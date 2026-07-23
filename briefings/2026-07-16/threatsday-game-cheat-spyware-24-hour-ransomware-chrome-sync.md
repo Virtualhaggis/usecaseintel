@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Game-cheat NuGet downloader fetches pepesoft.exe from pepegit666 GitHub/Hugging Face infra
 
-`UC_95_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### Starland RAT uses curl.exe to spawn PowerShell stager (WLDR agent decrypt/run)
 
-`UC_95_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_96_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware precursor: IIS worker (w3wp.exe) spawning shell from ASP.NET web shell
 
-`UC_95_19` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_96_19` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Spirals ransomware bulk file-encryption burst (single process, high write/rename volume)
 
-`UC_95_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_96_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -627,7 +627,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Game Cheat Spyware, 24-Hour Ransomware, Chrome Sync Stalking + 12 Mo
 
-`UC_95_16` · phase: **exploit** · confidence: **High**
+`UC_96_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

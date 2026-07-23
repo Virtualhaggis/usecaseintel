@@ -1,298 +1,3 @@
-<article class="card" id="art-206" data-art-slug="2026-07-02-ghsa-critical-cve-2026-9559-mautic-vulnerable-to-path-traver"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-9559: Mautic vulnerable to Path Traversal via Campaign Import Mautic vulnerable to Path Traversal via Campaign Import CVE-2026-9559 T1190 [LLM] Web-server process writes PHP file into Mautic config/cache/media/logs (zip-slip landing) [LLM] Mautic campaign import ZIP upload — POST to campaign import endpoint [LLM] HTTP request to an executable PHP file under Mautic /media (web-shell interaction) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-02-ghsa-critical-cve-2026-9559-mautic-vulnerable-to-path-traver" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-6r9h-4h75-7q4x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-9559: Mautic vulnerable to Path Traversal via Campaign Import</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-02</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Mautic vulnerable to Path Traversal via Campaign Import</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-9559</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-206-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-206"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-206-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Mautic campaign import ZIP upload — POST to campaign import endpoint</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Web-server process writes PHP file into Mautic config/cache/media/logs (zip-slip landing)</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] HTTP request to an executable PHP file under Mautic /media (web-shell interaction)</em></div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="612c318b2f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Web-server process writes PHP file into Mautic config/cache/media/logs (zip-slip landing)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="612c318b2f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the core of CVE-2026-9559: the Mautic campaign-import ZIP extraction escaping the temp directory and dropping an attacker-controlled .php/.phtml/.phar into Symfony&#x27;s config, var/cache, var/logs or media trees, executed under the web-server user (php-fpm/apache/nginx). A web-server process writing executable PHP into these directories at request time is almost never legitimate outside a controlled cache warm-up.
-
-Rationale: Keys on the article&#x27;s concrete outcome — &#x27;write arbitrary PHP files to sensitive system directories … overwrite critical internal configuration or cache components&#x27; — using Mautic 7&#x27;s real Symfony layout (config/, var/cache, var/logs, media) plus the web-server process identity that owns the write. Corroborated against NVD and the Mautic 7.1.2 release; the Symfony compiled-container exclusion removes the one high-volume legitimate PHP-into-cache writer.
-
-Cross-checked against:
-  • https://github.com/mautic/mautic/security/advisories/GHSA-6r9h-4h75-7q4x
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-9559
-  • https://advisories.gitlab.com/composer/mautic/core/CVE-2026-9559/
-  • https://github.com/mautic/mautic/releases/tag/7.1.2</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Symfony cache warm-up writing compiled container/service PHP into /var/cache/prod/ on first request or after `bin/console cache:clear`</li><li>Mautic plugin/theme installation via the admin UI writing PHP assets into media or plugin dirs</li><li>In-place Mautic upgrade / Composer operation regenerating cached PHP</li><li>Backup-restore tooling repopulating var/cache from a snapshot</li><li>Developer or deploy script running as the web user during a controlled release window</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has &quot;/var/cache/&quot; and (FileName startswith &quot;Container&quot; or FileName endswith &quot;ProjectContainer.php&quot; or FileName startswith &quot;srcApp_Kernel&quot; or FileName matches regex @&quot;get[A-Za-z0-9_]+Service\.php$&quot;)) and not (InitiatingProcessCommandLine has_any (&quot;cache:warmup&quot;,&quot;cache:clear&quot;,&quot;assets:install&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the exact FolderPath/FileName and SHA256, and read the dropped file — attacker webshells contain eval/system/base64_decode/assert; legitimate Symfony cache files are compiled container/service classes. Confirm whether a campaign import ran on this host within the prior 5 minutes. 2) Contain: isolate the Mautic host or block inbound HTTP; quarantine the dropped PHP; revoke campaign:imports:create from all non-admin users and rotate the app secret/DB creds if the file is a shell. 3) Hunt: pivot on the web-server user for subsequent shell spawns and outbound connections, enumerate every .php written under config/var/cache/var/logs/media in the last 30 days, and confirm the instance is patched to Mautic 7.1.2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-206-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-206-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-206-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-206-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-206-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-206-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where FileName endswith &quot;.php&quot; or FileName endswith &quot;.phtml&quot; or FileName endswith &quot;.phar&quot; or FileName endswith &quot;.pht&quot; or FileName endswith &quot;.php5&quot; or FileName endswith &quot;.php7&quot;
-| where FolderPath has_any (&quot;/config/&quot;,&quot;/var/cache/&quot;,&quot;/var/logs/&quot;,&quot;/media/&quot;)
-| where (InitiatingProcessFileName startswith &quot;php-fpm&quot; or InitiatingProcessFileName in~ (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php&quot;,&quot;php8&quot;))
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-// drop Symfony&#x27;s legitimate compiled-container cache writes
-| where not (FolderPath has &quot;/var/cache/&quot; and (FileName startswith &quot;Container&quot; or FileName endswith &quot;ProjectContainer.php&quot; or FileName startswith &quot;srcApp_Kernel&quot;))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-206-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where TargetFileExtension in~ (&quot;php&quot;,&quot;phtml&quot;,&quot;phar&quot;,&quot;pht&quot;,&quot;php5&quot;,&quot;php7&quot;)
-| where TargetFilePath has_any (&quot;/config/&quot;,&quot;/var/cache/&quot;,&quot;/var/logs/&quot;,&quot;/media/&quot;)
-| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
-| where not (TargetFilePath has &quot;/var/cache/&quot; and (TargetFileName startswith &quot;Container&quot; or TargetFileName endswith &quot;ProjectContainer.php&quot; or TargetFileName startswith &quot;srcApp_Kernel&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-206-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Server Process Writes PHP File into Mautic Config or Cache Directory
-id: b7e4c2a1-3f6d-4a9c-8e21-7d5f0a1b2c3d
-status: experimental
-description: Detects a web-server process (php-fpm/apache/nginx) writing an executable PHP file into a Mautic Symfony config, var/cache, var/logs or media directory, consistent with the CVE-2026-9559 campaign-import path-traversal RCE.
-references:
-  - https://github.com/mautic/mautic/security/advisories/GHSA-6r9h-4h75-7q4x
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-9559
-author: SOC Detection Engineering
-date: 2026/07/09
-tags:
-  - attack.t1190
-  - attack.t1505.003
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;/php-fpm&#x27;
-      - &#x27;/php-fpm8.1&#x27;
-      - &#x27;/php-fpm8.2&#x27;
-      - &#x27;/php-fpm8.3&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/nginx&#x27;
-  selection_dir:
-    TargetFilename|contains:
-      - &#x27;/config/&#x27;
-      - &#x27;/var/cache/&#x27;
-      - &#x27;/var/logs/&#x27;
-      - &#x27;/media/&#x27;
-  selection_ext:
-    TargetFilename|endswith:
-      - &#x27;.php&#x27;
-      - &#x27;.phtml&#x27;
-      - &#x27;.phar&#x27;
-      - &#x27;.pht&#x27;
-  filter_symfony:
-    TargetFilename|contains: &#x27;/var/cache/&#x27;
-    TargetFilename|endswith: &#x27;ProjectContainer.php&#x27;
-  condition: selection_proc and selection_dir and selection_ext and not filter_symfony
-level: high</code></pre></div>
-    <div class="tab-content" id="art-206-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/(php-fpm|httpd|apache2|nginx)/i
-| TargetFileName=/\/(config|var\/cache|var\/logs|media)\/.*\.(php|phtml|phar|pht|php5|php7)$/i
-| NOT (TargetFileName=/\/var\/cache\/.*(Container|ProjectContainer)\.php$/i)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-206-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-206-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-206-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-206-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created OR Filesystem.action=modified) (Filesystem.file_path=&quot;*/config/*&quot; OR Filesystem.file_path=&quot;*/var/cache/*&quot; OR Filesystem.file_path=&quot;*/var/logs/*&quot; OR Filesystem.file_path=&quot;*/media/*&quot;) (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.phar&quot; OR Filesystem.file_name=&quot;*.pht&quot; OR Filesystem.file_name=&quot;*.php5&quot; OR Filesystem.file_name=&quot;*.php7&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where process_name IN (&quot;php-fpm&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-fpm8.3&quot;,&quot;php-fpm7.4&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php&quot;) | where NOT (like(file_path,&quot;%/var/cache/%&quot;) AND (like(file_name,&quot;Container%&quot;) OR like(file_name,&quot;%ProjectContainer.php&quot;) OR like(file_name,&quot;srcApp_Kernel%Container.php&quot;))) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-206-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=created OR Filesystem.action=modified) (Filesystem.file_path=&quot;*/config/*&quot; OR Filesystem.file_path=&quot;*/var/cache/*&quot; OR Filesystem.file_path=&quot;*/var/logs/*&quot; OR Filesystem.file_path=&quot;*/media/*&quot;) (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.phar&quot; OR Filesystem.file_name=&quot;*.pht&quot; OR Filesystem.file_name=&quot;*.php5&quot; OR Filesystem.file_name=&quot;*.php7&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where process_name IN (&quot;php-fpm&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-fpm8.3&quot;,&quot;php-fpm7.4&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php&quot;) | where NOT (like(file_path,&quot;%/var/cache/%&quot;) AND (like(file_name,&quot;Container%&quot;) OR like(file_name,&quot;%ProjectContainer.php&quot;) OR like(file_name,&quot;srcApp_Kernel%Container.php&quot;))) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="396c4bd8e5" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Mautic campaign import ZIP upload — POST to campaign import endpoint</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="396c4bd8e5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces the delivery step of CVE-2026-9559: an authenticated POST to the Mautic campaign-import route carrying the malicious ZIP. Hunting-tier because import is a legitimate feature; pivot on the source user/IP and correlate against a PHP file-write (UC1) on the same host within ~60s to promote to a confirmed exploit.
-
-Rationale: Grounded on the article&#x27;s named privilege/feature (campaign:imports:create, &#x27;campaign import feature&#x27;, ZIP upload) confirmed as a Mautic 7 REST feature accepting ZIP form-data. Alone it is a legitimate action, so it is scoped as a hunt whose value is the source-actor pivot and correlation with UC1&#x27;s PHP write.
-
-Cross-checked against:
-  • https://github.com/mautic/mautic/security/advisories/GHSA-6r9h-4h75-7q4x
-  • https://devdocs.mautic.org/en/5.x/rest_api/campaigns.html
-  • https://advisories.gitlab.com/composer/mautic/core/CVE-2026-9559/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Marketing admin legitimately importing a campaign template exported from another Mautic instance</li><li>Migration/onboarding project bulk-importing campaigns during a cutover window</li><li>CI/CD or IaC tooling restoring campaign definitions from a repo</li><li>Vendor/consultant importing a packaged campaign bundle</li><li>Automated backup-restore re-importing campaign archives</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the SrcUsername/SrcIpAddr and check whether this account has ever performed a campaign import before and whether campaign:imports:create was recently granted; verify the source IP is within the IT-admin/marketing range. 2) Contain: if the actor is new/unexpected, disable the account, revoke campaign:imports:create org-wide, and preserve the uploaded ZIP for analysis. 3) Hunt: correlate this import timestamp against UC1 PHP file-writes on the Mautic host within 60s and against any web-server shell spawn; if a drop is found, treat as confirmed RCE and escalate.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-206-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-206-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-206-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where HttpMethod == &quot;POST&quot;
-| where Url has &quot;campaigns/import&quot; or Url has &quot;campaign/import&quot;
-| project TimeGenerated, SrcIpAddr, SrcUsername, DstHostname, Url, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-206-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-206-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-206-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-206-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST (Web.url=&quot;*campaigns/import*&quot; OR Web.url=&quot;*campaign/import*&quot;) by Web.src Web.dest Web.user Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-206-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST (Web.url=&quot;*campaigns/import*&quot; OR Web.url=&quot;*campaign/import*&quot;) by Web.src Web.dest Web.user Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6e5b0bc8c7" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">HTTP request to an executable PHP file under Mautic /media (web-shell interaction)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6e5b0bc8c7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the execution/command channel after CVE-2026-9559: an HTTP request that reaches a .php/.phtml/.phar under Mautic&#x27;s web-accessible /media path (which should only ever serve static assets) and returns 200, indicating the dropped web shell was invoked. Distinct pivot from the file-write (UC1) — this fires on the web-access log even if endpoint telemetry is absent.
-
-Rationale: The article&#x27;s RCE outcome lands PHP into config/cache/media; only /media is web-reachable, and Mautic serves it as a static-asset store, so any PHP under /media returning 200 is a web-shell invocation — a clean, high-fidelity signal that needs no threshold. Scoped to 200/500 to drop scanner 404 noise.
-
-Cross-checked against:
-  • https://github.com/mautic/mautic/security/advisories/GHSA-6r9h-4h75-7q4x
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-9559
-  • https://securityonline.info/mautic-security-vulnerabilities-rce/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanner / pentest probing for web shells under /media (usually 404, excluded by the 200/500 filter)</li><li>Legitimate Mautic plugin that intentionally serves a PHP endpoint from a media/asset path (rare, allowlist it)</li><li>Developer leaving a phpinfo/test file in media during troubleshooting</li><li>WAF or CDN health-check hitting an asset URL that happens to include .php in a query string</li><li>Misrouted request where .php appears only in the query parameter, not the path (regex anchors on path extension to avoid this)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| search NOT Web.url=&quot;*/media/js/*&quot; NOT Web.url=&quot;*/media/css/*&quot; NOT http_user_agent=&quot;*HealthCheck*&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the requested file on disk and the surrounding access-log entries for the same SrcIpAddr — POST bodies, repeated requests, and command-like query strings confirm a shell; capture the User-Agent and IP. 2) Contain: block the source IP at the WAF/edge, remove the PHP file from /media, isolate the host, and rotate web-app and DB credentials. 3) Hunt: enumerate all PHP under /media and other Mautic dirs, pivot the web-server user for spawned shells and outbound C2, and trace back to the UC2 campaign-import request and the UC1 file-write to reconstruct the full chain; confirm patch to 7.1.2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-206-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-206-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-206-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;/media/&quot;
-| where Url matches regex @&quot;(?i)\.(php|phtml|phar|pht|php5|php7)(\?|$)&quot;
-| where HttpStatusCode in (&quot;200&quot;,&quot;500&quot;)
-| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-206-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-206-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-206-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-206-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.http_method) as http_methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/media/*.php*&quot; OR Web.url=&quot;*/media/*.phtml*&quot; OR Web.url=&quot;*/media/*.phar*&quot;) Web.status=200 by Web.src Web.dest Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-206-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.http_method) as http_methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/media/*.php*&quot; OR Web.url=&quot;*/media/*.phtml*&quot; OR Web.url=&quot;*/media/*.phar*&quot;) Web.status=200 by Web.src Web.dest Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-206-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-206-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-206-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-206-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-9559&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-206-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-9559&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-206-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-206-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-206-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-206-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-9559&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-206-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-9559&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-207" data-art-slug="2026-07-02-ghsa-critical-cve-2026-9558-mautic-has-server-side-template-"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -15274,6 +14979,440 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-238" data-art-slug="2026-06-26-ghsa-critical-cve-2026-53519-nezha-monitoring-pre-auth-path-"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1528,T1539"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
+  data-targets="azure,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-53519: Nezha Monitoring: Pre-auth path traversal via /dashboard.. prefix confusion leaks jwt_secret_key Nezha Monitoring: Pre-auth path traversal via /dashboard.. prefix confusion leaks jwt_secret_key CVE-2026-53519 T1190 T1528 T1539 [LLM] Nezha Monitoring CVE-2026-53519 pre-auth path traversal via /dashboard.. prefix confusion [LLM] Nezha CVE-2026-53519 confirmed secret disclosure — 200 response to /dashboard.. traversal Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-26-ghsa-critical-cve-2026-53519-nezha-monitoring-pre-auth-path-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-5c25-7vpj-9mqh" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-53519: Nezha Monitoring: Pre-auth path traversal via /dashboard.. prefix confusion leaks jwt_secret_key</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-26</span>
+    <span>5 use cases</span>
+    <span>3 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Nezha Monitoring: Pre-auth path traversal via /dashboard.. prefix confusion leaks jwt_secret_key</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-53519</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-238-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-238"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-238-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Nezha Monitoring CVE-2026-53519 pre-auth path traversal via /dashboard.. prefix confusion</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Nezha CVE-2026-53519 confirmed secret disclosure — 200 response to /dashboard.. traversal · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6361ae93fb" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Nezha Monitoring CVE-2026-53519 pre-auth path traversal via /dashboard.. prefix confusion</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6361ae93fb" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound HTTP requests whose path uses the &#x27;dashboard..&#x27; / &#x27;dashboard%2e%2e&#x27; / &#x27;dashboard..%2f&#x27; prefix-confusion token that escapes the admin-dist root in Nezha&#x27;s NoRoute fallback handler. This is the exact unauthenticated file-read primitive of CVE-2026-53519 (fixed in 2.0.13) used to reach data/config.yaml and data/sqlite.db.
+
+Rationale: The token &#x27;dashboard&#x27; immediately followed by &#x27;..&#x27;/&#x27;%2e%2e&#x27;/&#x27;..%2f&#x27; (no separating slash) is the exact bypass string from the advisory PoC and has no benign form — legitimate asset requests are always &#x27;/dashboard/&#x27;. Cross-checked NVD (CVSS 9.1, fixed 2.0.13) and public PoC. ImWebSession chosen for ASIM portability; W3CIISLog (csUriStem+csUriQuery) or CommonSecurityLog (RequestURL) work identically if the tenant proxies via IIS/WAF instead.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-53519
+  • https://github.com/advisories/GHSA-5c25-7vpj-9mqh
+  • https://github.com/tar-xz/CVE-2026-53519-PoC</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Nuclei/Tenable/Qualys) firing the CVE-2026-53519 template against internal Nezha instances</li><li>Internal red-team or pentest validating the patch on 2.0.13</li><li>Security researcher replaying the PoC in a lab that ships logs to the same SIEM</li><li>A WAF that URL-decodes and re-logs the request, producing a duplicate &#x27;dashboard..&#x27; event per hit</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;10.0.0.0&quot;) // add authorized scanner/pentest source IPs here to suppress sanctioned CVE-2026-53519 template runs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: pull the full request path and HTTP status for the source IP; a 200 with Content-Type application/yaml or a sqlite body means the secret was served (pivot to UC2). Check the Nezha version banner — anything &lt;2.0.13 is vulnerable. 2) CONTAIN: block the source IP at the WAF/edge, take the Nezha dashboard off the public internet, and immediately rotate jwt_secret_key AND agent_secret_key in data/config.yaml (invalidates any forged admin JWT), then force-logout all sessions. 3) HUNT: search the same source IP for follow-on &#x27;/dashboard../data/sqlite.db&#x27; reads and for anomalous admin logins/API-token use after the request time; upgrade to 2.0.13+.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-238-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url contains &quot;/dashboard..&quot; or Url contains &quot;/dashboard%2e&quot; or Url contains &quot;dashboard..%2f&quot; or Url contains &quot;dashboard%2e%2e&quot;
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent, DvcAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-238-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Nezha CVE-2026-53519 Path Traversal Prefix Confusion (/dashboard..)
+id: 8f2c1d64-9b3e-4a77-bf01-2a6d5e9c7f10
+description: Detects unauthenticated path traversal against Nezha Monitoring exploiting the strings.HasPrefix /dashboard prefix-confusion bug (CVE-2026-53519) to read data/config.yaml or data/sqlite.db.
+references:
+  - https://github.com/advisories/GHSA-5c25-7vpj-9mqh
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-53519
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1083
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem|contains:
+      - &#x27;/dashboard..&#x27;
+      - &#x27;/dashboard%2e%2e&#x27;
+      - &#x27;dashboard..%2f&#x27;
+      - &#x27;dashboard%2e%2e&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-238-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where (Web.url=&quot;*dashboard..*&quot; OR Web.url=&quot;*dashboard%2e%2e*&quot; OR Web.url=&quot;*dashboard..%2f*&quot; OR Web.url=&quot;*dashboard%2e%2e%2f*&quot;) by Web.src, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-238-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where (Web.url=&quot;*dashboard..*&quot; OR Web.url=&quot;*dashboard%2e%2e*&quot; OR Web.url=&quot;*dashboard..%2f*&quot; OR Web.url=&quot;*dashboard%2e%2e%2f*&quot;) by Web.src, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cdfaaa1556" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Nezha CVE-2026-53519 confirmed secret disclosure — 200 response to /dashboard.. traversal</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="cdfaaa1556" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Alerts when a Nezha prefix-confusion traversal request returns HTTP 200, meaning http.ServeFile actually served the escaped file (jwt_secret_key in data/config.yaml or the full data/sqlite.db). Distinct from UC1: this fires only on successful exfil, not blocked/404 attempts, so it is a confirmed-breach signal warranting immediate secret rotation.
+
+Rationale: Combines the CVE-2026-53519 bypass token with sc-status 200 and the two default-deployment target files named in the advisory (data/config.yaml holding the HS256 jwt_secret_key, data/sqlite.db holding admin bcrypt hashes) — a 200 means http.ServeFile returned the file, so this is confirmed disclosure not a probe. Corroborated by NVD and the public PoC repo.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-53519
+  • https://github.com/advisories/GHSA-5c25-7vpj-9mqh
+  • https://github.com/tar-xz/CVE-2026-53519-PoC</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized scanner whose template asserts on the 200 + config.yaml body (Nuclei matcher) against an internal Nezha</li><li>Pentest confirming exploitability before the 2.0.13 upgrade</li><li>A caching reverse proxy replaying a cached 200 for the same crafted URL to a second analyst-driven request</li><li>WAF in detect-only mode logging both the request and an upstream 200 it did not block</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;10.0.0.0&quot;) // allowlist sanctioned scanner/pentest IPs; keep all external-origin hits in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: treat as confirmed breach — the response body (bytes_out/HttpResponseBodyBytes near the config size, ~167 bytes for config.yaml) shows the secret left the server; identify which file (config.yaml vs sqlite.db) from the URL. 2) CONTAIN: immediately rotate jwt_secret_key and agent_secret_key, invalidate all dashboard sessions, and rotate any OAuth2 client secrets / GitHub release token / GeoIP key also stored in config.yaml; if sqlite.db was served, force-reset all dashboard user passwords and revoke API tokens. 3) HUNT: correlate the source IP and the disclosure time against subsequent admin sign-ins, new API-token creation, and server-registry changes in Nezha; take the instance offline until upgraded to 2.0.13+.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-238-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where HttpStatusCode == 200
+| where Url contains &quot;/dashboard..&quot; or Url contains &quot;/dashboard%2e&quot; or Url contains &quot;dashboard..%2f&quot; or Url contains &quot;dashboard%2e%2e&quot;
+| where Url has_any (&quot;config.yaml&quot;, &quot;sqlite.db&quot;, &quot;.yaml&quot;, &quot;.db&quot;)
+| project TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, HttpResponseBodyBytes, HttpRequestHeaderUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-238-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Nezha CVE-2026-53519 Successful Secret Disclosure (200 on /dashboard.. traversal)
+id: c41a7e29-5d8b-4f16-9e2a-7b03d6a11e58
+description: Detects a successful (HTTP 200) unauthenticated file read via the Nezha /dashboard.. prefix-confusion traversal, indicating data/config.yaml (jwt_secret_key) or data/sqlite.db was served.
+references:
+  - https://github.com/advisories/GHSA-5c25-7vpj-9mqh
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-53519
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1552.001
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem|contains:
+      - &#x27;/dashboard..&#x27;
+      - &#x27;/dashboard%2e%2e&#x27;
+      - &#x27;dashboard..%2f&#x27;
+      - &#x27;dashboard%2e%2e&#x27;
+    sc-status: 200
+  target:
+    cs-uri-stem|contains:
+      - &#x27;config.yaml&#x27;
+      - &#x27;sqlite.db&#x27;
+  condition: selection and target
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-238-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.bytes_out) as bytes_out from datamodel=Web where Web.status=200 AND (Web.url=&quot;*dashboard..*&quot; OR Web.url=&quot;*dashboard%2e%2e*&quot; OR Web.url=&quot;*dashboard..%2f*&quot;) AND (Web.url=&quot;*config.yaml*&quot; OR Web.url=&quot;*sqlite.db*&quot; OR Web.url=&quot;*.yaml*&quot; OR Web.url=&quot;*.db*&quot;) by Web.src, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-238-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.bytes_out) as bytes_out from datamodel=Web where Web.status=200 AND (Web.url=&quot;*dashboard..*&quot; OR Web.url=&quot;*dashboard%2e%2e*&quot; OR Web.url=&quot;*dashboard..%2f*&quot;) AND (Web.url=&quot;*config.yaml*&quot; OR Web.url=&quot;*sqlite.db*&quot; OR Web.url=&quot;*.yaml*&quot; OR Web.url=&quot;*.db*&quot;) by Web.src, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-238-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-238-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                                  @&quot;\Microsoft\Edge\User Data\&quot;,
+                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-238-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-238-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53519&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53519&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53519&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-238-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53519&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
+  <summary>
+    <span class="uc-title">OAuth consent / suspicious app grant</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-238-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-238-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent</code></pre></div>
+    <div class="tab-content" id="art-238-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+AuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where OperationName has &quot;Consent to application&quot;
+| where Result =~ &quot;success&quot;
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
+         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, AppId, Result
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
+status: experimental
+description: |
+    User-driven consent to a third-party OAuth application — illicit-
+    consent attack precursor. Pair with first-time-seen-app heuristic
+    in your SIEM for higher fidelity.
+references:
+    - https://attack.mitre.org/techniques/T1528/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1528
+    - attack.persistence
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        OperationName: &#x27;Consent to application&#x27;
+        Result: &#x27;success&#x27;
+    condition: selection
+falsepositives:
+    - Legitimate first-time SaaS app onboarding
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-238-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

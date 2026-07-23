@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2592 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2591 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,10 +8,13 @@ _2592 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-23
+- [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
+
 ## 2026-07-22
 - [adobe acrobat extension flaw let malicious sites read whatsa](./2026-07-22/adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa.md)
 - [cisa kev cve 2026 16232 check point smartconsole improper au](./2026-07-22/cisa-kev-cve-2026-16232-check-point-smartconsole-improper-au.md)
-- [critical sharepoint rce flaw exploited to steal machine keys](./2026-07-22/critical-sharepoint-rce-flaw-exploited-to-steal-machine-keys.md)
+- [cisa kev cve 2026 50522 microsoft sharepoint deserialization](./2026-07-22/cisa-kev-cve-2026-50522-microsoft-sharepoint-deserialization.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-22/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
@@ -30,7 +33,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-21
 - [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
-- [anubis ransomware claims coca cola fairlife attack threatens](./2026-07-21/anubis-ransomware-claims-coca-cola-fairlife-attack-threatens.md)
 - [aws kiro flaw let a poisoned web page rewrite its config and](./2026-07-21/aws-kiro-flaw-let-a-poisoned-web-page-rewrite-its-config-and.md)
 - [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
 - [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)
@@ -102,7 +104,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
-- [n8n token exchange flaw could let attackers log in as users ](./2026-07-16/n8n-token-exchange-flaw-could-let-attackers-log-in-as-users-.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [threatsday game cheat spyware 24 hour ransomware chrome sync](./2026-07-16/threatsday-game-cheat-spyware-24-hour-ransomware-chrome-sync.md)
 - [two scattered spider hackers get 5 5 years each for 29 milli](./2026-07-16/two-scattered-spider-hackers-get-5-5-years-each-for-29-milli.md)

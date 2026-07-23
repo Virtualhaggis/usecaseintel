@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound phishing email or URL referencing npm look-alike domain npmjs.help
 
-`UC_19_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ union
 
 ### Endpoint DNS resolution or web connection to npm phishing domain npmjs.help
 
-`UC_19_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

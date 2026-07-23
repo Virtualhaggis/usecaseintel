@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### NadMesh hidden persistence file drops + cron in /dev/shm, /tmp, /etc/cron.d
 
-`UC_79_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_80_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceFileEvents
 
 ### NadMesh C2 egress to 209.99.186.235 / cdnorigin.net
 
-`UC_79_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_80_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### NadMesh agent sample execution by SHA1 31c69b3e12936abca770d430066f379ec1d997ec
 
-`UC_79_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_80_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union
 
 ### Cloud credential file harvest: reads of ~/.aws/config, .env, ~/.docker/config.json
 
-`UC_79_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_80_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Kubernetes service-account token / kubeconfig theft on compromised host
 
-`UC_79_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_80_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Exposed AI service / Docker socket spawns shell + egress (NadMesh post-exploit)
 
-`UC_79_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_80_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### Internet-exposed AI/Docker ports (8188/11434/7860/5678/2375) probed from public IPs
 
-`UC_79_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_80_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -250,7 +250,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Token
 
-`UC_79_5` · phase: **install** · confidence: **High**
+`UC_80_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

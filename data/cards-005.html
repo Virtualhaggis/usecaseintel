@@ -1,284 +1,3 @@
-<article class="card" id="art-122" data-art-slug="2026-07-14-ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application"
-  data-targets="azure,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-54052: n8n-MCP: Cross-tenant access to workflow version backups in multi-tenant HTTP deployments n8n-MCP: Cross-tenant access to workflow version backups in multi-tenant HTTP deployments CVE-2026-54052  [LLM] n8n-MCP cross-tenant workflow version read/enumeration via n8n_workflow_versions (CVE-2026-54052) [LLM] n8n-MCP destructive workflow version backup deletion (delete/prune/truncate) — CVE-2026-54052 impact [LLM] n8n-MCP vulnerable multi-tenant config exposure (ENABLE_MULTI_TENANT without version-tool mitigation) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-14-ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-j6r7-6fhx-77wx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-54052: n8n-MCP: Cross-tenant access to workflow version backups in multi-tenant HTTP deployments</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-14</span>
-    <span>4 use cases</span>
-    <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">n8n-MCP: Cross-tenant access to workflow version backups in multi-tenant HTTP deployments</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54052</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-122-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-122"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-122-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] n8n-MCP cross-tenant workflow version read/enumeration via n8n_workflow_versions (CVE-2026-54052) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] n8n-MCP vulnerable multi-tenant config exposure (ENABLE_MULTI_TENANT without version-tool mitigation)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] n8n-MCP destructive workflow version backup deletion (delete/prune/truncate) — CVE-2026-54052 impact</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="9ce7f5d943" data-platforms="sent,spl" data-targets="azure" open>
-  <summary>
-    <span class="uc-title">n8n-MCP cross-tenant workflow version read/enumeration via n8n_workflow_versions (CVE-2026-54052)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="9ce7f5d943" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts high fan-out use of the n8n-mcp `n8n_workflow_versions` tool in list/rollback mode within a single host/session, the read path an authenticated tenant abuses to pull other tenants&#x27; un-isolated version snapshots (which embed node credential references and auth headers). Article-specific because it keys on the exact vulnerable MCP tool name and its read modes rather than generic API abuse.
-
-Rationale: Keys on the exact vulnerable tool name `n8n_workflow_versions` and its read modes (list/rollback) confirmed in n8n-mcp docs, plus the tenant_id session parameter used by multi-tenant HTTP mode; fan-out threshold turns legitimate single-workflow use into an enumeration signal. Splunk uses a raw app-log search because n8n-mcp stdout has no native CIM datamodel home.
-
-Cross-checked against:
-  • https://github.com/czlonkowski/n8n-mcp
-  • https://www.n8n-mcp.com/docs/workflow-management
-  • https://docs.n8n.io/advanced-ai/mcp/mcp_tools_reference/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Cloud Service Discovery">T1526</span> <span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate AI agent (Claude/Cursor/Windsurf) doing a bulk workflow audit or cleanup across many workflows in one session</li><li>Scheduled version-retention job iterating history to prune old snapshots</li><li>The one-time 2.56.1 upgrade migration touching all existing history</li><li>Platform admin performing a genuine multi-workflow restore/rollback</li><li>Monitoring/health-check that periodically lists versions</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessName !has &quot;migration&quot; and Sample !has &quot;retention&quot; and Sample !has &quot;scheduled-prune&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the offending host/session&#x27;s raw n8n-mcp log lines; extract the acting tenant_id and the distinct workflow_ids/tenant_ids read — confirm whether the read tenant_id matches the owner tenant of each workflow. 2) Contain: if reads cross tenant boundaries, apply the advisory workaround immediately — set DISABLED_TOOLS=n8n_workflow_versions in the server env (Docker .env) and restart, or fail over each tenant to its own instance/DB; then upgrade to 2.56.1. 3) Hunt: for every foreign workflow_id touched, treat the embedded node credentials/auth headers as exposed — rotate them, and search the same logs for follow-on delete/prune/truncate (see companion UC).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-122-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;n8n_workflow_versions&quot;
-| where SyslogMessage has_any (&#x27;&quot;mode&quot;:&quot;list&quot;&#x27;,&#x27;&quot;mode&quot;:&quot;rollback&quot;&#x27;,&#x27;mode=list&#x27;,&#x27;mode=rollback&#x27;)
-| extend WorkflowId = extract(@&#x27;(?i)workflow[_\-]?id[&quot;&#x27;&#x27;:=\s]+([A-Za-z0-9]{6,})&#x27;, 1, SyslogMessage)
-| extend TenantId  = extract(@&#x27;(?i)tenant[_\-]?id[&quot;&#x27;&#x27;:=\s]+([A-Za-z0-9\-]{3,})&#x27;, 1, SyslogMessage)
-| summarize DistinctWorkflows = dcount(WorkflowId), Reads = count(), TenantIds = make_set(TenantId, 10), Sample = any(SyslogMessage), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by Computer, HostName, ProcessName, bin(TimeGenerated, 1h)
-| where DistinctWorkflows &gt; 20   // 20 = fan-out ceiling; a legit AI agent rarely reads &gt;20 distinct workflow version histories per host/hour
-| order by DistinctWorkflows desc</code></pre></div>
-    <div class="tab-content" id="art-122-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;n8n-mcp&quot; OR sourcetype=&quot;n8n_mcp&quot; OR source=&quot;*n8n-mcp*&quot; OR source=&quot;*n8n_mcp*&quot;) &quot;n8n_workflow_versions&quot; (&quot;\&quot;mode\&quot;:\&quot;list\&quot;&quot; OR &quot;\&quot;mode\&quot;:\&quot;rollback\&quot;&quot; OR &quot;mode=list&quot; OR &quot;mode=rollback&quot;)
-| rex field=_raw &quot;(?i)workflow[_\-]?id[\&quot;&#x27;:=\s]+(?&lt;workflow_id&gt;[A-Za-z0-9]{6,})&quot;
-| rex field=_raw &quot;(?i)tenant[_\-]?id[\&quot;&#x27;:=\s]+(?&lt;tenant_id&gt;[A-Za-z0-9\-]{3,})&quot;
-| bin _time span=1h
-| stats dc(workflow_id) as distinct_workflows count as reads values(tenant_id) as tenant_ids min(_time) as first_seen max(_time) as last_seen by host, _time
-| where distinct_workflows &gt; 20
-| sort - distinct_workflows</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0a56c79c1e" data-platforms="sent,sigma,spl" data-targets="azure,vcs,windows">
-  <summary>
-    <span class="uc-title">n8n-MCP destructive workflow version backup deletion (delete/prune/truncate) — CVE-2026-54052 impact</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0a56c79c1e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on invocation of the n8n-mcp `n8n_workflow_versions` tool in delete/prune/truncate mode, the integrity/availability path an authenticated tenant abuses to destroy other tenants&#x27; un-isolated version backups. Article-specific: matches the exact tool name and its destructive modes rather than a generic file-delete pattern.
-
-Rationale: Matches the exact `n8n_workflow_versions` tool plus its three destructive modes (delete/prune/truncate confirmed in n8n-mcp docs) — the article explicitly states an authenticated tenant &#x27;could delete or destroy other tenants&#x27; stored backups.&#x27; Destructive modes are rare enough to alert on; the query surfaces tenant_id/workflow_id so an analyst can immediately test cross-tenant ownership.
-
-Cross-checked against:
-  • https://github.com/czlonkowski/n8n-mcp
-  • https://www.n8n-mcp.com/docs/workflow-management</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate retention maintenance using prune/truncate (normal housekeeping modes)</li><li>The 2.56.1 upgrade migration which intentionally clears previously un-scoped backups</li><li>Admin manually rolling back a bad version then deleting it</li><li>CI/CD redeploy pipeline that resets workflow version history</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SyslogMessage !has &quot;migration&quot; and SyslogMessage !has &quot;scheduled&quot; and ProcessName !has &quot;retention&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the acting tenant_id and target workflow_id from the log line; verify whether the deleting tenant owns that workflow — a mismatch is a confirmed cross-tenant destruction. 2) Contain: disable the tool now (DISABLED_TOOLS=n8n_workflow_versions), restart the server, and restore affected version history from DB/offsite backup; upgrade to 2.56.1. 3) Hunt: pivot on the same tenant_id for prior list/rollback reads (recon before destruction) and treat any node credentials in the destroyed/read snapshots as compromised — rotate them.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-122-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-122-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(30d)
-| where SyslogMessage has &quot;n8n_workflow_versions&quot;
-| where SyslogMessage has_any (&#x27;&quot;mode&quot;:&quot;delete&quot;&#x27;,&#x27;&quot;mode&quot;:&quot;prune&quot;&#x27;,&#x27;&quot;mode&quot;:&quot;truncate&quot;&#x27;,&#x27;mode=delete&#x27;,&#x27;mode=prune&#x27;,&#x27;mode=truncate&#x27;)
-| extend WorkflowId = extract(@&#x27;(?i)workflow[_\-]?id[&quot;&#x27;&#x27;:=\s]+([A-Za-z0-9]{6,})&#x27;, 1, SyslogMessage)
-| extend TenantId  = extract(@&#x27;(?i)tenant[_\-]?id[&quot;&#x27;&#x27;:=\s]+([A-Za-z0-9\-]{3,})&#x27;, 1, SyslogMessage)
-| project TimeGenerated, Computer, HostName, ProcessName, TenantId, WorkflowId, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-122-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: n8n-MCP Destructive Workflow Version Backup Operation (CVE-2026-54052)
-id: b3e1c7a2-4f8d-4a1e-9c3b-7d2e5f0a9c14
-status: experimental
-description: Detects invocation of the n8n-mcp n8n_workflow_versions tool in a destructive mode (delete/prune/truncate), the impact path of CVE-2026-54052 cross-tenant backup destruction in multi-tenant HTTP deployments.
-references:
-  - https://github.com/advisories/GHSA-j6r7-6fhx-77wx
-author: SOC Detection Engineering
-date: 2026/07/15
-tags:
-  - attack.impact
-  - attack.t1565.001
-  - attack.t1485
-logsource:
-  product: n8n_mcp
-  service: application
-detection:
-  selection_tool:
-    message|contains: &#x27;n8n_workflow_versions&#x27;
-  selection_mode:
-    message|contains:
-      - &#x27;&quot;mode&quot;:&quot;delete&quot;&#x27;
-      - &#x27;&quot;mode&quot;:&quot;prune&quot;&#x27;
-      - &#x27;&quot;mode&quot;:&quot;truncate&quot;&#x27;
-  condition: selection_tool and selection_mode
-falsepositives:
-  - Legitimate version-retention pruning
-  - The 2.56.1 upgrade migration that clears un-scoped backups
-level: high</code></pre></div>
-    <div class="tab-content" id="art-122-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;n8n-mcp&quot; OR sourcetype=&quot;n8n_mcp&quot; OR source=&quot;*n8n-mcp*&quot; OR source=&quot;*n8n_mcp*&quot;) &quot;n8n_workflow_versions&quot; (&quot;\&quot;mode\&quot;:\&quot;delete\&quot;&quot; OR &quot;\&quot;mode\&quot;:\&quot;prune\&quot;&quot; OR &quot;\&quot;mode\&quot;:\&quot;truncate\&quot;&quot; OR &quot;mode=delete&quot; OR &quot;mode=prune&quot; OR &quot;mode=truncate&quot;)
-| rex field=_raw &quot;(?i)workflow[_\-]?id[\&quot;&#x27;:=\s]+(?&lt;workflow_id&gt;[A-Za-z0-9]{6,})&quot;
-| rex field=_raw &quot;(?i)tenant[_\-]?id[\&quot;&#x27;:=\s]+(?&lt;tenant_id&gt;[A-Za-z0-9\-]{3,})&quot;
-| table _time, host, source, tenant_id, workflow_id, _raw
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8571d5f529" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">n8n-MCP vulnerable multi-tenant config exposure (ENABLE_MULTI_TENANT without version-tool mitigation)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="8571d5f529" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Config-audit hunt: flags n8n-mcp instances running in multi-tenant HTTP mode (ENABLE_MULTI_TENANT=true) where the n8n_workflow_versions tool is NOT disabled and the build is at or below the vulnerable 2.56.0 — the exact preconditions for CVE-2026-54052 cross-tenant access. Article-specific because it keys on the named env vars, tool name, and fixed version from the advisory.
-
-Rationale: Uses the three concrete advisory facts — env var `ENABLE_MULTI_TENANT=true`, the `DISABLED_TOOLS=n8n_workflow_versions` mitigation string, and the fixed version boundary 2.56.0/2.56.1 — to surface exploitable instances before abuse. Low confidence because it assumes the server emits config/version in its startup logs; pair with a config-inventory check where available.
-
-Cross-checked against:
-  • https://github.com/czlonkowski/n8n-mcp
-  • https://docs.n8n.io/advanced-ai/mcp/mcp_tools_reference/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Instance flagged multi-tenant but actually serving a single tenant (advisory says single-tenant HTTP is not affected)</li><li>Dev/test instance intentionally multi-tenant and not internet-exposed</li><li>Already-patched 2.56.1 host still echoing the env flag (version filter should exclude it, but startup log ordering may split the strings)</li><li>Instances where the version string isn&#x27;t logged, causing an isnull() catch-all match</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SyslogMessage !has &quot;single-tenant&quot; and HostName !has &quot;dev&quot; and HostName !has &quot;test&quot; and HostName !has &quot;staging&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the flagged host is genuinely multi-tenant (&gt;1 tenant/token served) and reachable by tenants — cross-check against the config-inventory/orchestration manifest. 2) Contain: for exposed vulnerable instances, apply a workaround now — set DISABLED_TOOLS=n8n_workflow_versions, or restrict the HTTP endpoint to trusted operators, then schedule the 2.56.1 upgrade (its migration isolates and clears un-scoped backups). 3) Hunt: on any instance that was vulnerable, replay the two companion detections (cross-tenant reads, destructive deletions) over the full exposure window to determine whether the gap was actually abused.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-122-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(30d)
-| where SyslogMessage has &quot;n8n-mcp&quot; or SyslogMessage has &quot;n8n_mcp&quot;
-| where SyslogMessage has &quot;ENABLE_MULTI_TENANT&quot; and SyslogMessage has_any (&quot;true&quot;,&quot;enabled&quot;)
-| extend Version = extract(@&#x27;(?i)n8n[_\-]?mcp[^0-9]{0,20}v?(\d+\.\d+\.\d+)&#x27;, 1, SyslogMessage)
-| extend Mitigated = iif(SyslogMessage matches regex @&#x27;(?i)DISABLED_TOOLS\S*n8n_workflow_versions&#x27;, true, false)
-| extend Parts = split(Version, &quot;.&quot;)
-| extend VulnVersion = iif(isnotempty(Version) and (toint(Parts[0]) &lt; 2 or (toint(Parts[0]) == 2 and (toint(Parts[1]) &lt; 56 or (toint(Parts[1]) == 56 and toint(Parts[2]) &lt;= 0)))), true, false)
-| where Mitigated == false and (VulnVersion == true or isempty(Version))
-| summarize Version = any(Version), Sample = any(SyslogMessage), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by Computer, HostName, ProcessName
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-122-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;n8n-mcp&quot; OR sourcetype=&quot;n8n_mcp&quot; OR source=&quot;*n8n-mcp*&quot; OR source=&quot;*n8n_mcp*&quot;) &quot;ENABLE_MULTI_TENANT&quot; (&quot;true&quot; OR &quot;enabled&quot;)
-| rex field=_raw &quot;(?i)n8n[_\-]?mcp[^0-9]{0,20}v?(?&lt;ver&gt;\d+\.\d+\.\d+)&quot;
-| eval mitigated=if(match(_raw,&quot;(?i)DISABLED_TOOLS\S*n8n_workflow_versions&quot;),1,0)
-| eval vuln_version=if(isnotnull(ver) AND (tonumber(mvindex(split(ver,&quot;.&quot;),0))&lt;2 OR (tonumber(mvindex(split(ver,&quot;.&quot;),0))==2 AND (tonumber(mvindex(split(ver,&quot;.&quot;),1))&lt;56 OR (tonumber(mvindex(split(ver,&quot;.&quot;),1))==56 AND tonumber(mvindex(split(ver,&quot;.&quot;),2))&lt;=0)))),1,0)
-| where mitigated=0 AND (vuln_version=1 OR isnull(ver))
-| stats latest(ver) as version, latest(_raw) as sample, min(_time) as first_seen, max(_time) as last_seen by host, source
-| sort - last_seen</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-122-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-122-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-122-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-122-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-54052&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-122-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-54052&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-122-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-122-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-122-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-122-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-54052&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-122-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-54052&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-123" data-art-slug="2026-07-14-ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -14238,6 +13957,267 @@ Cross-checked against:
 | stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(src) as sources by host, sourcetype
 | convert ctime(firstTime) ctime(lastTime)
 | sort - count</code></pre></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-149" data-art-slug="2026-07-10-ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="vcs,web-app,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-50551: SiYuan: Stored XSS to RCE via Unsanitized Attribute View Asset Cell Content SiYuan: Stored XSS to RCE via attribute-view cell rendering in genAVValueHTML() CVE-2026-54158 CVE-2026-50551 T1190 [LLM] SiYuan Electron client spawns command interpreter (XSS-to-RCE via child_process) [LLM] Outbound network connection from a child process of SiYuan.exe (post-RCE C2/exfil) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-56mp-4f3v-fgj2" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-50551: SiYuan: Stored XSS to RCE via Unsanitized Attribute View Asset Cell Content</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-10</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">SiYuan: Stored XSS to RCE via attribute-view cell rendering in genAVValueHTML()</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54158</span> <span class="ind cve">CVE-2026-50551</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-149-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-149"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-149-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SiYuan Electron client spawns command interpreter (XSS-to-RCE via child_process)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound network connection from a child process of SiYuan.exe (post-RCE C2/exfil)</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="255a23e7f7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,web-app,windows" open>
+  <summary>
+    <span class="uc-title">SiYuan Electron client spawns command interpreter (XSS-to-RCE via child_process)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="255a23e7f7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the RCE payoff of CVE-2026-50551/CVE-2026-44588: a stored XSS in an attribute-view cell executes in the SiYuan renderer (nodeIntegration:true) and calls require(&#x27;child_process&#x27;) to run native commands. A note-taking app spawning cmd/powershell/wscript is the concrete, article-specific outcome.
+
+Rationale: Uses the article&#x27;s concrete RCE mechanism — Electron nodeIntegration renderer calling require(&#x27;child_process&#x27;) — pinned to the named parent binary SiYuan.exe. A knowledge/notes app spawning shells is near-zero baseline. Cross-checked against the SiYuan advisory, CVE-2026-39846 (same require(&#x27;child_process&#x27;).exec RCE pattern) and neighbor CVE-2026-44588.
+
+Cross-checked against:
+  • https://github.com/siyuan-note/siyuan/security/advisories/GHSA-56mp-4f3v-fgj2
+  • https://github.com/advisories/GHSA-phhp-9rm9-6gr2
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-39846/
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-50551</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SiYuan plugins that legitimately shell out (e.g. git-sync plugins invoking git via cmd.exe)</li><li>SiYuan updater/installer spawning a helper via cmd during version upgrade</li><li>A user-configured export/pandoc pipeline that SiYuan launches through a shell</li><li>Admin manually launching SiYuan from a script that reparents a console child</li><li>Security tooling that reparents processes and mislabels SiYuan.exe as the parent</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;\\git.exe&quot;,&quot;pandoc&quot;,&quot;--update&quot;,&quot;siyuan-updater&quot;) and InitiatingProcessCommandLine has &quot;SiYuan&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child ProcessCommandLine and grandparent chain — benign hits are git/pandoc/updater with recognizable args; malicious hits show base64/IEX/download-cradle or `calc`/reconnaissance commands and correlate to a recently opened note with an attribute-view. 2) Contain: isolate the host, kill the SiYuan.exe process tree, and block outbound from any spawned child; preserve the offending data/storage/av/&lt;avID&gt;.json for analysis. 3) Hunt: enumerate the user&#x27;s synced workspace peers (same account/sync target) for the same av JSON, and check DeviceNetworkEvents for the spawned child reaching external hosts. Push SiYuan &gt;= 3.7.0.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-149-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-149-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-149-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-149-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-149-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-149-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-149-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;SiYuan.exe&quot;
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;calc.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName endswith &quot;\\SiYuan.exe&quot;
+| where NewProcessName has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\wscript.exe&quot;,&quot;\\cscript.exe&quot;,&quot;\\mshta.exe&quot;,&quot;\\rundll32.exe&quot;,&quot;\\regsvr32.exe&quot;,&quot;\\curl.exe&quot;,&quot;\\bitsadmin.exe&quot;,&quot;\\certutil.exe&quot;,&quot;\\calc.exe&quot;)
+| where SubjectUserName !endswith &quot;$&quot;
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SiYuan Electron Client Spawning Command Interpreter (XSS-to-RCE)
+id: 8f2b6d14-3c7a-4e51-9b0a-2d6f7c1a9e33
+description: Detects the SiYuan desktop (Electron nodeIntegration) renderer spawning a shell/LOLBIN, the RCE payoff of CVE-2026-50551 stored XSS in attribute-view cells.
+references:
+  - https://github.com/advisories/GHSA-56mp-4f3v-fgj2
+  - https://github.com/advisories/GHSA-phhp-9rm9-6gr2
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1203
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith: &#x27;\SiYuan.exe&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\mshta.exe&#x27;
+      - &#x27;\rundll32.exe&#x27;
+      - &#x27;\regsvr32.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\calc.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\SiYuan.exe OR *\\siyuan.exe OR *\\SIYUAN.EXE) @Image:(*\\cmd.exe OR *\\Cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\curl.exe OR *\\certutil.exe OR *\\calc.exe)</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/siyuan\.exe$/i
+| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|curl|bitsadmin|certutil|calc)\.exe$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-149-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-149-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-149-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;SiYuan.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;calc.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-149-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;SiYuan.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;calc.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fc3bd53fe9" data-platforms="def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Outbound network connection from a child process of SiYuan.exe (post-RCE C2/exfil)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="fc3bd53fe9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts C2/exfil following CVE-2026-50551 exploitation: after the SiYuan renderer&#x27;s XSS runs require(&#x27;child_process&#x27;), the spawned interpreter/LOLBIN beacons out to attacker infrastructure. A shell whose parent is SiYuan.exe making a public egress is a high-signal post-exploitation pivot.
+
+Rationale: Pivots on the article&#x27;s RCE mechanism into the network phase: a child of the named SiYuan.exe binary reaching a public host. Scoping to InitiatingProcessParentFileName == SiYuan.exe keeps FP near zero because SiYuan&#x27;s own sync traffic originates from SiYuan.exe itself, not from a spawned shell. Sentinel/Datadog left blank — the listed Sentinel tables have no per-process egress with parent context, and Sysmon EID3 carries no ParentImage, so the parent scoping can&#x27;t be expressed there.
+
+Cross-checked against:
+  • https://github.com/siyuan-note/siyuan/security/advisories/GHSA-56mp-4f3v-fgj2
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-39846/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A SiYuan git-sync plugin spawning git.exe that fetches over HTTPS</li><li>SiYuan update process invoking curl/bitsadmin to pull a release artifact</li><li>A user macro/export that shells out to a network-enabled CLI</li><li>certutil/curl launched by SiYuan for a legitimate asset download</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;b3log.org&quot;,&quot;liuyun.io&quot;) or InitiatingProcessCommandLine has_any (&quot;\\git.exe&quot;,&quot;--update&quot;,&quot;siyuan-updater&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve RemoteIP/RemoteUrl reputation and inspect InitiatingProcessCommandLine — download cradles, base64, or raw IP beacons are malicious; a known package/update domain is likely benign. 2) Contain: isolate the host, kill the SiYuan.exe child tree, and block the destination at egress. 3) Hunt: correlate to UC1 process spawns on the same host/timeframe, sweep synced workspace peers for the same data/storage/av JSON payload, and confirm SiYuan is upgraded to &gt;= 3.7.0.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-149-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-149-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-149-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-149-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-149-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessParentFileName =~ &quot;SiYuan.exe&quot;
+| where InitiatingProcessFileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| project Timestamp, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-149-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where InitiatingProcessParentFileName =~ &quot;SiYuan.exe&quot;
+| where InitiatingProcessFileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| project TimeGenerated, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-149-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=*
+| join(query={#event_simpleName=ProcessRollup2 ParentBaseFileName=/siyuan\.exe$/i}, field=ContextProcessId, key=TargetProcessId, include=[ImageFileName, ParentBaseFileName])
+| ImageFileName=/\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|curl|bitsadmin|certutil)\.exe$/i
+| groupBy([aid, ComputerName, ImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-149-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-149-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-149-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-149-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.parent_process_name=&quot;SiYuan.exe&quot; AND All_Traffic.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.parent_process_name All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-149-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.parent_process_name=&quot;SiYuan.exe&quot; AND All_Traffic.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;curl.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.parent_process_name All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-149-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-149-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-149-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-149-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-149-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-149-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-149-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-149-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-149-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-149-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-54158&quot;, &quot;CVE-2026-50551&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
