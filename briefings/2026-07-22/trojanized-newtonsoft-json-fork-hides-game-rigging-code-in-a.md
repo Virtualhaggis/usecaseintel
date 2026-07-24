@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Trojanized NuGet typosquat 'Newtonsoftt.Json.Net' restored into a .NET build
 
-`UC_53_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_57_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### Newtonsoftt.Json.Net trojan C2/exfil beacon to 185.126.237.64:5341
 
-`UC_53_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

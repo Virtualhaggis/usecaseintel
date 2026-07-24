@@ -11,12 +11,8 @@ By Sergiu Gatlan
 July 24, 2026
 08:56 AM
 0 
-
-
 Europol has flagged 4,340 URLs for removal during a multi-week operation targeting online content linked to "The Com," a loosely organized network of nihilistic violent extremist groups.
-
-
-Investigators from nine countries (i.e., Belgium, Finland, Hungary, Ireland, Luxembourg, the Netherlands, Portugal, Spain, and Sweden) took part in what Europol called "Referral Action Days" between J…
+Investigators from nine countries (i.e., Belgium, Finland, Hungary, Ireland, Luxembourg, the Netherlands, Portugal, Spain, and Sweden) took part in what Europol called "Referral Action Days" between June and …
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -93,7 +93,7 @@ _(none detected from narrative keywords)_
 
 ### SmartLoader LuaJIT loader chain: luajit.exe/Compiler.exe executing userdata.txt Lua script
 
-`UC_86_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### SmartLoader persistence: LuaJIT runtime copied to %AppData%\ODE3 (module.class/lua51.dll)
 
-`UC_86_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_90_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceFileEvents
 
 ### SmartLoader blockchain C2: non-browser process resolving pasteflawwed[.]world / Polygon eth_call dead-drop
 
-`UC_86_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_90_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

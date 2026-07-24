@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — JavaScript frameworks security report 2019
 
-`UC_3456_0` · phase: **exploit** · confidence: **High**
+`UC_3457_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

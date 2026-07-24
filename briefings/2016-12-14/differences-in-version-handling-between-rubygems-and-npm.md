@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Differences in version handling between RubyGems and npm
 
-`UC_3653_0` · phase: **exploit** · confidence: **High**
+`UC_3654_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

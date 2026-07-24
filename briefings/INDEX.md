@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2593 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2594 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,8 +11,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-24
 - [2026 mid year update on pace for our biggest year yet](./2026-07-24/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [bing images flaws let crafted svgs run commands as system on](./2026-07-24/bing-images-flaws-let-crafted-svgs-run-commands-as-system-on.md)
+- [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
 - [clop ransomware targets windchill flexplm in data theft atta](./2026-07-24/clop-ransomware-targets-windchill-flexplm-in-data-theft-atta.md)
+- [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-24/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
 - [europol flags 4 340 urls for removal in the com crackdown](./2026-07-24/europol-flags-4-340-urls-for-removal-in-the-com-crackdown.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
 - [golden chickens resurfaces with four new malware families an](./2026-07-24/golden-chickens-resurfaces-with-four-new-malware-families-an.md)
@@ -20,6 +22,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
 - [seeing ai agents is not enough security teams must enforce w](./2026-07-24/seeing-ai-agents-is-not-enough-security-teams-must-enforce-w.md)
+- [slopsquatting phantom domains and hallusquatting are the sam](./2026-07-24/slopsquatting-phantom-domains-and-hallusquatting-are-the-sam.md)
 
 ## 2026-07-23
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
@@ -94,7 +97,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
-- [sleepergem uses three malicious rubygems packages to target ](./2026-07-20/sleepergem-uses-three-malicious-rubygems-packages-to-target-.md)
 - [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
 ## 2026-07-19
@@ -863,7 +865,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-12-15
 - [cisa kev cve 2025 14611 gladinet centrestack and triofox har](./2025-12-15/cisa-kev-cve-2025-14611-gladinet-centrestack-and-triofox-har.md)
 - [cisa kev cve 2025 43529 apple multiple products use after fr](./2025-12-15/cisa-kev-cve-2025-43529-apple-multiple-products-use-after-fr.md)
-- [critical remote code execution vulnerabilities discovered in](./2025-12-15/critical-remote-code-execution-vulnerabilities-discovered-in.md)
 
 ## 2025-12-12
 - [cisa kev cve 2018 4063 sierra wireless airlink aleos unrestr](./2025-12-12/cisa-kev-cve-2018-4063-sierra-wireless-airlink-aleos-unrestr.md)

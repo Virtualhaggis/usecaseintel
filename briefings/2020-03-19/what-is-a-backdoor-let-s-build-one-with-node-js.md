@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js process spawning OS command shell (child_process.exec backdoor)
 
-`UC_3388_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3389_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Inbound web request to Node app with ?cmd= command-injection backdoor parameter
 
-`UC_3388_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3389_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Installation of malicious npm package 'browser-redirect' (supply-chain backdoor)
 
-`UC_3388_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3389_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What is a backdoor? Let’s build one with Node.js
 
-`UC_3388_1` · phase: **exploit** · confidence: **High**
+`UC_3389_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

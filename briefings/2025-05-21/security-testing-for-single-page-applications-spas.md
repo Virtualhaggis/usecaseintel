@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Security Testing for Single-Page Applications (SPAs)
 
-`UC_946_0` · phase: **exploit** · confidence: **High**
+`UC_947_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Trivy supply-chain C2 beacon to typosquat domain scan.aquasecurtiy.org
 
-`UC_536_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_539_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ union isfuzzy=true
 
 ### Compromised trivy binary (v0.69.4-v0.69.6) execution by SHA1 hash
 
-`UC_536_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_539_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ union isfuzzy=true
 
 ### GitHub Actions runner credential stealer: python3 base64-decoded payload reading /proc/<pid>/mem
 
-`UC_536_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_539_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -293,7 +293,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trivy Compromised a Second Time - Malicious v0.69.4 Release, aquasecurity/setup-
 
-`UC_536_6` · phase: **exploit** · confidence: **High**
+`UC_539_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

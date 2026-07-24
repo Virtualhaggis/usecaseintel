@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Comparing Node.js web frameworks: Which is most secure?
 
-`UC_1808_1` · phase: **exploit** · confidence: **High**
+`UC_1809_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
