@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Host command injection via AppAgent 'adb shell input text' with shell metacharacters
 
-`UC_91_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_96_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### Mobile-agent host RCE artifact: 'rce_success' file written by adb/python driver
 
-`UC_91_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_96_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Unauthenticated ADB keyboard broadcast (ADB_INPUT_B64 / ADB_INPUT_TEXT) from agent host
 
-`UC_91_13` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_96_13` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

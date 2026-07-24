@@ -11,15 +11,9 @@ By Bill Toulas
 July 24, 2026
 03:55 PM
 0 
-
-
 OnTrac parcel delivery company is informing that hackers breached its corporate network and may have accessed personal details belonging to its customers.
-
-
 The incident was detected on March 23, and an internal investigation revealed that the attacker accessed certain files between March 20 and 22.
-
-
-Apart from names, it is unclear what type of information was exposed, as the company r…
+Apart from names, it is unclear what type of information was exposed, as the company redacted the …
 
 ## Indicators of Compromise (high-fidelity only)
 
