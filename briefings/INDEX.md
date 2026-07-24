@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-24
+- [clop ransomware targets windchill flexplm in data theft atta](./2026-07-24/clop-ransomware-targets-windchill-flexplm-in-data-theft-atta.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
+- [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
+- [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
 
 ## 2026-07-23
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
@@ -45,7 +48,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [real world incident response microsoft and axa xl strengthen](./2026-07-22/real-world-incident-response-microsoft-and-axa-xl-strengthen.md)
 - [sol searching can frontier models tackle autonomous long hor](./2026-07-22/sol-searching-can-frontier-models-tackle-autonomous-long-hor.md)
 - [sql injection isn t dead](./2026-07-22/sql-injection-isn-t-dead.md)
-- [swiss rail giant stadler rejects 12 3m ransom demand after c](./2026-07-22/swiss-rail-giant-stadler-rejects-12-3m-ransom-demand-after-c.md)
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 - [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
 - [ubuntu snap confine flaw could give local users root on defa](./2026-07-22/ubuntu-snap-confine-flaw-could-give-local-users-root-on-defa.md)
@@ -96,10 +98,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-17
-- [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
 - [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
 - [openssl hollowbyte flaw could freeze server memory with 11 b](./2026-07-17/openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b.md)
-- [seven malicious vite npm packages use blockchain c2 to deliv](./2026-07-17/seven-malicious-vite-npm-packages-use-blockchain-c2-to-deliv.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
 - [unauthenticated rce in wordpress core wp2shell via sql injec](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec.md)
 
