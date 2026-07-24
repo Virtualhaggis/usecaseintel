@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2595 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2597 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -27,6 +27,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa w28w gp39 m4p6 prompty server side templa](./2026-07-24/ghsa-critical-ghsa-w28w-gp39-m4p6-prompty-server-side-templa.md)
 - [golden chickens resurfaces with four new malware families an](./2026-07-24/golden-chickens-resurfaces-with-four-new-malware-families-an.md)
 - [hacker runs hermes ai agent unattended for post exploitation](./2026-07-24/hacker-runs-hermes-ai-agent-unattended-for-post-exploitation.md)
+- [hackers hijack hotel wi fi dns to steal microsoft 365 accoun](./2026-07-24/hackers-hijack-hotel-wi-fi-dns-to-steal-microsoft-365-accoun.md)
+- [hermes ai agent used to automate attack on thai finance mini](./2026-07-24/hermes-ai-agent-used-to-automate-attack-on-thai-finance-mini.md)
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
 - [seeing ai agents is not enough security teams must enforce w](./2026-07-24/seeing-ai-agents-is-not-enough-security-teams-must-enforce-w.md)

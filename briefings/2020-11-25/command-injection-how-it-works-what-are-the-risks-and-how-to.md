@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### systeminformation inetChecksite curl argument injection (CVE-2020-7752)
 
-`UC_3242_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3243_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Arbitrary child process from systeminformation inetChecksite shell pipeline
 
-`UC_3242_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3243_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Command injection: how it works, what are the risks, and how to prevent it
 
-`UC_3242_0` · phase: **exploit** · confidence: **High**
+`UC_3243_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

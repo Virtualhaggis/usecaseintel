@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### FortiBleed password-spray success burst against internet-facing Fortinet/edge auth
 
-`UC_267_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_268_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate jsconsole / loopback admin login (CVE-2024-55591 auth-bypass exploitation)
 
-`UC_267_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_268_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate rogue super_admin / SSL-VPN account creation following CVE-2024-55591 exploit
 
-`UC_267_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_268_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ _(none detected from narrative keywords)_
 
 ### FortiBleed MSSQL login-failure burst then success (internet-exposed SQL spraying)
 
-`UC_267_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_268_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

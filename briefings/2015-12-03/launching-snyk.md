@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Launching Snyk
 
-`UC_3683_0` · phase: **exploit** · confidence: **High**
+`UC_3684_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

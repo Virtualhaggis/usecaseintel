@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Securing PHP containers
 
-`UC_2073_4` · phase: **exploit** · confidence: **High**
+`UC_2074_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

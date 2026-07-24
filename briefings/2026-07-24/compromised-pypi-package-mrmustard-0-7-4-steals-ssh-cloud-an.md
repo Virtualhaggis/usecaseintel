@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised PyPI Package: mrmustard 0.7.4 Steals SSH, Cloud, and Kubernetes Cred
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_5_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure: hosts running python-multipart ≤0.0.6 / FastAPI ≤0.109.0 vulnerable to CVE-2024-24762 ReDoS
 
-`UC_1264_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1265_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### CVE-2024-24762 ReDoS exploitation: overlong Content-Type header / stalled POST to FastAPI form endpoint
 
-`UC_1264_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1265_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
-`UC_1264_1` · phase: **exploit** · confidence: **High**
+`UC_1265_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### tj-actions/changed-files compromise: self-hosted runner egress to nikitastupin memdump gist (CVE-2025-30066)
 
-`UC_645_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_646_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### tj-actions/changed-files compromise: memdump.py secret-exfiltration shell pattern on runner (CVE-2025-30066)
 
-`UC_645_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_646_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### tj-actions/changed-files compromise: malicious commit SHA 0e58ed86... referenced on host (CVE-2025-30066)
 
-`UC_645_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_646_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II: xz utility misused as 'cat' to read sensitive files (CVE-2025-40948)
 
-`UC_112_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_113_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II web management: shell metacharacters in HTTP requests (CVE-2025-40947/40949 command injection)
 
-`UC_112_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_113_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II: malicious root cron entry via web task scheduler (CVE-2025-40949)
 
-`UC_112_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_113_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens ROX II: three-stage zero-day chain correlated on one device (CVE-2025-40948→40947→40949)
 
-`UC_112_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_113_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ _(none detected from narrative keywords)_
 
 ### Ruggedcom ROX II firmware exposed to CVE-2025-40947/40948/40949 (below V2.17.1)
 
-`UC_112_8` · phase: **recon** · confidence: **Low** · AI-generated for this article
+`UC_113_8` · phase: **recon** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
 
-`UC_112_3` · phase: **install** · confidence: **High**
+`UC_113_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
