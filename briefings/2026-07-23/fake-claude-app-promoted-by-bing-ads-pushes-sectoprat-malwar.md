@@ -11,15 +11,9 @@ By Bill Toulas
 July 23, 2026
 03:48 PM
 0 
-
-
 A malvertising campaign on the Bing search service is pushing a fake Claude desktop app installer hosted on a legitimate Claude.ai domain to deliver the SectopRAT malware.
-
-
 At least 29 organizations were compromised between July 21-22 during the malicious operation, which researchers call FakeAgent.
-
-
-The attacker uses a malicious Claude Artifact hosted on Claude’s legitimate domain,…
+The attacker uses a malicious Claude Artifact hosted on Claude’s legitimate domain, which is a …
 
 ## Indicators of Compromise (high-fidelity only)
 
