@@ -38,12 +38,72 @@ CVE-2…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
+- **T1552.001** — Credentials In Files
+- **T1005** — Data from Local System
+- **T1006** — Direct Volume Access
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1053** — Scheduled Task/Job
+- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Siemens ROX II: xz utility misused as 'cat' to read sensitive files (CVE-2025-40948)
+
+`UC_101_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="xz" (Processes.process="*-dc*" OR Processes.process="*--stdout*" OR Processes.process="*--decompress*" OR Processes.process="*-d *") (Processes.process="*/etc/shadow*" OR Processes.process="*/etc/passwd*" OR Processes.process="*id_rsa*" OR Processes.process="*.pem*" OR Processes.process="*.key*" OR Processes.process="*/etc/ssh/*") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user="root" | sort - lastTime
+```
+
+### Siemens ROX II web management: shell metacharacters in HTTP requests (CVE-2025-40947/40949 command injection)
+
+`UC_101_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*%3B*" OR Web.url="*;*" OR Web.url="*%7C*" OR Web.url="*|*" OR Web.url="*$(*" OR Web.url="*%24%28*" OR Web.url="*`*" OR Web.url="*%60*" OR Web.url="*%26%26*" OR Web.url="*&&*") by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
+### Siemens ROX II: malicious root cron entry via web task scheduler (CVE-2025-40949)
+
+`UC_101_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/crontab" OR Filesystem.file_path="*/etc/cron.d/*" OR Filesystem.file_path="*/var/spool/cron/crontabs/root*" OR Filesystem.file_path="*/var/spool/cron/root*") by Filesystem.dest Filesystem.file_path Filesystem.action Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+### Siemens ROX II: three-stage zero-day chain correlated on one device (CVE-2025-40948→40947→40949)
+
+`UC_101_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name="xz" (Processes.process="*id_rsa*" OR Processes.process="*shadow*" OR Processes.process="*.pem*" OR Processes.process="*.key*") by _time span=15m Processes.dest | `drop_dm_object_name(Processes)` | eval stage="disclosure" | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/crontab" OR Filesystem.file_path="*/etc/cron.d/*" OR Filesystem.file_path="*/var/spool/cron/crontabs/root*") by _time span=15m Filesystem.dest | `drop_dm_object_name(Filesystem)` | eval stage="persistence"] | bin _time span=15m | stats dc(stage) as stages values(stage) as stages_seen sum(count) as events by dest _time | where stages>=2 | sort - _time
+```
+
+### Ruggedcom ROX II firmware exposed to CVE-2025-40947/40948/40949 (below V2.17.1)
+
+`UC_101_8` · phase: **recon** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve="CVE-2025-40947" OR Vulnerabilities.cve="CVE-2025-40948" OR Vulnerabilities.cve="CVE-2025-40949") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ('CVE-2025-40947','CVE-2025-40948','CVE-2025-40949')
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by DeviceName asc
+```
 
 ### Scheduled task created with suspicious image / encoded args
 
@@ -145,4 +205,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

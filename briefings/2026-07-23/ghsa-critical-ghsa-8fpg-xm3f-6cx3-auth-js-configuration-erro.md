@@ -22,7 +22,6 @@ When the Auth.js configuration produces a server-side error, the `auth` object e
 
 - **T1204.002** — User Execution: Malicious File
 - **T1556** — Modify Authentication Process
-- **T1190** — Exploit Public-Facing Application
 - **T1078** — Valid Accounts
 
 ## Kill chain phases observed
@@ -31,36 +30,45 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Auth.js (next-auth v5) server-configuration error surfaced in application logs (fail-open trigger)
+### Auth.js v5 fail-open trigger: server-configuration error emitted in app logs
 
 `UC_10_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype IN ("nodejs","nextjs","node:application") ("[auth][error]") ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET" OR "There was a problem with the server configuration") | stats count AS hits, min(_time) AS firstSeen, max(_time) AS lastSeen, values(source) AS sources BY host | sort - hits
+index=* ("[auth][error]") ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET" OR "problem with the server configuration")
+| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sampleLog by host, source, sourcetype
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
-### HTTP 500 on Auth.js /api/auth/session endpoint (@auth/core error body read as session)
+### Auth.js fail-open: protected-route access succeeds during a config-error window
 
 `UC_10_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, min(_time) AS firstSeen, max(_time) AS lastSeen FROM datamodel=Web.Web WHERE Web.status=500 Web.url="*/api/auth/session*" BY Web.site, Web.src, Web.url
-| `drop_dm_object_name(Web)`
-| sort - count
+| tstats summariesonly=true count from datamodel=Web where Web.status IN ("200","302") Web.url="/api/*" NOT Web.url="/api/auth*" by _time span=5m, Web.site, Web.src, Web.url, Web.status
+| rename Web.* as *
+| join type=inner _time [
+    search index=* "[auth][error]"
+    | bin _time span=5m
+    | stats count as authErrors by _time ]
+| where authErrors > 0
+| stats sum(count) as okProtectedReqs values(url) as urls values(src) as sourceIPs by _time, site
+| sort - _time
 ```
 
-### Auth.js fail-open evidence: successful protected-route access within window of /api/auth 500 error
+### Auth.js: protected /api access returning success with no session cookie (fail-open evidence)
 
-`UC_10_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count(eval(Web.status=500 AND like(Web.url,"%/api/auth/%"))) AS auth_errors, count(eval(Web.status IN (200,302) AND NOT like(Web.url,"%/api/auth/%") AND NOT like(Web.url,"%/_next/%"))) AS authed_access FROM datamodel=Web.Web BY Web.src, Web.site, _time span=5m
-| `drop_dm_object_name(Web)`
-| where auth_errors > 0 AND authed_access > 0
-| sort - _time
+index=* sourcetype=*:access* (status=200 OR status=302) uri_path="/api/*" NOT uri_path="/api/auth*" NOT cookie="*authjs.session-token*"
+| stats count as reqs values(uri_path) as paths dc(src_ip) as srcIPs by host, src_ip
+| where reqs > 0
+| sort - reqs
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
@@ -115,4 +123,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

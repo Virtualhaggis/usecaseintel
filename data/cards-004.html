@@ -4180,11 +4180,11 @@ level: critical
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1053.005,T1059.001,T1190"
   data-sources="Unit 42 (Palo Alto)"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="4" data-llm-uc-count="0"
-  data-search="Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy A technical analysis of three chained zero-day vulnerabilities in Siemens ROX II OT switches that allow privilege escalation and persistent root access. The post Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy appeared first on Unit 42 . CVE-2025-40947 CVE-2025-40948 CVE-2025-40949 T1053.005 T1059.001 T1190 Asset exposure — vulnerability matches article CVE(s) Scheduled task created with suspicious image / encoded args PowerShell encoded / obfuscated command Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy">
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
+  data-targets="linux,windows"
+  data-uc-count="9" data-llm-uc-count="5"
+  data-search="Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy A technical analysis of three chained zero-day vulnerabilities in Siemens ROX II OT switches that allow privilege escalation and persistent root access. The post Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy appeared first on Unit 42 . CVE-2025-40947 CVE-2025-40948 CVE-2025-40949 T1053.005 T1059.001 T1190 [LLM] Siemens ROX II: xz utility misused as &#x27;cat&#x27; to read sensitive files (CVE-2025-40948) [LLM] Siemens ROX II web management: shell metacharacters in HTTP requests (CVE-2025-40947/40949 command injection) [LLM] Siemens ROX II: malicious root cron entry via web task scheduler (CVE-2025-40949) [LLM] Siemens ROX II: three-stage zero-day chain correlated on one device (CVE-2025-40948→40947→40949) [LLM] Ruggedcom ROX II firmware exposed to CVE-2025-40947/40948/40949 (below V2.17.1) Asset exposure — vulnerability matches article CVE(s) Scheduled task created with suspicious image / encoded args PowerShell encoded / obfuscated command Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-17-three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -4193,7 +4193,7 @@ level: critical
   <div class="source-badges"><span class="source-badge unit42">Unit 42 (Palo Alto)</span></div>
   <div class="pubmeta">
     <span>2026-07-17</span>
-    <span>4 use cases</span>
+    <span>9 use cases</span>
     <span>3 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -4241,15 +4241,283 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Siemens ROX II: xz utility misused as &#x27;cat&#x27; to read sensitive files (CVE-2025-40948) · [LLM] Ruggedcom ROX II firmware exposed to CVE-2025-40947/40948/40949 (below V2.17.1) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Scheduled task created with suspicious image / encoded args · Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Siemens ROX II web management: shell metacharacters in HTTP requests (CVE-2025-40947/40949 command injection) · PowerShell encoded / obfuscated command</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Siemens ROX II: malicious root cron entry via web task scheduler (CVE-2025-40949) · [LLM] Siemens ROX II: three-stage zero-day chain correlated on one device (CVE-2025-40948→40947→40949) · Scheduled task created with suspicious image / encoded args · Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="b5dfc9a52d" data-platforms="datadog,sent,sigma,spl" data-targets="linux" open>
+  <summary>
+    <span class="uc-title">Siemens ROX II: xz utility misused as &#x27;cat&#x27; to read sensitive files (CVE-2025-40948)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b5dfc9a52d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the CVE-2025-40948 arbitrary file disclosure primitive, where the root-privileged xz utility on a Ruggedcom ROX II switch is invoked with decompress-to-stdout flags against sensitive files (shadow, private keys, config) to function like cat. Article-specific because it keys on xz — not a generic file-read tool — reading credential/key material.
+
+Rationale: Anchored on the article&#x27;s explicit CVE-2025-40948 mechanic: &#x27;xz can be used with specific parameters to function like the standard Linux cat command&#x27; running as root to disclose &#x27;password hashes and private cryptographic keys&#x27;. Defender/Falcon/CloudWatch left empty — Ruggedcom ROX II is an embedded OT switch with no EDR agent; only forwarded Syslog/auditd carries this. Cross-checked NVD and CISA ICS advisory.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2025-40947
+  • https://www.cisa.gov/news-events/ics-advisories/icsa-26-134-02
+  • https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="Direct Volume Access">T1006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin decompressing a .xz backup/log archive to stdout (but rarely against /etc/shadow or key paths)</li><li>Siemens support script bundling config for a support case</li><li>Firmware update tooling reading signed packages</li><li>Backup jobs streaming compressed config to a collector</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SyslogMessage has &#x27;.xz&#x27; and SyslogMessage has_any (&#x27;/tmp/&#x27;,&#x27;/var/backup&#x27;,&#x27;/opt/backup&#x27;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: On the flagged ROX II, confirm the xz invocation targeted /etc/shadow, SSH/private keys, or feature-key config, and identify the initiating session/user — legitimate decompression targets a .xz archive, not credential files. 2) CONTAIN: Isolate the switch&#x27;s management VLAN, rotate any exposed SSH host keys / device credentials, and force a config/credential reset; verify firmware is &gt;= V2.17.1. 3) HUNT: Pivot on the same host/session for subsequent command-injection (feature key) and root cron writes — the next two stages of the chain.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where ProcessName == &#x27;xz&#x27; or SyslogMessage has &#x27;xz &#x27;
+| where SyslogMessage has_any (&#x27;-dc&#x27;,&#x27;--stdout&#x27;,&#x27;--decompress&#x27;,&#x27;-d &#x27;)
+| where SyslogMessage has_any (&#x27;/etc/shadow&#x27;,&#x27;/etc/passwd&#x27;,&#x27;id_rsa&#x27;,&#x27;.pem&#x27;,&#x27;.key&#x27;,&#x27;/etc/ssh/&#x27;,&#x27;feature&#x27;)
+| project TimeGenerated, Computer, Facility, ProcessName, SyslogMessage
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Siemens ROX II xz Utility Misused for Arbitrary File Disclosure
+id: 6a1f2c34-9d5e-4f81-b2a7-8c4e0f9a1b23
+description: Detects the root-privileged xz utility on Ruggedcom ROX II being invoked with decompress-to-stdout flags against sensitive files (CVE-2025-40948), effectively acting as cat to read credentials and keys.
+references:
+  - https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/
+  - https://nvd.nist.gov/vuln/detail/CVE-2025-40947
+author: SOC Detection Engineering
+date: 2026/07/24
+tags:
+  - attack.t1552.001
+  - attack.t1005
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_bin:
+    Image|endswith: &#x27;/xz&#x27;
+  selection_flags:
+    CommandLine|contains:
+      - &#x27;-dc&#x27;
+      - &#x27;--stdout&#x27;
+      - &#x27;--decompress&#x27;
+  selection_target:
+    CommandLine|contains:
+      - &#x27;/etc/shadow&#x27;
+      - &#x27;/etc/passwd&#x27;
+      - &#x27;id_rsa&#x27;
+      - &#x27;.pem&#x27;
+      - &#x27;.key&#x27;
+      - &#x27;/etc/ssh/&#x27;
+  condition: selection_bin and selection_flags and selection_target
+level: high</code></pre></div>
+    <div class="tab-content" id="art-101-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:xz @process.command_line:(*shadow* OR *passwd* OR *id_rsa* OR *.pem* OR *.key* OR */etc/ssh/*)</code></pre></div>
+    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;xz&quot; (Processes.process=&quot;*-dc*&quot; OR Processes.process=&quot;*--stdout*&quot; OR Processes.process=&quot;*--decompress*&quot; OR Processes.process=&quot;*-d *&quot;) (Processes.process=&quot;*/etc/shadow*&quot; OR Processes.process=&quot;*/etc/passwd*&quot; OR Processes.process=&quot;*id_rsa*&quot; OR Processes.process=&quot;*.pem*&quot; OR Processes.process=&quot;*.key*&quot; OR Processes.process=&quot;*/etc/ssh/*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user=&quot;root&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;xz&quot; (Processes.process=&quot;*-dc*&quot; OR Processes.process=&quot;*--stdout*&quot; OR Processes.process=&quot;*--decompress*&quot; OR Processes.process=&quot;*-d *&quot;) (Processes.process=&quot;*/etc/shadow*&quot; OR Processes.process=&quot;*/etc/passwd*&quot; OR Processes.process=&quot;*id_rsa*&quot; OR Processes.process=&quot;*.pem*&quot; OR Processes.process=&quot;*.key*&quot; OR Processes.process=&quot;*/etc/ssh/*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user=&quot;root&quot; | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="eef503bbf7" data-platforms="sent,sigma,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Siemens ROX II web management: shell metacharacters in HTTP requests (CVE-2025-40947/40949 command injection)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="eef503bbf7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the authenticated command-injection surface of Ruggedcom ROX II — the feature-key validation (CVE-2025-40947) and web task-scheduler (CVE-2025-40949) endpoints — by flagging HTTP requests to the switch&#x27;s web management interface carrying shell metacharacters or command substitution. Article-specific: both flaws inject an attacker-controlled payload into a root-privileged command via the web GUI.
+
+Rationale: Both CVE-2025-40947 (feature key validation &#x27;fails to sanitize an attacker-controlled payload before inserting it directly into a command executed with root privileges&#x27;) and CVE-2025-40949 (scheduler &#x27;improper input sanitization&#x27;) are web-authenticated command injections, so shell metacharacters over HTTP to the mgmt GUI is the observable. Datadog/Falcon empty — no NGFW web source in scope; Defender empty (OT switch). Corroborated via NVD, which classes CVE-2025-40947 as authenticated command injection.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2025-40947
+  • https://windowsnews.ai/article/ruggedcom-rox-cve-2025-40947-siemens-patches-authenticated-command-injection-in-industrial-routers.418280
+  • https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate config values that legitimately contain &#x27;&amp;&#x27; or &#x27;;&#x27; (e.g. URL query params, RADIUS strings) submitted via the GUI</li><li>Automated config-backup tooling POSTing complex payloads</li><li>Vulnerability scanners (Nessus/Qualys) probing the mgmt interface</li><li>Analyst penetration testing of the ROX II device</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RequestClientApplication has_any (&#x27;Nessus&#x27;,&#x27;Qualys&#x27;,&#x27;Nuclei&#x27;) or SourceIP in (&#x27;10.0.0.0&#x27;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Inspect the flagged request&#x27;s URL/body for genuine command substitution ($(...), backticks, ;id, |sh) vs. benign config characters, and check the HTTP response code — a 200 after an injection pattern suggests success. 2) CONTAIN: Block the source IP from the mgmt VLAN, capture the raw request, and confirm the ROX II firmware is patched to V2.17.1; disable the web GUI feature-key/scheduler endpoints if unpatched. 3) HUNT: On the same device, look for xz sensitive-file reads (stage 1) and new root cron entries (stage 3) within the following minutes.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where ApplicationProtocol in (&#x27;HTTP&#x27;,&#x27;HTTPS&#x27;) or isnotempty(RequestURL)
+| where RequestURL has_any (&#x27;;&#x27;,&#x27;|&#x27;,&#x27;$(&#x27;,&#x27;`&#x27;,&#x27;&amp;&amp;&#x27;,&#x27;%3B&#x27;,&#x27;%7C&#x27;,&#x27;%24%28&#x27;,&#x27;%60&#x27;,&#x27;%26%26&#x27;) or Message has_any (&#x27;$(&#x27;,&#x27;`;&#x27;,&#x27;|sh&#x27;,&#x27;;id&#x27;,&#x27;${IFS}&#x27;)
+| project TimeGenerated, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, Message
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Siemens ROX II Web Management Command Injection Attempt
+id: b3e7d219-4c1a-4a6f-9e02-1f7d3c5a8b40
+description: Detects HTTP requests to a Ruggedcom ROX II web management interface containing shell metacharacters or command substitution, consistent with CVE-2025-40947 (feature key) and CVE-2025-40949 (task scheduler) command injection.
+references:
+  - https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/
+  - https://nvd.nist.gov/vuln/detail/CVE-2025-40947
+author: SOC Detection Engineering
+date: 2026/07/24
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: webserver
+detection:
+  selection:
+    c-uri|contains:
+      - &#x27;;&#x27;
+      - &#x27;|&#x27;
+      - &#x27;$(&#x27;
+      - &#x27;`&#x27;
+      - &#x27;&amp;&amp;&#x27;
+      - &#x27;%3B&#x27;
+      - &#x27;%7C&#x27;
+      - &#x27;%24%28&#x27;
+      - &#x27;%60&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*;*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*`*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*%26%26*&quot; OR Web.url=&quot;*&amp;&amp;*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*;*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*`*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*%26%26*&quot; OR Web.url=&quot;*&amp;&amp;*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cbe313b78d" data-platforms="datadog,sent,sigma,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">Siemens ROX II: malicious root cron entry via web task scheduler (CVE-2025-40949)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="cbe313b78d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts CVE-2025-40949 persistence — the ROX II web management task scheduler injecting attacker commands into the root cron table, surviving reboot. Detects writes/modifications to root crontab paths on a ROX II device, especially when originating from the web management daemon rather than an interactive admin.
+
+Rationale: Directly maps CVE-2025-40949: &#x27;inject malicious commands into the system&#x27;s root cron table ... surviving system reboots&#x27;. Watches the exact persistence artifact (root crontab paths). Defender/Falcon/CloudWatch empty — OT switch, Syslog/auditd only. Datadog uses process/exec proxy since auditd source lacks a file-path facet.
+
+Cross-checked against:
+  • https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/
+  • https://www.cisa.gov/news-events/ics-advisories/icsa-26-134-02</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Scheduled Task/Job">T1053</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin scheduling a maintenance job via the ROX II scheduler GUI</li><li>Firmware update writing a post-boot cron hook</li><li>Siemens support adding a diagnostic cron entry</li><li>Monitoring agent installing a scheduled health check</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessName in (&#x27;dpkg&#x27;,&#x27;rpm&#x27;,&#x27;apt&#x27;,&#x27;yum&#x27;) or SyslogMessage has &#x27;siemens-firmware-update&#x27;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Dump the current root crontab and cron.d contents on the flagged ROX II; compare the new entry&#x27;s command against a known-good baseline — malicious entries typically call sh/curl/nc or reference /tmp payloads. 2) CONTAIN: Remove the unauthorized cron entry, isolate the mgmt VLAN, and confirm firmware is V2.17.1+; capture the entry for IR. 3) HUNT: Correlate backward for the preceding web command-injection request and xz file disclosure on the same host to confirm the full three-stage chain.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where SyslogMessage has_any (&#x27;/etc/crontab&#x27;,&#x27;/etc/cron.d/&#x27;,&#x27;/var/spool/cron/crontabs/root&#x27;,&#x27;/var/spool/cron/root&#x27;)
+| where SyslogMessage has_any (&#x27;open&#x27;,&#x27;write&#x27;,&#x27;rename&#x27;,&#x27;create&#x27;,&#x27;O_WRONLY&#x27;,&#x27;O_CREAT&#x27;) or Facility =~ &#x27;cron&#x27;
+| project TimeGenerated, Computer, Facility, ProcessName, SyslogMessage
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Siemens ROX II Root Cron Table Modification (Persistence)
+id: c8d40a15-2b6e-4d93-a1f7-5e9c2d0b7a61
+description: Detects modification of root cron paths on a Ruggedcom ROX II switch, consistent with CVE-2025-40949 persistence where the web task scheduler injects commands into the root cron table.
+references:
+  - https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/
+author: SOC Detection Engineering
+date: 2026/07/24
+tags:
+  - attack.t1053.003
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    TargetFilename|contains:
+      - &#x27;/etc/crontab&#x27;
+      - &#x27;/etc/cron.d/&#x27;
+      - &#x27;/var/spool/cron/crontabs/root&#x27;
+      - &#x27;/var/spool/cron/root&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-101-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*crontab* OR */etc/cron.d/* OR */var/spool/cron/crontabs/root*)</code></pre></div>
+    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/root*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/root*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.action Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/root*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/root*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.action Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9435c115a2" data-platforms="sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">Siemens ROX II: three-stage zero-day chain correlated on one device (CVE-2025-40948→40947→40949)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9435c115a2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlation hunt that fires when a single ROX II switch exhibits multiple stages of the documented exploit chain within a short window — xz sensitive-file disclosure and/or web command injection followed by a root cron write. Confirms active exploitation of the full &#x27;three steps to the terminal&#x27; chain rather than an isolated artifact.
+
+Rationale: Encodes the article&#x27;s central thesis — a chained exploit (&#x27;Three Steps to the Terminal&#x27;) — as temporal correlation of stage-1 xz disclosure and stage-3 root cron write on the same device within 15 minutes, which is far higher-fidelity than any single artifact. No Sigma (multi-event/temporal). Defender/Falcon/CloudWatch empty (OT switch, Syslog only).
+
+Cross-checked against:
+  • https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/
+  • https://nvd.nist.gov/vuln/detail/CVE-2025-40947</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Firmware upgrade window that both reads config (via xz) and installs cron hooks on the same device</li><li>Automated backup + scheduler-reconfiguration maintenance run</li><li>Vendor support session performing config export and job scheduling together</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Msg3 !has &#x27;siemens-firmware-update&#x27; and Msg1 !has &#x27;/var/backup&#x27;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Treat as high priority — pull all Syslog for the device across the 15-minute window and reconstruct the sequence (file read → cron write); validate whether a change window explains it. 2) CONTAIN: Isolate the switch from OT and management networks, snapshot config, remove unauthorized cron entries, rotate device credentials/keys exposed in stage 1, and schedule firmware update to V2.17.1. 3) HUNT: Search other ROX II / Ruggedcom devices in the fleet for the same stage-1/stage-3 signatures and any lateral movement from the switch into HMI/PLC segments.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 15m;
+let filedisc = Syslog
+  | where TimeGenerated &gt; ago(7d)
+  | where SyslogMessage has &#x27;xz&#x27; and SyslogMessage has_any (&#x27;/etc/shadow&#x27;,&#x27;id_rsa&#x27;,&#x27;.pem&#x27;,&#x27;.key&#x27;,&#x27;/etc/ssh/&#x27;)
+  | project T1 = TimeGenerated, Computer, Stage1 = &#x27;xz_file_read&#x27;, Msg1 = SyslogMessage;
+let cronwrite = Syslog
+  | where TimeGenerated &gt; ago(7d)
+  | where SyslogMessage has_any (&#x27;/etc/crontab&#x27;,&#x27;/etc/cron.d/&#x27;,&#x27;/var/spool/cron/crontabs/root&#x27;,&#x27;/var/spool/cron/root&#x27;)
+  | project T3 = TimeGenerated, Computer, Stage3 = &#x27;root_cron_write&#x27;, Msg3 = SyslogMessage;
+filedisc
+| join kind=inner cronwrite on Computer
+| where T3 between (T1 .. T1 + win)
+| project Computer, T1, T3, ElapsedSec = datetime_diff(&#x27;second&#x27;, T3, T1), Stage1, Stage3, Msg1, Msg3
+| sort by T1 desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name=&quot;xz&quot; (Processes.process=&quot;*id_rsa*&quot; OR Processes.process=&quot;*shadow*&quot; OR Processes.process=&quot;*.pem*&quot; OR Processes.process=&quot;*.key*&quot;) by _time span=15m Processes.dest | `drop_dm_object_name(Processes)` | eval stage=&quot;disclosure&quot; | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/root*&quot;) by _time span=15m Filesystem.dest | `drop_dm_object_name(Filesystem)` | eval stage=&quot;persistence&quot;] | bin _time span=15m | stats dc(stage) as stages values(stage) as stages_seen sum(count) as events by dest _time | where stages&gt;=2 | sort - _time</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_name=&quot;xz&quot; (Processes.process=&quot;*id_rsa*&quot; OR Processes.process=&quot;*shadow*&quot; OR Processes.process=&quot;*.pem*&quot; OR Processes.process=&quot;*.key*&quot;) by _time span=15m Processes.dest | `drop_dm_object_name(Processes)` | eval stage=&quot;disclosure&quot; | append [| tstats summariesonly=false count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/crontab&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/root*&quot;) by _time span=15m Filesystem.dest | `drop_dm_object_name(Filesystem)` | eval stage=&quot;persistence&quot;] | bin _time span=15m | stats dc(stage) as stages values(stage) as stages_seen sum(count) as events by dest _time | where stages&gt;=2 | sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0c1578186f" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Ruggedcom ROX II firmware exposed to CVE-2025-40947/40948/40949 (below V2.17.1)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="0c1578186f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Inventory/exposure hunt that surfaces any managed asset reporting the three ROX II CVEs so the SOC can prioritise the V2.17.1 firmware update. Uses the exact CVE IDs and the fixed version named in the Siemens advisories.
+
+Rationale: Uses the most concrete strings in the article: the three CVE IDs and the fixed firmware V2.17.1 from Siemens advisories SSA-973901/SSA-078743/SSA-081142. Low confidence because Ruggedcom OT switches are frequently absent from TVM/scanner coverage; still the correct first defender action after a zero-day advisory. Datadog/Falcon/CloudWatch empty (not vuln-inventory sources here).
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2025-40947
+  • https://www.cisa.gov/news-events/ics-advisories/icsa-26-134-02
+  • https://unit42.paloaltonetworks.com/siemens-rox-ii-zero-day-vulnerabilities/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Scanner mis-fingerprinting firmware version, flagging a device already on V2.17.1</li><li>Duplicate CMDB entries for the same physical switch</li><li>Decommissioned devices still in inventory</li><li>Non-ROX Ruggedcom models incorrectly mapped to these CVEs</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the reported firmware is genuinely below V2.17.1 by querying the device directly; deduplicate against CMDB. 2) CONTAIN: For confirmed-vulnerable switches, restrict management-plane access (ACL the web GUI to a jump host, disable unused feature-key/scheduler functions) pending patch. 3) HUNT: Enable behavioral detections (xz file read, web command injection, root cron write) on the exposed devices and schedule the V2.17.1 update per Siemens SSA-973901/078743/081142.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-101-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-101-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId in (&#x27;CVE-2025-40947&#x27;,&#x27;CVE-2025-40948&#x27;,&#x27;CVE-2025-40949&#x27;)
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-101-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in (&#x27;CVE-2025-40947&#x27;,&#x27;CVE-2025-40948&#x27;,&#x27;CVE-2025-40949&#x27;)
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-101-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2025-40947&quot; OR Vulnerabilities.cve=&quot;CVE-2025-40948&quot; OR Vulnerabilities.cve=&quot;CVE-2025-40949&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - count</code></pre><pre class="spl-mode-body" id="art-101-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2025-40947&quot; OR Vulnerabilities.cve=&quot;CVE-2025-40948&quot; OR Vulnerabilities.cve=&quot;CVE-2025-40949&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -4264,11 +4532,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-101-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -4277,7 +4545,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-101-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -4289,12 +4557,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-40947&quot;, &quot;CVE-2025-40948&quot;, &quot;CVE-2025-40949&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-40947&quot;, &quot;CVE-2025-40948&quot;, &quot;CVE-2025-40949&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -4317,19 +4585,19 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-101-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName =~ &quot;schtasks.exe&quot;
 | where ProcessCommandLine has &quot;/create&quot;
 | where ProcessCommandLine has_any (&quot;powershell&quot;,&quot;cmd.exe&quot;,&quot;rundll32&quot;,&quot;-enc&quot;,&quot;FromBase64&quot;,&quot;\Users\Public&quot;,&quot;\AppData\&quot;)
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-101-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -4341,7 +4609,7 @@ DeviceTvmSoftwareVulnerabilities
           ParentProcessName, NewProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Scheduled Task Creation with Suspicious Image / Encoded Args
+    <div class="tab-content" id="art-101-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Scheduled Task Creation with Suspicious Image / Encoded Args
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0d
 status: experimental
 description: |
@@ -4376,7 +4644,7 @@ falsepositives:
     - GPO-driven scheduled tasks, MDT/SCCM imaging
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*/create*&quot;
       AND (Processes.process=&quot;*powershell*&quot; OR Processes.process=&quot;*cmd.exe*&quot;
@@ -4384,7 +4652,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*\Users\Public*&quot;
         OR Processes.process=&quot;*\AppData\*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*/create*&quot;
       AND (Processes.process=&quot;*powershell*&quot; OR Processes.process=&quot;*cmd.exe*&quot;
@@ -4410,19 +4678,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-101-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-101-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -4433,7 +4701,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-101-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -4479,7 +4747,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -4488,7 +4756,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -4515,11 +4783,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
+    <div class="tab-content active" id="art-101-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -4532,7 +4800,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-101-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
@@ -4548,14 +4816,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy ```
+    <div class="tab-content" id="art-101-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/tmp/rev_shell.py*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-101-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
