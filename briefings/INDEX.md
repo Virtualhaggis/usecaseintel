@@ -8,6 +8,9 @@ _2592 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-24
+- [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
+
 ## 2026-07-23
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
@@ -93,7 +96,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-17
-- [goldeneyedog subgroup linked to digicert breach and code sig](./2026-07-17/goldeneyedog-subgroup-linked-to-digicert-breach-and-code-sig.md)
 - [new nadmesh botnet hunts exposed ai services for cloud keys ](./2026-07-17/new-nadmesh-botnet-hunts-exposed-ai-services-for-cloud-keys-.md)
 - [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
 - [openssl hollowbyte flaw could freeze server memory with 11 b](./2026-07-17/openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b.md)

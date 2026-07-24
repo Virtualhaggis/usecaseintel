@@ -1,44 +1,29 @@
-# [CRIT] GoldenEyeDog Subgroup Linked to DigiCert Breach and Code-Signing Certificate Theft
+# [CRIT] Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks
 
 **Source:** The Hacker News
-**Published:** 2026-07-17
-**Article:** https://thehackernews.com/2026/07/goldeneyedog-subgroup-linked-to.html
+**Published:** 2026-07-24
+**Article:** https://thehackernews.com/2026/07/fake-notepad-plugin-delivers.html
 
 ## Threat Profile
 
-GoldenEyeDog Subgroup Linked to DigiCert Breach and Code-Signing Certificate Theft 
- Ravie Lakshmanan  Jul 17, 2026 Malware / Threat Intelligence 
-Cybersecurity researchers have attributed the April 2026 DigiCert security incident to a threat activity cluster dubbed CylindricalCanine .
-Expel, which shared technical details of the event, described the threat actor as a sub-group of GoldenEyeDog (aka APT-Q-27, Dragon Breath, and Miuuti Group), a Chinese cybercrime group known for its targeting o…
+Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks 
+ Ravie Lakshmanan  Jul 24, 2026 Cyber Espionage / Web Security 
+The Computer Emergency Response Team of Ukraine (CERT-UA) has warned of a new campaign that involves the use of a malicious program that's dressed up as a Notepad++ plugin to compromise Windows systems.
+The activity has been attributed by the agency to a threat cluster it tracks as UAC-0099 , a Russia-aligned group that has previously observed weaponizing security fl…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `82.23.186.8`
-- **IPv4 (defanged):** `154.12.185.32`
-- **IPv4 (defanged):** `45.144.227.12`
-- **IPv4 (defanged):** `203.160.68.2`
-- **IPv4 (defanged):** `154.12.185.30`
-- **IPv4 (defanged):** `62.197.153.45`
-- **IPv4 (defanged):** `45.144.227.29`
-- **Domain (defanged):** `qaqkongtiao.com`
-- **SHA256:** `da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b`
-- **SHA256:** `82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724`
-- **SHA256:** `c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5`
-- **SHA256:** `2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5`
-- **SHA256:** `1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7`
-- **SHA256:** `395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d`
-- **SHA256:** `1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2`
-- **SHA256:** `4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6`
-- **SHA256:** `96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0`
-- **SHA256:** `33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c`
-- **SHA256:** `fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc`
-- **SHA256:** `fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107`
-- **SHA256:** `3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33`
+- **CVE:** `CVE-2025-66376`
+- **CVE:** `CVE-2026-8496`
+- **CVE:** `CVE-2025-49113`
+- **Domain (defanged):** `easysend.co`
 
 ## MITRE ATT&CK Techniques
 
+- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -46,24 +31,19 @@ Expel, which shared technical details of the event, described the threat actor a
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1566** — Phishing
-- **T1219** — Remote Access Software
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1027** — Obfuscated Files or Information
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1566.001** — Phishing: Spearphishing Attachment
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
-- **T1005** — Data from Local System
-- **T1553.002** — Subvert Trust Controls: Code Signing
-- **T1588.003** — Obtain Capabilities: Code Signing Certificates
+- **T1053.005** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
@@ -71,74 +51,29 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Golden Gh0st Loader DLL side-load loading encrypted 'update.log' payload from user-writable path
+### Suspicious browser extension installation
 
-`UC_98_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="update.log" (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\Public\\*" OR Filesystem.file_path="*\\ProgramData\\*") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
 ```
 
 **Defender KQL:**
 ```kql
-let Window = 14d; let SideloadHosts = DeviceImageLoadEvents | where Timestamp > ago(Window) | where FileName endswith ".dll" | where FolderPath has_any (@"\AppData\", @"\Users\Public\", @"\ProgramData\", @"\Temp\") | where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Users\Public\", @"\ProgramData\", @"\Temp\") | project DllLoadTime=Timestamp, DeviceId, DeviceName, SideloadExe=InitiatingProcessFileName, SideloadExeFolder=InitiatingProcessFolderPath, RogueDll=FileName, DllFolder=FolderPath; DeviceFileEvents | where Timestamp > ago(Window) | where FileName =~ "update.log" | where FolderPath has_any (@"\AppData\", @"\Users\Public\", @"\ProgramData\", @"\Temp\") | project PayloadTime=Timestamp, DeviceId, PayloadPath=FolderPath, PayloadWriter=InitiatingProcessFileName | join kind=inner SideloadHosts on DeviceId | where abs(datetime_diff('minute', DllLoadTime, PayloadTime)) <= 30 | project PayloadTime, DllLoadTime, DeviceName, SideloadExe, SideloadExeFolder, RogueDll, DllFolder, PayloadPath, PayloadWriter | order by PayloadTime desc
-```
-
-### GoldenEyeDog .scr screensaver payload executed from download/archive path (support-chat delivery)
-
-`UC_98_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="*.scr" (Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\AppData\\*" OR Processes.process_path="*\\Public\\*" OR Processes.process_path="*\\Desktop\\*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | search NOT process_path="C:\\Windows\\*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents | where Timestamp > ago(14d) | where AccountName !endswith "$" | where FileName endswith ".scr" | where FolderPath !startswith @"C:\Windows\" | where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\", @"\Users\Public\", @"\Desktop\") or InitiatingProcessFileName in~ ("winrar.exe","7zfm.exe","7zg.exe","explorer.exe","chrome.exe","msedge.exe","firefox.exe","outlook.exe") | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine | order by Timestamp desc
-```
-
-### Golden Gh0st RAT plaintext WebSocket C2 to qaqkongtiao.com / GoldenEyeDog IP set
-
-`UC_98_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("82.23.186.8","154.12.185.32","45.144.227.12","203.160.68.2","154.12.185.30","62.197.153.45","45.144.227.29")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents | where Timestamp > ago(14d) | where RemoteUrl has "qaqkongtiao.com" or RemoteIP in ("82.23.186.8","154.12.185.32","45.144.227.12","203.160.68.2","154.12.185.30","62.197.153.45","45.144.227.29") | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessCommandLine | order by Timestamp desc
-```
-
-### Golden Gh0st RAT browser/credential collection targeting 360, QQ and Skype data stores
-
-`UC_98_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Filesystem.file_path) as file_paths min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\360se*" OR Filesystem.file_path="*\\360Chrome*" OR Filesystem.file_path="*\\QQBrowser*" OR Filesystem.file_path="*\\Tencent\\QQBrowser*" OR Filesystem.file_path="*\\AppData\\Roaming\\Skype*") by Filesystem.dest Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("360se.exe","360chrome.exe","qqbrowser.exe","skype.exe","chrome.exe","firefox.exe","msedge.exe","explorer.exe") | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents | where Timestamp > ago(14d) | where FolderPath has_any (@"\360se", @"\360Chrome", @"\360Browser", @"\Tencent\QQBrowser", @"\QQBrowser\User Data", @"\AppData\Roaming\Skype") | where InitiatingProcessFileName !in~ ("360se.exe","360chrome.exe","qqbrowser.exe","skype.exe","chrome.exe","firefox.exe","msedge.exe","explorer.exe") | where InitiatingProcessAccountName !endswith "$" | summarize FilesTouched=dcount(FolderPath), Paths=make_set(FolderPath, 20), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256 | order by FirstSeen desc
-```
-
-### Execution of stolen-cert-signed Zhong Stealer / Golden Gh0st RAT artifacts by SHA256
-
-`UC_98_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b","82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724","c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5","2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5","1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7","395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d","1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2","4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6","96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0","33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c","fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc","fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107","3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let BadHashes = dynamic(["da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b","82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724","c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5","2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5","1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7","395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d","1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2","4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6","96f401b80d3319f8285fa2bb7f0d66ca9055d349c044b78c27e339bcfb07cdf0","33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c","fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc","fd4dd9904549c6655465331921a28330ad2b9ff1c99eb993edf2252001f1d107","3dd470e85fe77cd847ca59d1d08ec8ccebe9bd73fd2cf074c29d87ca2fd24e33"]); union (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (BadHashes) | project Timestamp, DeviceName, AccountName, Source="ProcessExec", FileName, FolderPath, SHA256, CmdLine=ProcessCommandLine), (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (BadHashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", FileName, FolderPath, SHA256, CmdLine=InitiatingProcessCommandLine), (DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA256 in (BadHashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="ImageLoad", FileName, FolderPath, SHA256, CmdLine=InitiatingProcessCommandLine) | order by Timestamp desc
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -318,44 +253,47 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
+### OAuth consent / suspicious app grant
 
-`UC_TEAMS_VISHING` · phase: **delivery** · confidence: **High**
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`o365_management_activity`
-  Workload=MicrosoftTeams Operation=MessageSent
-  ExternalParticipants=*
-| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
-| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
-    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application == "Microsoft Teams"
-| where ActionType == "MessageSent"
-| where RawEventData has "ExternalParticipants"
-| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
-| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
-| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+### Scheduled task created with suspicious image / encoded args
 
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
+        OR Processes.process="*\AppData\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
 
@@ -364,11 +302,10 @@ CloudAppEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
 ```
 
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
@@ -397,6 +334,35 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
+### PowerShell encoded / obfuscated command
+
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -483,17 +449,90 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
+### Article-specific behavioural hunt — Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks
+
+`UC_0_15` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("nppexport.dll","winrar.exe","remotelibupdater.exe","inittest.dll"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("nppexport.dll","winrar.exe","remotelibupdater.exe","inittest.dll"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("nppexport.dll", "winrar.exe", "remotelibupdater.exe", "inittest.dll"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("nppexport.dll", "winrar.exe", "remotelibupdater.exe", "inittest.dll"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `82.23.186.8`, `154.12.185.32`, `45.144.227.12`, `203.160.68.2`, `154.12.185.30`, `62.197.153.45`, `45.144.227.29`, `qaqkongtiao.com`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-66376`, `CVE-2026-8496`, `CVE-2025-49113`
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `da2c58308e860e57df4c46465fd1cfc68d41e8699b4871e9a9be3c434283d50b`, `82794015e2b40cc6e02d3c1d50241465c0cf2c2e4f0a7a2a8f880edaee203724`, `c65170be2bf4f0bd71b9044592c063eaa82f3d43fcbd8a81e30a959bcaad8ae5`, `2515b546125d20013237aeadec5873e6438ada611347035358059a77a32c54f5`, `1613a913d0384cbb958e9a8d6b00fffaf77c27d348ebc7886d6c563a6f22f2b7`, `395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d`, `1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2`, `4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6` _(+5 more)_
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `easysend.co`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

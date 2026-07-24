@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### curl.exe downloading MSI payload into ProgramData (msaRAT delivery)
 
-`UC_4_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### msiexec executing MSI masquerading as Windows update from ProgramData
 
-`UC_4_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Chrome/Edge launched with --remote-debugging-port by non-browser parent (CDP abuse)
 
-`UC_4_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### Plain-HTTP over port 443 to msaRAT delivery IP 172.86.126.18
 
-`UC_4_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### Browser contacting msaRAT WebRTC signaling relay (workers.dev Cloudflare Worker)
 
-`UC_4_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,7 +320,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Don’t swing at everything
 
-`UC_4_8` · phase: **exploit** · confidence: **High**
+`UC_5_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
