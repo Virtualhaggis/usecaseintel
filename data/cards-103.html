@@ -1,3 +1,254 @@
+<article class="card" id="art-3590" data-art-slug="2018-08-15-behind-the-disclosure-the-zip-slip-vulnerability"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Behind the disclosure: the Zip Slip vulnerability In June 2018, the Snyk research team found many exploitable instances of the Zip Slip in various ecosystems that affected thousands of applications. This kind of wide reaching vulnerability requires a well thought out private disclosure process so that vulnerable libraries and projects are warned about their exposure before public disclosures are made. This post goes into the details of what we did throughout the process from discovery to disclosure, creating fix PRs and beyond. CVE-2018-8008 CVE-2018-8009 T1190 [LLM] Zip Slip arbitrary file overwrite by archive-handling runtime (java/python) via path traversal [LLM] Exposure: hosts running Zip Slip-vulnerable Apache Storm / Hadoop (CVE-2018-8008 / CVE-2018-8009) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2018-08-15-behind-the-disclosure-the-zip-slip-vulnerability" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/behind-the-disclosure-the-zip-slip-vulnerability/" target="_blank" rel="noopener">Behind the disclosure: the Zip Slip vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2018-08-15</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">In June 2018, the Snyk research team found many exploitable instances of the Zip Slip in various ecosystems that affected thousands of applications. This kind of wide reaching vulnerability requires a well thought out private disclosure process so that vulnerable libraries and projects are warned about their exposure before public disclosures are made. This post goes into the details of what we did throughout the process from discovery to disclosure, creating fix PRs and beyond.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2018-8008</span> <span class="ind cve">CVE-2018-8009</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3590-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3590"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3590-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Zip Slip arbitrary file overwrite by archive-handling runtime (java/python) via path traversal · [LLM] Exposure: hosts running Zip Slip-vulnerable Apache Storm / Hadoop (CVE-2018-8008 / CVE-2018-8009)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="d95a13b714" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <summary>
+    <span class="uc-title">Zip Slip arbitrary file overwrite by archive-handling runtime (java/python) via path traversal</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="d95a13b714" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the arbitrary-file-write outcome of a Zip Slip exploit (CVE-2018-8008 Apache Storm / CVE-2018-8009 Apache Hadoop and the wider Java/Python archive-extraction libraries named by Snyk): an archive-processing runtime (java.exe/javaw.exe/python*) writing files into autostart, web-root or system directories, or writing a path that still carries a raw `..` traversal sequence. Legitimate extraction never lands files in Startup/wwwroot/System32, so the parent-runtime + destination pairing is high-signal.
+
+Rationale: Anchored on the article&#x27;s named affected runtimes (Java zip classes / Apache Storm+Hadoop, Python tarfile) and the core Zip Slip mechanism — an extraction writing OUTSIDE the target folder. The `..` raw-traversal token plus archive-runtime parent writing into autostart/web-root/System32 is the highest-fidelity host-side artifact; confidence is Low because EDR usually canonicalizes paths (the `..` clause may not always populate).
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2018-8009
+  • https://github.com/advisories/GHSA-898j-5cc8-cmf5
+  • https://github.com/snyk/zip-slip-vulnerability
+  • https://security.snyk.io/research/zip-slip-vulnerability</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder">T1547.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Application servers (Tomcat/Storm/Hadoop) legitimately deploying .war/.jar artifacts into \webapps\ during normal deploys</li><li>Python build/CI tooling extracting packages into virtualenvs whose relative paths log with &#x27;..&#x27; segments</li><li>Java-based installers writing shortcuts/config into the Startup folder during legitimate install</li><li>Backup/restore jobs run as java/python repopulating wwwroot content</li><li>Self-update routines of Java apps writing into their own install tree under System32-adjacent paths</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has &quot;\webapps\&quot; and (FileName endswith &quot;.war&quot; or FileName endswith &quot;.jar&quot;) and InitiatingProcessCommandLine has_any (&quot;catalina&quot;,&quot;deploy&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Inspect the written file — is it an executable/script/.jsp/.war/webshell or a config overwrite? Identify the parent runtime&#x27;s working dir and the archive it just processed; a file landing far outside the extraction dir or carrying &#x27;..&#x27; confirms traversal. 2) Contain: Isolate the host, quarantine/remove the dropped file, and stop the affected Apache Storm/Hadoop/Hive (or other extractor) service to halt further extraction of attacker archives. 3) Hunt: Pull all recent file writes by the same runtime+user, review the application/upload logs for the source archive and uploader IP, and check for execution of the dropped file (child processes, web requests to the new web-root path).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3590-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3590-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3590-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3590-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3590-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3590-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3590-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;)
+| where ActionType in~ (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath has_any (@&quot;\Start Menu\Programs\Startup\&quot;, @&quot;\inetpub\wwwroot\&quot;, @&quot;\webapps\&quot;, @&quot;\System32\&quot;, @&quot;\Tasks\&quot;)
+    or FolderPath contains &quot;..&quot;   // raw path-traversal sequence retained by the sensor = Zip Slip signature
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3590-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;)
+| where EventType in~ (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileCreate&quot;)
+| where TargetFilePath has_any (@&quot;\Start Menu\Programs\Startup\&quot;, @&quot;\inetpub\wwwroot\&quot;, @&quot;\webapps\&quot;, @&quot;\System32\&quot;)
+    or TargetFilePath contains &quot;..&quot;   // raw path-traversal sequence = Zip Slip signature
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3590-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Zip Slip File Write by Archive Runtime to Autostart or via Path Traversal
+id: 6f3b2c1a-2d54-4f0e-9c8a-7b1e4a9d2c11
+description: Detects java/python archive-extraction runtimes writing files into autostart/web-root/system directories or to paths retaining a raw .. traversal sequence, the arbitrary-file-write outcome of a Zip Slip exploit (CVE-2018-8008, CVE-2018-8009).
+references:
+  - https://snyk.io/blog/behind-the-disclosure-the-zip-slip-vulnerability/
+  - https://github.com/snyk/zip-slip-vulnerability
+  - https://nvd.nist.gov/vuln/detail/CVE-2018-8009
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1505.003
+  - attack.t1547.001
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;\javaw.exe&#x27;
+      - &#x27;\python.exe&#x27;
+      - &#x27;\python3.exe&#x27;
+  selection_path:
+    TargetFilename|contains:
+      - &#x27;\Start Menu\Programs\Startup\&#x27;
+      - &#x27;\inetpub\wwwroot\&#x27;
+      - &#x27;\webapps\&#x27;
+      - &#x27;\System32\&#x27;
+      - &#x27;..&#x27;
+  condition: selection_proc and selection_path
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3590-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@Image:(*\\java.exe OR *\\javaw.exe OR *\\python.exe OR *\\python3.exe OR *\\Java.exe OR *\\Python.exe)) (@TargetFilename:(*\\Startup\\* OR *\\webapps\\* OR *\\wwwroot\\* OR *\\System32\\* OR *..*))</code></pre></div>
+    <div class="tab-content" id="art-3590-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/\\(java|javaw|python|python3)\.exe$/i
+| TargetFileName=/(\\Startup\\|\\webapps\\|\\wwwroot\\|\\System32\\|\.\.[\\\/])/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3590-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3590-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3590-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3590-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_path=&quot;*..\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*../*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\Startup\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\webapps\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\wwwroot\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\System32\\*&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3590-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_path=&quot;*..\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*../*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\Startup\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\webapps\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\wwwroot\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\System32\\*&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="2355295c11" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Exposure: hosts running Zip Slip-vulnerable Apache Storm / Hadoop (CVE-2018-8008 / CVE-2018-8009)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="2355295c11" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces managed hosts where vulnerability telemetry flags the two CVEs the article disclosed — CVE-2018-8008 (Apache Storm &lt;=1.0.6 / &lt;=1.1.2 / &lt;=1.2.1) and CVE-2018-8009 (Apache Hadoop, multiple 0.23.x–3.1.0 branches). These accept attacker-supplied archives and are exploitable by Zip Slip arbitrary file overwrite, so exposed instances are the attack surface the behavioural UC defends.
+
+Rationale: Uses the two concrete CVE IDs the article disclosed, cross-confirmed to specific products (Apache Storm / Apache Hadoop) and affected version ranges via NVD and the GitHub Advisory Database, queried against the real CveId column in TVM / CIM Vulnerabilities — deterministic, no behavioural FP risk.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2018-8009
+  • https://github.com/advisories/GHSA-898j-5cc8-cmf5
+  • https://www.cvedetails.com/cve/CVE-2018-8009/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanner flags a Storm/Hadoop version that has actually been hot-patched but version string unchanged</li><li>Decommissioned or air-gapped lab Hadoop nodes that are not attacker-reachable</li><li>Container image scan attributing the CVE to a base layer not actually running the vulnerable code path</li><li>Third-party bundles re-vendoring storm-core/hadoop libs that are not invoked for archive extraction</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the flagged Storm/Hadoop instance is running and whether its archive-upload endpoints (topology/blob submission, job resource staging) are network-reachable. 2) Contain: Upgrade to fixed releases (Apache Storm 1.0.7 / 1.1.3 / 1.2.2 or later; patched Hadoop 2.7.7+/2.8.5+/2.9.2+/3.0.3+/3.1.1+) or restrict upload endpoints to trusted principals pending patch. 3) Hunt: Review application logs for archive submissions and pivot to the behavioural file-overwrite UC on the same host to confirm no traversal write already occurred.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3590-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3590-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3590-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3590-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId in (&quot;CVE-2018-8008&quot;,&quot;CVE-2018-8009&quot;)
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel desc</code></pre></div>
+    <div class="tab-content" id="art-3590-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in (&quot;CVE-2018-8008&quot;,&quot;CVE-2018-8009&quot;)
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel desc</code></pre></div>
+    <div class="tab-content" id="art-3590-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3590-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3590-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3590-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2018-8008&quot;,&quot;CVE-2018-8009&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - severity</code></pre><pre class="spl-mode-body" id="art-3590-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2018-8008&quot;,&quot;CVE-2018-8009&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3590-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3590-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3590-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3590-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2018-8008&quot;, &quot;CVE-2018-8009&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3590-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2018-8008&quot;, &quot;CVE-2018-8009&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3590-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3590-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3590-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3590-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2018-8008&quot;, &quot;CVE-2018-8009&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3590-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2018-8008&quot;, &quot;CVE-2018-8009&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3595" data-art-slug="2018-06-28-container-vulnerability-management-for-developers"
   data-phases="c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -6118,146 +6369,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3643" data-art-slug="2017-03-14-fixing-a-prototype-override-protection-bypass-vulnerability-"
-  data-phases="c2,exploit,install" data-sev="low"
-  data-techs=""
-  data-sources="Snyk"
-  data-platforms="sent,sigma,spl"
-  data-splunk-cats="cloud"
-  data-targets="vcs"
-  data-uc-count="1" data-llm-uc-count="1"
-  data-search="Fixing a Prototype Override Protection Bypass Vulnerability in qs Last month, we added a high-severity Prototype Override Protection Bypass vulnerability in the qs package to our database. The fix was released in updated versions of the library about a week ago. This post explains the vulnerability and how to mitigate it.   [LLM] qs prototype-override bypass exploit attempt in HTTP query string (CVE-2017-1000048)">
-  <div class="sev-ribbon low">Low</div>
-  <button class="share-btn card-share" data-share-art="2017-03-14-fixing-a-prototype-override-protection-bypass-vulnerability-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/high-severity-vulnerability-qs/" target="_blank" rel="noopener">Fixing a Prototype Override Protection Bypass Vulnerability in qs</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2017-03-14</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">Last month, we added a high-severity Prototype Override Protection Bypass vulnerability in the qs package to our database. The fix was released in updated versions of the library about a week ago. This post explains the vulnerability and how to mitigate it.</p>
-  
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3643-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3643"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3643-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] qs prototype-override bypass exploit attempt in HTTP query string (CVE-2017-1000048)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="85c8558a9b" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">qs prototype-override bypass exploit attempt in HTTP query string (CVE-2017-1000048)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="85c8558a9b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests whose query string carries the qs prototype-override-protection bypass payload — a parameter named hasOwnProperty/__proto__/constructor[prototype], often bracket-prefixed (]=, [=). These tokens are never legitimate query-string parameter names, so their presence indicates an attacker probing a Node.js app that parses querystrings with the vulnerable qs package.
-
-Rationale: Anchored on the article&#x27;s exact bypass payloads (`]=hasOwnProperty`, `[=hasOwnProperty`) plus their URL-encoded forms and the broader prototype-pollution markers (`__proto__`, `constructor[prototype]`); a query-string parameter literally named hasOwnProperty/__proto__ is never legitimate, making this high-fidelity. Cross-checked CVE-2017-1000048 against GitHub Advisory GHSA-gqgv-6jq5-jjj9 and Red Hat Bugzilla 1427872.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-gqgv-6jq5-jjj9
-  • https://bugzilla.redhat.com/show_bug.cgi?id=1427872
-  • https://security.snyk.io/vuln/npm:qs:20170213</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated DAST/WAF scanners (Burp Suite, Acunetix, Nessus, OWASP ZAP) probing for prototype pollution</li><li>Authorized penetration testers or bug-bounty researchers fuzzing the app</li><li>Legitimate user search queries on a documentation/Q&amp;A site where &#x27;__proto__&#x27; or &#x27;hasOwnProperty&#x27; is the literal search term</li><li>Internal QA/dev teams testing input-validation hardening</li><li>Security-product synthetic transactions / canary requests that include known exploit strings</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIp !startswith &quot;10.&quot; and SrcIp !startswith &quot;192.168.&quot; and UA !has &quot;Nessus&quot; and UA !has &quot;Acunetix&quot; and UA !has &quot;ZAP&quot; and UA !has &quot;Nuclei&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request (UriQuery, SrcIp, UA, Status). A 2xx/3xx response on a non-static endpoint that parses querystrings is far more concerning than a 4xx; map the target host&#x27;s qs version against the patched set (6.0.4, 6.1.2, 6.2.3, 6.3.2, 6.4.0+). 2) Contain: if the app is unpatched and returned a success status, block the source IP at the WAF, add a WAF rule rejecting query params named hasOwnProperty/__proto__/constructor, and prioritise upgrading qs. 3) Hunt: review all requests from the same SrcIp/UA across other apps for repeated prototype-pollution probing, check application/error logs for resulting TypeErrors or unexpected 500s indicating successful prototype corruption, and confirm no follow-on RCE on the host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3643-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3643-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3643-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3643-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
- (W3CIISLog | where TimeGenerated &gt; ago(7d) | extend UriQuery = csUriQuery, SrcIp = cIP, Method = csMethod, UriStem = csUriStem, UA = csUserAgent, Status = tostring(scStatus)),
- (AppServiceHTTPLogs | where TimeGenerated &gt; ago(7d) | extend UriQuery = CsUriQuery, SrcIp = CIp, Method = CsMethod, UriStem = CsUriStem, UA = UserAgent, Status = tostring(ScStatus))
-| where UriQuery contains &quot;hasOwnProperty&quot; or UriQuery contains &quot;__proto__&quot; or UriQuery contains &quot;%5F%5Fproto&quot; or UriQuery contains &quot;constructor[prototype]&quot; or UriQuery contains &quot;constructor%5Bprototype%5D&quot;
-| project TimeGenerated, Computer, SrcIp, Method, UriStem, UriQuery, UA, Status
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3643-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: qs Prototype Override Protection Bypass Exploit Attempt (CVE-2017-1000048)
-id: 7f3c2a1e-9d4b-4e6a-8c12-5a0b7d9e1f23
-description: Detects HTTP query strings carrying the qs prototype-override bypass payload (parameter named hasOwnProperty/__proto__/constructor[prototype], often bracket-prefixed).
-references:
-  - https://snyk.io/blog/high-severity-vulnerability-qs/
-  - https://github.com/advisories/GHSA-gqgv-6jq5-jjj9
-  - https://www.cve.org/CVERecord?id=CVE-2017-1000048
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-query|contains:
-      - &#x27;]=hasOwnProperty&#x27;
-      - &#x27;[=hasOwnProperty&#x27;
-      - &#x27;%5D=hasOwnProperty&#x27;
-      - &#x27;%5B=hasOwnProperty&#x27;
-      - &#x27;__proto__&#x27;
-      - &#x27;%5F%5Fproto&#x27;
-      - &#x27;constructor[prototype]&#x27;
-      - &#x27;constructor%5Bprototype%5D&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3643-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3643-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3643-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3643-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*]=hasOwnProperty*&quot; OR Web.uri_query=&quot;*[=hasOwnProperty*&quot; OR Web.uri_query=&quot;*%5D=hasOwnProperty*&quot; OR Web.uri_query=&quot;*%5B=hasOwnProperty*&quot; OR Web.uri_query=&quot;*hasOwnProperty*&quot; OR Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*%5F%5Fproto*&quot; OR Web.uri_query=&quot;*constructor[prototype]*&quot; OR Web.uri_query=&quot;*constructor%5Bprototype%5D*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3643-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*]=hasOwnProperty*&quot; OR Web.uri_query=&quot;*[=hasOwnProperty*&quot; OR Web.uri_query=&quot;*%5D=hasOwnProperty*&quot; OR Web.uri_query=&quot;*%5B=hasOwnProperty*&quot; OR Web.uri_query=&quot;*hasOwnProperty*&quot; OR Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*%5F%5Fproto*&quot; OR Web.uri_query=&quot;*constructor[prototype]*&quot; OR Web.uri_query=&quot;*constructor%5Bprototype%5D*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
   </div>
 </details></div>
 </article>

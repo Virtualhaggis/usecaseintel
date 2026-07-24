@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2594 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2595 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,12 +11,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-24
 - [2026 mid year update on pace for our biggest year yet](./2026-07-24/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [bing images flaws let crafted svgs run commands as system on](./2026-07-24/bing-images-flaws-let-crafted-svgs-run-commands-as-system-on.md)
+- [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
 - [clop ransomware targets windchill flexplm in data theft atta](./2026-07-24/clop-ransomware-targets-windchill-flexplm-in-data-theft-atta.md)
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-24/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
 - [europol flags 4 340 urls for removal in the com crackdown](./2026-07-24/europol-flags-4-340-urls-for-removal-in-the-com-crackdown.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
+- [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
+- [ghsa critical cve 2026 59865 microsoft kiota command injecti](./2026-07-24/ghsa-critical-cve-2026-59865-microsoft-kiota-command-injecti.md)
+- [ghsa critical cve 2026 59940 seroval seroval fromjson promis](./2026-07-24/ghsa-critical-cve-2026-59940-seroval-seroval-fromjson-promis.md)
+- [ghsa critical ghsa 7gfh x38p prh3 velocity js remote code ex](./2026-07-24/ghsa-critical-ghsa-7gfh-x38p-prh3-velocity-js-remote-code-ex.md)
+- [ghsa critical ghsa r277 6w6q xmqw kin openapi validationhand](./2026-07-24/ghsa-critical-ghsa-r277-6w6q-xmqw-kin-openapi-validationhand.md)
+- [ghsa critical ghsa rjg6 39jm rgg4 better auth scim account t](./2026-07-24/ghsa-critical-ghsa-rjg6-39jm-rgg4-better-auth-scim-account-t.md)
+- [ghsa critical ghsa w28w gp39 m4p6 prompty server side templa](./2026-07-24/ghsa-critical-ghsa-w28w-gp39-m4p6-prompty-server-side-templa.md)
 - [golden chickens resurfaces with four new malware families an](./2026-07-24/golden-chickens-resurfaces-with-four-new-malware-families-an.md)
 - [hacker runs hermes ai agent unattended for post exploitation](./2026-07-24/hacker-runs-hermes-ai-agent-unattended-for-post-exploitation.md)
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
@@ -39,7 +47,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
 - [hackers abuse notepad plugins to stealthily install malware](./2026-07-23/hackers-abuse-notepad-plugins-to-stealthily-install-malware.md)
 - [new dolphin x malware uses ai to rank high value targets](./2026-07-23/new-dolphin-x-malware-uses-ai-to-rank-high-value-targets.md)
-- [new msarat malware uses chrome edge browsers to route c2 tra](./2026-07-23/new-msarat-malware-uses-chrome-edge-browsers-to-route-c2-tra.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
 - [russian espionage group exploited zimbra zero day to steal m](./2026-07-23/russian-espionage-group-exploited-zimbra-zero-day-to-steal-m.md)
@@ -97,7 +104,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
 - [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 - [russian speaking hacker uses google gemini cli to control bo](./2026-07-20/russian-speaking-hacker-uses-google-gemini-cli-to-control-bo.md)
-- [world s largest ai model repository hugging face breached by](./2026-07-20/world-s-largest-ai-model-repository-hugging-face-breached-by.md)
 
 ## 2026-07-19
 - [sleepergem compromised git credential manager dendreo and fa](./2026-07-19/sleepergem-compromised-git-credential-manager-dendreo-and-fa.md)
@@ -208,6 +214,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
+- [ghsa critical cve 2026 53913 apache camel keycloaksecuritypo](./2026-07-06/ghsa-critical-cve-2026-53913-apache-camel-keycloaksecuritypo.md)
 - [ghsa critical cve 2026 54496 zebra missing copy constraint i](./2026-07-06/ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i.md)
 - [ghsa critical cve 2026 54769 langroid sandbox escape to remo](./2026-07-06/ghsa-critical-cve-2026-54769-langroid-sandbox-escape-to-remo.md)
 - [ghsa critical cve 2026 55500 9routers has exposure of sensit](./2026-07-06/ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit.md)
@@ -286,19 +293,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
 - [ghsa critical cve 2026 39831 golang org x crypto fido u2f se](./2026-06-25/ghsa-critical-cve-2026-39831-golang-org-x-crypto-fido-u2f-se.md)
-- [ghsa critical cve 2026 39832 golang org x crypto doesn t dro](./2026-06-25/ghsa-critical-cve-2026-39832-golang-org-x-crypto-doesn-t-dro.md)
 - [ghsa critical cve 2026 42508 golang org x crypto vulnerable ](./2026-06-25/ghsa-critical-cve-2026-42508-golang-org-x-crypto-vulnerable-.md)
 - [ghsa critical cve 2026 46595 golang org x crypto invoking ve](./2026-06-25/ghsa-critical-cve-2026-46595-golang-org-x-crypto-invoking-ve.md)
-- [ghsa critical cve 2026 48713 i18next fs backend vulnerable t](./2026-06-25/ghsa-critical-cve-2026-48713-i18next-fs-backend-vulnerable-t.md)
-- [ghsa critical cve 2026 48714 i18next http middleware missing](./2026-06-25/ghsa-critical-cve-2026-48714-i18next-http-middleware-missing.md)
-- [ghsa critical cve 2026 55166 lemur acme ssrf creator equalit](./2026-06-25/ghsa-critical-cve-2026-55166-lemur-acme-ssrf-creator-equalit.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 
 ## 2026-06-24
 - [compromised github action codfish semantic release action st](./2026-06-24/compromised-github-action-codfish-semantic-release-action-st.md)
 - [eset takes part in operation endgame to disrupt amadey and s](./2026-06-24/eset-takes-part-in-operation-endgame-to-disrupt-amadey-and-s.md)
-- [ghsa critical cve 2026 45051 openam pre auth rce via java de](./2026-06-24/ghsa-critical-cve-2026-45051-openam-pre-auth-rce-via-java-de.md)
-- [ghsa critical cve 2026 45052 openam pre auth user profile ta](./2026-06-24/ghsa-critical-cve-2026-45052-openam-pre-auth-user-profile-ta.md)
 
 ## 2026-06-23
 - [cisa kev cve 2025 67038 lantronix eds5000 code injection vul](./2026-06-23/cisa-kev-cve-2025-67038-lantronix-eds5000-code-injection-vul.md)

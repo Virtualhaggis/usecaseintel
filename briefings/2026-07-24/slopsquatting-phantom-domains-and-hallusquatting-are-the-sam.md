@@ -11,15 +11,9 @@ Sponsored by ActiveState
 July 24, 2026
 10:01 AM
 0 
-
-
 Three attacks, three names, and one identical flaw: AI coding agents treat a hallucinated identifier as a verified command. 
-
-
 By Shane Warden, Principal Architect, ActiveState 
-
-
-Ask an AI coding agent to fetch a tool. Occasionally, it returns a name that sounds right, but does not exist. Developers used to ignore this mistake, assuming a compiler or test would …
+Ask an AI coding agent to fetch a tool. Occasionally, it returns a name that sounds right, but does not exist. Developers used to ignore this mistake, assuming a compiler or test would stop it. Unf…
 
 ## Indicators of Compromise (high-fidelity only)
 
