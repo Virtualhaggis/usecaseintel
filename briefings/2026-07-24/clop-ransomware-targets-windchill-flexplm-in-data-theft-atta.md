@@ -11,15 +11,9 @@ By Sergiu Gatlan
 July 24, 2026
 03:36 AM
 0 
-
-
 The Clop ransomware gang (also tracked as Cl0p) is targeting Internet-exposed PTC Windchill and FlexPLM instances in a new data theft extortion campaign.
-
-
 Clop has reportedly been exploiting a critical improper input validation vulnerability tracked as CVE-2026-12569 , which allows attackers to execute arbitrary code on vulnerable Windchill and FlexPLM instances.
-
-
-As cybersecur…
+As cybersecurity company …
 
 ## Indicators of Compromise (high-fidelity only)
 

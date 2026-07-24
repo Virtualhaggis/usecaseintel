@@ -9,8 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-24
+- [2026 mid year update on pace for our biggest year yet](./2026-07-24/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [clop ransomware targets windchill flexplm in data theft atta](./2026-07-24/clop-ransomware-targets-windchill-flexplm-in-data-theft-atta.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
+- [golden chickens resurfaces with four new malware families an](./2026-07-24/golden-chickens-resurfaces-with-four-new-malware-families-an.md)
+- [hacker runs hermes ai agent unattended for post exploitation](./2026-07-24/hacker-runs-hermes-ai-agent-unattended-for-post-exploitation.md)
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
 
@@ -98,8 +101,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uac 0145 uses clickfix captchas to infect ukrainian devices ](./2026-07-19/uac-0145-uses-clickfix-captchas-to-infect-ukrainian-devices-.md)
 
 ## 2026-07-17
-- [new wp2shell wordpress core flaw lets unauthenticated attack](./2026-07-17/new-wp2shell-wordpress-core-flaw-lets-unauthenticated-attack.md)
-- [openssl hollowbyte flaw could freeze server memory with 11 b](./2026-07-17/openssl-hollowbyte-flaw-could-freeze-server-memory-with-11-b.md)
 - [three steps to the terminal a siemens rox ii zero day trilog](./2026-07-17/three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog.md)
 - [unauthenticated rce in wordpress core wp2shell via sql injec](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec.md)
 
@@ -862,7 +863,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 14611 gladinet centrestack and triofox har](./2025-12-15/cisa-kev-cve-2025-14611-gladinet-centrestack-and-triofox-har.md)
 - [cisa kev cve 2025 43529 apple multiple products use after fr](./2025-12-15/cisa-kev-cve-2025-43529-apple-multiple-products-use-after-fr.md)
 - [critical remote code execution vulnerabilities discovered in](./2025-12-15/critical-remote-code-execution-vulnerabilities-discovered-in.md)
-- [how harden runner detected the sha1 hulud supply chain attac](./2025-12-15/how-harden-runner-detected-the-sha1-hulud-supply-chain-attac.md)
 
 ## 2025-12-12
 - [cisa kev cve 2018 4063 sierra wireless airlink aleos unrestr](./2025-12-12/cisa-kev-cve-2018-4063-sierra-wireless-airlink-aleos-unrestr.md)
