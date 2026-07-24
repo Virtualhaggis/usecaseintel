@@ -1,19 +1,21 @@
-# [CRIT] Critical NGINX Vulnerability Can Crash Workers and May Allow Remote Code Execution
+# [CRIT] Bing Images Flaws Let Crafted SVGs Run Commands as SYSTEM on Microsoft's Servers
 
 **Source:** The Hacker News
-**Published:** 2026-07-19
-**Article:** https://thehackernews.com/2026/07/critical-nginx-vulnerability-can-crash.html
+**Published:** 2026-07-24
+**Article:** https://thehackernews.com/2026/07/bing-images-flaws-let-crafted-svgs-run.html
 
 ## Threat Profile
 
-Critical NGINX Vulnerability Can Crash Workers and May Allow Remote Code Execution 
- Swati Khandelwal  Jul 19, 2026 Vulnerability / Server Security 
-F5 has shipped fixes for a critical nginx flaw that lets a remote, unauthenticated attacker trigger a heap buffer overflow in the worker process with crafted HTTP requests. CVE-2026-42533 was patched on July 15 in nginx 1.30.4 (stable) and 1.31.3 (mainline) , and in NGINX Plus 37.0.3.1; anyone on an earlier build should upgrade.
-Triggering it can …
+Bing Images Flaws Let Crafted SVGs Run Commands as SYSTEM on Microsoft's Servers 
+ Swati Khandelwal  Jul 24, 2026 Vulnerability / Web Security 
+A crafted SVG submitted to Bing's image search ran commands as NT AUTHORITY\SYSTEM on Microsoft's production image-processing workers, and as root on the Linux machines in the same fleet.
+XBOW's testing got the same result on workers across different hosts and network ranges, so the problem sat in Bing's image tier, not on one bad machine. Microsoft is…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42533`
+- **CVE:** `CVE-2026-32194`
+- **CVE:** `CVE-2026-32191`
+- **CVE:** `CVE-2016-3714`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,45 +38,12 @@ Triggering it can …
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### NGINX worker repeated crash/respawn — CVE-2026-42533 heap overflow exploitation (DoS)
-
-`UC_94_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="nginx" AND Processes.process_name="nginx") by Processes.dest Processes.parent_process_name Processes.process_name _time span=10m | `drop_dm_object_name(Processes)` | where count>=10 | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(1d)
-| where FileName =~ "nginx" and InitiatingProcessFileName =~ "nginx"   // master respawning a worker
-| summarize RespawnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(ProcessCommandLine) by DeviceName, bin(Timestamp, 10m)
-| where RespawnCount >= 10   // 10 worker respawns / 10 min — well above normal reload churn
-| order by RespawnCount desc
-```
-
-### Exposure: internet-facing NGINX vulnerable to CVE-2026-42533 (pre-1.30.4 / 1.31.3)
-
-`UC_94_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-42533"
-| join kind=leftouter (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId) on DeviceId
-| project DeviceName, OSPlatform, IsInternetFacing, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, DeviceName asc
-```
 
 ### Suspicious browser extension installation
 
@@ -418,9 +387,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42533`
+  - CVE(s): `CVE-2026-32194`, `CVE-2026-32191`, `CVE-2016-3714`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

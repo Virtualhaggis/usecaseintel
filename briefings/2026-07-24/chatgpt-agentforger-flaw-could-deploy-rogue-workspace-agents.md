@@ -1,40 +1,22 @@
-# [CRIT] SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access
+# [CRIT] ChatGPT AgentForger Flaw Could Deploy Rogue Workspace Agents via a Phishing Link
 
 **Source:** The Hacker News
-**Published:** 2026-07-19
-**Article:** https://thehackernews.com/2026/07/sonicwall-sma-zero-days-exploited.html
+**Published:** 2026-07-24
+**Article:** https://thehackernews.com/2026/07/chatgpt-agentforger-flaw-could-deploy.html
 
 ## Threat Profile
 
-SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access 
- Ravie Lakshmanan  Jul 19, 2026 Vulnerability / Network Security 
-A previously undocumented threat actor has been attributed to the exploitation of recently disclosed SonicWall Secure Mobile Access (SMA) 1000 series VPN appliances as zero-days prior their public disclosure since June 22, 2026.
-Cybersecurity company Volexity is tracking the activity under the moniker UTA0533 . The discovery was made following an incident r…
+ChatGPT AgentForger Flaw Could Deploy Rogue Workspace Agents via a Phishing Link 
+ Ravie Lakshmanan  Jul 24, 2026 Vulnerability / Enterprise Security 
+Cybersecurity researchers have disclosed a critical vulnerability in OpenAI's ChatGPT Workspace Agents that could have allowed a single phishing link to stealthily build, authorize, and deploy an autonomous artificial intelligence (AI) agent inside a victim's organization.
+The vulnerability has been codenamed AgentForger by Zenity Labs. The issu…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-15409`
-- **CVE:** `CVE-2026-15410`
-- **IPv4 (defanged):** `108.205.8.173`
-- **IPv4 (defanged):** `147.45.51.19`
-- **IPv4 (defanged):** `150.241.210.53`
-- **IPv4 (defanged):** `202.8.105.201`
-- **IPv4 (defanged):** `217.77.15.99`
-- **IPv4 (defanged):** `42.200.172.14`
-- **IPv4 (defanged):** `81.19.140.217`
-- **IPv4 (defanged):** `89.117.20.1`
-- **SHA256:** `81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2`
-- **SHA256:** `8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3`
-- **SHA256:** `1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee`
-- **SHA256:** `ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081`
-- **SHA1:** `04d4a9fbb32e967200eb98be014ca914a03bfa6b`
-- **SHA1:** `b4ee1f50fbb49f0ff5fde3d026343bc23ee08d51`
-- **SHA1:** `c2b0ae0a1f42a139abe4dd612676066ec1426394`
-- **SHA1:** `5e5b716f2385c818ec61198be1a2a07a4560eac5`
-- **MD5:** `5cb00bbfe818ee3e85fb99ab1db1af7c`
-- **MD5:** `b6df166291f80ee89032d769c99714f3`
-- **MD5:** `54d21399b8b52b48a0fef68450593e45`
-- **MD5:** `5f3a55201c511c9ff9be4c16c41028a2`
+- **CVE:** `CVE-2024-6587`
+- **CVE:** `CVE-2026-40217`
+- **CVE:** `CVE-2026-35029`
+- **Domain (defanged):** `chatgpt.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -51,65 +33,20 @@ Cybersecurity company Volexity is tracking the activity under the moniker UTA053
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
-- **T1133** — External Remote Services
-- **T1505.003** — Server Software Component: Web Shell
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1037.004** — Boot or Logon Initialization Scripts: RC Scripts
-- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
-- **T1105** — Ingress Tool Transfer
-- **T1040** — Network Sniffing
-- **T1552.004** — Unsecured Credentials: Private Keys
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### SonicWall SMA pre-auth /wsproxy WebSocket bypass (CVE-2026-15409) via 'SMA Connect Agent' UA + bmID=-3389
-
-`UC_97_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*/wsproxy*" Web.http_user_agent="*SMA Connect Agent*" Web.url="*bmID=-3389*" by Web.src Web.dest Web.dest_port Web.url Web.http_user_agent Web.status Web.http_method | `drop_dm_object_name(Web)` | sort - lastTime
-```
-
-### UTA0533 ORANGETAIL/Suo5 web shell access on SonicWall SMA (/workplace/error.jsp, /workplace/dialogs/errorDialog.jsp)
-
-`UC_97_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/workplace/error.jsp*" OR Web.url="*/workplace/dialogs/errorDialog.jsp*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | where http_method="POST" OR count > 5 | sort - lastTime
-```
-
-### SonicWall SMA appliance implant & persistence artifacts (ROOTRUN xzfind, KNUCKLEBALL deploy_new.py, init.d/workplace, Unit conf.json)
-
-`UC_97_17` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path IN ("/usr/bin/xzfind","/usr/lib/python3.11/site-packages/deploy_new.py","/tmp/hypdate.b64","/var/tmp/lib.sh","/etc/init.d/workplace","/var/lib/unit/conf.json") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.action Endpoint.Filesystem.user | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-### SonicWall SMA tcpdump LDAP credential sniffing via lib.sh (UTA0533)
-
-`UC_97_18` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name="tcpdump" (Endpoint.Processes.process="*389*" OR Endpoint.Processes.process="*ldap*" OR Endpoint.Processes.parent_process="*lib.sh*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process Endpoint.Processes.parent_process | `drop_dm_object_name(Processes)` | sort - lastTime
-```
 
 ### Suspicious browser extension installation
 
@@ -340,6 +277,34 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -424,33 +389,6 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -475,69 +413,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access
-
-`UC_97_14` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("lib.sh"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/usr/bin/xzfind*" OR Filesystem.file_path="*/usr/lib/python3.11/site-packages/deploy_new.py*" OR Filesystem.file_path="*/etc/init.d/workplace*" OR Filesystem.file_path="*/var/lib/unit/conf.json*" OR Filesystem.file_path="*/var/tmp*" OR Filesystem.file_path="*/tmp/hypdate.b64*" OR Filesystem.file_name IN ("lib.sh"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — SonicWall SMA Zero-Days Exploited Before Disclosure to Gain Root Access
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("lib.sh"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/usr/bin/xzfind", "/usr/lib/python3.11/site-packages/deploy_new.py", "/etc/init.d/workplace", "/var/lib/unit/conf.json", "/var/tmp", "/tmp/hypdate.b64") or FileName in~ ("lib.sh"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-15409`, `CVE-2026-15410`
+  - CVE(s): `CVE-2024-6587`, `CVE-2026-40217`, `CVE-2026-35029`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `108.205.8.173`, `147.45.51.19`, `150.241.210.53`, `202.8.105.201`, `217.77.15.99`, `42.200.172.14`, `81.19.140.217`, `89.117.20.1`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2`, `8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3`, `1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee`, `ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081`, `04d4a9fbb32e967200eb98be014ca914a03bfa6b`, `b4ee1f50fbb49f0ff5fde3d026343bc23ee08d51`, `c2b0ae0a1f42a139abe4dd612676066ec1426394`, `5e5b716f2385c818ec61198be1a2a07a4560eac5` _(+4 more)_
+  - IP / domain IOC(s): `chatgpt.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 19 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

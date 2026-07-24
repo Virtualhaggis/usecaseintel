@@ -1,22 +1,18 @@
-# [CRIT] UAC-0145 Uses ClickFix CAPTCHAs to Infect Ukrainian Devices wih Malware
+# [CRIT] Seeing AI Agents Is Not Enough. Security Teams Must Enforce What They Can Do
 
 **Source:** The Hacker News
-**Published:** 2026-07-19
-**Article:** https://thehackernews.com/2026/07/uac-0145-uses-clickfix-captchas-to.html
+**Published:** 2026-07-24
+**Article:** https://thehackernews.com/2026/07/seeing-ai-agents-is-not-enough-security.html
 
 ## Threat Profile
 
-UAC-0145 Uses ClickFix CAPTCHAs to Infect Ukrainian Devices wih Malware 
- Ravie Lakshmanan  Jul 19, 2026 Malware / Cyber Warfare 
-Russian state-sponsored threat actors have been observed leveraging the infamous ClickFix strategy to trick Ukrainian targets into infecting their own machines with data-stealing malware.
-According to the Computer Emergency Response Team of Ukraine (CERT-UA), the activity has been attributed to UAC-0145 , a sub-cluster within Sandworm , an advanced hacking unit affi…
+Seeing AI Agents Is Not Enough. Security Teams Must Enforce What They Can Do 
+ The Hacker News  Jul 24, 2026 Enterprise Security / AI Security 
+AI agent security is moving through a familiar maturity curve: adoption, then visibility, and finally, control. But what we've collectively discovered is that enforcing least privilege for AI agents is harder than we ever imagined. This is why there are so many approaches, from prompt filtering to identity-layer access controls. Where we've collectivel…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `office366.com`
-- **Domain (defanged):** `365softupdate.com`
-- **Domain (defanged):** `cloaking.house`
-- **Domain (defanged):** `delta.smartlinkupload.com`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -32,109 +28,18 @@ According to the Computer Emergency Response Team of Ukraine (CERT-UA), the acti
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1027** — Obfuscated Files or Information
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1547.001** — Boot or Logon Autostart Execution: Startup Folder
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
-- **T1102** — Web Service
-- **T1571** — Non-Standard Port
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### UAC-0145 ClickFix: explorer-spawned PowerShell downloads + drops VBS to Startup (GHETTOVIBE)
-
-`UC_96_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=explorer.exe) (Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe OR Processes.process_name=cmd.exe OR Processes.process_name=mshta.exe) (Processes.process="*Invoke-WebRequest*" OR Processes.process="*iwr *" OR Processes.process="*DownloadString*" OR Processes.process="*DownloadFile*" OR Processes.process="*Start-BitsTransfer*" OR Processes.process="*curl *" OR Processes.process="*certutil*") (Processes.process="*Startup*" OR Processes.process="*.vbs*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where NOT match(user, "\$$") | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "explorer.exe"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe")
-| where ProcessCommandLine has_any ("Invoke-WebRequest","iwr ","DownloadString","DownloadFile","Start-BitsTransfer","curl ","certutil")
-| where ProcessCommandLine has_any ("Startup",@"\Start Menu\Programs\Startup",".vbs")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### GHETTOVIBE persistence: VBS written to Startup folder by script host / PowerShell
-
-`UC_96_14` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.vbs" Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
-| where FileName endswith ".vbs"
-| where FolderPath has @"\Start Menu\Programs\Startup"
-| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### UAC-0145 ClickFix C2 / staging domain contact (office366.com, 365softupdate.com, delta.smartlinkupload.com)
-
-`UC_96_15` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="office366.com" OR DNS.query="*.office366.com" OR DNS.query="365softupdate.com" OR DNS.query="*.365softupdate.com" OR DNS.query="delta.smartlinkupload.com" OR DNS.query="*.smartlinkupload.com" OR DNS.query="cloaking.house" OR DNS.query="*.cloaking.house") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("office366.com","365softupdate.com","delta.smartlinkupload.com","cloaking.house")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### EtherHiding: browser fetching UAC-0145 C2 domain from Ethereum/BSC smart contract via public RPC
-
-`UC_96_16` · phase: **c2** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=chrome.exe OR All_Traffic.app=msedge.exe OR All_Traffic.app=firefox.exe OR All_Traffic.app=brave.exe OR All_Traffic.app=opera.exe) (All_Traffic.dest_host="*bsc-dataseed*" OR All_Traffic.dest_host="*cloudflare-eth.com" OR All_Traffic.dest_host="*mainnet.infura.io" OR All_Traffic.dest_host="*rpc.ankr.com*" OR All_Traffic.dest_host="*eth.llamarpc.com" OR All_Traffic.dest_host="*bscrpc.com" OR All_Traffic.dest_host="*binance.org") by All_Traffic.src All_Traffic.app All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe")
-| where RemoteUrl has_any ("bsc-dataseed","cloudflare-eth.com","mainnet.infura.io","rpc.ankr.com","eth.llamarpc.com","bscrpc.com","binance.org","nodereal.io","quiknode.pro")
-| summarize FirstSeen=min(Timestamp), Hits=count(), Endpoints=make_set(RemoteUrl, 20) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
-| order by FirstSeen desc
-```
 
 ### Suspicious browser extension installation
 
@@ -365,63 +270,6 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### PowerShell encoded / obfuscated command
-
-`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("powershell.exe","pwsh.exe")
-      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
-        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
-        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*Net.WebClient*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -530,14 +378,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `office366.com`, `365softupdate.com`, `cloaking.house`, `delta.smartlinkupload.com`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

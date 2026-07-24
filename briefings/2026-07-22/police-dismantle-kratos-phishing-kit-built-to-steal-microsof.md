@@ -88,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### Kratos/SneakyLog phishing page fingerprint: barr.svg + lg.svg assets with next.php/save.php POST
 
-`UC_49_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_52_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### Network/DNS callouts to disclosed Kratos (SneakyLog) takedown infrastructure
 
-`UC_49_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_52_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### AiTM stolen-session token replay: successful M365 sign-in from Kratos IPs / anomalous-token risk
 
-`UC_49_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_52_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ AADSignInEventsBeta
 
 ### Tax/W-2 themed QR-code phishing email (SneakyLog delivery)
 
-`UC_49_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_52_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -172,7 +172,7 @@ EmailEvents
 
 ### Post-compromise M365 inbox forwarding/rule creation from Kratos infrastructure (ATO→BEC)
 
-`UC_49_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_52_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -526,7 +526,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Police Dismantle Kratos Phishing Kit Built to Steal Microsoft 365 Sessions and B
 
-`UC_49_12` · phase: **exploit** · confidence: **High**
+`UC_52_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

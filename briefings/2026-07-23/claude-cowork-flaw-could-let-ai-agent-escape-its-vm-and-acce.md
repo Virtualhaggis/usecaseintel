@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Cowork VM escape: guest process writing to host root via /mnt/.virtiofs-root
 
-`UC_22_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_26_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceFileEvents
 
 ### CVE-2026-46331 pedit COW exploit: tc act_pedit action loaded on Cowork guest
 
-`UC_22_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_26_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Cowork guest: unprivileged user + network namespace creation granting CAP_NET_ADMIN
 
-`UC_22_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_26_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Post-escape credential theft: Cowork guest reading host SSH/cloud keys via virtiofs mount
 
-`UC_22_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_26_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
