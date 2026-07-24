@@ -35,12 +35,126 @@ The attacker uses a malicious Claude Artifact hosted on Claude’s legitimate do
 - **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1053.005** — Persistence (article-specific)
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1571** — Non-Standard Port
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### SectopRAT libcef.dll side-load via renamed JetBrains jcef_helper (ClaudeDesktop.exe/DockerDesktop.exe)
+
+`UC_2_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ClaudeDesktop.exe" OR Processes.process_name="DockerDesktop.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | eval note="Renamed JetBrains jcef_helper loading malicious libcef.dll (SHA256 26bae4d7012bf59847ab4036a065419c3d4ca47e020479f55b3b2c6d0d21394a)" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "libcef.dll"
+| where InitiatingProcessFileName in~ ("ClaudeDesktop.exe","DockerDesktop.exe")
+    or SHA256 == "26bae4d7012bf59847ab4036a065419c3d4ca47e020479f55b3b2c6d0d21394a"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          Loader = InitiatingProcessFileName,
+          LoaderPath = InitiatingProcessFolderPath,
+          Dll = FileName, DllPath = FolderPath, DllSHA256 = SHA256,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### FakeAgent fake installer: ClaudeDesktop.exe/DockerDesktop.exe masquerading as jcef_helper.exe
+
+`UC_2_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ClaudeDesktop.exe" OR Processes.process_name="DockerDesktop.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | search process_hash="*f8acb8f5cf88b77a4c27d7fd6856aa299bb178e85f9963c2fbd447d818da3ed0*" OR process_path="*\\Downloads\\*" OR process_path="*\\Temp\\*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("ClaudeDesktop.exe","DockerDesktop.exe")
+| where ProcessVersionInfoOriginalFileName =~ "jcef_helper.exe"
+    or SHA256 == "f8acb8f5cf88b77a4c27d7fd6856aa299bb178e85f9963c2fbd447d818da3ed0"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          OriginalName = ProcessVersionInfoOriginalFileName,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### FakeAgent scheduled-task persistence created by DockerDesktop.exe
+
+`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" (Processes.parent_process_name="DockerDesktop.exe" OR Processes.parent_process_name="ClaudeDesktop.exe") Processes.process="*/create*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("DockerDesktop.exe","ClaudeDesktop.exe")
+| where FileName =~ "schtasks.exe" and ProcessCommandLine has "/create"
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath,
+          ProcessCommandLine
+| order by Timestamp desc
+```
+
+### SectopRAT secondary persistence: sslconf.exe running from EdgeUpdate\Install with tempdir.dll side-load
+
+`UC_2_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="sslconf.exe" Processes.process_path="*\\Microsoft\\EdgeUpdate\\Install\\*" by Processes.dest Processes.user Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "sslconf.exe"
+| where FolderPath has @"\Microsoft\EdgeUpdate\Install\"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### FakeAgent EtherHiding C2 egress from renamed JetBrains/SPSS loaders
+
+`UC_2_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name="ClaudeDesktop.exe" OR All_Traffic.process_name="DockerDesktop.exe" OR All_Traffic.process_name="sslconf.exe") All_Traffic.dest_is_internal=false by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | eval known_c2=if(dest=="2.24.131.246","yes","no") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("ClaudeDesktop.exe","DockerDesktop.exe","sslconf.exe")
+| where RemoteIPType == "Public"
+| extend KnownIOC = iff(RemoteIP == "2.24.131.246"
+        or RemoteUrl has_any ("download-app.us","downloading-api.it.com","5ca8758c-02d0-4a72-89c8-d468b66dda41.com"), "yes","no")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          RemoteIP, RemoteUrl, RemotePort, KnownIOC
+| order by KnownIOC desc, Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -362,4 +476,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
