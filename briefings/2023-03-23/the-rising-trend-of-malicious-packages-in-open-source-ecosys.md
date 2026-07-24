@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### npm/PyPI install-script beacon to hardcoded C2 3.72.6.53 (django-yauth supply chain)
 
-`UC_1796_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1798_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### Package-manager install hook spawning host-recon curl/wget exfil (pre.sh pattern)
 
-`UC_1796_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1798_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Install of ypvpctpbamdhxtkzdu malicious package set (django-yauth + siblings)
 
-`UC_1796_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1798_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

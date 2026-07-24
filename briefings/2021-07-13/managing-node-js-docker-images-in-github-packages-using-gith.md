@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Managing Node.js Docker images in GitHub Packages using GitHub Actions
 
-`UC_3116_1` · phase: **exploit** · confidence: **High**
+`UC_3118_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

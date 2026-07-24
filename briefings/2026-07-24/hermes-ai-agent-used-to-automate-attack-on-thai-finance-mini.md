@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 24, 2026
 03:09 PM
 0 
-
-
 A threat actor used the open-source Hermes AI agent in unattended "YOLO" mode to automate post-exploitation activity during an alleged breach of Thailand's Ministry of Finance.
-
-
-The activity was uncovered by threat intelligence company Hunt.io and security researcher Bob Diachenko after they discovered several exposed web directories containing hundreds of files associated with …
+The activity was uncovered by threat intelligence company Hunt.io and security researcher Bob Diachenko after they discovered several exposed web directories containing hundreds of files associated with the oper…
 
 ## Indicators of Compromise (high-fidelity only)
 

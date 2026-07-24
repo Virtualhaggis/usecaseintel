@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2597 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -21,7 +21,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
 - [ghsa critical cve 2026 59865 microsoft kiota command injecti](./2026-07-24/ghsa-critical-cve-2026-59865-microsoft-kiota-command-injecti.md)
 - [ghsa critical cve 2026 59940 seroval seroval fromjson promis](./2026-07-24/ghsa-critical-cve-2026-59940-seroval-seroval-fromjson-promis.md)
+- [ghsa critical cve 2026 62263 openam webauthn java deserializ](./2026-07-24/ghsa-critical-cve-2026-62263-openam-webauthn-java-deserializ.md)
+- [ghsa critical cve 2026 62379 openam unauthenticated remote c](./2026-07-24/ghsa-critical-cve-2026-62379-openam-unauthenticated-remote-c.md)
 - [ghsa critical ghsa 7gfh x38p prh3 velocity js remote code ex](./2026-07-24/ghsa-critical-ghsa-7gfh-x38p-prh3-velocity-js-remote-code-ex.md)
+- [ghsa critical ghsa hp6v 6jw7 gv2f budibase oidc sso account ](./2026-07-24/ghsa-critical-ghsa-hp6v-6jw7-gv2f-budibase-oidc-sso-account-.md)
+- [ghsa critical ghsa mqhr 6j6h 74p5 budibase unauthenticated r](./2026-07-24/ghsa-critical-ghsa-mqhr-6j6h-74p5-budibase-unauthenticated-r.md)
+- [ghsa critical ghsa q6x4 v3qx 85qw budibase sql injection via](./2026-07-24/ghsa-critical-ghsa-q6x4-v3qx-85qw-budibase-sql-injection-via.md)
 - [ghsa critical ghsa r277 6w6q xmqw kin openapi validationhand](./2026-07-24/ghsa-critical-ghsa-r277-6w6q-xmqw-kin-openapi-validationhand.md)
 - [ghsa critical ghsa rjg6 39jm rgg4 better auth scim account t](./2026-07-24/ghsa-critical-ghsa-rjg6-39jm-rgg4-better-auth-scim-account-t.md)
 - [ghsa critical ghsa w28w gp39 m4p6 prompty server side templa](./2026-07-24/ghsa-critical-ghsa-w28w-gp39-m4p6-prompty-server-side-templa.md)
@@ -31,6 +36,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hermes ai agent used to automate attack on thai finance mini](./2026-07-24/hermes-ai-agent-used-to-automate-attack-on-thai-finance-mini.md)
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
+- [ontrac notifies customers of data breach after network hack](./2026-07-24/ontrac-notifies-customers-of-data-breach-after-network-hack.md)
 - [seeing ai agents is not enough security teams must enforce w](./2026-07-24/seeing-ai-agents-is-not-enough-security-teams-must-enforce-w.md)
 - [slopsquatting phantom domains and hallusquatting are the sam](./2026-07-24/slopsquatting-phantom-domains-and-hallusquatting-are-the-sam.md)
 
@@ -213,6 +219,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06
+- [ghsa critical cve 2026 48204 apache camel camel mongodb grid](./2026-07-06/ghsa-critical-cve-2026-48204-apache-camel-camel-mongodb-grid.md)
+- [ghsa critical cve 2026 48205 apache camel dns has improper i](./2026-07-06/ghsa-critical-cve-2026-48205-apache-camel-dns-has-improper-i.md)
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
@@ -294,9 +302,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
-- [ghsa critical cve 2026 39831 golang org x crypto fido u2f se](./2026-06-25/ghsa-critical-cve-2026-39831-golang-org-x-crypto-fido-u2f-se.md)
-- [ghsa critical cve 2026 42508 golang org x crypto vulnerable ](./2026-06-25/ghsa-critical-cve-2026-42508-golang-org-x-crypto-vulnerable-.md)
-- [ghsa critical cve 2026 46595 golang org x crypto invoking ve](./2026-06-25/ghsa-critical-cve-2026-46595-golang-org-x-crypto-invoking-ve.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
 
 ## 2026-06-24

@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### msaRAT delivery: curl.exe fetching fake Windows-update MSI to ProgramData over HTTP
 
-`UC_47_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_52_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### msaRAT msiexec executing update_ms.msi (fake Windows update custom action)
 
-`UC_47_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_52_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### msaRAT CDP abuse: headless Chrome/Edge with remote-debugging port spawned by non-browser parent
 
-`UC_47_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_52_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### msaRAT C2 network IOC: connection to 172.86.126.18 or is-01-ast.ols-img-12.workers.dev
 
-`UC_47_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_52_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -244,7 +244,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chaos ransomware's msaRAT: Living off the browser to build a covert C2 channel
 
-`UC_47_5` · phase: **exploit** · confidence: **High**
+`UC_52_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

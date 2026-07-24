@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Creating an automated cloud infrastructure testing tool with Terraform and PyTes
 
-`UC_3385_0` · phase: **exploit** · confidence: **High**
+`UC_3387_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

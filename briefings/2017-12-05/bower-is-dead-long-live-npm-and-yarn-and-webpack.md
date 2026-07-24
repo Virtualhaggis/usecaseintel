@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Bower is dead, long live npm. And Yarn. And webpack.
 
-`UC_3620_0` · phase: **exploit** · confidence: **High**
+`UC_3622_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

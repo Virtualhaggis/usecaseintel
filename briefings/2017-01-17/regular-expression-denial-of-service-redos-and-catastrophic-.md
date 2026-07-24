@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Regular Expression Denial of Service (ReDoS) and Catastrophic Backtracking
 
-`UC_3651_0` · phase: **exploit** · confidence: **High**
+`UC_3653_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

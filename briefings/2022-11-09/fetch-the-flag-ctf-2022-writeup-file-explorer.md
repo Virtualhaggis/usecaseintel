@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### URL-encoded directory traversal (%2e%2e) against node 'st' static-file route (CVE-2014-3744)
 
-`UC_1919_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1921_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Fetch the Flag CTF 2022 writeup: File Explorer
 
-`UC_1919_2` · phase: **exploit** · confidence: **High**
+`UC_1921_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

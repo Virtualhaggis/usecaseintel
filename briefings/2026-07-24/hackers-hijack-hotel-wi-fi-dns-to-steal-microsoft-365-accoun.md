@@ -11,15 +11,9 @@ By Bill Toulas
 July 24, 2026
 01:50 PM
 0 
-
-
 Hackers are changing the DNS settings on Wi-Fi devices at hotels and conference centers to redirect users to fake Microsoft 365 login pages.
-
-
 The campaign has been ongoing since at least June and impacts organizations in various sectors, including financial services, professional services, legal, health care, energy, and retail.
-
-
-Cybersecurity company ReliaQuest identified compromi…
+Cybersecurity company ReliaQuest identified compromised Wi-Fi ga…
 
 ## Indicators of Compromise (high-fidelity only)
 

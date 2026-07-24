@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Serverless Security implications—from infra to OWASP
 
-`UC_3638_0` · phase: **exploit** · confidence: **High**
+`UC_3640_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
