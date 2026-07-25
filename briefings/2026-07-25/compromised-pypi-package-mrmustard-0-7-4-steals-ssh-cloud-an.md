@@ -1,7 +1,7 @@
 # [CRIT] Compromised PyPI Package: mrmustard 0.7.4 Steals SSH, Cloud, and Kubernetes Credentials
 
 **Source:** StepSecurity
-**Published:** 2026-07-24
+**Published:** 2026-07-25
 **Article:** https://www.stepsecurity.io/blog/compromised-pypi-mrmustard-0-7-4-credential-stealer
 
 ## Threat Profile
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised PyPI Package: mrmustard 0.7.4 Steals SSH, Cloud, and Kubernetes Cred
 
-`UC_17_5` · phase: **exploit** · confidence: **High**
+`UC_0_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -8,14 +8,16 @@ _2602 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-25
+- [2026 mid year update on pace for our biggest year yet](./2026-07-25/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
+
 ## 2026-07-24
-- [2026 mid year update on pace for our biggest year yet](./2026-07-24/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [bing images flaws let crafted svgs run commands as system on](./2026-07-24/bing-images-flaws-let-crafted-svgs-run-commands-as-system-on.md)
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
 - [clop ransomware targets windchill flexplm in data theft atta](./2026-07-24/clop-ransomware-targets-windchill-flexplm-in-data-theft-atta.md)
-- [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-24/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
 - [europol flags 4 340 urls for removal in the com crackdown](./2026-07-24/europol-flags-4-340-urls-for-removal-in-the-com-crackdown.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)

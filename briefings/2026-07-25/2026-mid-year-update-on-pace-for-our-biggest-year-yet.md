@@ -1,7 +1,7 @@
 # [CRIT] 2026 Mid-Year Update: On Pace for Our Biggest Year Yet
 
 **Source:** StepSecurity
-**Published:** 2026-07-24
+**Published:** 2026-07-25
 **Article:** https://www.stepsecurity.io/blog/2026-mid-year-update-on-pace-for-our-biggest-year-yet
 
 ## Threat Profile

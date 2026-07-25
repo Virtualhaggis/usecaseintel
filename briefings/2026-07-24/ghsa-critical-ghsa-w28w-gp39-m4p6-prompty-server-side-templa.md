@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-w28w-gp39-m4p6: Prompty: Server-Side Template Injection t
 
-`UC_15_0` · phase: **exploit** · confidence: **High**
+`UC_16_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
