@@ -15,6 +15,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ctm360 research reveals how insurance phishing has evolved i](./2026-07-25/ctm360-research-reveals-how-insurance-phishing-has-evolved-i.md)
 - [devman raas portal centralizes payload builds victim managem](./2026-07-25/devman-raas-portal-centralizes-payload-builds-victim-managem.md)
 - [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
+- [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
 - [shinyhunters data leaks fuel 2 000 sextortion email scam](./2026-07-25/shinyhunters-data-leaks-fuel-2-000-sextortion-email-scam.md)
 
@@ -120,7 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)
 - [ghsa critical cve 2026 61736 lightrag cors wildcard credenti](./2026-07-20/ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti.md)
 - [ghsa critical cve 2026 61740 lightrag is vulnerable to authe](./2026-07-20/ghsa-critical-cve-2026-61740-lightrag-is-vulnerable-to-authe.md)
-- [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
 
 ## 2026-07-19
 - [sleepergem compromised git credential manager dendreo and fa](./2026-07-19/sleepergem-compromised-git-credential-manager-dendreo-and-fa.md)

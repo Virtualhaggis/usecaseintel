@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### SectopRAT libcef.dll side-load via renamed JetBrains jcef_helper (ClaudeDesktop.exe/DockerDesktop.exe)
 
-`UC_49_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_50_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceImageLoadEvents
 
 ### FakeAgent fake installer: ClaudeDesktop.exe/DockerDesktop.exe masquerading as jcef_helper.exe
 
-`UC_49_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_50_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### FakeAgent scheduled-task persistence created by DockerDesktop.exe
 
-`UC_49_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### SectopRAT secondary persistence: sslconf.exe running from EdgeUpdate\Install with tempdir.dll side-load
 
-`UC_49_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### FakeAgent EtherHiding C2 egress from renamed JetBrains/SPSS loaders
 
-`UC_49_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_50_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -426,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Claude app promoted by Bing ads pushes SectopRAT malware
 
-`UC_49_7` · phase: **exploit** · confidence: **High**
+`UC_50_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
