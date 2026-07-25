@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-7gfh-x38p-prh3: Velocity.js: Remote Code Execution via pr
 
-`UC_19_0` · phase: **exploit** · confidence: **High**
+`UC_23_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

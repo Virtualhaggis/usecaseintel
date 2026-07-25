@@ -1,27 +1,26 @@
-# [CRIT] New 7-Zip Vulnerability Could Let Crafted XZ Archives Run Code During Extraction
+# [CRIT] CTM360 Research Reveals How Insurance Phishing Has Evolved Into Real-Time Account Hijacking
 
 **Source:** The Hacker News
-**Published:** 2026-07-20
-**Article:** https://thehackernews.com/2026/07/new-7-zip-vulnerability-could-let.html
+**Published:** 2026-07-25
+**Article:** https://thehackernews.com/2026/07/ctm360-research-reveals-how-insurance.html
 
 ## Threat Profile
 
-New 7-Zip Vulnerability Could Let Crafted XZ Archives Run Code During Extraction 
- Swati Khandelwal  Jul 20, 2026 Vulnerability / Endpoint Security 
-Opening a crafted XZ archive in 7-Zip could let an attacker run code on the machine. The flaw, CVE-2026-14266 , is a heap-based buffer overflow in how the archiver processes XZ chunked data, and Trend Micro's Zero Day Initiative (ZDI) detailed it on July 15. A fix shipped on June 25 in 7-Zip 26.02 .
-The overflow lets an attacker "execute code in t…
+CTM360 Research Reveals How Insurance Phishing Has Evolved Into Real-Time Account Hijacking 
+ The Hacker News  Jul 25, 2026 Phishing / Cybercrime 
+For years, phishing campaigns targeting financial institutions followed the same playbook. Victims were tricked into entering usernames and passwords, attackers collected the credentials, and accounts were compromised later when an opportunity arose.
+That model is changing.
+Recent investigations into insurance-focused phishing operations reveal a mo…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-14266`
-- **CVE:** `CVE-2026-48095`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -31,83 +30,19 @@ The overflow lets an attacker "execute code in t…
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1203** — Exploitation for Client Execution
-- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### 7-Zip process (7z/7zFM/7zG) spawning shell or LOLBin child — post-exploit of XZ/NTFS heap overflow
-
-`UC_117_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("7z.exe","7zFM.exe","7zG.exe","7za.exe")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","cmstp.exe","bitsadmin.exe","certutil.exe","curl.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("7z.exe","7zFM.exe","7zG.exe","7za.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","cmstp.exe","bitsadmin.exe","certutil.exe","curl.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Vulnerable 7-Zip (<26.02) exposed to CVE-2026-14266 / CVE-2026-48095 heap overflows
-
-`UC_117_12` · phase: **weapon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-14266","CVE-2026-48095")) OR (Vulnerabilities.signature="*7-Zip*" AND Vulnerabilities.signature="*26.0*") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId in ("CVE-2026-14266","CVE-2026-48095")
-| where SoftwareName has "7-zip"
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc
-```
-
-### Inbound XZ archive attachment delivered — CVE-2026-14266 delivery vector
-
-`UC_117_13` · phase: **delivery** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Email.All_Email where (All_Email.file_name="*.xz" OR All_Email.file_name="*.txz" OR All_Email.file_name="*.tar.xz") AND All_Email.direction="inbound" by All_Email.src_user All_Email.recipient All_Email.subject All_Email.file_name All_Email.message_id | `drop_dm_object_name(All_Email)` | sort - count
-```
-
-**Defender KQL:**
-```kql
-EmailAttachmentInfo
-| where Timestamp > ago(30d)
-| where FileName endswith ".xz" or FileName endswith ".txz" or FileName endswith ".tar.xz"
-| join kind=inner (
-    EmailEvents
-    | where Timestamp > ago(30d)
-    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
-    | project NetworkMessageId, Subject, SenderMailFromDomain, DeliveryLocation
-  ) on NetworkMessageId
-| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, FileName, FileType, DeliveryLocation
-| order by Timestamp desc
-```
 
 ### Suspicious browser extension installation
 
@@ -338,6 +273,34 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -446,14 +409,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-14266`, `CVE-2026-48095`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

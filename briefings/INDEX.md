@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,7 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-25
 - [2026 mid year update on pace for our biggest year yet](./2026-07-25/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [cl0p affiliates target internet exposed ptc windchill and fl](./2026-07-25/cl0p-affiliates-target-internet-exposed-ptc-windchill-and-fl.md)
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
+- [ctm360 research reveals how insurance phishing has evolved i](./2026-07-25/ctm360-research-reveals-how-insurance-phishing-has-evolved-i.md)
+- [devman raas portal centralizes payload builds victim managem](./2026-07-25/devman-raas-portal-centralizes-payload-builds-victim-managem.md)
+- [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
 
 ## 2026-07-24
@@ -117,8 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 61736 lightrag cors wildcard credenti](./2026-07-20/ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti.md)
 - [ghsa critical cve 2026 61740 lightrag is vulnerable to authe](./2026-07-20/ghsa-critical-cve-2026-61740-lightrag-is-vulnerable-to-authe.md)
 - [hollowgraph malware hides c2 and stolen files in microsoft 3](./2026-07-20/hollowgraph-malware-hides-c2-and-stolen-files-in-microsoft-3.md)
-- [new 7 zip vulnerability could let crafted xz archives run co](./2026-07-20/new-7-zip-vulnerability-could-let-crafted-xz-archives-run-co.md)
-- [russian intelligence hacks ip cameras to spy on military log](./2026-07-20/russian-intelligence-hacks-ip-cameras-to-spy-on-military-log.md)
 
 ## 2026-07-19
 - [sleepergem compromised git credential manager dendreo and fa](./2026-07-19/sleepergem-compromised-git-credential-manager-dendreo-and-fa.md)
