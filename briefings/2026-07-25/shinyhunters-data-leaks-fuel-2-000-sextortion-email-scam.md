@@ -11,15 +11,9 @@ By Lawrence Abrams
 July 25, 2026
 10:16 AM
 0 
-
-
 Threat actors are using email addresses exposed in data breaches leaked by the ShinyHunters extortion group to send sextortion emails demanding $2,000 in Bitcoin.
-
-
 The emails claim to come from ShinyHunters and tell recipients that hackers compromised their devices after obtaining their email addresses from breached company databases.
-
-
-However, the messages appear to be sent by some…
+However, the messages appear to be sent by someone who down…
 
 ## Indicators of Compromise (high-fidelity only)
 
