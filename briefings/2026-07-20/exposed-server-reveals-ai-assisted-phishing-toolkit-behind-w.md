@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### WebDAV working-directory hijack: signed binary spawns child from remote share (CVE-2025-33053)
 
-`UC_110_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_111_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### search-ms: URI opening a remote WebDAV share filtered to .scr payloads
 
-`UC_110_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_111_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### RTLO / double-extension executable masquerading as a CURP PDF report
 
-`UC_110_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_111_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### Signed Ubisoft-branded binary executing from a user-writable path (DlrtyGames DLL side-load)
 
-`UC_110_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_111_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Known Simba Service WebDAV campaign C2 IPs, domains and payload hashes
 
-`UC_110_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_111_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -544,7 +544,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Exposed Server Reveals AI-Assisted Phishing Toolkit Behind WebDAV Malware Campai
 
-`UC_110_14` · phase: **exploit** · confidence: **High**
+`UC_111_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

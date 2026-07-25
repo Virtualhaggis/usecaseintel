@@ -1,15 +1,15 @@
-# [HIGH] Russian-Speaking Hacker Uses Google Gemini CLI to Control Botnet of Eight Dental Clinic PCs
+# [HIGH] Researcher Publishes GitLab RCE PoC Letting Authenticated Users Run Commands as Git
 
 **Source:** The Hacker News
-**Published:** 2026-07-20
-**Article:** https://thehackernews.com/2026/07/russian-speaking-hacker-uses-google.html
+**Published:** 2026-07-25
+**Article:** https://thehackernews.com/2026/07/researcher-publishes-gitlab-rce-poc.html
 
 ## Threat Profile
 
-Russian-Speaking Hacker Uses Google Gemini CLI to Control Botnet of Eight Dental Clinic PCs 
- Ravie Lakshmanan  Jul 20, 2026 Artificial Intelligence / Cybercrime 
-A solo Russian-speaking threat actor known as " bandcampro " outsourced a chunk of their operations to Google's open-source Gemini CLI artificial intelligence (AI) and commandeered a live botnet.
-The findings come from an analysis of 200 Gemini CLI session logs between March 19 and April 21, 2026, which found the threat actor using A…
+Researcher Publishes GitLab RCE PoC Letting Authenticated Users Run Commands as Git 
+ Swati Khandelwal  Jul 25, 2026 Vulnerability / Application Security 
+Security researcher Yuhang Wu at depthfirst has published a working proof-of-concept (PoC) exploit that executes commands as git on an unpatched self-managed GitLab 18.11.3 server.
+An ordinary authenticated user triggers it by committing two crafted Jupyter notebooks and requesting their diff. The chain needs no administrator rights, continu…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -17,8 +17,6 @@ The findings come from an analysis of 200 Gemini CLI session logs between March 
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -31,150 +29,18 @@ The findings come from an analysis of 200 Gemini CLI session logs between March 
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1027** — Obfuscated Files or Information
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1572** — Protocol Tunneling
-- **T1102** — Web Service
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1105** — Ingress Tool Transfer
-- **T1546.003** — Event Triggered Execution: WMI Event Subscription
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1036.004** — Masquerading: Masquerade Task or Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### PowerShell 5-second HTTPS beacon to Cloudflare tunnel C&C (bandcampro botnet)
-
-`UC_117_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app="powershell.exe" OR All_Traffic.process_name="powershell.exe" OR All_Traffic.process_name="pwsh.exe") AND (All_Traffic.dest_host="*.trycloudflare.com" OR All_Traffic.dest_host="*.cfargotunnel.com" OR All_Traffic.url="*trycloudflare.com*") by All_Traffic.src All_Traffic.dest_host All_Traffic.process_name span=5m | `drop_dm_object_name(All_Traffic)` | where count>=20 | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(3d)
-| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
-| where RemoteUrl has "trycloudflare.com" or RemoteUrl has "cfargotunnel.com"
-| summarize Beacons = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Paths = make_set(RemoteUrl, 8), DstIPs = make_set(RemoteIP, 8)
-    by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, bin(Timestamp, 5m)
-| extend WindowSeconds = datetime_diff('second', LastSeen, FirstSeen)
-| where Beacons >= 20   // ~5s polling => ~60 conn / 5min; 20 is well above ad-hoc script noise
-| order by Beacons desc
-```
-
-### PowerShell one-liner pulling agent from Cloudflare tunnel (/api/v1) and IEX-executing
-
-`UC_117_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") AND Processes.process="*trycloudflare.com*" AND (Processes.process="*Invoke-Expression*" OR Processes.process="*IEX*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*Invoke-RestMethod*" OR Processes.process="*/api/v1*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has "trycloudflare.com"
-| where ProcessCommandLine has_any ("Invoke-WebRequest","iwr ","Invoke-RestMethod","irm ","DownloadString","Net.WebClient","IEX","Invoke-Expression","/api/v1")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### PowerShell-created WMI permanent event subscription persistence (bandcampro agent)
-
-`UC_117_14` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*__EventFilter*" OR Processes.process="*CommandLineEventConsumer*" OR Processes.process="*ActiveScriptEventConsumer*" OR Processes.process="*__FilterToConsumerBinding*" OR Processes.process="*Register-WmiEvent*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe","pwsh.exe","wmic.exe","cmd.exe","mshta.exe")
-| where ProcessCommandLine has_any ("__EventFilter","CommandLineEventConsumer","ActiveScriptEventConsumer","__FilterToConsumerBinding")
-    or ProcessCommandLine has "Register-WmiEvent"
-    or (ProcessCommandLine has "Set-WmiInstance" and ProcessCommandLine has_any ("EventFilter","EventConsumer","FilterToConsumerBinding"))
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Scheduled task masquerading as OneDrive update running PowerShell (bandcampro agent)
-
-`UC_117_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="schtasks.exe" AND Processes.process="*/create*") OR Processes.process="*Register-ScheduledTask*") AND Processes.process="*OneDrive*" AND (Processes.process="*powershell*" OR Processes.process="*pwsh*" OR Processes.process="*http*" OR Processes.process="*trycloudflare.com*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create")
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Register-ScheduledTask")
-| where ProcessCommandLine has "OneDrive"
-| where ProcessCommandLine has_any ("powershell","pwsh","trycloudflare.com","http")
-| where InitiatingProcessFileName !in~ ("OneDriveSetup.exe","OneDrive.exe","OneDriveStandaloneUpdater.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName, ProcessCommandLine
-| order by Timestamp desc
-```
-
-### Beaconing — periodic outbound to small set of destinations
-
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
-```
 
 ### Suspicious browser extension installation
 
@@ -405,35 +271,6 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
-### PowerShell encoded / obfuscated command
-
-`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("powershell.exe","pwsh.exe")
-      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
-        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
-        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*Net.WebClient*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -545,4 +382,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 16 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
