@@ -18,6 +18,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
 - [shinyhunters data leaks fuel 2 000 sextortion email scam](./2026-07-25/shinyhunters-data-leaks-fuel-2-000-sextortion-email-scam.md)
+- [steam forum clickfix attacks infect gamers with xmrig crypto](./2026-07-25/steam-forum-clickfix-attacks-infect-gamers-with-xmrig-crypto.md)
 
 ## 2026-07-24
 - [bing images flaws let crafted svgs run commands as system on](./2026-07-24/bing-images-flaws-let-crafted-svgs-run-commands-as-system-on.md)
@@ -63,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
-- [fake claude app promoted by bing ads pushes sectoprat malwar](./2026-07-23/fake-claude-app-promoted-by-bing-ads-pushes-sectoprat-malwar.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
