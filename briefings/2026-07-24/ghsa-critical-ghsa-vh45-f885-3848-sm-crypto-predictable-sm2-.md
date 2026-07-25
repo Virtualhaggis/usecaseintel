@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-vh45-f885-3848: sm-crypto: Predictable SM2 key generation
 
-`UC_5_1` · phase: **exploit** · confidence: **High**
+`UC_6_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
