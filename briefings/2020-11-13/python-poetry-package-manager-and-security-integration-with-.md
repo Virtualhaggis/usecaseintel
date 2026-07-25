@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Python Poetry package manager and security integration with software composition
 
-`UC_3254_1` · phase: **exploit** · confidence: **High**
+`UC_3255_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

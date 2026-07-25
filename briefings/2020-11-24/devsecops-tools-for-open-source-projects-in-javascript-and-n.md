@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DevSecOps tools for open source projects in JavaScript and Node.js
 
-`UC_3246_1` · phase: **exploit** · confidence: **High**
+`UC_3247_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

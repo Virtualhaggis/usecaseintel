@@ -16,6 +16,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [devman raas portal centralizes payload builds victim managem](./2026-07-25/devman-raas-portal-centralizes-payload-builds-victim-managem.md)
 - [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
+- [shinyhunters data leaks fuel 2 000 sextortion email scam](./2026-07-25/shinyhunters-data-leaks-fuel-2-000-sextortion-email-scam.md)
 
 ## 2026-07-24
 - [bing images flaws let crafted svgs run commands as system on](./2026-07-24/bing-images-flaws-let-crafted-svgs-run-commands-as-system-on.md)
@@ -65,7 +66,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
-- [hackers abuse notepad plugins to stealthily install malware](./2026-07-23/hackers-abuse-notepad-plugins-to-stealthily-install-malware.md)
 - [new dolphin x malware uses ai to rank high value targets](./2026-07-23/new-dolphin-x-malware-uses-ai-to-rank-high-value-targets.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)

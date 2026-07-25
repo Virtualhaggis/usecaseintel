@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Container image formats under the hood
 
-`UC_3251_1` · phase: **exploit** · confidence: **High**
+`UC_3252_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

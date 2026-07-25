@@ -475,7 +475,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks
 
-`UC_44_15` · phase: **exploit** · confidence: **High**
+`UC_46_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
