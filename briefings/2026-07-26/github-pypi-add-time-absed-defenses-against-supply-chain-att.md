@@ -11,15 +11,9 @@ By Bill Toulas
 July 26, 2026
 10:13 AM
 0 
-
-
 GitHub and PyPI (Python Package Index) have introduced a time-based mechanism in the Dependabot dependency management tool to protect against supply-chain attacks and to limit their impact.
-
-
 Specifically, Dependabot comes with a default three-day cooldown setting, while PyPI will reject new files uploaded to releases older than 14 days.
-
-
-The measure comes after the two developme…
+The measure comes after the two development ecosystem…
 
 ## Indicators of Compromise (high-fidelity only)
 
