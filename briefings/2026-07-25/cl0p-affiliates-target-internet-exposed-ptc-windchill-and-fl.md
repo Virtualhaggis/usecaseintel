@@ -14,6 +14,11 @@ Threat actors linked to the Cl0p (aka Chubby Scorpius, FIN11, Graceful Spider, a
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-12569`
+- **IPv4 (defanged):** `216.152.148.54`
+- **IPv4 (defanged):** `216.152.151.204`
+- **IPv4 (defanged):** `104.243.35.63`
+- **IPv4 (defanged):** `5.180.41.35`
+- **SHA256:** `55a1eb4c2d3da04376df39d7ba832569c6af1a37a0cf2b95f754ac898023a30c`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,12 +41,100 @@ Threat actors linked to the Cl0p (aka Chubby Scorpius, FIN11, Graceful Spider, a
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1083** — File and Directory Discovery
+- **T1074.001** — Data Staged: Local Data Staging
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Cl0p hex-named JSP web shell dropped under /Windchill/login/ (CVE-2026-12569)
+
+`UC_8_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*\\Windchill\\login\\*" OR Filesystem.file_path="*/Windchill/login/*") Filesystem.file_name="*.jsp" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_id | `drop_dm_object_name(Filesystem)` | eval hex_shell=if(match(file_name,"^[0-9a-f]{16}\.jsp$"),1,0) | where hex_shell=1 OR file_hash="55a1eb4c2d3da04376df39d7ba832569c6af1a37a0cf2b95f754ac898023a30c" | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName endswith ".jsp"
+| where FolderPath has @"\Windchill\login\" or FolderPath contains "/Windchill/login/"
+| where FileName matches regex @"^[0-9a-f]{16}\.jsp$" or SHA256 == "55a1eb4c2d3da04376df39d7ba832569c6af1a37a0cf2b95f754ac898023a30c"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### PTC Windchill Java/Tomcat web tier spawning OS command shell (web shell RCE)
+
+`UC_8_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java.exe","javaw.exe","tomcat9.exe","tomcat10.exe","tomcat.exe","java")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","systeminfo.exe","ipconfig.exe","hostname.exe","tasklist.exe","certutil.exe","bitsadmin.exe","cscript.exe","wscript.exe","sh","bash","whoami","id")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("java.exe","javaw.exe","tomcat9.exe","tomcat10.exe","tomcat.exe","java")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","systeminfo.exe","ipconfig.exe","hostname.exe","tasklist.exe","certutil.exe","bitsadmin.exe","cscript.exe","wscript.exe","sh","bash","whoami","id")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Network connections to Cl0p CVE-2026-12569 C2 / staging infrastructure
+
+`UC_8_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("216.152.148.54","216.152.151.204","104.243.35.63","5.180.41.35") OR All_Traffic.src_ip IN ("216.152.148.54","216.152.151.204","104.243.35.63","5.180.41.35")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("216.152.148.54","216.152.151.204","104.243.35.63","5.180.41.35")
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Windchill filesystem-enumeration artifact flst.txt written by web tier (CVE-2026-12569 discovery)
+
+`UC_8_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="flst.txt" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | join type=inner process_id [| tstats `summariesonly` values(Processes.process_name) as writer_proc from datamodel=Endpoint.Processes where Processes.process_name IN ("java.exe","javaw.exe","tomcat9.exe","tomcat10.exe","cmd.exe","powershell.exe") by Processes.process_id | `drop_dm_object_name(Processes)`] | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName =~ "flst.txt"
+| where InitiatingProcessFileName in~ ("java.exe","javaw.exe","tomcat9.exe","tomcat10.exe","tomcat.exe","cmd.exe","powershell.exe","pwsh.exe")
+    or FolderPath has @"\Windchill\" or FolderPath contains "/Windchill/"
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -387,7 +480,13 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-12569`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `216.152.148.54`, `216.152.151.204`, `104.243.35.63`, `5.180.41.35`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `55a1eb4c2d3da04376df39d7ba832569c6af1a37a0cf2b95f754ac898023a30c`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

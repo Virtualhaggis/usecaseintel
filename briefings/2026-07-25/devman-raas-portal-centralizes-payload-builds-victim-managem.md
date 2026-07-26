@@ -14,7 +14,9 @@ Swiss cybersecurity company PRODAFT is tracking the centrally administered RaaS 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **SHA256:** `df5ab9015833023a03f92a797e20196672c1d6525501a9f9a94a45b0904c7403`
+- **SHA256:** `018494565257ef2b6a4e68f1c3e7573b87fc53bd5828c9c5127f31d37ea964f8`
+- **MD5:** `e84270afa3030b48dc9e0c53a35c65aa`
 
 ## MITRE ATT&CK Techniques
 
@@ -37,12 +39,77 @@ Swiss cybersecurity company PRODAFT is tracking the centrally administered RaaS 
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
+- **T1490** — Inhibit System Recovery
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### DevMan/Funky Mantis locker execution by known SHA256/MD5 hash
+
+`UC_9_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="df5ab9015833023a03f92a797e20196672c1d6525501a9f9a94a45b0904c7403" OR Processes.process_hash="018494565257ef2b6a4e68f1c3e7573b87fc53bd5828c9c5127f31d37ea964f8" OR Processes.process_hash="e84270afa3030b48dc9e0c53a35c65aa") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in~ ("df5ab9015833023a03f92a797e20196672c1d6525501a9f9a94a45b0904c7403","018494565257ef2b6a4e68f1c3e7573b87fc53bd5828c9c5127f31d37ea964f8")
+    or MD5 =~ "e84270afa3030b48dc9e0c53a35c65aa"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### DevMan ransomware encryption artifacts: .devman extension and deterministic ransom note
+
+`UC_9_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name="*.devman" OR Filesystem.file_name="e47qfsnz2trbkhnt.devman") by Filesystem.dest Filesystem.user _time span=5m | where count > 50 | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where FileName endswith ".devman"
+| summarize FileCount = dcount(FolderPath), Note = countif(FileName =~ "e47qfsnz2trbkhnt.devman"), Proc = any(InitiatingProcessFileName), Cmd = any(InitiatingProcessCommandLine), FirstSeen = min(Timestamp) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 5m)
+| where FileCount > 50 or Note > 0    // >50 encrypted files in 5m OR the deterministic ransom note appears
+| order by FirstSeen desc
+```
+
+### DevMan pre-encryption recovery inhibition and event-log clearing
+
+`UC_9_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user!="*$" AND ((Processes.process_name="vssadmin.exe" AND Processes.process="*delete*shadows*") OR (Processes.process_name="wmic.exe" AND Processes.process="*shadowcopy*delete*") OR (Processes.process_name="wevtutil.exe" AND Processes.process="*cl*") OR (Processes.process_name="bcdedit.exe" AND (Processes.process="*recoveryenabled*no*" OR Processes.process="*bootstatuspolicy*ignoreallfailures*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName =~ "vssadmin.exe" and ProcessCommandLine has_all ("delete","shadows"))
+    or (FileName =~ "wmic.exe" and ProcessCommandLine has_all ("shadowcopy","delete"))
+    or (FileName =~ "wevtutil.exe" and ProcessCommandLine has "cl ")
+    or (FileName =~ "bcdedit.exe" and (ProcessCommandLine has "recoveryenabled" or ProcessCommandLine has "ignoreallfailures"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -408,7 +475,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `df5ab9015833023a03f92a797e20196672c1d6525501a9f9a94a45b0904c7403`, `018494565257ef2b6a4e68f1c3e7573b87fc53bd5828c9c5127f31d37ea964f8`, `e84270afa3030b48dc9e0c53a35c65aa`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

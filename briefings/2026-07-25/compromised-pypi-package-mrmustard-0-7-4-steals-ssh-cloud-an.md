@@ -12,8 +12,10 @@ Table of Contents Loa…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `ifconfig.me`
-- **Domain (defanged):** `webhook.site`
+- **Domain (defanged):** `metrics.femboy.energy`
+- **Domain (defanged):** `femboy.energy`
+- **SHA256:** `0404f8590fdaef95280c1d908068f31bf2321fe887faabf0c2329ba67c7203cb`
+- **SHA256:** `81f0d1291a975d012d1b892cf9967557fdbb1ad4e1ac0545702ad235ace1cac5`
 
 ## MITRE ATT&CK Techniques
 
@@ -150,7 +152,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised PyPI Package: mrmustard 0.7.4 Steals SSH, Cloud, and Kubernetes Cred
 
-`UC_11_5` · phase: **exploit** · confidence: **High**
+`UC_11_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -202,9 +204,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `ifconfig.me`, `webhook.site`
+  - IP / domain IOC(s): `metrics.femboy.energy`, `femboy.energy`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `0404f8590fdaef95280c1d908068f31bf2321fe887faabf0c2329ba67c7203cb`, `81f0d1291a975d012d1b892cf9967557fdbb1ad4e1ac0545702ad235ace1cac5`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

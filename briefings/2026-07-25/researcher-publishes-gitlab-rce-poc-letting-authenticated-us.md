@@ -35,12 +35,56 @@ An ordinary authenticated user triggers it by committing two crafted Jupyter not
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1190** — Exploit Public-Facing Application
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### GitLab Puma/Ruby worker (running as git) spawns shell or network tool — Oj .ipynb RCE landing
+
+`UC_6_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("ruby","puma") OR Processes.parent_process="*puma*") AND Processes.process_name IN ("sh","bash","dash","zsh","nc","ncat","netcat","curl","wget","python","python3","perl","socat") AND Processes.user IN ("git","gitlab-www","gitlab") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessCommandLine has "puma" or InitiatingProcessFileName in~ ("puma","ruby")
+| where FileName in~ ("sh","bash","dash","zsh","nc","ncat","netcat","curl","wget","python","python3","perl","socat")
+| where AccountName in~ ("git","gitlab-www","gitlab")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Outbound reverse-shell egress from GitLab Ruby/Puma worker as git — Oj RCE connect-back
+
+`UC_6_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN ("ruby","puma")) AND All_Traffic.user IN ("git","gitlab-www","gitlab") AND All_Traffic.direction="outbound" AND NOT (All_Traffic.dest IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.0/8)) by All_Traffic.src All_Traffic.dest All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessCommandLine has "puma" or InitiatingProcessFileName in~ ("puma","ruby")
+| where InitiatingProcessAccountName in~ ("git","gitlab-www","gitlab")
+| where RemoteIPType == "Public"
+| where ActionType == "ConnectionSuccess"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), Ports=make_set(RemotePort, 15) by DeviceName, RemoteIP, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by FirstSeen desc
+```
 
 ### Suspicious browser extension installation
 
@@ -382,4 +426,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

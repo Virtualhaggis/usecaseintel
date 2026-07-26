@@ -28,12 +28,113 @@ BleepingComputer learned of the campaign from a reader, who told us threat actor
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
 - **T1053.005** — Persistence (article-specific)
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1112** — Modify Registry
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1496** — Resource Hijacking
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Microsoft Defender path exclusion added for C:\Windows\Background (ClickFix XMRig)
+
+`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Windows Defender\\Exclusions\\Paths*" AND (Registry.registry_value_name="*\\Windows\\Background*" OR Registry.registry_value_name="*Background*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_id Registry.user | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has @"Windows Defender\Exclusions\Paths"
+| where RegistryValueName has "Background" or RegistryValueData has @"C:\Windows\Background"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Scheduled task 'XMRig-<host>' launching C:\Windows\Background\system.exe as SYSTEM
+
+`UC_1_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process="*Register-ScheduledTask*") AND (Processes.process="*XMRig-*" OR Processes.process="*\\Windows\\Background\\system.exe*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "schtasks.exe" or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Register-ScheduledTask")
+| where ProcessCommandLine has "XMRig-" or ProcessCommandLine has @"C:\Windows\Background\system.exe"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Outbound connection / DNS to msfconfig.icu (XMRig payload download)
+
+`UC_1_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="msfconfig.icu" OR DNS.query="*.msfconfig.icu" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "msfconfig.icu" or RemoteUrl endswith "/tmp/system.txt"
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Payload written to C:\Windows\Background\system.exe (XMRig drop)
+
+`UC_1_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Windows\\Background\\*" AND (Filesystem.file_name="system.exe" OR Filesystem.file_name="config.json" OR Filesystem.file_name="*.exe") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath startswith @"C:\Windows\Background"
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileOriginUrl
+| order by Timestamp desc
+```
+
+### XMRig miner executing as SYSTEM from C:\Windows\Background
+
+`UC_1_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_path="*\\Windows\\Background\\*" AND (Processes.process_name="system.exe" OR Processes.process_name="xmrig.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath startswith @"C:\Windows\Background"
+| where FileName in~ ("system.exe","xmrig.exe")
+| project Timestamp, DeviceName, AccountName, ProcessIntegrityLevel, InitiatingProcessFileName, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Scheduled task created with suspicious image / encoded args
 
@@ -264,4 +365,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

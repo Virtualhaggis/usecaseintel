@@ -37,12 +37,63 @@ Recent investigations into insurance-focused phishing operations reveal a mo…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1583.008** — Acquire Infrastructure: Malvertising
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1567** — Exfiltration Over Web Service
+- **T1102** — Web Service
+- **T1111** — Multi-Factor Authentication Interception
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### InsureTrap malvertising: Google Ads referrer landing on free-hosting insurance phish
+
+`UC_7_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*github.io*" OR Web.url="*netlify.app*" OR Web.url="*netlify.com*" OR Web.url="*wixsite.com*" OR Web.url="*hostingersite.com*" OR Web.url="*lovable.app*" OR Web.url="*lovableproject.com*" OR Web.url="*lovable.dev*") (Web.http_referrer="*googleadservices.com*" OR Web.http_referrer="*doubleclick.net*" OR Web.http_referrer="*googleads*") by Web.src Web.user Web.dest Web.url Web.http_referrer | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let Window = 90s;
+let AdClicks = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where RemoteUrl has_any ("googleadservices.com","googleads.g.doubleclick.net","g.doubleclick.net")
+    | project DeviceId, AdTime = Timestamp;
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| where RemoteUrl has_any ("github.io","netlify.app","netlify.com","wixsite.com","hostingersite.com","lovable.app","lovableproject.com","lovable.dev")
+| join kind=inner AdClicks on DeviceId
+| where Timestamp between (AdTime .. AdTime + Window)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, LandingUrl = RemoteUrl, RemoteIP, AdTime, DelaySec = datetime_diff('second', Timestamp, AdTime)
+| order by Timestamp desc
+```
+
+### InsureOTP kit exfiltration: browser connecting to api.telegram.org Bot API
+
+`UC_7_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="api.telegram.org" OR DNS.query="*.api.telegram.org") by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "api.telegram.org"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Conns = count(), any(RemoteIP) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
+| order by LastSeen desc
+```
 
 ### Suspicious browser extension installation
 
@@ -412,4 +463,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

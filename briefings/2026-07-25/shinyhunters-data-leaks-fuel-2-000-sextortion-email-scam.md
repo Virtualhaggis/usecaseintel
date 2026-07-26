@@ -26,12 +26,62 @@ However, the messages appear to be sent by someone who down…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1656** — Impersonation
+- **T1566** — Phishing
+- **T1657** — Financial Theft
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Fake ShinyHunters sextortion email by fixed subject + spoofed display name
+
+`UC_4_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.direction=inbound (All_Email.subject="Information about your online security" OR All_Email.src_user="ShinyHunters" OR All_Email.src_user="You've Been HACKED") by All_Email.src_user, All_Email.src, All_Email.subject, All_Email.recipient, All_Email.message_id | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| where Subject =~ "Information about your online security"
+    or SenderDisplayName has_any ("ShinyHunters", "You've Been HACKED")
+| where DeliveryAction != "Blocked"    // surface what actually landed in the mailbox
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderDisplayName, SenderIPv4, SenderFromDomain, Subject, RecipientEmailAddress, DeliveryAction, DeliveryLocation, ThreatTypes
+| order by Timestamp desc
+```
+
+### ShinyHunters sextortion campaign fan-out (one subject, many random senders/recipients)
+
+`UC_4_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(All_Email.recipient) as recipients dc(All_Email.src) as distinct_senders count min(_time) as firstTime max(_time) as lastTime values(All_Email.src) as sender_addresses from datamodel=Email.All_Email where All_Email.direction=inbound (All_Email.subject="Information about your online security" OR All_Email.src_user="ShinyHunters" OR All_Email.src_user="You've Been HACKED") by All_Email.subject | `drop_dm_object_name(All_Email)` | where recipients>=5 | convert ctime(firstTime) ctime(lastTime) | sort - recipients
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound"
+| where Subject =~ "Information about your online security"
+    or SenderDisplayName has_any ("ShinyHunters", "You've Been HACKED")
+| summarize Recipients = dcount(RecipientEmailAddress),
+            DistinctSenders = dcount(SenderFromAddress),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            SampleSenders = make_set(SenderFromAddress, 15),
+            SampleSenderIPs = make_set(SenderIPv4, 15)
+        by Subject
+| where Recipients >= 5     // 5 = low bar for a coordinated blast vs a one-off; tune up in large tenants
+| order by Recipients desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -120,4 +170,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
