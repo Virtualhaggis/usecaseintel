@@ -1,4 +1,4 @@
-# [MED] GitHub, PyPI add time-absed defenses against supply chain attacks
+# [MED] GitHub, PyPI add time-based defenses against supply chain attacks
 
 **Source:** BleepingComputer
 **Published:** 2026-07-26
