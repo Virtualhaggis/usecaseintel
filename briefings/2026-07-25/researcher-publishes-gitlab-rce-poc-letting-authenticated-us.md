@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### GitLab Puma/Ruby worker (running as git) spawns shell or network tool — Oj .ipynb RCE landing
 
-`UC_6_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Outbound reverse-shell egress from GitLab Ruby/Puma worker as git — Oj RCE connect-back
 
-`UC_6_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

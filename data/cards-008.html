@@ -1,3 +1,350 @@
+<article class="card" id="art-201" data-art-slug="2026-07-08-ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-53649: Joro: Unauthenticated Cross-Origin Plugin Upload Leads to RCE Joro: Unauthenticated Cross-Origin Plugin Upload Leads to RCE CVE-2026-53649 T1190 [LLM] Joro proxy-mode confused-deputy: browser POSTs to loopback API 127.0.0.1:9090 (CVE-2026-53649) [LLM] Joro native plugin RCE: joro process spawns interactive /bin/bash shell (CVE-2026-53649) [LLM] Joro writes a native .so plugin: attacker plugin drop before restart (CVE-2026-53649) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-08-ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-xqhv-chqm-fhcc" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-53649: Joro: Unauthenticated Cross-Origin Plugin Upload Leads to RCE</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-08</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Joro: Unauthenticated Cross-Origin Plugin Upload Leads to RCE</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-53649</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-201-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-201"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-201-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Joro proxy-mode confused-deputy: browser POSTs to loopback API 127.0.0.1:9090 (CVE-2026-53649)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Joro native plugin RCE: joro process spawns interactive /bin/bash shell (CVE-2026-53649)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Joro writes a native .so plugin: attacker plugin drop before restart (CVE-2026-53649)</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="a0fbf9ab9f" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">Joro proxy-mode confused-deputy: browser POSTs to loopback API 127.0.0.1:9090 (CVE-2026-53649)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="a0fbf9ab9f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a web browser process opening connections to the Joro proxy-mode API on loopback TCP/9090, the confused-deputy vector CVE-2026-53649 abuses when attacker-controlled cross-origin JavaScript reaches the unauthenticated, wildcard-CORS Joro API. Article-specific because it pins the exact bind (127.0.0.1:9090) and the browser-mediated initiator.
+
+Rationale: Uses the exact loopback bind (127.0.0.1:9090) named in the advisory plus a browser-process initiator, the confused-deputy shape of CVE-2026-53649. Deliberately hunting/Low because a legitimate Joro operator&#x27;s own browser talks to the same UI/API port.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqhv-chqm-fhcc
+  • https://bishopfox.com/blog/introducing-joro-using-ai-build-security-tooling
+  • https://github.com/bishopfox</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Drive-by Compromise">T1189</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Joro operator using the proxy-mode web UI, which itself talks to 127.0.0.1:9090</li><li>Unrelated local dev services on 9090 (Prometheus Pushgateway, SonarQube, custom app) that a browser hits</li><li>Browser DevTools/extension polling a localhost dev server on the same port</li><li>Local reverse-proxy or API mock bound to 9090 during development</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether Joro is installed/running on the host and whether the operator was actively using the Joro UI at that timestamp; pull the browser history for the immediately preceding external navigation. 2) Contain: if the loopback hit was NOT operator-initiated UI use, kill the joro process, isolate the host, and block the external page&#x27;s domain at the proxy. 3) Hunt: pivot to whether joro subsequently wrote a .so plugin, restarted, or spawned an interactive shell (see companion UCs) — that sequence confirms exploitation.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-201-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-201-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemotePort == 9090
+| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
+| where InitiatingProcessFileName in~ (&quot;firefox&quot;,&quot;firefox-bin&quot;,&quot;chrome&quot;,&quot;chromium&quot;,&quot;msedge&quot;,&quot;brave&quot;,&quot;Google Chrome&quot;,&quot;Firefox&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, LocalIP
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where RemotePort == 9090
+| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;)
+| where InitiatingProcessFileName in~ (&quot;firefox&quot;,&quot;firefox-bin&quot;,&quot;chrome&quot;,&quot;chromium&quot;,&quot;msedge&quot;,&quot;brave&quot;,&quot;Google Chrome&quot;,&quot;Firefox&quot;)
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, LocalIP
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Connects to Joro Proxy-Mode Loopback API (CVE-2026-53649)
+id: 8b2f4c1e-9d3a-4e77-bc21-6f0a2d5e91aa
+description: A browser process opening a connection to 127.0.0.1:9090 is the browser-mediated confused-deputy vector against Joro&#x27;s unauthenticated proxy-mode API.
+references:
+  - https://github.com/advisories/GHSA-xqhv-chqm-fhcc
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.t1189
+  - attack.t1204.001
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;/firefox&#x27;
+      - &#x27;/firefox-bin&#x27;
+      - &#x27;/chrome&#x27;
+      - &#x27;/chromium&#x27;
+      - &#x27;/brave&#x27;
+    DestinationIp:
+      - &#x27;127.0.0.1&#x27;
+      - &#x27;::1&#x27;
+    DestinationPort: 9090
+  condition: selection
+level: low</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=9090
+| RemoteAddressIP4=/^127\.0\.0\.1$/
+| ContextImageFileName=/\/(firefox|firefox-bin|chrome|chromium|brave)$/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-201-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=9090 (All_Traffic.dest_ip=&quot;127.0.0.1&quot; OR All_Traffic.dest_ip=&quot;::1&quot;) (All_Traffic.process_name=firefox OR All_Traffic.process_name=chrome OR All_Traffic.process_name=chromium OR All_Traffic.process_name=msedge OR All_Traffic.process_name=brave OR All_Traffic.process_name=&quot;firefox-bin&quot;) by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-201-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=9090 (All_Traffic.dest_ip=&quot;127.0.0.1&quot; OR All_Traffic.dest_ip=&quot;::1&quot;) (All_Traffic.process_name=firefox OR All_Traffic.process_name=chrome OR All_Traffic.process_name=chromium OR All_Traffic.process_name=msedge OR All_Traffic.process_name=brave OR All_Traffic.process_name=&quot;firefox-bin&quot;) by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0d99295d17" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Joro native plugin RCE: joro process spawns interactive /bin/bash shell (CVE-2026-53649)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0d99295d17" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Alerts when the joro binary spawns an interactive Unix shell (bash/sh/dash/zsh with -i), the terminal step of the CVE-2026-53649 chain where a malicious uploaded plugin&#x27;s init() opens a goroutine and yields an interactive /bin/bash -i shell as the operator&#x27;s user. High fidelity because joro is a proxy/teamserver, not a shell launcher — it has no legitimate reason to fork a local login shell.
+
+Rationale: Pins the article&#x27;s exact parent (joro) and payload (interactive /bin/bash -i obtained on plugin.Open() init()). Because Joro is a proxy that never legitimately forks a local login shell, parent=joro + shell + -i is a near-zero-FP RCE tell.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqhv-chqm-fhcc
+  • https://bishopfox.com/blog/introducing-joro-using-ai-build-security-tooling</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Shared Modules">T1129</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Joro developer/operator debugging the tool and manually shelling out from a plugin during testing</li><li>A local wrapper or helper script also named &#x27;joro&#x27; that legitimately invokes a shell</li><li>Operator running a benign self-authored plugin that spawns a shell for tooling</li><li>CI/build harness building Joro plugins that exec a shell as part of a test</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;--build-plugin&quot; and InitiatingProcessCommandLine !has &quot;--build-plugin&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the child shell&#x27;s full process tree and any sockets it holds (ss -p); confirm the joro process previously loaded a newly-written .so and restarted. 2) Contain: kill the shell and joro process, isolate the host, and snapshot /proc for the joro PID before termination for the loaded-plugin path. 3) Hunt: enumerate the Joro plugin directory for attacker-uploaded .so files, review recent POSTs to /api/v1/plugins/upload and /api/v1/system/restart, and check outbound connections from joro to external hosts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-201-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-201-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName =~ &quot;joro&quot;
+| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;)
+| where ProcessCommandLine has &quot;-i&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessId, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has &quot;joro&quot;
+| where TargetProcessName has_any (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;)
+| where TargetProcessCommandLine has &quot;-i&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Joro Process Spawns Interactive Shell (CVE-2026-53649 Plugin RCE)
+id: 3d9a71f0-2c46-4b8e-9a1d-7e5c0b4f2d13
+description: The joro proxy/teamserver binary forking an interactive Unix shell (-i) is the payload-execution step of the CVE-2026-53649 unauthenticated plugin-upload RCE chain.
+references:
+  - https://github.com/advisories/GHSA-xqhv-chqm-fhcc
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.t1203
+  - attack.t1059.004
+  - attack.t1129
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    ParentImage|endswith: &#x27;/joro&#x27;
+    Image|endswith:
+      - &#x27;/bash&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/ash&#x27;
+    CommandLine|contains: &#x27;-i&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^joro$/i
+| ImageFileName=/\/(bash|sh|dash|zsh|ash)$/i
+| CommandLine=/(^|\s)-i(\s|$)/
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-201-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=joro (Processes.process_name=bash OR Processes.process_name=sh OR Processes.process_name=dash OR Processes.process_name=zsh OR Processes.process_name=ash) Processes.process=&quot;*-i*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-201-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=joro (Processes.process_name=bash OR Processes.process_name=sh OR Processes.process_name=dash OR Processes.process_name=zsh OR Processes.process_name=ash) Processes.process=&quot;*-i*&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7b08a34bef" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Joro writes a native .so plugin: attacker plugin drop before restart (CVE-2026-53649)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7b08a34bef" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the joro process writing a shared-object (.so) plugin file to disk, the staging step where CVE-2026-53649&#x27;s unauthenticated upload endpoint persists an attacker-supplied native plugin that executes its init() on the next plugin.Open(). Article-specific via the joro-process writer plus the .so plugin artifact.
+
+Rationale: Ties the article&#x27;s plugin-upload artifact (a native .so consumed by plugin.Open()) to the joro process as writer. joro dropping a .so it did not build interactively is the on-disk footprint of the upload endpoint being abused.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqhv-chqm-fhcc
+  • https://bishopfox.com/blog/introducing-joro-using-ai-build-security-tooling</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Shared Modules">T1129</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Operator legitimately installing/updating a Joro plugin through the intended workflow</li><li>Joro&#x27;s own --build-plugin feature emitting a compiled .so during plugin development</li><li>Package manager or updater refreshing bundled Joro plugins on the same host</li><li>Backup/sync tooling restoring the Joro plugin directory</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;--build-plugin&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: hash the written .so, submit to sandbox/AV, and check whether it was preceded by a browser hit to 127.0.0.1:9090 and a joro restart. 2) Contain: quarantine the .so, stop joro before it re-opens the plugin, and isolate the host if the file is unsigned/unknown. 3) Hunt: look for joro spawning an interactive shell or making outbound public connections after the write, and sweep other operator hosts for the same .so hash (one ABI-matched plugin works against every operator on the release).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-201-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-201-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName =~ &quot;joro&quot;
+| where FileName endswith &quot;.so&quot;
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has &quot;joro&quot;
+| where TargetFileName endswith &quot;.so&quot;
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileCreate&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-201-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Joro Process Writes Native .so Plugin (CVE-2026-53649)
+id: 6f1c8b90-4a2d-4e63-8c77-1b9e0d3a5f42
+description: The joro binary writing a shared-object plugin to disk is the staging step of the CVE-2026-53649 unauthenticated plugin-upload RCE chain.
+references:
+  - https://github.com/advisories/GHSA-xqhv-chqm-fhcc
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.t1129
+  - attack.t1203
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    Image|endswith: &#x27;/joro&#x27;
+    TargetFilename|endswith: &#x27;.so&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-201-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\.so$/i
+| ContextImageFileName=/\/joro$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-201-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=joro Filesystem.file_name=&quot;*.so&quot; (Filesystem.action=created OR Filesystem.action=modified) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-201-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=joro Filesystem.file_name=&quot;*.so&quot; (Filesystem.action=created OR Filesystem.action=modified) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-201-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-201-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-201-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-201-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53649&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-201-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53649&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-201-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-201-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-201-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-201-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53649&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-201-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53649&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-202" data-art-slug="2026-07-08-ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -10881,481 +11228,6 @@ level: critical
         where DNS.query IN (&quot;cacoo.com&quot;, &quot;allianceinvestigators.com&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-229" data-art-slug="2026-07-03-authentication-bypass-in-the-default-configuration-phpbb"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1195.002,T1528"
-  data-sources="Aikido"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="azure,windows"
-  data-uc-count="6" data-llm-uc-count="3"
-  data-search="Authentication Bypass in the default configuration phpBB Our AI pentest agents found a critical phpBB auth bypass (CVE-2026-48611): one unauthenticated request logs you into any account. See the exploit and the fix. Category: Vulnerabilities &amp; Threats CVE-2026-48611 T1190 T1195.002 T1528 [LLM] phpBB CVE-2026-48611 auth bypass via login_link auth_provider=apache [LLM] phpBB CVE-2026-48611 post-exploit ACP access from exploiting IP [LLM] HTTP Basic Authorization header sent to phpBB login_link endpoint Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-03-authentication-bypass-in-the-default-configuration-phpbb" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.aikido.dev/blog/authentication-bypass-phpbb-technical-writeup" target="_blank" rel="noopener">Authentication Bypass in the default configuration phpBB</a></h2>
-  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
-  <div class="pubmeta">
-    <span>2026-07-03</span>
-    <span>6 use cases</span>
-    <span>3 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Our AI pentest agents found a critical phpBB auth bypass (CVE-2026-48611): one unauthenticated request logs you into any account. See the exploit and the fix. Category: Vulnerabilities &amp; Threats</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48611</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-229-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-229"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-229-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] phpBB CVE-2026-48611 auth bypass via login_link auth_provider=apache · [LLM] HTTP Basic Authorization header sent to phpBB login_link endpoint · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] phpBB CVE-2026-48611 post-exploit ACP access from exploiting IP · OAuth consent / suspicious app grant</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="a3498f8930" data-platforms="sent,sigma,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">phpBB CVE-2026-48611 auth bypass via login_link auth_provider=apache</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a3498f8930" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the exact CVE-2026-48611 exploit request: a single unauthenticated POST to ucp.php that triggers the login-link flow but forces the vulnerable &#x27;apache&#x27; auth provider (auth_provider=apache) to skip the password check and log in as any user. The auth_provider=apache value inside a mode=login_link request is a near-unambiguous exploit signature that no legitimate default phpBB flow produces.
-
-Rationale: Anchored on the article&#x27;s verbatim PoC URL (/ucp.php?mode=login_link&amp;auth_provider=apache&amp;login_link_aikido=1); auth_provider=apache in a login_link request is the exact exploit primitive and has no benign default-config equivalent. Cross-checked against Pentest-Tools, IONIX, SentinelOne, phpBB.com advisory and public PoC repos.
-
-Cross-checked against:
-  • https://pentest-tools.com/research/phpbb-authentication-bypass
-  • https://www.ionix.io/threat-center/cve-2026-48611/
-  • https://www.sentinelone.com/vulnerability-database/cve-2026-48611/
-  • https://www.bleepingcomputer.com/news/security/phpbb-forum-fixes-auth-bypass-bug-lurking-for-a-decade/
-  • https://www.phpbb.com/community/viewtopic.php?t=2672170</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanning (Nuclei has a public CVE-2026-48611 template) hitting the endpoint</li><li>Internal penetration-test / red-team validation of the patch</li><li>A phpBB instance legitimately fronted by an Apache .htpasswd proxy that genuinely uses the apache auth provider (rare, non-default)</li><li>Security researchers reproducing the PoC from the aikido.dev / GitHub repos against a lab instance</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;&lt;scanner-ip-allowlist&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the target forum version — if &lt; 3.3.17 (or 4.0.0-a2) it is exploitable; capture source IP, User-Agent, targeted login_username, and the HTTP status (302 = successful bypass). 2) Contain: block the source IP at the WAF, force-expire all active phpBB sessions (rotate the board&#x27;s session salt / clear phpbb_sessions), and prioritise upgrade to 3.3.17 or apply the vendor workaround disabling the apache provider. 3) Hunt: pivot on the same source IP for follow-on /adm/index.php access, ACP user/permission changes, and private-message reads; review phpbb_log for admin actions after the exploit timestamp.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-229-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;ucp.php&quot;
-| where Url has &quot;mode=login_link&quot; and Url has &quot;auth_provider=apache&quot;
-| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: phpBB CVE-2026-48611 Auth Bypass via login_link apache Provider
-id: 7b3e1c2a-8f44-4d19-9a2e-1c5f0e6b2d31
-description: Detects the CVE-2026-48611 exploit request forcing the apache auth provider inside a phpBB login-link flow to bypass the password check.
-references:
-  - https://www.aikido.dev/blog/authentication-bypass-phpbb-technical-writeup
-  - https://pentest-tools.com/research/phpbb-authentication-bypass
-author: SOC Detection Engineering
-date: 2026/07/10
-tags:
-  - attack.t1190
-  - attack.t1078
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-stem|contains: &#x27;ucp.php&#x27;
-    cs-uri-query|contains|all:
-      - &#x27;mode=login_link&#x27;
-      - &#x27;auth_provider=apache&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-229-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;*ucp.php&quot; Web.uri_query=&quot;*mode=login_link*&quot; Web.uri_query=&quot;*auth_provider=apache*&quot; by Web.src Web.dest Web.uri_path Web.uri_query
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-229-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;*ucp.php&quot; Web.uri_query=&quot;*mode=login_link*&quot; Web.uri_query=&quot;*auth_provider=apache*&quot; by Web.src Web.dest Web.uri_path Web.uri_query
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="24f09ed384" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">phpBB CVE-2026-48611 post-exploit ACP access from exploiting IP</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="24f09ed384" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates the CVE-2026-48611 exploit request (login_link + auth_provider=apache) with a subsequent hit to the phpBB Admin Control Panel (/adm/index.php) from the same source IP within one hour. This confirms the bypass yielded an admin session and the attacker is now operating the forum backend, separating real compromise from opportunistic scanning.
-
-Rationale: Uses the article&#x27;s ACP path (/adm/index.php) plus the exact exploit query string, tied on source IP within a 1h window (3600s / 1h) — the exploit-then-admin sequence is what turns a scan into confirmed admin takeover. ACP path and admin impact confirmed against phpBB.com advisory and BleepingComputer.
-
-Cross-checked against:
-  • https://www.bleepingcomputer.com/news/security/phpbb-forum-fixes-auth-bypass-bug-lurking-for-a-decade/
-  • https://www.phpbb.com/community/viewtopic.php?t=2672170
-  • https://pentest-tools.com/research/phpbb-authentication-bypass</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate admin who happens to share a NAT/egress IP with a scanner that probed the endpoint</li><li>Penetration test that both exploits and logs into ACP from the same host (expected TP but authorized)</li><li>WAF/proxy that rewrites source IP to a single upstream address, collapsing distinct users onto one src (tune to use X-Forwarded-For)</li><li>Load-balancer health checks hitting /adm/index.php returning 401/403 (filter on HttpStatusCode success)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpStatusCode in (200, 302, 301)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm both events share the true client IP (check XFF if behind a proxy) and that the /adm access returned 200/302 rather than 401/403; identify which admin username was impersonated. 2) Contain: invalidate all sessions, disable/rotate the compromised admin account credentials, block the source IP, and enable maintenance mode until 3.3.17 is deployed. 3) Hunt: enumerate every ACP action from that session — new admin/mod accounts (acp_users, acp_groups), permission grants, board settings and email-config changes, and extension installs (potential webshell); diff phpbb_config and phpbb_users against a known-good backup.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Exploit = ImWebSession
-    | where TimeGenerated &gt; ago(7d)
-    | where Url has &quot;ucp.php&quot; and Url has &quot;mode=login_link&quot; and Url has &quot;auth_provider=apache&quot;
-    | project ExploitTime = TimeGenerated, SrcIpAddr, DstHostname;
-ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;/adm/index.php&quot;
-| join kind=inner Exploit on SrcIpAddr
-| where TimeGenerated between (ExploitTime .. ExploitTime + 1h)
-| extend DelaySec = datetime_diff(&#x27;second&#x27;, TimeGenerated, ExploitTime)
-| project ExploitTime, AdminAccessTime = TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, DelaySec
-| order by ExploitTime desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t min(_time) as exploit_time from datamodel=Web where Web.uri_path=&quot;*ucp.php&quot; Web.uri_query=&quot;*mode=login_link*&quot; Web.uri_query=&quot;*auth_provider=apache*&quot; by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| rename dest as forum_host
-| join type=inner src forum_host [
-    | tstats summariesonly=t min(_time) as admin_time values(Web.uri_path) as admin_paths from datamodel=Web where Web.uri_path=&quot;*/adm/index.php&quot; by Web.src Web.dest
-    | `drop_dm_object_name(Web)`
-    | rename dest as forum_host ]
-| where admin_time &gt;= exploit_time AND admin_time &lt;= exploit_time + 3600
-| eval delay_sec = admin_time - exploit_time
-| convert ctime(exploit_time) ctime(admin_time)
-| table src forum_host exploit_time admin_time delay_sec admin_paths</code></pre><pre class="spl-mode-body" id="art-229-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as exploit_time from datamodel=Web where Web.uri_path=&quot;*ucp.php&quot; Web.uri_query=&quot;*mode=login_link*&quot; Web.uri_query=&quot;*auth_provider=apache*&quot; by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| rename dest as forum_host
-| join type=inner src forum_host [
-    | tstats summariesonly=false min(_time) as admin_time values(Web.uri_path) as admin_paths from datamodel=Web where Web.uri_path=&quot;*/adm/index.php&quot; by Web.src Web.dest
-    | `drop_dm_object_name(Web)`
-    | rename dest as forum_host ]
-| where admin_time &gt;= exploit_time AND admin_time &lt;= exploit_time + 3600
-| eval delay_sec = admin_time - exploit_time
-| convert ctime(exploit_time) ctime(admin_time)
-| table src forum_host exploit_time admin_time delay_sec admin_paths</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3e23b6b16c" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">HTTP Basic Authorization header sent to phpBB login_link endpoint</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3e23b6b16c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the mechanism CVE-2026-48611 abuses: an HTTP &#x27;Authorization: Basic&#x27; header supplied to phpBB&#x27;s ucp.php login_link flow, which the apache provider trusts as PHP_AUTH_USER to skip password validation. Default phpBB never uses HTTP Basic authentication, so a Basic header on a login_link request is a strong exploit indicator that survives WAF logs even when query strings are truncated or the provider value varies.
-
-Rationale: Anchored on the PoC&#x27;s &#x27;Authorization: Basic YWRtaW46eA==&#x27; header combined with mode=login_link on ucp.php — the apache provider reads PHP_AUTH_USER from exactly this header. Basic auth on phpBB is anomalous by design; the Splunk fallback keys on the login_link POST since CIM Web has no request-header field (the header check requires ImWebSession/WAF telemetry, noted for the analyst).
-
-Cross-checked against:
-  • https://www.aikido.dev/blog/authentication-bypass-phpbb-technical-writeup
-  • https://pentest-tools.com/research/phpbb-authentication-bypass
-  • https://www.ionix.io/threat-center/cve-2026-48611/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A phpBB instance genuinely deployed behind an Apache .htpasswd proxy using the apache auth provider (non-default, legitimate Basic auth)</li><li>Automated vulnerability scanners replaying the PoC request</li><li>Browser/basic-auth prompts on a reverse proxy protecting the whole forum with site-wide Basic auth</li><li>API clients or monitoring tools mistakenly configured to send Basic credentials to ucp.php</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpStatusCode in (200, 302)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: base64-decode the Authorization header to recover the targeted username and check whether the response was a 302 (successful bypass); confirm the forum is not intentionally behind an Apache .htpasswd proxy. 2) Contain: block the source IP, expire active sessions, and fast-track the 3.3.17 upgrade or apply the vendor workaround disabling the apache provider. 3) Hunt: correlate the same IP/username to subsequent /adm/index.php access, private-message reads, and ACP configuration or account changes; review other endpoints for reuse of the same Basic header.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;ucp.php&quot; and Url has &quot;mode=login_link&quot;
-| where isnotempty(HttpRequestHeaderAuthorization) and HttpRequestHeaderAuthorization startswith &quot;Basic &quot;
-| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderAuthorization, HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-229-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;*ucp.php&quot; Web.uri_query=&quot;*mode=login_link*&quot; Web.http_method=POST by Web.src Web.dest Web.uri_path Web.uri_query
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-229-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;*ucp.php&quot; Web.uri_query=&quot;*mode=login_link*&quot; Web.http_method=POST by Web.src Web.dest Web.uri_path Web.uri_query
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-229-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48611&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-48611&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48611&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-229-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-48611&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">OAuth consent / suspicious app grant</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-229-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-229-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-229-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
-AuditLogs
-| where TimeGenerated &gt; ago(7d)
-| where OperationName has &quot;Consent to application&quot;
-| where Result =~ &quot;success&quot;
-| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
-         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
-         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
-| project TimeGenerated, OperationName, User, AppName, AppId, Result
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
-status: experimental
-description: |
-    User-driven consent to a third-party OAuth application — illicit-
-    consent attack precursor. Pair with first-time-seen-app heuristic
-    in your SIEM for higher fidelity.
-references:
-    - https://attack.mitre.org/techniques/T1528/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1528
-    - attack.persistence
-logsource:
-    product: azure
-    service: auditlogs
-detection:
-    selection:
-        OperationName: &#x27;Consent to application&#x27;
-        Result: &#x27;success&#x27;
-    condition: selection
-falsepositives:
-    - Legitimate first-time SaaS app onboarding
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-229-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-229-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-229-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-229-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-229-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-229-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-229-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-229-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-229-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

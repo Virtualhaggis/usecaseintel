@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f25v-x6vr-962g: Pheditor: Authentication Bypass in Forced
 
-`UC_13_0` · phase: **install** · confidence: **High**
+`UC_14_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

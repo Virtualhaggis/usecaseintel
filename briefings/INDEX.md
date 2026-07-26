@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-26
 - [2026 mid year update on pace for our biggest year yet](./2026-07-26/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [github pypi add time absed defenses against supply chain att](./2026-07-26/github-pypi-add-time-absed-defenses-against-supply-chain-att.md)
 
 ## 2026-07-25
 - [cl0p affiliates target internet exposed ptc windchill and fl](./2026-07-25/cl0p-affiliates-target-internet-exposed-ptc-windchill-and-fl.md)

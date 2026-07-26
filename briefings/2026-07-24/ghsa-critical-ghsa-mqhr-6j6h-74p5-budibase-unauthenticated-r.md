@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource
 
-`UC_17_1` · phase: **install** · confidence: **High**
+`UC_18_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
