@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 25, 2026
 06:37 PM
 0 
-
-
 Steam discussion forums are being abused in ClickFix attacks that pretend to be fixes for game and computer problems but actually infect devices with cryptominers.
-
-
-BleepingComputer learned of the campaign from a reader, who told us threat actors are creating random Steam accounts to post what appears to be helpful fixes for people's posts about games crashing, lost inventory …
+BleepingComputer learned of the campaign from a reader, who told us threat actors are creating random Steam accounts to post what appears to be helpful fixes for people's posts about games crashing, lost inventory items, a…
 
 ## Indicators of Compromise (high-fidelity only)
 

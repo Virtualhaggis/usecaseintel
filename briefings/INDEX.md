@@ -8,8 +8,10 @@ _2604 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-07-26
+- [2026 mid year update on pace for our biggest year yet](./2026-07-26/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+
 ## 2026-07-25
-- [2026 mid year update on pace for our biggest year yet](./2026-07-25/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [cl0p affiliates target internet exposed ptc windchill and fl](./2026-07-25/cl0p-affiliates-target-internet-exposed-ptc-windchill-and-fl.md)
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
 - [ctm360 research reveals how insurance phishing has evolved i](./2026-07-25/ctm360-research-reveals-how-insurance-phishing-has-evolved-i.md)
