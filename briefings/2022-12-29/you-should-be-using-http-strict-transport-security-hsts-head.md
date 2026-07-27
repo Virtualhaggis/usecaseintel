@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — You should be using HTTP Strict Transport Security (HSTS) headers in your Node.j
 
-`UC_1869_1` · phase: **exploit** · confidence: **High**
+`UC_1871_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

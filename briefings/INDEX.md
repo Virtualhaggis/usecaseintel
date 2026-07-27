@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2601 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,8 +10,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-27
 - [2026 mid year update on pace for our biggest year yet](./2026-07-27/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [coca cola confirms data theft in fairlife ransomware attack](./2026-07-27/coca-cola-confirms-data-theft-in-fairlife-ransomware-attack.md)
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
+- [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
 - [ernst young data breach claimed by shinyhunters extortion ga](./2026-07-27/ernst-young-data-breach-claimed-by-shinyhunters-extortion-ga.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
@@ -116,7 +118,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa p63j vcc4 9vmv vitest browser browser mod](./2026-07-21/ghsa-critical-ghsa-p63j-vcc4-9vmv-vitest-browser-browser-mod.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
-- [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
 - [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
 

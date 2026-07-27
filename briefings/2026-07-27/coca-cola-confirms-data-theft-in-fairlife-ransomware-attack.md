@@ -11,15 +11,9 @@ By Bill Toulas
 July 27, 2026
 11:39 AM
 0 
-
-
 The Coca-Cola Company has confirmed that hackers stole data from its dairy subsidiary, Fairlife, during a ransomware attack earlier this month.
-
-
 In a short statement earlier today, the global beverages giant says that it is still working to restore some of the impacted systems and operations, but most of the production in the U.S. has been resumed.
-
-
-Coca-Cola disclosed the cyberattack…
+Coca-Cola disclosed the cyberattack in a filing…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -44,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Anubis ransomware execution via distinctive /WIPEMODE /PFAD= /KEY= command-line flags
 
-`UC_4_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +61,7 @@ DeviceProcessEvents
 
 ### Anubis ransomware Volume Shadow Copy deletion via hardcoded /for=norealvolume artifact
 
-`UC_4_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +83,7 @@ DeviceProcessEvents
 
 ### Anubis ransomware mass file encryption — .anubis extension write burst
 
-`UC_4_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

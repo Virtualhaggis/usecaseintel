@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Timing out synchronous functions with regex
 
-`UC_1775_1` · phase: **exploit** · confidence: **High**
+`UC_1777_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

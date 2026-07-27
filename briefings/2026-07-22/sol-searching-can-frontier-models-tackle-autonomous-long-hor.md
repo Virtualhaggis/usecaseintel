@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### fast16 sabotage implant carrier (svcmgmt.exe) by hash / Lua-carrier behaviour
 
-`UC_82_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_85_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### fast16 kernel driver (fast16.sys) drop / load — sabotage patching engine
 
-`UC_82_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_85_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sol Searching | Can Frontier Models Tackle Autonomous Long-Horizon Malware Analy
 
-`UC_82_3` · phase: **exploit** · confidence: **High**
+`UC_85_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

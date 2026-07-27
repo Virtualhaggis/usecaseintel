@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### FTP client / Hive (commons-net) overwrites Unix auth files via path-traversal LIST (CVE-2018-1315)
 
-`UC_3608_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3610_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceFileEvents
 
 ### FTP control-channel connection followed by write to Unix system path (CVE-2018-1315 traversal chain)
 
-`UC_3608_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3610_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Attacking an FTP Client: MGETting more than you bargained for
 
-`UC_3608_1` · phase: **exploit** · confidence: **High**
+`UC_3610_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

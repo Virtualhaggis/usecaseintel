@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### CodeCov Bash Uploader CI env-var exfiltration via curl (<<<<<< ENV marker)
 
-`UC_2745_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2747_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### CodeCov uploader egress to non-CodeCov host (surfaces exfil server IP)
 
-`UC_2745_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2747_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

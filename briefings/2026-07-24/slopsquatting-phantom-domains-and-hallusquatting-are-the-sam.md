@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### AI coding agent installing hallucinated npm package 'react-codeshift' (slopsquatting)
 
-`UC_50_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_53_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

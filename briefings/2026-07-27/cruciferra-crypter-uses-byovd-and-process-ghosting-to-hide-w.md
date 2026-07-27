@@ -116,7 +116,7 @@ _(none detected from narrative keywords)_
 
 ### Cruciferra persistence: Run key 'putty' value pointing to non-PuTTY binary
 
-`UC_11_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceRegistryEvents
 
 ### Cruciferra BYOVD: vulnerable driver (GoFlyDrv.sys) load for EDR tampering
 
-`UC_11_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceImageLoadEvents
 
 ### Cruciferra loader side-load DLLs and Remcos logs.dat drop
 
-`UC_11_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceFileEvents
 
 ### Cruciferra known-sample SHA256 execution/write
 
-`UC_11_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_12_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,7 +205,7 @@ union
 
 ### Cruciferra C2 beacon to known IOC domains/IPs (incl. .gu.cc cluster)
 
-`UC_11_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +227,7 @@ DeviceNetworkEvents
 
 ### Process Ghosting: executable created then deleted while backing a live process
 
-`UC_11_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cruciferra Crypter Uses BYOVD and Process Ghosting to Hide Windows Malware
 
-`UC_11_8` · phase: **exploit** · confidence: **High**
+`UC_12_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

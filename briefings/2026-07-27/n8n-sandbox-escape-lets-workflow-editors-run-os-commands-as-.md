@@ -27,11 +27,15 @@ The affected ranges are <2.31.5 and >=2.32.0,<2.32.1 . n8n fixed…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1059.004** — Unix Shell
+- **T1059.003** — Windows Command Shell
+- **T1203** — Exploitation for Client Execution
+- **T1071.001** — Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552.001** — Credentials In Files
+- **T1555** — Credentials from Password Stores
+- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
@@ -39,74 +43,62 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### n8n (Node.js) process spawning shells / curl / wget — expression-sandbox escape RCE
+### n8n/Node.js process spawning shell or recon utility (sandbox-escape RCE)
 
-`UC_9_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n","n8n.exe") AND Processes.parent_process="*n8n*") AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","zsh","curl","curl.exe","wget","wget.exe","whoami","whoami.exe","nc","ncat","netcat","id")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n")) AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","csh","cmd.exe","powershell.exe","pwsh","pwsh.exe","whoami","id","curl","wget","nc","ncat","netcat","python","python3","perl","ruby")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node","node.exe","n8n","n8n.exe")
-| where InitiatingProcessCommandLine has "n8n"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","zsh","curl","curl.exe","wget","wget.exe","whoami","whoami.exe","nc","ncat","netcat","id")
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node","node.exe","n8n") or InitiatingProcessParentFileName in~ ("node","node.exe","n8n")
+| where FileName in~ ("sh","bash","dash","zsh","ksh","csh","cmd.exe","powershell.exe","pwsh","pwsh.exe","whoami","id","curl","wget","nc","ncat","netcat","python","python3","perl","ruby")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### n8n child process referencing secrets — N8N_ENCRYPTION_KEY / credential file theft
+### curl/wget/nc spawned by n8n/Node reaching external hosts (post-escape C2/exfil)
 
-`UC_9_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n","n8n.exe") AND Processes.parent_process="*n8n*") AND (Processes.process="*N8N_ENCRYPTION_KEY*" OR Processes.process="*/etc/shadow*" OR Processes.process="*/etc/passwd*" OR Processes.process="*id_rsa*" OR Processes.process="*.n8n/config*" OR Processes.process="*/proc/self/environ*" OR Processes.process="*printenv*" OR Processes.process="*/.aws/credentials*" OR Processes.process="*/root/.ssh*") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node","node.exe","n8n","n8n.exe")
-| where InitiatingProcessCommandLine has "n8n"
-| where ProcessCommandLine has_any ("N8N_ENCRYPTION_KEY","/etc/shadow","/etc/passwd","id_rsa",".n8n/config","/proc/self/environ","printenv","/root/.ssh","/.aws/credentials")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### n8n (Node.js) process reaching cloud instance metadata endpoint (IMDS)
-
-`UC_9_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("169.254.169.254","100.100.100.200") AND All_Traffic.app IN ("node","node.exe","n8n","n8n.exe") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n")) AND (Processes.process_name IN ("curl","wget","nc","ncat","netcat","bash","sh","python","python3","perl")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node","node.exe","n8n","n8n.exe")
-| where InitiatingProcessCommandLine has "n8n"
-| where RemoteIP in ("169.254.169.254","100.100.100.200") or RemoteUrl has "169.254.169.254"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where Timestamp > ago(7d)
+| where InitiatingProcessParentFileName in~ ("node","node.exe","n8n")
+| where InitiatingProcessFileName in~ ("curl","wget","nc","ncat","netcat","bash","sh","python","python3","perl")
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### n8n/Node child command accessing N8N_ENCRYPTION_KEY or host credential stores
+
+`UC_10_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n")) AND (Processes.process="*N8N_ENCRYPTION_KEY*" OR Processes.process="*/etc/shadow*" OR Processes.process="*/etc/passwd*" OR Processes.process="*id_rsa*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.n8n/config*" OR Processes.process="*printenv*" OR Processes.process="*/proc/self/environ*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node","node.exe","n8n") or InitiatingProcessParentFileName in~ ("node","node.exe","n8n")
+| where ProcessCommandLine has_any ("N8N_ENCRYPTION_KEY","/etc/shadow","/etc/passwd","id_rsa",".aws/credentials",".n8n/config","printenv","/proc/self/environ",".ssh/","/root/.n8n")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ChildProcess = FileName, ChildCmd = ProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -317,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process
 
-`UC_9_6` · phase: **exploit** · confidence: **High**
+`UC_10_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -374,4 +366,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
