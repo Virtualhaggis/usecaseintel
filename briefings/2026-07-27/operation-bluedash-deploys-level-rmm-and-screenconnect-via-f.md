@@ -1,26 +1,28 @@
-# [CRIT] Critical ServiceNow AI Platform Flaw Exploited for Unauthenticated Code Execution
+# [HIGH] Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update
 
 **Source:** The Hacker News
-**Published:** 2026-07-21
-**Article:** https://thehackernews.com/2026/07/critical-servicenow-ai-platform-flaw.html
+**Published:** 2026-07-27
+**Article:** https://thehackernews.com/2026/07/operation-bluedash-deploys-level-rmm.html
 
 ## Threat Profile
 
-Critical ServiceNow AI Platform Flaw Exploited for Unauthenticated Code Execution 
- Ravie Lakshmanan  Jul 21, 2026 Vulnerability / Artificial Intelligence 
-Threat actors are now exploiting a recently disclosed critical security flaw impacting ServiceNow AI Platform, according to Defused Cyber .
-In a post shared on X, the threat intelligence firm said it's observing in-the-wild exploitation of CVE-2026-6875 (CVSS score: 9.5), a sandbox escape vulnerability that could allow an unauthenticated us…
+Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update 
+ Ravie Lakshmanan  Jul 27, 2026 Malware / Cyber Attack 
+Cybersecurity researchers have flagged a Microsoft Teams-themed phishing campaign that employs "secure document" lures to deliver legitimate remote monitoring and management ( RMM ) tools.
+"The victim was directed through compromised web infrastructure to a counterfeit Microsoft Store page claiming that Microsoft Teams had to be updated before the shared documen…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-6875`
+- **Domain (defanged):** `teamvem.com`
+- **Domain (defanged):** `support.berrydev.xyz`
+- **Domain (defanged):** `berry4603.github.io`
+- **Domain (defanged):** `corychase.org`
+- **Domain (defanged):** `anuyotindustries.com`
 
 ## MITRE ATT&CK Techniques
 
-- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -28,99 +30,20 @@ In a post shared on X, the threat intelligence firm said it's observing in-the-w
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1566.004** — Phishing: Spearphishing Voice
+- **T1566** — Phishing
+- **T1219** — Remote Access Software
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
-- **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1027** — Obfuscated Files or Information
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### ServiceNow CVE-2026-6875 pre-auth RCE: POST/GET to /assessment_thanks.do
-
-`UC_111_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as http_user_agent values(Web.status) as status values(Web.uri_query) as uri_query from datamodel=Web where Web.http_method IN ("POST","GET") Web.uri_path="*/assessment_thanks.do*" by Web.src Web.dest Web.http_method Web.url
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-### ServiceNow CVE-2026-6875 sandbox-escape gadget markers in assessment_thanks.do request
-
-`UC_111_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as http_user_agent values(Web.status) as status from datamodel=Web where Web.uri_path="*/assessment_thanks.do*" (Web.uri_query="*Packages.*" OR Web.uri_query="*java.lang*" OR Web.uri_query="*getRuntime*" OR Web.uri_query="*eval(*" OR Web.uri_query="*javascript:*" OR Web.uri_query="*GlideRecord*" OR Web.url="*Packages.java*" OR Web.url="*getRuntime*") by Web.src Web.dest Web.http_method Web.url Web.uri_query
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-### ServiceNow node / MID Server Java process spawning OS shell (CVE-2026-6875 post-exploit)
-
-`UC_111_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java.exe","wrapper.exe","wrapper-windows-x86-64.exe","java")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","bash.exe","wscript.exe","cscript.exe","curl.exe","certutil.exe","bitsadmin.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ('java.exe','wrapper.exe','wrapper-windows-x86-64.exe','java')
-| where FileName in~ ('cmd.exe','powershell.exe','pwsh.exe','bash','sh','bash.exe','wscript.exe','cscript.exe','curl.exe','certutil.exe','bitsadmin.exe')
-| where AccountName !endswith '$'
-| where AccountName !in~ ('system','local service','network service')
-| project Timestamp, DeviceName, AccountName, ParentProc=InitiatingProcessFileName, ParentPath=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildProc=FileName, ChildCmd=ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Suspicious browser extension installation
-
-`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
-        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
-        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessAccountName
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -299,6 +222,59 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
+
+`UC_TEAMS_VISHING` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`o365_management_activity`
+  Workload=MicrosoftTeams Operation=MessageSent
+  ExternalParticipants=*
+| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
+| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
+    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Microsoft Teams"
+| where ActionType == "MessageSent"
+| where RawEventData has "ExternalParticipants"
+| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
+| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
+| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
+```
+
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+```
+
 ### OAuth consent / suspicious app grant
 
 `UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
@@ -326,122 +302,120 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
-### Ransomware-style mass file rename / extension change
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
+### PowerShell encoded / obfuscated command
+
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+```
+
+### Article-specific behavioural hunt — Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update
+
+`UC_1_10` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("supportdev.exe"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("supportdev.exe"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
+]
 ```
 
 **Defender KQL:**
 ```kql
+// Article-specific bespoke detection — Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("supportdev.exe"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
 DeviceFileEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-```
-
-### LSASS process access / dump (credential theft)
-
-`UC_LSASS` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("supportdev.exe"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
 | order by Timestamp desc
-```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-6875`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `teamvem.com`, `support.berrydev.xyz`, `berry4603.github.io`, `corychase.org`, `anuyotindustries.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

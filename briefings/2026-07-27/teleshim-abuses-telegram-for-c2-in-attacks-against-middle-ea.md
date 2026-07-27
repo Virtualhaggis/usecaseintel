@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### TELESHIM DLL side-load: ASUS RegSchdTask.exe/shimgen.exe loading rogue AsTaskSched.dll
 
-`UC_0_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceImageLoadEvents
 
 ### MIXEDKEY reflective loader side-load: GoProAlertService.exe loading rogue pthreadVC2.dll
 
-`UC_0_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceImageLoadEvents
 
 ### Environmental-keyed payload drop: *.PCPKEY file in C:\ProgramData\Crypto\DSS
 
-`UC_0_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceFileEvents
 
 ### TELESHIM Telegram-bot C2: api.telegram.org getUpdates polling from a non-messenger process
 
-`UC_0_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceNetworkEvents
 
 ### BINDCLOAK C2 beacon to cert.hypersnet.com / ssl.blsouqs.com / contacts.ftabnews.com
 
-`UC_0_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +175,7 @@ DeviceNetworkEvents
 
 ### TELESHIM persistence: scheduled tasks 'shimgen' / 'Feedback' executing ProgramData binaries
 
-`UC_0_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -437,7 +437,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TELESHIM Abuses Telegram for C2 in Attacks Against Middle East Governments
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_3_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

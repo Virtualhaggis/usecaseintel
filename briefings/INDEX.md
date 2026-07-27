@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-27
+- [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
+- [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
+- [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 
 ## 2026-07-26
@@ -102,7 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
 - [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)
 - [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
-- [critical servicenow ai platform flaw exploited for unauthent](./2026-07-21/critical-servicenow-ai-platform-flaw-exploited-for-unauthent.md)
 - [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
 - [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)
 - [ghsa critical cve 2026 22874 gitea incomplete ssrf protectio](./2026-07-21/ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio.md)
@@ -113,11 +115,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa p63j vcc4 9vmv vitest browser browser mod](./2026-07-21/ghsa-critical-ghsa-p63j-vcc4-9vmv-vitest-browser-browser-mod.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
 - [new bit2watt attack could let cloud tenants disrupt power gr](./2026-07-21/new-bit2watt-attack-could-let-cloud-tenants-disrupt-power-gr.md)
-- [new encforge ransomware targets ai model files in langflow r](./2026-07-21/new-encforge-ransomware-targets-ai-model-files-in-langflow-r.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 - [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
-- [wordpress wp2shell exploitation grows as public exploit fuel](./2026-07-21/wordpress-wp2shell-exploitation-grows-as-public-exploit-fuel.md)
 - [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
 
 ## 2026-07-20
