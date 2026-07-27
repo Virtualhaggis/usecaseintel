@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,9 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-27
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
+- [ernst young data breach claimed by shinyhunters extortion ga](./2026-07-27/ernst-young-data-breach-claimed-by-shinyhunters-extortion-ga.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
+- [shadow ai agents are multiplying here s how to find and secu](./2026-07-27/shadow-ai-agents-are-multiplying-here-s-how-to-find-and-secu.md)
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 
 ## 2026-07-26
@@ -35,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
-- [clop ransomware targets windchill flexplm in data theft atta](./2026-07-24/clop-ransomware-targets-windchill-flexplm-in-data-theft-atta.md)
 - [europol flags 4 340 urls for removal in the com crackdown](./2026-07-24/europol-flags-4-340-urls-for-removal-in-the-com-crackdown.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
@@ -75,7 +76,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
-- [new dolphin x malware uses ai to rank high value targets](./2026-07-23/new-dolphin-x-malware-uses-ai-to-rank-high-value-targets.md)
 - [nine year old refluxfs linux flaw gives local users root on ](./2026-07-23/nine-year-old-refluxfs-linux-flaw-gives-local-users-root-on-.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
 - [russian espionage group exploited zimbra zero day to steal m](./2026-07-23/russian-espionage-group-exploited-zimbra-zero-day-to-steal-m.md)
@@ -114,7 +114,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 59891 credential confusion in sigstor](./2026-07-21/ghsa-critical-cve-2026-59891-credential-confusion-in-sigstor.md)
 - [ghsa critical ghsa p63j vcc4 9vmv vitest browser browser mod](./2026-07-21/ghsa-critical-ghsa-p63j-vcc4-9vmv-vitest-browser-browser-mod.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
-- [new bit2watt attack could let cloud tenants disrupt power gr](./2026-07-21/new-bit2watt-attack-could-let-cloud-tenants-disrupt-power-gr.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 - [open source android ai agents could let invisible screen tex](./2026-07-21/open-source-android-ai-agents-could-let-invisible-screen-tex.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)

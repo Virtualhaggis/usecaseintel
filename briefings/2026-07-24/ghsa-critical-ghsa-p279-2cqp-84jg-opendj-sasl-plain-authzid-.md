@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### OpenDJ SASL PLAIN bind invoking proxied authorization (authzid) — impersonation
 
-`UC_21_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_24_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### OpenDJ proxied-auth fan-out — one source assuming many distinct authz identities
 
-`UC_21_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_24_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

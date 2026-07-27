@@ -38,12 +38,129 @@ Cybersecurity researchers have flagged a Microsoft Teams-themed phishing campaig
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1564.003** — Hide Artifacts: Hidden Window
+- **T1608** — Stage Capabilities
+- **T1078** — Valid Accounts
+- **T1069.001** — Permission Groups Discovery: Local Groups
+- **T1518.001** — Software Discovery: Security Software Discovery
+- **T1082** — System Information Discovery
+- **T1016** — System Network Configuration Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Operation BlueDash fake Teams/Zoom update payload-host infrastructure contact
+
+`UC_4_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("teamvem.com","*.teamvem.com","support.berrydev.xyz","berry4603.github.io","anuyotindustries.com","*.anuyotindustries.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("teamvem.com","support.berrydev.xyz","berry4603.github.io","anuyotindustries.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### supportdev.exe Inno Setup loader spawning hidden-window PowerShell
+
+`UC_4_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="supportdev.exe" AND Processes.process_name IN ("powershell.exe","pwsh.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "supportdev.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| extend Cmd = tolower(ProcessCommandLine)
+| where Cmd has_any ("-w hidden","-windowstyle hidden","-win h"," hidden") or Cmd has_any ("downloadstring","invoke-webrequest","iwr","level_api_key")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Level RMM enrollment with BlueDash attacker API key (GxSCHE8EZwfyYN3iPQHPai8D)
+
+`UC_4_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*GxSCHE8EZwfyYN3iPQHPai8D*" OR Processes.process="*LEVEL_API_KEY=GxSCHE8EZwfyYN3iPQHPai8D*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where ProcessCommandLine has "GxSCHE8EZwfyYN3iPQHPai8D" or InitiatingProcessCommandLine has "GxSCHE8EZwfyYN3iPQHPai8D"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Multiple RMM agents co-resident on one host (BlueDash redundant access)
+
+`UC_4_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` values(Processes.process_name) as procs values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","tacticalrmm.exe","meshagent.exe","level.exe","level-windows-amd64.exe") OR Processes.process="*LEVEL_API_KEY*") by Processes.dest | `drop_dm_object_name(Processes)` | eval fam=0 | eval fam=if(match(mvjoin(procs,","),"(?i)screenconnect"),fam+1,fam) | eval fam=if(match(mvjoin(procs,","),"(?i)(tacticalrmm|meshagent)"),fam+1,fam) | eval fam=if(match(mvjoin(procs,","),"(?i)level") OR match(mvjoin(cmds,","),"LEVEL_API_KEY"),fam+1,fam) | where fam>=2 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let RmmBins = dynamic(["screenconnect.clientservice.exe","screenconnect.windowsclient.exe","tacticalrmm.exe","meshagent.exe","level.exe","level-windows-amd64.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| extend fn = tolower(FileName)
+| where fn in (RmmBins) or ProcessCommandLine has "LEVEL_API_KEY"
+| extend RmmFamily = case(
+    fn startswith "screenconnect", "ScreenConnect",
+    fn in ("tacticalrmm.exe","meshagent.exe"), "TacticalRMM",
+    fn startswith "level" or ProcessCommandLine has "LEVEL_API_KEY", "LevelRMM",
+    "Other")
+| summarize Families = make_set(RmmFamily), FamilyCount = dcount(RmmFamily), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmds = make_set(ProcessCommandLine, 5) by DeviceName
+| where FamilyCount >= 2   // 2+ distinct RMM families on one host = redundant-access pattern
+| order by LastSeen desc
+```
+
+### Host reconnaissance sequence spawned from an RMM agent context (BlueDash operator checklist)
+
+`UC_4_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","tacticalrmm.exe","meshagent.exe","level.exe") AND (Processes.process_name IN ("net.exe","net1.exe","manage-bde.exe","netsh.exe") OR Processes.process_name IN ("powershell.exe","pwsh.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where like(process,"%localgroup%administ%") OR like(process,"%manage-bde%status%") OR like(process,"%advfirewall show allprofiles%") OR like(process,"%Get-BitLockerVolume%") OR like(process,"%Get-LocalGroupMember%") OR like(process,"%PendingFileRenameOperations%") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let RmmParents = dynamic(["screenconnect.clientservice.exe","screenconnect.windowsclient.exe","tacticalrmm.exe","meshagent.exe","level.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where tolower(InitiatingProcessFileName) in (RmmParents)
+| extend Cmd = tolower(ProcessCommandLine)
+| where (FileName in~ ("net.exe","net1.exe") and Cmd has "localgroup" and Cmd has "admin")
+    or (FileName =~ "manage-bde.exe" and Cmd has "-status")
+    or (FileName =~ "netsh.exe" and Cmd has_all ("advfirewall","show"))
+    or (FileName in~ ("powershell.exe","pwsh.exe") and Cmd has_any ("get-bitlockervolume","get-localgroupmember","pendingfilerenameoperations","win32_shadowcopy","netfirewallprofile"))
+| summarize Recon = make_set(ProcessCommandLine, 10), ReconTypes = dcount(FileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName
+| order by LastSeen desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -361,7 +478,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update
 
-`UC_1_10` · phase: **exploit** · confidence: **High**
+`UC_4_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -418,4 +535,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 16 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

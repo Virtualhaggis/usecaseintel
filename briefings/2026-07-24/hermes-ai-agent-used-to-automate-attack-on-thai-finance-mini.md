@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### Hades Go implant C2 beacon to redhatupdating432.dnsrd.com and Hunt.io-named IPs
 
-`UC_29_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_32_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### Hades Go implant payload written or executed (SHA256 match)
 
-`UC_29_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union
 
 ### Customized LinPEAS privilege-escalation enumeration on Linux host
 
-`UC_29_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_32_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### Linux local privilege escalation attempt (PwnKit CVE-2021-4034 / Baron Samedit CVE-2021-3156)
 
-`UC_29_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_32_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Web/app-server process spawning shell (PHP web shell / suo5 HTTP tunnel)
 
-`UC_29_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

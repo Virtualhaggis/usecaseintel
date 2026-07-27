@@ -1,240 +1,3 @@
-<article class="card" id="art-117" data-art-slug="2026-07-20-ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application,cloud"
-  data-targets=""
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-61736: LightRAG: CORS Wildcard + Credentials Enables Any-Origin Credentialed Requests LightRAG: CORS Wildcard + Credentials Enables Any-Origin Credentialed Requests CVE-2026-61736 T1190 [LLM] LightRAG CVE-2026-61736: cross-origin credentialed read of /documents or /query (data exfil) [LLM] LightRAG CVE-2026-61736: cross-origin DELETE of document store (destructive CORS abuse) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-20-ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-6x6h-qqr7-855w" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-61736: LightRAG: CORS Wildcard + Credentials Enables Any-Origin Credentialed Requests</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-20</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">LightRAG: CORS Wildcard + Credentials Enables Any-Origin Credentialed Requests</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-61736</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-117-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-117"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-117-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] LightRAG CVE-2026-61736: cross-origin credentialed read of /documents or /query (data exfil) · [LLM] LightRAG CVE-2026-61736: cross-origin DELETE of document store (destructive CORS abuse)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="661d108950" data-platforms="sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">LightRAG CVE-2026-61736: cross-origin credentialed read of /documents or /query (data exfil)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="661d108950" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts credentialed cross-origin HTTP requests to LightRAG&#x27;s sensitive API endpoints (/documents, /query, /query/data) where the Referer/Origin host differs from the LightRAG host — the exploitation signature of the CORS wildcard + allow_credentials flaw. A malicious site the victim visits rides their authenticated session to exfiltrate documents and knowledge-graph data.
-
-Rationale: Anchored on LightRAG&#x27;s article-named endpoints (/login, /documents) plus /query corroborated by the official API docs, combined with the CORS root cause: the exploit necessarily produces a credentialed request whose Referer/Origin host != the LightRAG host. Comparing referer-host to target-host is the highest-fidelity behavioural signal the flaw leaves in access logs.
-
-Cross-checked against:
-  • https://www.thehackerwire.com/lightrag-critical-credentialed-cors-vulnerability/
-  • https://github.com/HKUDS/LightRAG/blob/main/docs/LightRAG-API-Server.md
-  • https://cve.threatint.eu/CVE/CVE-2026-61736</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Session Hijacking">T1185</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Split frontend/backend deployment where the LightRAG SPA is served from a different host/subdomain than the API, so legitimate reads carry a cross-origin Referer</li><li>API gateway or reverse proxy that rewrites Host, making Referer host legitimately differ from the logged CsHost</li><li>Grafana/BI dashboards or internal wikis embedding LightRAG query results with their own Referer</li><li>Swagger UI / ReDoc API console hosted on a separate documentation host</li><li>DAST scanners (Burp, OWASP ZAP) issuing requests with crafted Referer values</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| extend RefDomain = strcat_array(array_slice(split(RefererHost,&quot;.&quot;), -2, -1), &quot;.&quot;) | extend TgtDomain = strcat_array(array_slice(split(TargetHost,&quot;.&quot;), -2, -1), &quot;.&quot;) | where RefDomain != TgtDomain</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the offending RefererHost and CIp; confirm it is NOT a sanctioned internal frontend/gateway for this LightRAG instance and check whether the CsUsername session was concurrently active from a normal client. 2) Contain: set CORS_ORIGINS to an explicit allow-list (or allow_credentials=False) and upgrade lightrag-hku to &gt;=1.5.4; if the RefererHost is an unknown external domain, block it at the proxy/WAF and force-invalidate active LightRAG tokens. 3) Hunt: sweep all LightRAG access logs for the same RefererHost across /documents, /query, /query/data and DELETE /documents; review volume of documents/knowledge-graph rows read to scope data exposure.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-117-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-117-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-117-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(7d)
-| where CsUriStem has_any (&quot;/documents&quot;, &quot;/query&quot;)
-| where CsMethod in (&quot;GET&quot;,&quot;POST&quot;)
-| where isnotempty(Referer) and Referer != &quot;-&quot;
-| extend RefererHost = tolower(tostring(parse_url(Referer).Host))
-| extend TargetHost = tolower(tostring(split(CsHost, &quot;:&quot;)[0]))
-| where isnotempty(RefererHost) and RefererHost != TargetHost
-| where RefererHost !in (&quot;localhost&quot;, &quot;127.0.0.1&quot;)
-| project TimeGenerated, CsHost, CIp, CsUsername, CsMethod, CsUriStem, Referer, RefererHost, UserAgent, ScStatus
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-117-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-117-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-117-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-117-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/documents*&quot; OR Web.url=&quot;*/query*&quot;) Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.http_referrer, Web.http_user_agent, Web.status, Web.site
-| `drop_dm_object_name(Web)`
-| where isnotnull(http_referrer) AND http_referrer!=&quot;&quot; AND http_referrer!=&quot;-&quot;
-| eval ref_host=lower(replace(http_referrer,&quot;^https?:\/\/([^\/:]+).*$&quot;,&quot;\1&quot;))
-| eval site_host=lower(replace(site,&quot;:\d+$&quot;,&quot;&quot;))
-| where ref_host!=site_host AND NOT match(ref_host,&quot;^(127\.0\.0\.1|localhost)$&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| table firstTime lastTime src dest dest_port http_method url http_referrer ref_host site_host http_user_agent status count
-| sort - count</code></pre><pre class="spl-mode-body" id="art-117-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/documents*&quot; OR Web.url=&quot;*/query*&quot;) Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.http_referrer, Web.http_user_agent, Web.status, Web.site
-| `drop_dm_object_name(Web)`
-| where isnotnull(http_referrer) AND http_referrer!=&quot;&quot; AND http_referrer!=&quot;-&quot;
-| eval ref_host=lower(replace(http_referrer,&quot;^https?:\/\/([^\/:]+).*$&quot;,&quot;\1&quot;))
-| eval site_host=lower(replace(site,&quot;:\d+$&quot;,&quot;&quot;))
-| where ref_host!=site_host AND NOT match(ref_host,&quot;^(127\.0\.0\.1|localhost)$&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| table firstTime lastTime src dest dest_port http_method url http_referrer ref_host site_host http_user_agent status count
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="dd737e3d9c" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">LightRAG CVE-2026-61736: cross-origin DELETE of document store (destructive CORS abuse)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="dd737e3d9c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on a credentialed cross-origin DELETE against LightRAG&#x27;s /documents endpoints where the Referer/Origin host differs from the LightRAG host. The advisory calls out &#x27;deleting the entire document store&#x27; as a destructive impact of the wildcard-CORS-with-credentials flaw; a DELETE riding the victim&#x27;s session from an external origin is high-fidelity data destruction.
-
-Rationale: Uses the article&#x27;s explicitly stated destructive impact (delete the document store) mapped to LightRAG&#x27;s real DELETE /documents and DELETE /documents/delete_document endpoints (confirmed in the API-server docs), qualified by the cross-origin Referer signature that only the CORS flaw produces — a very low-FP, high-severity combination.
-
-Cross-checked against:
-  • https://www.thehackerwire.com/lightrag-critical-credentialed-cors-vulnerability/
-  • https://github.com/HKUDS/LightRAG/blob/main/docs/LightRAG-API-Server.md
-  • https://cve.threatint.eu/CVE/CVE-2026-61736</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Browser Session Hijacking">T1185</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin performing bulk document deletion from a dedicated management console hosted on a different host than the API</li><li>Scheduled data-retention / cleanup jobs invoked from an orchestration host whose Referer differs from the API host</li><li>QA/staging teardown scripts that clear the document store between test runs</li><li>Split frontend deployment where the admin UI legitimately lives on another subdomain</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| extend RefDomain = strcat_array(array_slice(split(RefererHost,&quot;.&quot;), -2, -1), &quot;.&quot;) | extend TgtDomain = strcat_array(array_slice(split(TargetHost,&quot;.&quot;), -2, -1), &quot;.&quot;) | where RefDomain != TgtDomain</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the RefererHost, CIp and CsUsername on the DELETE; verify whether an authorized admin intentionally cleared documents from a sanctioned console — if not, treat as active destruction. 2) Contain: immediately restrict CORS_ORIGINS to an explicit allow-list (or disable allow_credentials) and upgrade to lightrag-hku &gt;=1.5.4; revoke/rotate the affected user&#x27;s LightRAG token and, if data loss occurred, initiate restore of the document/KG store from backup. 3) Hunt: search for the same RefererHost/CIp across GET /documents and /query (pre-deletion reconnaissance/exfil) and for any /login POSTs from the same origin to establish the full session-riding chain.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-117-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-117-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-117-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(7d)
-| where CsMethod == &quot;DELETE&quot;
-| where CsUriStem has &quot;/documents&quot;
-| where isnotempty(Referer) and Referer != &quot;-&quot;
-| extend RefererHost = tolower(tostring(parse_url(Referer).Host))
-| extend TargetHost = tolower(tostring(split(CsHost, &quot;:&quot;)[0]))
-| where isnotempty(RefererHost) and RefererHost != TargetHost
-| where RefererHost !in (&quot;localhost&quot;, &quot;127.0.0.1&quot;)
-| project TimeGenerated, CsHost, CIp, CsUsername, CsMethod, CsUriStem, Referer, RefererHost, UserAgent, ScStatus
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-117-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-117-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-117-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-117-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=&quot;DELETE&quot; Web.url=&quot;*/documents*&quot; by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_referrer, Web.http_user_agent, Web.status, Web.site
-| `drop_dm_object_name(Web)`
-| where isnotnull(http_referrer) AND http_referrer!=&quot;&quot; AND http_referrer!=&quot;-&quot;
-| eval ref_host=lower(replace(http_referrer,&quot;^https?:\/\/([^\/:]+).*$&quot;,&quot;\1&quot;))
-| eval site_host=lower(replace(site,&quot;:\d+$&quot;,&quot;&quot;))
-| where ref_host!=site_host AND NOT match(ref_host,&quot;^(127\.0\.0\.1|localhost)$&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| table firstTime lastTime src dest dest_port url http_referrer ref_host site_host http_user_agent status count
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-117-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=&quot;DELETE&quot; Web.url=&quot;*/documents*&quot; by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_referrer, Web.http_user_agent, Web.status, Web.site
-| `drop_dm_object_name(Web)`
-| where isnotnull(http_referrer) AND http_referrer!=&quot;&quot; AND http_referrer!=&quot;-&quot;
-| eval ref_host=lower(replace(http_referrer,&quot;^https?:\/\/([^\/:]+).*$&quot;,&quot;\1&quot;))
-| eval site_host=lower(replace(site,&quot;:\d+$&quot;,&quot;&quot;))
-| where ref_host!=site_host AND NOT match(ref_host,&quot;^(127\.0\.0\.1|localhost)$&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| table firstTime lastTime src dest dest_port url http_referrer ref_host site_host http_user_agent status count
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-117-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-117-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-117-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-117-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-61736&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-117-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-61736&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-117-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-117-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-117-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-117-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-61736&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-117-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-61736&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-119" data-art-slug="2026-07-19-sleepergem-compromised-git-credential-manager-dendreo-and-fa"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1195.002"
@@ -21409,6 +21172,132 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-149" data-art-slug="2026-07-15-cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2026-46817 — Oracle E-Business Suite Improper Privilege Management Vulnerability Oracle E-Business Suite contains an improper privilege management vulnerability that allows an unauthenticated attacker with network access via HTTP to compromise Oracle Payments. Successful attacks of this vulnerability can result in takeover of Oracle Payments. Vendor: Oracle, Product: E-Business Suite. Federal patch due: 2026-07-18. CVE-2026-46817  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-15-cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-46817 — Oracle E-Business Suite Improper Privilege Management Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-07-15</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Oracle E-Business Suite contains an improper privilege management vulnerability that allows an unauthenticated attacker with network access via HTTP to compromise Oracle Payments. Successful attacks of this vulnerability can result in takeover of Oracle Payments. Vendor: Oracle, Product: E-Business Suite. Federal patch due: 2026-07-18.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-46817</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-149-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-149"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-149-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-149-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-149-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-149-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-149-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-46817&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-46817&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-149-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-149-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-149-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-149-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-46817&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-149-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-46817&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

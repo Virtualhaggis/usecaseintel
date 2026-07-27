@@ -97,12 +97,168 @@ According to a new analysis by Proofpoint, Cruciferra has been utilized by vario
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1547.001** — Persistence (article-specific)
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1211** — Exploitation for Defense Evasion
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1105** — Ingress Tool Transfer
+- **T1027.010** — Obfuscated Files or Information: Command Obfuscation
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1036.004** — Masquerading: Masquerade Task or Service
+- **T1055.013** — Process Injection: Process Doppelgänging / Ghosting
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Cruciferra persistence: Run key 'putty' value pointing to non-PuTTY binary
+
+`UC_5_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND (Registry.registry_value_name="putty" OR Registry.registry_value_data="putty") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid 
+| `drop_dm_object_name(Registry)` 
+| where NOT match(registry_value_data,"(?i)putty\.exe") 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"CurrentVersion\Run"
+| where RegistryValueName =~ "putty"
+| where isempty(RegistryValueData) or RegistryValueData !contains "putty.exe"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### Cruciferra BYOVD: vulnerable driver (GoFlyDrv.sys) load for EDR tampering
+
+`UC_5_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="GoFlyDrv.sys" OR Filesystem.file_name="Core64.sys" OR Filesystem.file_name="HwOs2Ec.sys" OR Filesystem.file_name="LnvMSRIO.MemoryInformer.sys" OR Filesystem.file_name="NTIOLib_X64.sys") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid 
+| `drop_dm_object_name(Filesystem)` 
+| where NOT match(file_path,"(?i)\\\\Windows\\\\System32\\\\drivers\\\\") 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("GoFlyDrv.sys","Core64.sys","HwOs2Ec.sys","LnvMSRIO.MemoryInformer.sys","NTIOLib_X64.sys")
+| where FolderPath !contains @"\Windows\System32\drivers\"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Cruciferra loader side-load DLLs and Remcos logs.dat drop
+
+`UC_5_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="ALTERNATE.dll" OR Filesystem.file_name="ClassLibrary3.dll" OR Filesystem.file_name="Keylogger.dll" OR Filesystem.file_name="msedge_proxy.exe" OR (Filesystem.file_name="logs.dat" AND (Filesystem.file_path="*\\ProgramData\\remcos\\*" OR Filesystem.file_path="*\\ProgramData\\colors\\*"))) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FileName in~ ("ALTERNATE.dll","ClassLibrary3.dll","Keylogger.dll","msedge_proxy.exe"))
+    or (FileName =~ "logs.dat" and FolderPath has_any (@"\ProgramData\remcos\", @"\ProgramData\colors\"))
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Cruciferra known-sample SHA256 execution/write
+
+`UC_5_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("3c181f642e24c28602a87be7f195e2f3d1ffa30b37e20f5121d99f88b22ab80e","66dbe675480dc229e5b3ab8ad74207f73486e64e57805074f784bb2e01bcb865","a6fb779be35592fb0ff624a8f8e12ab3cafe7bcfc312cd98263814db7fb01e02","59ad96dd3b4d5f10a5c53bbd465446e52dc7701a4ac633632f762bf1336d3347","6dbd6f9f2fa636c16ac4fa81418b68a604424861b9650dd9c4f2b0ba6f67d6ac","3f31aee0948d16f8d64bf6bec69a4331099993e502b11bfc56b2c0112024489d","17aae57cf6255c7eb169bf62ea67376d9708976eb7831f8cdd0ea38bdcb37dc4","2fdfdd13a0c548bb68c9d5aa8599a9265d4659da3e237fe7a42ac6ac06b9a06a","c4e93449453cf67c5d5605bb8f425207a738a242fdb432d720acc32faa74926c","c5b1e9aafc8f2b4ab05effc00fd43f3114b9ef1d592a086c952793ac4e299809","7887e919555fb5948c217556ba149392a72982b1bc427d3db779db9dcbf09ee8","09bedbf7a41e0f8dabe4f41d331db58373ce15b2e9204540873a1884f38bdde1","5b4f59236a9b950bcd5191b35d19125f60cfb9e1a1e1aa2e4f914b6745dde9df","c46e907886e2158cbc453e767183aecf07887b5ac8848f19684451883d69f5f0","2f2f8f92af86fb962c30c4c1c9d673f9d94886373d0fcf78f8d105c051ffc643","1787d1119cd3b40e0e5f19d62821958b7d5c2bbe0518bf1e3fb2e44fdeb4fa58","19ca5fe04ca45a18c5bad9658ff73a8f39fe20ced78f690595f1b4c5a90af324","2f72f4b71e33c80f122dbe5360a8d687577260567d4b59cf8c07ee2182e8ceba","4a040770fd81d0db9e04cb8dbd2e07e61969072962bb4e736b7c7001444cc2fa","696f6a1a0fbf7b4ff977cc36382f6d2bc6d7813ed84b0195d925d1f46c24568c") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash 
+| `drop_dm_object_name(Processes)` 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let CruciferraHashes = dynamic(["3c181f642e24c28602a87be7f195e2f3d1ffa30b37e20f5121d99f88b22ab80e","66dbe675480dc229e5b3ab8ad74207f73486e64e57805074f784bb2e01bcb865","a6fb779be35592fb0ff624a8f8e12ab3cafe7bcfc312cd98263814db7fb01e02","59ad96dd3b4d5f10a5c53bbd465446e52dc7701a4ac633632f762bf1336d3347","6dbd6f9f2fa636c16ac4fa81418b68a604424861b9650dd9c4f2b0ba6f67d6ac","3f31aee0948d16f8d64bf6bec69a4331099993e502b11bfc56b2c0112024489d","17aae57cf6255c7eb169bf62ea67376d9708976eb7831f8cdd0ea38bdcb37dc4","2fdfdd13a0c548bb68c9d5aa8599a9265d4659da3e237fe7a42ac6ac06b9a06a","c4e93449453cf67c5d5605bb8f425207a738a242fdb432d720acc32faa74926c","c5b1e9aafc8f2b4ab05effc00fd43f3114b9ef1d592a086c952793ac4e299809","7887e919555fb5948c217556ba149392a72982b1bc427d3db779db9dcbf09ee8","09bedbf7a41e0f8dabe4f41d331db58373ce15b2e9204540873a1884f38bdde1","5b4f59236a9b950bcd5191b35d19125f60cfb9e1a1e1aa2e4f914b6745dde9df","c46e907886e2158cbc453e767183aecf07887b5ac8848f19684451883d69f5f0","2f2f8f92af86fb962c30c4c1c9d673f9d94886373d0fcf78f8d105c051ffc643","1787d1119cd3b40e0e5f19d62821958b7d5c2bbe0518bf1e3fb2e44fdeb4fa58","19ca5fe04ca45a18c5bad9658ff73a8f39fe20ced78f690595f1b4c5a90af324","2f72f4b71e33c80f122dbe5360a8d687577260567d4b59cf8c07ee2182e8ceba","4a040770fd81d0db9e04cb8dbd2e07e61969072962bb4e736b7c7001444cc2fa","696f6a1a0fbf7b4ff977cc36382f6d2bc6d7813ed84b0195d925d1f46c24568c"]);
+union
+  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (CruciferraHashes) | project Timestamp, DeviceName, AccountName, Source="ProcessExec", FileName, FolderPath, SHA256, ProcessCommandLine),
+  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (CruciferraHashes) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### Cruciferra C2 beacon to known IOC domains/IPs (incl. .gu.cc cluster)
+
+`UC_5_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("89.34.90.99","204.194.48.250","118.107.0.197","27.50.54.191","223.26.63.40","117.44.201.119") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_id 
+| `drop_dm_object_name(All_Traffic)` 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let C2Domains = dynamic(["govtop.one","ikkkkddd.com","1kkkkddd.com","kkxqbh.top","simaqz.com","jiayingjing.com","gatuso.duckdns.org","0zbqnac1t4dv2t2wuodv1m.com","almacensantangel.com","hsahyteiows.gu.cc","yicoweytcbtw.gu.cc","nciyeyrawoe.gu.cc","lasiduutfe.gu.cc","xkcifgieusr.gu.cc","viuyeyrwqs.gu.cc","pmcjsuyraw.gu.cc","laiwutrencr.gu.cc","maisytawe.gu.cc","kawosyetw.gu.cc","nviuawusye.gu.cc"]);
+let C2IPs = dynamic(["89.34.90.99","204.194.48.250","118.107.0.197","27.50.54.191","223.26.63.40","117.44.201.119"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (C2IPs) or RemoteUrl in~ (C2Domains) or (RemoteUrl endswith ".gu.cc")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Process Ghosting: executable created then deleted while backing a live process
+
+`UC_5_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` values(Filesystem.action) as actions min(_time) as firstTime max(_time) as lastTime dc(Filesystem.action) as action_variety from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\Public\\*") AND (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_guid 
+| `drop_dm_object_name(Filesystem)` 
+| where like(actions,"%created%") AND like(actions,"%deleted%") 
+| eval window_sec=round((lastTime-firstTime),0) | where window_sec<=120 
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let Window = 2m;
+let Created = DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where ActionType == "FileCreated"
+    | where FolderPath has_any (@"\AppData\Local\Temp\", @"\ProgramData\", @"\Users\Public\")
+    | where FileName endswith ".exe" or FileName endswith ".dll"
+    | project DeviceId, DeviceName, FileName, FolderPath, CreateTime=Timestamp, CreatorProc=InitiatingProcessFileName, CreatorPid=InitiatingProcessId, SHA256;
+let Deleted = DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where ActionType == "FileDeleted"
+    | where FileName endswith ".exe" or FileName endswith ".dll"
+    | project DeviceId, FileName, FolderPath, DeleteTime=Timestamp, DeleterPid=InitiatingProcessId;
+Created
+| join kind=inner Deleted on DeviceId, FileName, FolderPath
+| where DeleteTime between (CreateTime .. CreateTime + Window)
+| where CreatorPid == DeleterPid
+| project CreateTime, DeleteTime, LifeSec=datetime_diff('second', DeleteTime, CreateTime), DeviceName, FileName, FolderPath, CreatorProc, SHA256
+| order by CreateTime desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -346,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cruciferra Crypter Uses BYOVD and Process Ghosting to Hide Windows Malware
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_5_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -406,4 +562,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

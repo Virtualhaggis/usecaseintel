@@ -22,7 +22,7 @@ When the Auth.js configuration produces a server-side error, the `auth` object e
 
 - **T1204.002** — User Execution: Malicious File
 - **T1556** — Modify Authentication Process
-- **T1078** — Valid Accounts
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -30,50 +30,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Auth.js v5 fail-open trigger: server-configuration error emitted in app logs
+### Auth.js (next-auth v5) server-configuration error indicating fail-open auth bypass
 
-`UC_61_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_62_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* ("[auth][error]") ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET" OR "problem with the server configuration")
-| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sampleLog by host, source, sourcetype
+index=* ("[auth][error]") ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET" OR "There was a problem with the server configuration")
+| stats count AS Hits, min(_time) AS firstTime, max(_time) AS lastTime, values(source) AS sources BY host, sourcetype
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count
+| sort - lastTime
 ```
 
-### Auth.js fail-open: protected-route access succeeds during a config-error window
+### HTTP 500 on Auth.js /api/auth/ route — live fail-open trigger
 
-`UC_61_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_62_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Web where Web.status IN ("200","302") Web.url="/api/*" NOT Web.url="/api/auth*" by _time span=5m, Web.site, Web.src, Web.url, Web.status
-| rename Web.* as *
-| join type=inner _time [
-    search index=* "[auth][error]"
-    | bin _time span=5m
-    | stats count as authErrors by _time ]
-| where authErrors > 0
-| stats sum(count) as okProtectedReqs values(url) as urls values(src) as sourceIPs by _time, site
-| sort - _time
+| tstats `summariesonly` count FROM datamodel=Web.Web WHERE Web.uri_path="/api/auth/*" Web.status=500 BY Web.site, Web.uri_path, Web.status, Web.src, _time span=1h
+| `drop_dm_object_name(Web)`
+| stats sum(count) AS Hits, dc(src) AS DistinctClients, min(_time) AS firstTime, max(_time) AS lastTime BY site, uri_path
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
-### Auth.js: protected /api access returning success with no session cookie (fail-open evidence)
+### Auth.js fail-open window — config error coincident with successful responses served
 
-`UC_61_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_62_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* sourcetype=*:access* (status=200 OR status=302) uri_path="/api/*" NOT uri_path="/api/auth*" NOT cookie="*authjs.session-token*"
-| stats count as reqs values(uri_path) as paths dc(src_ip) as srcIPs by host, src_ip
-| where reqs > 0
-| sort - reqs
+| tstats `summariesonly` count FROM datamodel=Web.Web WHERE Web.status IN (200,302) BY Web.site, Web.src, _time span=5m
+| `drop_dm_object_name(Web)`
+| join type=inner site [ search index=* "[auth][error]" ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET") | stats min(_time) AS errStart, max(_time) AS errEnd BY host | rename host AS site ]
+| where _time>=errStart AND _time<=errEnd+300
+| stats sum(count) AS SuccessfulResponses, dc(src) AS DistinctClients, values(errStart) AS errStart, values(errEnd) AS errEnd BY site
+| sort - SuccessfulResponses
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
 
-`UC_61_0` · phase: **exploit** · confidence: **High**
+`UC_62_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,14 +36,13 @@ Intezer, in research with Kodem Security, found that a request as ordinary as as
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1554** — Compromise Host Software Binary
 - **T1546** — Event Triggered Execution
-- **T1059.004** — Unix Shell
-- **T1059.006** — Python
+- **T1554** — Compromise Host Software Binary
+- **T1059** — Command and Scripting Interpreter
 - **T1059.007** — JavaScript
+- **T1059.006** — Python
 - **T1071.001** — Web Protocols
-- **T1571** — Non-Standard Port
+- **T1082** — System Information Discovery
 
 ## Kill chain phases observed
 
@@ -51,65 +50,92 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Kiro (AWS agentic IDE) writing protected config files mcp.json / .vscode tasks.json
+### Kiro agent writing to protected MCP/VS Code config (mcp.json, tasks.json, settings.json)
 
-`UC_101_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="mcp.json" AND Filesystem.file_path="*/.kiro/settings/*") OR (Filesystem.file_name="tasks.json" AND Filesystem.file_path="*/.vscode/*") OR (Filesystem.file_name="settings.json" AND Filesystem.file_path="*/.vscode/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="mcp.json" AND Filesystem.file_path="*.kiro*settings*") OR (Filesystem.file_name IN ("tasks.json","settings.json") AND Filesystem.file_path="*.vscode*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(14d)
+| where (FileName =~ "mcp.json" and FolderPath contains ".kiro") or (FileName in~ ("tasks.json","settings.json") and FolderPath contains ".vscode")
+| where InitiatingProcessFileName has "kiro" or InitiatingProcessFolderPath contains "kiro"
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where (FolderPath has "/.kiro/settings" and FileName =~ "mcp.json")
-     or (FolderPath has "/.vscode" and FileName in~ ("tasks.json","settings.json"))
-| where InitiatingProcessFileName has "kiro"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType, SHA256
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
 
-### Kiro process spawning shell / interpreter child (rogue MCP server start command)
+### Kiro spawning interpreter with inline-eval MCP payload (Intezer node -e beacon)
 
-`UC_101_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_102_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="kiro*" OR Processes.parent_process_name="Kiro*") AND (Processes.process_name IN ("bash","sh","zsh","python","python3","node","osascript","curl","wget","nc","ncat")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="*kiro*" OR Processes.parent_process="*kiro*") AND Processes.process_name IN ("node","node.exe","python","python3","python.exe","deno","bun","npx","uv","uvx","sh","bash","zsh") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,"(?i)(setInterval|os\.hostname|os\.userInfo|child_process|require\(| -e |--eval| -c )") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName has "kiro"
-| where FileName in~ ("bash","sh","zsh","python","python3","node","osascript","curl","wget","nc","ncat","pwsh","powershell.exe","cmd.exe")
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName has "kiro" or InitiatingProcessFolderPath contains "kiro" or InitiatingProcessParentFileName has "kiro"
+| where FileName in~ ("node","node.exe","python","python3","python.exe","deno","bun","npx","uv","uvx","sh","bash","zsh")
+| where ProcessCommandLine has_any ("-e ","--eval","-c ","setInterval") or ProcessCommandLine contains "os.hostname" or ProcessCommandLine contains "os.userInfo" or ProcessCommandLine contains "require(" or ProcessCommandLine contains "child_process"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Kiro-spawned interpreter beaconing to external host (rogue MCP server C2)
+### Kiro config write immediately followed by interpreter child (mcp.json reload-to-exec chain)
 
-`UC_101_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(All_Traffic.dest_port) as dest_ports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction="outbound" AND (All_Traffic.app IN ("node","python","python3","bash","osascript","curl","wget")) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where count >= 30 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+| tstats `summariesonly` count min(_time) as spawnTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="*kiro*") AND Processes.process_name IN ("node","python","python3","deno","bun","npx","uvx","sh","bash","zsh") by Processes.dest Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | join type=inner dest [ | tstats `summariesonly` max(_time) as writeTime from datamodel=Endpoint.Filesystem where ((Filesystem.file_name="mcp.json" AND Filesystem.file_path="*.kiro*") OR (Filesystem.file_name="tasks.json" AND Filesystem.file_path="*.vscode*")) by Filesystem.dest | `drop_dm_object_name(Filesystem)` ] | eval delaySec = spawnTime - writeTime | where delaySec >= 0 AND delaySec <= 120 | table dest writeTime spawnTime delaySec process_name process | sort - spawnTime
+```
+
+**Defender KQL:**
+```kql
+let Window = 120s;
+let ConfigWrites = DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where (FileName =~ "mcp.json" and FolderPath contains ".kiro") or (FileName =~ "tasks.json" and FolderPath contains ".vscode")
+    | where InitiatingProcessFileName has "kiro" or InitiatingProcessFolderPath contains "kiro"
+    | project WriteTime = Timestamp, DeviceId, DeviceName, ConfigFolder = FolderPath, ConfigName = FileName;
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName has "kiro" or InitiatingProcessFolderPath contains "kiro"
+| where FileName in~ ("node","node.exe","python","python3","deno","bun","npx","uvx","sh","bash","zsh")
+| join kind=inner ConfigWrites on DeviceId
+| where Timestamp between (WriteTime .. WriteTime + Window)
+| project WriteTime, SpawnTime = Timestamp, DelaySec = datetime_diff('second', Timestamp, WriteTime), DeviceName, ConfigName, ChildProcess = FileName, ProcessCommandLine
+| order by SpawnTime desc
+```
+
+### Kiro-spawned interpreter beaconing to external host at fixed short interval
+
+`UC_102_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(_time) as distinctSeconds min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node","node.exe","python","python3","deno","bun") AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | eval durationMin = round((lastTime-firstTime)/60,1) | where count >= 20 AND durationMin >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessParentFileName has "kiro"
+| where InitiatingProcessParentFileName has "kiro" or InitiatingProcessFolderPath contains "kiro"
+| where InitiatingProcessFileName in~ ("node","node.exe","python","python3","deno","bun","sh","bash")
 | where RemoteIPType == "Public"
-| summarize ConnCount = count(), IntervalBuckets = dcount(bin(Timestamp, 10s)), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Ports = make_set(RemotePort, 8)
-    by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
-| where ConnCount >= 30    // ~10s beacon sustained over several minutes
+| summarize ConnCount = count(), ActiveMinutes = dcount(bin(Timestamp, 1m)), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessId, RemoteIP, RemotePort
+| where ConnCount >= 20 and ActiveMinutes >= 5   // ~10s interval -> many conns across many minutes = beacon
 | order by ConnCount desc
 ```
 
@@ -460,4 +486,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 15 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

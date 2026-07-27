@@ -45,13 +45,14 @@ The intrusions have resulted in the deployment of previously unreported malware 
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1204.002** — Malicious File
+- **T1574.002** — DLL Side-Loading
+- **T1497** — Virtualization/Sandbox Evasion
+- **T1102.002** — Bidirectional Communication
+- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
 - **T1620** — Reflective Code Loading
-- **T1480.001** — Execution Guardrails: Environmental Keying
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1480.001** — Environmental Keying
 
 ## Kill chain phases observed
 
@@ -59,140 +60,140 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TELESHIM DLL side-load: ASUS RegSchdTask.exe/shimgen.exe loading rogue AsTaskSched.dll
+### ISO-delivered signed RegSchdTask.exe executed from non-standard/removable path
 
-`UC_3_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="*\\ProgramData\\shimgen_Data\\*" OR Processes.process_name="shimgen.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "AsTaskSched.dll"
-| where InitiatingProcessFileName in~ ("RegSchdTask.exe","shimgen.exe")
-| where FolderPath !startswith @"C:\Windows\\"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, LoadedDll = FileName, DllPath = FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### MIXEDKEY reflective loader side-load: GoProAlertService.exe loading rogue pthreadVC2.dll
-
-`UC_3_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="GoProAlertService.exe" by Processes.dest Processes.user Processes.process_path Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| where NOT match(process_path,"(?i)\\\\Program Files( \(x86\))?\\\\GoPro")
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "GoProAlertService.exe"
-| where FileName =~ "pthreadVC2.dll"
-| where FolderPath !contains @"\Program Files"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, LoadedDll = FileName, DllPath = FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Environmental-keyed payload drop: *.PCPKEY file in C:\ProgramData\Crypto\DSS
-
-`UC_3_11` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.PCPKEY" OR Filesystem.file_path="*\\ProgramData\\Crypto\\DSS\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName endswith ".PCPKEY" or FolderPath has @"\ProgramData\Crypto\DSS\"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### TELESHIM Telegram-bot C2: api.telegram.org getUpdates polling from a non-messenger process
-
-`UC_3_12` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*api.telegram.org/bot*" AND Web.url="*getUpdates*" by Web.src Web.dest Web.url Web.http_user_agent Web.site
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "api.telegram.org"
-| where InitiatingProcessFolderPath has @"\ProgramData\" or InitiatingProcessFileName in~ ("shimgen.exe","RegSchdTask.exe","GoProAlertService.exe")
-| where InitiatingProcessFileName !in~ ("telegram.exe","msedge.exe","chrome.exe","firefox.exe")
-| summarize Requests = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP
-| order by LastSeen desc
-```
-
-### BINDCLOAK C2 beacon to cert.hypersnet.com / ssl.blsouqs.com / contacts.ftabnews.com
-
-`UC_3_13` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="cert.hypersnet.com" OR DNS.query="ssl.blsouqs.com" OR DNS.query="contacts.ftabnews.com") by DNS.src DNS.dest DNS.query DNS.answer
-| `drop_dm_object_name(DNS)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl in~ ("cert.hypersnet.com","ssl.blsouqs.com","contacts.ftabnews.com")
-   or RemoteUrl has_any ("hypersnet.com","blsouqs.com","ftabnews.com")
-| summarize Connections = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
-| order by LastSeen desc
-```
-
-### TELESHIM persistence: scheduled tasks 'shimgen' / 'Feedback' executing ProgramData binaries
-
-`UC_3_14` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND (Processes.process="*shimgen*" OR Processes.process="*Feedback*" OR Processes.process="*\\ProgramData\\shimgen_Data\\*") by Processes.dest Processes.user Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="RegSchdTask.exe" NOT (Processes.process_path="*\\Program Files\\*" OR Processes.process_path="*\\Program Files (x86)\\*" OR Processes.process_path="*\\Windows\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("shimgen","Feedback") or ProcessCommandLine has @"\ProgramData\shimgen_Data\"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where FileName =~ "RegSchdTask.exe"
+| where not(FolderPath has_any (@"\Program Files\", @"\Program Files (x86)\", @"\Windows\"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### TELESHIM DLL side-load: RegSchdTask.exe loads rogue AsTaskSched.dll
+
+`UC_6_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="AsTaskSched.dll" NOT (Filesystem.file_path="*\\Windows\\System32\\*" OR Filesystem.file_path="*\\Program Files\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "RegSchdTask.exe"
+| where FileName =~ "AsTaskSched.dll"
+| where not(FolderPath has_any (@"\Windows\System32\", @"\Program Files\"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, MD5
+| order by Timestamp desc
+```
+
+### Telegram Bot API used for C2 by non-browser/non-messaging process
+
+`UC_6_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="api.telegram.org" OR DNS.query="core.telegram.org") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any ("api.telegram.org","core.telegram.org")
+| where InitiatingProcessFileName !in~ ("telegram.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","teams.exe","ms-teams.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize FirstSeen=min(Timestamp), Count=count(), Ports=make_set(RemotePort), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256
+| order by FirstSeen desc
+```
+
+### TELESHIM/MIXEDKEY sideload host binary beacons to Telegram (C2 + exfil)
+
+`UC_6_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app="RegSchdTask.exe" OR All_Traffic.app="GoProAlertService.exe") All_Traffic.direction="outbound" by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("RegSchdTask.exe","GoProAlertService.exe")
+| where RemoteUrl has "telegram.org" or RemoteUrl has_any ("api.telegram.org","core.telegram.org")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### MIXEDKEY encrypted payload: .PCPKEY file dropped on disk
+
+`UC_6_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.PCPKEY" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName endswith ".PCPKEY"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### BINDCLOAK C2 beacon to cert.hypersnet.com / ssl.blsouqs.com
+
+`UC_6_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="cert.hypersnet.com" OR DNS.query="ssl.blsouqs.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("cert.hypersnet.com","ssl.blsouqs.com")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### TELESHIM/MIXEDKEY/BINDCLOAK known-bad file hash execution
+
+`UC_6_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("789fd11285642861190dc074c1e9a5957073f1a2afebd5160f9cc907f7f320bd","c84542ac30cbe9bb8bd648bad323c37801023bf9451c1c0990452466e084340f","32529043d15e9111ba284f1d8a9e4b3f58e071c6b69c8f271d4d02feacd44e66","db11ff3f37a8b2aa25c480871504b886a6364167ecb501eacf7345f6bbf9582b","5c2fe953da53da66fbcbb3be0fd6b63907c10714c337f287b2fc258857bbff6d","cac1f37beaa814461f7709a073aeec468c74e5d70f7d693a9e367ece4a3a78be","0637069c7052118fd5c0f1113541bdd35e5f71cd9689f2516045da152c6fa8d9","3b3eaea783fd6dab90f0408274bf8a9c49adbdc70c0efd70658d65b0e1684a3f","7cbc51ada1a4aec88660ec32c408114b","3f60d53a2b5737d77e058d9e33cbe9eb","28b47bdf16d7af6f8ec21218eac9145a","78a4f8574830bf7fbaf63d7da09be2b8","7a14a99d70d42d3f7bf72f843185fc07") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badSHA256 = dynamic(["789fd11285642861190dc074c1e9a5957073f1a2afebd5160f9cc907f7f320bd","c84542ac30cbe9bb8bd648bad323c37801023bf9451c1c0990452466e084340f","32529043d15e9111ba284f1d8a9e4b3f58e071c6b69c8f271d4d02feacd44e66","db11ff3f37a8b2aa25c480871504b886a6364167ecb501eacf7345f6bbf9582b","5c2fe953da53da66fbcbb3be0fd6b63907c10714c337f287b2fc258857bbff6d","cac1f37beaa814461f7709a073aeec468c74e5d70f7d693a9e367ece4a3a78be","0637069c7052118fd5c0f1113541bdd35e5f71cd9689f2516045da152c6fa8d9","3b3eaea783fd6dab90f0408274bf8a9c49adbdc70c0efd70658d65b0e1684a3f"]);
+let badMD5 = dynamic(["7cbc51ada1a4aec88660ec32c408114b","3f60d53a2b5737d77e058d9e33cbe9eb","28b47bdf16d7af6f8ec21218eac9145a","78a4f8574830bf7fbaf63d7da09be2b8","7a14a99d70d42d3f7bf72f843185fc07"]);
+union
+ (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in~ (badSHA256) or MD5 in~ (badMD5) | extend Source="Process"),
+ (DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA256 in~ (badSHA256) or MD5 in~ (badMD5) | extend Source="ImageLoad"),
+ (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in~ (badSHA256) or MD5 in~ (badMD5) | extend Source="FileEvent")
+| project Timestamp, Source, DeviceName, FileName, FolderPath, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
@@ -437,7 +438,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TELESHIM Abuses Telegram for C2 in Attacks Against Middle East Governments
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_6_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -497,4 +498,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

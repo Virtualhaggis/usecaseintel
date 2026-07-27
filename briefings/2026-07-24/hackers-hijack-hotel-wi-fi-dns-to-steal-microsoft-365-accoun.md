@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Endpoint DNS/connection to hotel-WiFi M365 phishing infrastructure (ms365-* domains + IPs)
 
-`UC_30_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_33_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### Entra ID sign-in from hotel Wi-Fi DNS-hijack campaign infrastructure IPs
 
-`UC_30_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_33_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ AADSignInEventsBeta
 
 ### Malicious WPAD/PAC proxy auto-config fetch on untrusted network
 
-`UC_30_7` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_33_7` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
