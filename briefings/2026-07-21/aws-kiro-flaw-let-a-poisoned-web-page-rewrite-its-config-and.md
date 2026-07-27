@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Kiro agent writing to protected MCP/VS Code config (mcp.json, tasks.json, settings.json)
 
-`UC_102_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_105_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceFileEvents
 
 ### Kiro spawning interpreter with inline-eval MCP payload (Intezer node -e beacon)
 
-`UC_102_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_105_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Kiro config write immediately followed by interpreter child (mcp.json reload-to-exec chain)
 
-`UC_102_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Kiro-spawned interpreter beaconing to external host at fixed short interval
 
-`UC_102_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft Defender path exclusion added for C:\Windows\Background (ClickFix XMRig)
 
-`UC_10_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceRegistryEvents
 
 ### Scheduled task 'XMRig-<host>' launching C:\Windows\Background\system.exe as SYSTEM
 
-`UC_10_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Outbound connection / DNS to msfconfig.icu (XMRig payload download)
 
-`UC_10_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_15_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### Payload written to C:\Windows\Background\system.exe (XMRig drop)
 
-`UC_10_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### XMRig miner executing as SYSTEM from C:\Windows\Background
 
-`UC_10_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_15_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -308,7 +308,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Steam forum ClickFix attacks infect gamers with XMRig cryptominers
 
-`UC_10_5` · phase: **exploit** · confidence: **High**
+`UC_15_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

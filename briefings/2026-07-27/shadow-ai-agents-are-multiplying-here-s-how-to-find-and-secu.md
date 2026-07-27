@@ -11,12 +11,8 @@ Sponsored by Nudge Security
 July 27, 2026
 10:01 AM
 0 
-
-
 Your workforce is building agents in Salesforce Agentforce, Microsoft Copilot Studio, Cursor, Zapier, Retool, and a dozen other tools, often without visibility or approval from IT or security.
-
-
-For IT and security teams, the decision of whether or not agents should be used has already been made by the business, one shadow agent at a time. The challenge now is keepi…
+For IT and security teams, the decision of whether or not agents should be used has already been made by the business, one shadow agent at a time. The challenge now is keeping up. N…
 
 ## Indicators of Compromise (high-fidelity only)
 

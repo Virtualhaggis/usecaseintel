@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat Chrome extension (HermeticReader / CVE-2026-48294) present on endpoints
 
-`UC_82_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_85_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceFileEvents
 
 ### First-ever WhatsApp Web contact from a browser on a HermeticReader-vulnerable host
 
-`UC_82_13` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_85_13` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

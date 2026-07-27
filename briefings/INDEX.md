@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2601 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,16 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-27
+- [2026 mid year update on pace for our biggest year yet](./2026-07-27/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [coca cola confirms data theft in fairlife ransomware attack](./2026-07-27/coca-cola-confirms-data-theft-in-fairlife-ransomware-attack.md)
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [ernst young data breach claimed by shinyhunters extortion ga](./2026-07-27/ernst-young-data-breach-claimed-by-shinyhunters-extortion-ga.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
+- [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
 - [shadow ai agents are multiplying here s how to find and secu](./2026-07-27/shadow-ai-agents-are-multiplying-here-s-how-to-find-and-secu.md)
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 
 ## 2026-07-26
-- [2026 mid year update on pace for our biggest year yet](./2026-07-26/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [github pypi add time based defenses against supply chain att](./2026-07-26/github-pypi-add-time-based-defenses-against-supply-chain-att.md)
 
 ## 2026-07-25
@@ -37,7 +39,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
-- [europol flags 4 340 urls for removal in the com crackdown](./2026-07-24/europol-flags-4-340-urls-for-removal-in-the-com-crackdown.md)
 - [fake notepad plugin delivers matchboil v2 in uac 0099 attack](./2026-07-24/fake-notepad-plugin-delivers-matchboil-v2-in-uac-0099-attack.md)
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
 - [ghsa critical cve 2026 59865 microsoft kiota command injecti](./2026-07-24/ghsa-critical-cve-2026-59865-microsoft-kiota-command-injecti.md)
@@ -182,7 +183,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)
 - [how aikido intel detects malware and vulnerabilities first](./2026-07-13/how-aikido-intel-detects-malware-and-vulnerabilities-first.md)
-- [microsoft entra id security updates passkeys are the default](./2026-07-13/microsoft-entra-id-security-updates-passkeys-are-the-default.md)
 - [what is a dependency firewall](./2026-07-13/what-is-a-dependency-firewall.md)
 
 ## 2026-07-12
@@ -202,7 +202,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
 - [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
-- [securing our future july 2026 progress report on microsoft s](./2026-07-10/securing-our-future-july-2026-progress-report-on-microsoft-s.md)
 
 ## 2026-07-09
 - [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)

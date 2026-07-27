@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### UAC-0099 fake-PDF VBScript launching Notepad++ / WinRAR (LUNCHPOKE stage)
 
-`UC_56_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_59_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### Notepad++ side-loading NppExport.dll from a non-Program Files path (LUNCHPOKE)
 
-`UC_56_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_59_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceImageLoadEvents
 
 ### WinRAR extracting password-protected updater.rar in UAC-0099 chain
 
-`UC_56_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Recurring scheduled task running RemoteLibUpdater.exe (BURNYBEAR persistence, 3-min cadence)
 
-`UC_56_18` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceProcessEvents
 
 ### BURNYBEAR (RemoteLibUpdater.exe) loading MATCHBOIL.V2 InitTest.dll
 
-`UC_56_19` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_59_19` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -580,7 +580,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks
 
-`UC_56_14` · phase: **exploit** · confidence: **High**
+`UC_59_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

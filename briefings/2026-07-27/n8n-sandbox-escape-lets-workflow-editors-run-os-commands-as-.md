@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### n8n (Node.js) process spawning shells / curl / wget — expression-sandbox escape RCE
 
-`UC_3_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### n8n child process referencing secrets — N8N_ENCRYPTION_KEY / credential file theft
 
-`UC_3_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### n8n (Node.js) process reaching cloud instance metadata endpoint (IMDS)
 
-`UC_3_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -317,7 +317,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process
 
-`UC_3_6` · phase: **exploit** · confidence: **High**
+`UC_9_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

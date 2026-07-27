@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Injective SDK wallet-key exfil to lookalike domain testnet.archival.chain.grpc-web.injective.network
 
-`UC_177_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_178_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### Backdoored @injectivelabs/sdk-ts 1.20.21 payload file dropped on disk
 
-`UC_177_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_178_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -199,7 +199,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Injective npm Supply Chain Attack: 18 Packages Backdoored to Steal Crypto Wallet
 
-`UC_177_6` · phase: **exploit** · confidence: **High**
+`UC_178_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

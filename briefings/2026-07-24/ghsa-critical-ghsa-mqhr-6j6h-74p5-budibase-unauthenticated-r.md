@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Budibase REST query published to PUBLIC role (unauth cred-leak enabler)
 
-`UC_26_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_31_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Budibase server leaks datasource auth to first-seen host (undici + Authorization egress)
 
-`UC_26_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_31_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource
 
-`UC_26_0` · phase: **install** · confidence: **High**
+`UC_31_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

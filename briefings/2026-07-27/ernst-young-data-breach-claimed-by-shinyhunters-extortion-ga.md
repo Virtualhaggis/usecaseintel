@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 27, 2026
 11:12 AM
 0 
-
-
 The ShinyHunters extortion gang has claimed responsibility for a recently disclosed Ernst & Young data breach, saying it obtained credentials for some of the company's systems via a supply-chain attack.
-
-
-Ernst & Young disclosed the breach earlier this month, saying a third-party support ticket system used by its IT personnel was compromised and support tickets that may contain c…
+Ernst & Young disclosed the breach earlier this month, saying a third-party support ticket system used by its IT personnel was compromised and support tickets that may contain client ta…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -43,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous first-seen sign-in with valid EY account to GitHub/Azure/Jira (ShinyHunters supply-chain creds)
 
-`UC_0_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_5_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +70,7 @@ AADSignInEventsBeta
 
 ### Single identity authenticating to Jira + GitHub + Azure within one hour (ShinyHunters cross-SaaS credential reuse)
 
-`UC_0_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

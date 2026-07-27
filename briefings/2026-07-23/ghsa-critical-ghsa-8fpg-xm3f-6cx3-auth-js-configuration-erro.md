@@ -30,48 +30,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Auth.js (next-auth v5) server-configuration error indicating fail-open auth bypass
+### Auth.js server-configuration error reaching production (fail-open precondition)
 
-`UC_62_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_65_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* ("[auth][error]") ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET" OR "There was a problem with the server configuration")
-| stats count AS Hits, min(_time) AS firstTime, max(_time) AS lastTime, values(source) AS sources BY host, sourcetype
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+index=* ("[auth][error]" OR "InvalidEndpoints" OR "MissingSecret" OR "There was a problem with the server configuration")
+| stats earliest(_time) as firstSeen latest(_time) as lastSeen count values(source) as sources by host
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - lastSeen
 ```
 
-### HTTP 500 on Auth.js /api/auth/ route — live fail-open trigger
+### Auth.js fail-open exploited: protected routes served 200/302 during an active auth-error window
 
-`UC_62_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_65_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count FROM datamodel=Web.Web WHERE Web.uri_path="/api/auth/*" Web.status=500 BY Web.site, Web.uri_path, Web.status, Web.src, _time span=1h
+`summariesonly`
+| tstats count, values(Web.uri_path) as uri_paths, values(Web.src) as src_ips from datamodel=Web where (Web.status=200 OR Web.status=302) by Web.dest, _time span=10m
 | `drop_dm_object_name(Web)`
-| stats sum(count) AS Hits, dc(src) AS DistinctClients, min(_time) AS firstTime, max(_time) AS lastTime BY site, uri_path
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| join type=inner dest [ search index=* ("[auth][error]" OR "MissingSecret" OR "InvalidEndpoints") | stats count by host | rename host as dest | fields dest ]
+| sort - _time
 ```
 
-### Auth.js fail-open window — config error coincident with successful responses served
+### Auth.js config break on deploy: first-ever [auth][error] on a previously-healthy host
 
-`UC_62_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_65_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count FROM datamodel=Web.Web WHERE Web.status IN (200,302) BY Web.site, Web.src, _time span=5m
-| `drop_dm_object_name(Web)`
-| join type=inner site [ search index=* "[auth][error]" ("InvalidEndpoints" OR "MissingSecret" OR "AUTH_SECRET") | stats min(_time) AS errStart, max(_time) AS errEnd BY host | rename host AS site ]
-| where _time>=errStart AND _time<=errEnd+300
-| stats sum(count) AS SuccessfulResponses, dc(src) AS DistinctClients, values(errStart) AS errStart, values(errEnd) AS errEnd BY site
-| sort - SuccessfulResponses
+index=* "[auth][error]" earliest=-1d
+| stats min(_time) as firstSeen count values(source) as sources by host
+| where firstSeen >= relative_time(now(), "-1d")
+| join type=leftanti host [ search index=* "[auth][error]" earliest=-14d latest=-1d | stats count by host | fields host ]
+| convert ctime(firstSeen)
+| sort - firstSeen
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
 
-`UC_62_0` · phase: **exploit** · confidence: **High**
+`UC_65_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
