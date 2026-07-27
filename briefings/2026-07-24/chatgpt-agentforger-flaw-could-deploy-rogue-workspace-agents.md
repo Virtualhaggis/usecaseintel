@@ -41,12 +41,69 @@ The vulnerability has been codenamed AgentForger by Zenity Labs. The issu…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1071.003** — Application Layer Protocol: Mail Protocols
+- **T1114.002** — Email Collection: Remote Email Collection
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ChatGPT AgentForger CSRF link: Agent Builder URL with initial_assistant_prompt param
+
+`UC_42_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*chatgpt.com/agents/studio/new*" Web.url="*initial_assistant_prompt*" by Web.src Web.user Web.dest Web.url
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+UrlClickEvents
+| where Timestamp > ago(30d)
+| where Url has "chatgpt.com/agents/studio/new"
+| where Url has "initial_assistant_prompt"
+| project Timestamp, AccountUpn, Workload, ActionType, IsClickedThrough, IPAddress, Url, NetworkMessageId
+| order by Timestamp desc
+```
+
+### AgentForger rogue-agent C2: inbound TASK-subject email followed by outbound reply to sender domain
+
+`UC_42_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.subject="TASK*" by All_Email.src_user All_Email.recipient All_Email.subject
+| `drop_dm_object_name(All_Email)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let Window = 30d;
+let TaskInbound = EmailEvents
+    | where Timestamp > ago(Window)
+    | where EmailDirection == "Inbound"
+    | where Subject startswith "TASK"
+    | project InTime = Timestamp, Victim = RecipientEmailAddress, AttackerAddr = SenderFromAddress, AttackerDomain = SenderFromDomain;
+EmailEvents
+| where Timestamp > ago(Window)
+| where EmailDirection == "Outbound"
+| extend RecipientDomain = tostring(split(RecipientEmailAddress, "@")[1])
+| project OutTime = Timestamp, Victim = SenderFromAddress, ReplyTo = RecipientEmailAddress, RecipientDomain
+| join kind=inner TaskInbound on Victim
+| where RecipientDomain =~ AttackerDomain
+| where OutTime between (InTime .. InTime + 1h)
+| project InTime, OutTime, DelayMin = datetime_diff('minute', OutTime, InTime), Victim, AttackerAddr, ReplyTo, AttackerDomain
+| order by OutTime desc
+```
 
 ### Suspicious browser extension installation
 
@@ -426,4 +483,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

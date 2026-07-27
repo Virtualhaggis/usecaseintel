@@ -29,12 +29,37 @@ Ask an AI coding agent to fetch a tool. Occasionally, it returns a name that sou
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1195.001** — Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### AI coding agent installing hallucinated npm package 'react-codeshift' (slopsquatting)
+
+`UC_39_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm","node.exe","cmd.exe","powershell.exe","pwsh.exe","bash","sh") Processes.process="*react-codeshift*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "react-codeshift"
+| where FileName in~ ("npm.exe","npm","npx.exe","npx","node.exe","yarn.exe","yarn","pnpm.exe","pnpm","cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -215,4 +240,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

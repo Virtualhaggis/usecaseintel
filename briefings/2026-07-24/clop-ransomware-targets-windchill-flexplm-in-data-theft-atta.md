@@ -18,7 +18,12 @@ As cybersecurity company …
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-12569`
-- **CVE:** `CVE-2026-4681`
+- **IPv4 (defanged):** `216.152.148.54`
+- **IPv4 (defanged):** `216.152.151.204`
+- **IPv4 (defanged):** `104.243.35.63`
+- **IPv4 (defanged):** `5.180.41.35`
+- **Domain (defanged):** `cryptohox.com`
+- **SHA256:** `55a1eb4c2d3da04376df39d7ba832569c6af1a37a0cf2b95f754ac898023a30c`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,6 +34,8 @@ As cybersecurity company …
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -149,9 +156,15 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-12569`, `CVE-2026-4681`
+  - CVE(s): `CVE-2026-12569`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `216.152.148.54`, `216.152.151.204`, `104.243.35.63`, `5.180.41.35`, `cryptohox.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `55a1eb4c2d3da04376df39d7ba832569c6af1a37a0cf2b95f754ac898023a30c`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -24,7 +24,8 @@ The MySQL integration component in Budibase is configured with `multipleStatemen
 
 ## MITRE ATT&CK Techniques
 
-- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
+- **T1190** — Exploit Public-Facing Application
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -32,9 +33,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-_No actionable hunts can be derived from the RSS summary alone. The article may still warrant manual review — open the source link for actor attribution, IOCs in the body, and TTP detail._
+### Stacked SQL-injection payload against Budibase datasource query API (multipleStatements)
+
+`UC_22_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method IN ("POST","PUT") (Web.url="*/api/queries*" OR Web.url="*/api/datasources*" OR Web.uri_path="*/api/queries*" OR Web.uri_path="*/api/datasources*") (Web.url="*;*DROP TABLE*" OR Web.url="*;*DELETE *" OR Web.url="*INTO OUTFILE*" OR Web.url="*GRANT ALL*" OR Web.uri_query="*;*DROP TABLE*" OR Web.uri_query="*INTO OUTFILE*") by Web.src Web.dest Web.http_method Web.url Web.uri_path Web.status
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+### MySQL server (mysqld) writes exfil file via SELECT INTO OUTFILE on Budibase DB host
+
+`UC_22_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name IN ("mysqld.exe","mysqld") AND (Endpoint.Filesystem.file_path="*/tmp/*" OR Endpoint.Filesystem.file_path="*/var/www/*" OR Endpoint.Filesystem.file_path="*\\Temp\\*" OR Endpoint.Filesystem.file_path="*\\inetpub\\*" OR Endpoint.Filesystem.file_name="*.csv" OR Endpoint.Filesystem.file_name="*.sql" OR Endpoint.Filesystem.file_name="*.txt") AND NOT (Endpoint.Filesystem.file_path="*/var/lib/mysql/*" OR Endpoint.Filesystem.file_path="*\\MySQL\\*\\Data\\*") by Endpoint.Filesystem.dest Endpoint.Filesystem.process_name Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("mysqld.exe","mysqld")
+| where ActionType == "FileCreated"
+| where FolderPath has_any (@"\Temp\", "/tmp/", @"\inetpub\", "/var/www/", @"\www\") or FileName endswith ".csv" or FileName endswith ".sql" or FileName endswith ".txt"
+| where not(FolderPath has_any ("/var/lib/mysql/", @"\MySQL\", @"\Data\"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessId, FolderPath, FileName, InitiatingProcessCommandLine
+| sort by Timestamp desc
+```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

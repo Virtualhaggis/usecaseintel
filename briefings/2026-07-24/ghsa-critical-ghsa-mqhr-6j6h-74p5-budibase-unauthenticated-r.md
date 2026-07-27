@@ -13,12 +13,14 @@ Budibase attaches a REST datasource's stored credentials (Bearer/Basic tokens an
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **MD5:** `6a56b19a000000002a1e99450570f12e`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1552** — Unsecured Credentials
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
@@ -26,9 +28,36 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Budibase REST query published to PUBLIC role (unauth cred-leak enabler)
+
+`UC_20_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url="*/api/permission/PUBLIC/query_*" (Web.url="*/read" OR Web.url="*/write") by Web.src Web.dest Web.url
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+### Budibase server leaks datasource auth to first-seen host (undici + Authorization egress)
+
+`UC_20_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` earliest(_time) as firstTime latest(_time) as lastTime count from datamodel=Web where Web.http_user_agent="undici" by Web.dest
+| `drop_dm_object_name(Web)`
+| where firstTime >= relative_time(now(), "-1d@d")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime
+```
+
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource
 
-`UC_18_1` · phase: **install** · confidence: **High**
+`UC_20_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,14 +88,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6a56b19a000000002a1e99450570f12e`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

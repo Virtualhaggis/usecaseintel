@@ -17,7 +17,9 @@ Budibase's OIDC SSO login links an incoming SSO identity to an existing Budibase
 
 ## MITRE ATT&CK Techniques
 
-- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1550** — Use Alternate Authentication Material
+- **T1548** — Abuse Elevation Control Mechanism
 
 ## Kill chain phases observed
 
@@ -25,9 +27,25 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-_No actionable hunts can be derived from the RSS summary alone. The article may still warrant manual review — open the source link for actor attribution, IOCs in the body, and TTP detail._
+### Budibase OIDC login sequence (configs → callback → self) from single source
+
+`UC_21_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web.Web where (Web.url="*/api/global/auth/*/oidc/configs/*" OR Web.url="*/api/global/auth/oidc/callback*" OR Web.url="*/api/global/self*") by _time, Web.src, Web.dest, Web.uri_path span=1m | `drop_dm_object_name(Web)` | eval step=case(like(uri_path,"%/oidc/configs/%"),"1_init", like(uri_path,"%/oidc/callback%"),"2_callback", like(uri_path,"%/api/global/self%"),"3_self", 1==1,"other") | where step!="other" | stats dc(step) as steps values(step) as steps_seen min(_time) as firstTime max(_time) as lastTime by src, dest | where steps>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+### IdP self-registration or profile email-change asserting a privileged Budibase user's email
+
+`UC_21_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web.Web where (Web.uri_path="/api/global/auth/oidc/callback" OR Web.uri_path="/api/global/users" OR Web.uri_path="/api/global/roles" OR Web.uri_path="/api/global/configs") by _time, Web.src, Web.dest, Web.uri_path span=1m | `drop_dm_object_name(Web)` | eval isCallback=if(uri_path=="/api/global/auth/oidc/callback",1,0) | eval isAdmin=if(uri_path=="/api/global/users" OR uri_path=="/api/global/roles" OR uri_path=="/api/global/configs",1,0) | stats sum(isCallback) as callbacks sum(isAdmin) as adminCalls min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths by src, dest | where callbacks>=1 AND adminCalls>=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

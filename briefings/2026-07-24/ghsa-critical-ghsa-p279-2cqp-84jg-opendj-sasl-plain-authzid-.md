@@ -19,7 +19,8 @@ This…
 
 ## MITRE ATT&CK Techniques
 
-- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
+- **T1078** — Valid Accounts
+- **T1134** — Access Token Manipulation
 
 ## Kill chain phases observed
 
@@ -27,9 +28,36 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-_No actionable hunts can be derived from the RSS summary alone. The article may still warrant manual review — open the source link for actor attribution, IOCs in the body, and TTP detail._
+### OpenDJ SASL PLAIN bind invoking proxied authorization (authzid) — impersonation
+
+`UC_18_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.app="opendj" by Authentication.src_user, Authentication.user, Authentication.src, Authentication.dest 
+| `drop_dm_object_name(Authentication)` 
+| where isnotnull(src_user) AND isnotnull(user) AND lower(src_user)!=lower(user) 
+| where NOT like(lower(user), "%cn=directory manager%") 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+### OpenDJ proxied-auth fan-out — one source assuming many distinct authz identities
+
+`UC_18_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.app="opendj" by Authentication.src_user, Authentication.user, _time span=10m 
+| `drop_dm_object_name(Authentication)` 
+| where lower(src_user)!=lower(user) AND NOT like(lower(user), "%cn=directory manager%") 
+| stats dc(user) as distinct_authzids values(user) as assumed_identities min(_time) as firstTime max(_time) as lastTime by src_user 
+| where distinct_authzids >= 5 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

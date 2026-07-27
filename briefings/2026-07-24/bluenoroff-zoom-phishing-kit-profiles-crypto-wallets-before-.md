@@ -13,7 +13,10 @@ The North Korean threat actors behind the ClickFix-style campaigns that employ t
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `us.zoom.06webin.us`
+- **Domain (defanged):** `zoom.05ukweb.uk`
+- **Domain (defanged):** `weekly-up.online`
+- **Domain (defanged):** `callsdk.online`
 
 ## MITRE ATT&CK Techniques
 
@@ -41,12 +44,120 @@ The North Korean threat actors behind the ClickFix-style campaigns that employ t
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1105** — Ingress Tool Transfer
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1217** — Browser Information Discovery
+- **T1567** — Exfiltration Over Web Service
+- **T1555.001** — Credentials from Password Stores: Keychain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### BlueNoroff ClickFix Defender tamper: exclude C:\Users + disable realtime monitoring
+
+`UC_36_16` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND ((Processes.process="*ExclusionPath*" AND Processes.process="*C:\\Users*") OR Processes.process="*DisableRealtimeMonitoring*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where AccountName !endswith "$"
+| where (ProcessCommandLine has "ExclusionPath" and ProcessCommandLine has @"C:\Users")
+     or (ProcessCommandLine has "DisableRealtimeMonitoring" and ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### BlueNoroff typosquatted Zoom/Teams infrastructure network contact
+
+`UC_36_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*06webin.us" OR DNS.query="*05ukweb.uk" OR DNS.query="*weekly-up.online" OR DNS.query="*callsdk.online") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("06webin.us","05ukweb.uk","weekly-up.online","callsdk.online")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### ClickFix PowerShell loader spawning wscript to run downloaded VBScript
+
+`UC_36_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("powershell.exe","pwsh.exe") AND Processes.process_name IN ("wscript.exe","cscript.exe") AND Processes.process="*.vbs*" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where ProcessCommandLine has ".vbs"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### WScript enumerating browser profiles for Telegram session and wallet extensions
+
+`UC_36_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("wscript.exe","cscript.exe") AND (Filesystem.file_path="*\\Google\\Chrome\\User Data*" OR Filesystem.file_path="*\\Microsoft\\Edge\\User Data*" OR Filesystem.file_path="*\\BraveSoftware\\Brave-Browser\\User Data*" OR Filesystem.file_path="*\\Mozilla\\Firefox\\Profiles*" OR Filesystem.file_path="*\\Opera Software*" OR Filesystem.file_path="*\\Vivaldi\\User Data*") by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where FolderPath has_any (@"\Google\Chrome\User Data", @"\Microsoft\Edge\User Data", @"\BraveSoftware\Brave-Browser\User Data", @"\Mozilla\Firefox\Profiles", @"\Opera Software", @"\Vivaldi\User Data", @"\Chromium\User Data")
+| summarize FilesTouched = dcount(FolderPath), SamplePath = any(FolderPath), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine
+| order by LastSeen desc
+```
+
+### macOS BlueNoroff stealer exfiltrating to Telegram bot (Aurora channel)
+
+`UC_36_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","bash","sh","zsh","osascript") AND Processes.process="*api.telegram.org/bot*" AND (Processes.process="*sendDocument*" OR Processes.process="*sendMessage*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("curl","bash","sh","zsh","osascript")
+| where ProcessCommandLine has "api.telegram.org/bot"
+| where ProcessCommandLine has_any ("sendDocument","sendMessage")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -525,7 +636,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `us.zoom.06webin.us`, `zoom.05ukweb.uk`, `weekly-up.online`, `callsdk.online`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 21 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

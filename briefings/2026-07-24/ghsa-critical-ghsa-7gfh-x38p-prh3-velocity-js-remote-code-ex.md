@@ -19,6 +19,10 @@ Remote Code Execution (RCE) in velocityjs v2.1.6 via property-read to the Functi
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
@@ -26,9 +30,44 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Velocity.js SSTI RCE payload (constructor.constructor→child_process) in HTTP request
+
+`UC_30_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*constructor.constructor*" OR Web.url="*child_process*" OR Web.url="*mainModule*" OR Web.url="*%23set(*" OR Web.url="*process.mainModule*") by Web.src Web.dest Web.site Web.http_method Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### Node.js process spawning shell / recon binary (velocityjs SSTI RCE execution)
+
+`UC_30_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","node")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","hostname.exe","ipconfig.exe","systeminfo.exe","wmic.exe","certutil.exe","bitsadmin.exe","curl.exe","nslookup.exe","sh","bash","dash","whoami","id","uname","curl","wget","nc","ncat")) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process Processes.process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","hostname.exe","ipconfig.exe","systeminfo.exe","wmic.exe","certutil.exe","bitsadmin.exe","curl.exe","nslookup.exe","sh","bash","dash","whoami","id","uname","curl","wget","nc","ncat")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256, InitiatingProcessId, ProcessId
+| order by Timestamp desc
+```
+
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-7gfh-x38p-prh3: Velocity.js: Remote Code Execution via pr
 
-`UC_28_0` · phase: **exploit** · confidence: **High**
+`UC_30_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,4 +117,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

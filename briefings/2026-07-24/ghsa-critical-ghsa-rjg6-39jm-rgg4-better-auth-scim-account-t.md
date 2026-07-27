@@ -20,12 +20,40 @@ You are affected if your application registers the `@better-auth/scim` plugin an
 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1531** — Account Access Removal
+- **T1550.001** — Use Alternate Authentication Material: Application Access Tokens
+- **T1098** — Account Manipulation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Better-Auth SCIM global user deletion via /scim/v2/Users from unsanctioned caller
+
+`UC_35_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as delete_count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method=DELETE Web.url="*/scim/v2/Users/*" (Web.status=200 OR Web.status=204) by Web.src Web.user Web.site Web.dest
+| `drop_dm_object_name(Web)`
+| eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S")
+| sort - lastTime
+```
+
+### Better-Auth SCIM profile/email rewrite fan-out across many /scim/v2/Users resources
+
+`UC_35_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as write_count dc(Web.url) as distinct_user_resources values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method=PUT OR Web.http_method=PATCH) Web.url="*/scim/v2/Users/*" Web.status>=200 Web.status<300 by Web.src Web.user Web.site
+| `drop_dm_object_name(Web)`
+| where distinct_user_resources > 5
+| eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S")
+| sort - write_count
+```
 
 ### OAuth consent / suspicious app grant
 
@@ -57,4 +85,4 @@ CloudAppEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

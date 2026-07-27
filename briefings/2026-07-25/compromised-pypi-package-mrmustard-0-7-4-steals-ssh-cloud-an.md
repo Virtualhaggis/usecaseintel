@@ -28,12 +28,133 @@ Table of Contents Loa…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1546** — Event Triggered Execution
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### mrmustard stealer C2 exfil to metrics.femboy.energy
+
+`UC_14_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="*femboy.energy*" by DNS.src DNS.dest DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "femboy.energy" or RemoteUrl endswith "femboy.energy"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Python interpreter reading SSH + AWS + Kube credential stores
+
+`UC_14_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Filesystem.file_path) as distinct_paths values(Filesystem.file_path) as file_paths min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.ssh/*" OR Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.aws/config" OR Filesystem.file_path="*/.kube/config") by Filesystem.dest Filesystem.user _time span=5m
+| `drop_dm_object_name(Filesystem)`
+| eventstats dc(eval(if(match(file_paths,"/\.ssh/"),"ssh",if(match(file_paths,"/\.aws/"),"aws",if(match(file_paths,"/\.kube/"),"kube",null()))))) as store_count by dest
+| where distinct_paths >= 2
+| convert ctime(firstTime)
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has "python"
+| extend SecretStore = case(FolderPath has "/.ssh", "ssh", FolderPath has "/.aws", "aws", FolderPath has "/.kube", "kube", "")
+| where SecretStore != ""
+| summarize StoreCount = dcount(SecretStore), Stores = make_set(SecretStore), Files = make_set(FolderPath, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessId, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where StoreCount >= 2   // one python process touching >=2 of {ssh,aws,kube} = harvest pattern
+| order by FirstSeen desc
+```
+
+### mrmustard persistence artifacts: mmcompat.pth and .tf_cache/hw_probe.pyc
+
+`UC_14_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="mmcompat.pth" OR Filesystem.file_name="hw_probe.pyc" OR Filesystem.file_path="*/.cache/.tf_cache/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| where FileName =~ "mmcompat.pth" or FileName =~ "hw_probe.pyc" or FolderPath has "/.cache/.tf_cache/"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### Recurring cron/shell-rc execution of .tf_cache/hw_probe.pyc payload
+
+`UC_14_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*hw_probe.pyc*" OR Processes.process="*/.cache/.tf_cache/*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "hw_probe.pyc" or ProcessCommandLine has "/.cache/.tf_cache/"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Malicious mrmustard 0.7.4 artifact by hash or filename
+
+`UC_14_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="0404f8590fdaef95280c1d908068f31bf2321fe887faabf0c2329ba67c7203cb" OR Filesystem.file_hash="81f0d1291a975d012d1b892cf9967557fdbb1ad4e1ac0545702ad235ace1cac5" OR Filesystem.file_name="mrmustard-0.7.4*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(90d)
+| where SHA256 in~ ("0404f8590fdaef95280c1d908068f31bf2321fe887faabf0c2329ba67c7203cb", "81f0d1291a975d012d1b892cf9967557fdbb1ad4e1ac0545702ad235ace1cac5")
+    or FileName startswith "mrmustard-0.7.4"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -152,7 +273,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised PyPI Package: mrmustard 0.7.4 Steals SSH, Cloud, and Kubernetes Cred
 
-`UC_12_6` · phase: **exploit** · confidence: **High**
+`UC_14_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,4 +333,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

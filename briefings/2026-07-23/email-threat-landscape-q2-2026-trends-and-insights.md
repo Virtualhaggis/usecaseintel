@@ -44,9 +44,8 @@ The second quarter of 2026 (April–June) was largely defined by the continuing 
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
 - **T1105** — Ingress Tool Transfer
-- **T1564.003** — Hidden Window
-- **T1070.004** — File Deletion
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1059.003** — Windows Command Shell
 
 ## Kill chain phases observed
 
@@ -54,13 +53,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inbound phishing from campaign sender 9i6pokerdepot.com (Q2 2026 ClickUp/pixeldrain malware chain)
+### Inbound malware campaign email from DKIM-signed sender 9i6pokerdepot.com
 
-`UC_55_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_57_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (All_Email.src_user="Customer.Service@9i6pokerdepot.com" OR All_Email.src_user_domain="9i6pokerdepot.com") by All_Email.src_user, All_Email.src_user_domain, All_Email.recipient, All_Email.subject, All_Email.message_id | `drop_dm_object_name(Email)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Email.All_Email where (All_Email.src_user="customer.service@9i6pokerdepot.com" OR All_Email.src_user="*@9i6pokerdepot.com") by All_Email.src_user, All_Email.recipient, All_Email.subject, All_Email.action, _time | `drop_dm_object_name(All_Email)` | sort - _time
 ```
 
 **Defender KQL:**
@@ -69,67 +68,74 @@ EmailEvents
 | where Timestamp > ago(30d)
 | where EmailDirection == "Inbound"
 | where SenderFromDomain =~ "9i6pokerdepot.com" or SenderMailFromDomain =~ "9i6pokerdepot.com" or SenderFromAddress =~ "customer.service@9i6pokerdepot.com"
-| join kind=leftouter (EmailAttachmentInfo | where Timestamp > ago(30d) | project NetworkMessageId, AttFile = FileName, FileType) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, AttFile, FileType, AuthenticationDetails
+| join kind=leftouter (EmailAttachmentInfo | where Timestamp > ago(30d) | project NetworkMessageId, FileName, FileType) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, AuthenticationDetails, AttachmentFile = FileName, AttachmentType = FileType, UrlCount
 | order by Timestamp desc
 ```
 
-### ClickUp-hosted Financial_report.bat dropper written to disk
+### Second-stage BAT dropper retrieval from ClickUp attachment subdomain t90141296286
 
-`UC_55_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="Financial_report.bat" by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where (FileOriginUrl has "clickup-attachments.com" and FileName endswith ".bat")
-    or FileName =~ "Financial_report.bat"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Batch dropper spawns hidden PowerShell pulling installer.exe from pixeldrain.com
-
-`UC_55_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*pixeldrain.com*" AND (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="cmd.exe" OR Processes.process_name="curl.exe") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has "pixeldrain.com"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe")
-| extend HiddenOrTemp = ProcessCommandLine has_any ("-w hidden","-windowstyle hidden","hidden","-nop","-noprofile","\\Temp\\","installer.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, HiddenOrTemp, SHA256
-| order by Timestamp desc
-```
-
-### Endpoint network/DNS egress to pixeldrain.com from a LOLBin / script host
-
-`UC_55_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="*pixeldrain.com*" by DNS.src, DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query="t90141296286.p.clickup-attachments.com" by DNS.src, DNS.query, _time | `drop_dm_object_name(DNS)` | sort - _time
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "pixeldrain.com"
-| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe","wscript.exe","cscript.exe","mshta.exe")
+| where RemoteUrl has "t90141296286.p.clickup-attachments.com" or (RemoteUrl has "clickup-attachments.com" and RemoteUrl has "fb39c3a9-3161-40ad")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### BAT-spawned hidden PowerShell pulling installer from pixeldrain.com
+
+`UC_57_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*pixeldrain.com*" OR Processes.process="*3v92oJiL*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process, _time | `drop_dm_object_name(Processes)` | sort - _time
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has "pixeldrain.com" or ProcessCommandLine has "3v92oJiL"
+| extend HiddenWindow = ProcessCommandLine matches regex @"(?i)-w(in(dowstyle)?)?\s+h(idden)?"
+| extend BatParent = InitiatingProcessFileName in~ ("cmd.exe") or InitiatingProcessCommandLine has ".bat" or InitiatingProcessCommandLine has "financial_report"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, HiddenWindow, BatParent, SHA256
+| order by Timestamp desc
+```
+
+### LOLBin download of installer.exe from pixeldrain.com API to user Temp
+
+`UC_57_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web.All_Web where (All_Web.url="*pixeldrain.com/api/file*" OR All_Web.url="*3v92oJiL*") by All_Web.src, All_Web.user, All_Web.dest, All_Web.url, All_Web.http_user_agent, _time | `drop_dm_object_name(All_Web)` | sort - _time
+```
+
+**Defender KQL:**
+```kql
+let DownloadHosts = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "pixeldrain.com" and (RemoteUrl has "/api/file" or RemoteUrl has "3v92oJiL")
+    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe","mshta.exe")
+    | project Timestamp, DeviceId, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP;
+DownloadHosts
+| join kind=leftouter (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName endswith ".exe" and FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp")
+    | project FileTimestamp = Timestamp, DeviceId, DroppedFile = FileName, DroppedPath = FolderPath, FileOriginUrl, SHA256
+  ) on DeviceId
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, DroppedFile, DroppedPath, FileOriginUrl, SHA256
 | order by Timestamp desc
 ```
 
@@ -420,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Email threat landscape: Q2 2026 trends and insights
 
-`UC_55_9` · phase: **exploit** · confidence: **High**
+`UC_57_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -477,4 +483,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

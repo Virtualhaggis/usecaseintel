@@ -15,6 +15,8 @@ The simp…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-58593`
+- **IPv4 (defanged):** `4.245.3.4`
+- **Domain (defanged):** `attacker.tld`
 
 ## MITRE ATT&CK Techniques
 
@@ -37,12 +39,62 @@ The simp…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1548** — Abuse Elevation Control Mechanism
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1656** — Impersonation
+- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### NodeBB privilege escalation: non-admin reaching /api/admin/* after homePageCustom bypass
+
+`UC_48_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as hits, min(_time) as firstTime, max(_time) as lastTime, values(Web.uri_path) as uri_paths, values(Web.http_method) as methods from datamodel=Web where (Web.uri_path="/admin" OR Web.uri_path="/admin/*" OR Web.uri_path="/api/admin/*" OR Web.uri_path="/api/admin/advanced/errors" OR Web.uri_path="/api/admin/users/csv" OR Web.uri_path="/api/admin/uploadlogo") Web.status=200 by Web.src, Web.http_user_agent, Web.site
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+### NodeBB i18n translation-token XSS: [[topic:merged-message,...]] injected in request URI
+
+`UC_48_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as hits, min(_time) as firstTime, max(_time) as lastTime, values(Web.uri_path) as uri_paths from datamodel=Web where (Web.url="*[[*" OR Web.url="*%5B%5B*" OR Web.uri_query="*topic:merged-message*" OR Web.uri_query="*%5D%5D*") by Web.src, Web.http_user_agent, Web.url, Web.http_method, Web.status
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+### NodeBB federation actor spoofing (CVE-2026-58593): external POST to ActivityPub inbox
+
+`UC_48_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as hits, min(_time) as firstTime, max(_time) as lastTime, values(Web.uri_path) as uri_paths, values(Web.status) as statuses from datamodel=Web where Web.http_method="POST" (Web.uri_path="/category/*/inbox" OR Web.uri_path="/uid/*/inbox" OR Web.uri_path="/ap/inbox/*") by Web.src, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| sort - hits
+```
+
+### NodeBB unauthenticated private-data enumeration via ActivityPub outbox / message endpoints
+
+`UC_48_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as hits, dc(Web.uri_path) as distinct_objects, min(_time) as firstTime, max(_time) as lastTime, values(Web.uri_path) as sample_paths from datamodel=Web where Web.http_method="GET" (Web.uri_path="/message/*" OR Web.uri_path="/category/*/outbox") by Web.src, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| where distinct_objects > 5
+| sort - distinct_objects
+```
 
 ### Suspicious browser extension installation
 
@@ -388,7 +440,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-58593`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `4.245.3.4`, `attacker.tld`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

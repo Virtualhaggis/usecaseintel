@@ -1,12 +1,16 @@
 # Briefings — full archive
 
-_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-27
+- [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
+- [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 
 ## 2026-07-26
 - [2026 mid year update on pace for our biggest year yet](./2026-07-26/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
@@ -25,7 +29,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [steam forum clickfix attacks infect gamers with xmrig crypto](./2026-07-25/steam-forum-clickfix-attacks-infect-gamers-with-xmrig-crypto.md)
 
 ## 2026-07-24
-- [bing images flaws let crafted svgs run commands as system on](./2026-07-24/bing-images-flaws-let-crafted-svgs-run-commands-as-system-on.md)
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
@@ -46,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa q6x4 v3qx 85qw budibase sql injection via](./2026-07-24/ghsa-critical-ghsa-q6x4-v3qx-85qw-budibase-sql-injection-via.md)
 - [ghsa critical ghsa r277 6w6q xmqw kin openapi validationhand](./2026-07-24/ghsa-critical-ghsa-r277-6w6q-xmqw-kin-openapi-validationhand.md)
 - [ghsa critical ghsa rjg6 39jm rgg4 better auth scim account t](./2026-07-24/ghsa-critical-ghsa-rjg6-39jm-rgg4-better-auth-scim-account-t.md)
-- [ghsa critical ghsa vh45 f885 3848 sm crypto predictable sm2 ](./2026-07-24/ghsa-critical-ghsa-vh45-f885-3848-sm-crypto-predictable-sm2-.md)
 - [ghsa critical ghsa w28w gp39 m4p6 prompty server side templa](./2026-07-24/ghsa-critical-ghsa-w28w-gp39-m4p6-prompty-server-side-templa.md)
 - [ghsa critical ghsa w4hw qcx7 56pr shescape shell injection v](./2026-07-24/ghsa-critical-ghsa-w4hw-qcx7-56pr-shescape-shell-injection-v.md)
 - [golden chickens resurfaces with four new malware families an](./2026-07-24/golden-chickens-resurfaces-with-four-new-malware-families-an.md)
@@ -56,7 +58,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
 - [ontrac notifies customers of data breach after network hack](./2026-07-24/ontrac-notifies-customers-of-data-breach-after-network-hack.md)
-- [seeing ai agents is not enough security teams must enforce w](./2026-07-24/seeing-ai-agents-is-not-enough-security-teams-must-enforce-w.md)
 - [slopsquatting phantom domains and hallusquatting are the sam](./2026-07-24/slopsquatting-phantom-domains-and-hallusquatting-are-the-sam.md)
 
 ## 2026-07-23
@@ -120,8 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
 
 ## 2026-07-20
-- [exposed server reveals ai assisted phishing toolkit behind w](./2026-07-20/exposed-server-reveals-ai-assisted-phishing-toolkit-behind-w.md)
-- [fakegit campaign uses 7 600 github repositories to spread sm](./2026-07-20/fakegit-campaign-uses-7-600-github-repositories-to-spread-sm.md)
 - [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)
 - [ghsa critical cve 2026 61736 lightrag cors wildcard credenti](./2026-07-20/ghsa-critical-cve-2026-61736-lightrag-cors-wildcard-credenti.md)
 - [ghsa critical cve 2026 61740 lightrag is vulnerable to authe](./2026-07-20/ghsa-critical-cve-2026-61740-lightrag-is-vulnerable-to-authe.md)

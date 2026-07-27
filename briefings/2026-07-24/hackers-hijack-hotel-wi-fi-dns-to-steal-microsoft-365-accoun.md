@@ -17,6 +17,9 @@ Cybersecurity company ReliaQuest identified compromised Wi-Fi ga…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `38.146.28.75`
+- **IPv4 (defanged):** `31.57.243.154`
+- **IPv4 (defanged):** `104.194.159.150`
 - **Domain (defanged):** `m365-owa.com`
 - **Domain (defanged):** `owa-ms365.com`
 - **Domain (defanged):** `ms365-device.com`
@@ -34,12 +37,76 @@ Cybersecurity company ReliaQuest identified compromised Wi-Fi ga…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1071** — Application Layer Protocol
+- **T1557** — Adversary-in-the-Middle
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1584.002** — Compromise Infrastructure: DNS Server
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1090.001** — Proxy: Internal Proxy
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Endpoint DNS/connection to hotel-WiFi M365 phishing infrastructure (ms365-* domains + IPs)
+
+`UC_27_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("38.146.28.75","31.57.243.154","104.194.159.150") OR All_Traffic.dest_host IN ("m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let BadDomains = dynamic(["m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com"]);
+let BadIPs = dynamic(["38.146.28.75","31.57.243.154","104.194.159.150"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (BadDomains) or RemoteIP in (BadIPs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Entra ID sign-in from hotel Wi-Fi DNS-hijack campaign infrastructure IPs
+
+`UC_27_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN ("38.146.28.75","31.57.243.154","104.194.159.150") by Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let BadIPs = dynamic(["38.146.28.75","31.57.243.154","104.194.159.150"]);
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress in (BadIPs)
+| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, IsInteractive, ErrorCode, UserAgent
+| order by Timestamp desc
+```
+
+### Malicious WPAD/PAC proxy auto-config fetch on untrusted network
+
+`UC_27_7` · phase: **c2** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*wpad.dat*" OR Web.url="*.pac") Web.dest_category!="internal" by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "wpad.dat" or RemoteUrl endswith ".pac"
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -221,9 +288,9 @@ CloudAppEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `m365-owa.com`, `owa-ms365.com`, `ms365-device.com`, `ms365-live.com`
+  - IP / domain IOC(s): `38.146.28.75`, `31.57.243.154`, `104.194.159.150`, `m365-owa.com`, `owa-ms365.com`, `ms365-device.com`, `ms365-live.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

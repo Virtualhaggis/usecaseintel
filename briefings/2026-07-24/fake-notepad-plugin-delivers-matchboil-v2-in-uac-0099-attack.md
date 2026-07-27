@@ -16,7 +16,7 @@ The activity has been attributed by the agency to a threat cluster it tracks as 
 - **CVE:** `CVE-2025-66376`
 - **CVE:** `CVE-2026-8496`
 - **CVE:** `CVE-2025-49113`
-- **Domain (defanged):** `easysend.co`
+- **CVE:** `CVE-2025-56383`
 
 ## MITRE ATT&CK Techniques
 
@@ -42,14 +42,119 @@ The activity has been attributed by the agency to a threat cluster it tracks as 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
 - **T1053.005** — Persistence (article-specific)
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036** — Masquerading
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1499** — Endpoint Denial of Service
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### UAC-0099 fake-PDF VBScript launching Notepad++ / WinRAR (LUNCHPOKE stage)
+
+`UC_51_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("wscript.exe","cscript.exe")) AND (Processes.process_name IN ("notepad++.exe","winrar.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where FileName in~ ("notepad++.exe","winrar.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Notepad++ side-loading NppExport.dll from a non-Program Files path (LUNCHPOKE)
+
+`UC_51_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="notepad++.exe" AND NOT (Processes.process_path IN ("C:\\Program Files\\Notepad++\\*","C:\\Program Files (x86)\\Notepad++\\*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "notepad++.exe"
+| where FileName =~ "NppExport.dll"
+| where FolderPath !startswith "C:\\Program Files"
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### WinRAR extracting password-protected updater.rar in UAC-0099 chain
+
+`UC_51_17` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("winrar.exe","rar.exe","unrar.exe")) AND Processes.process="*updater.rar*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("winrar.exe","rar.exe","unrar.exe")
+| where ProcessCommandLine has "updater.rar"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Recurring scheduled task running RemoteLibUpdater.exe (BURNYBEAR persistence, 3-min cadence)
+
+`UC_51_18` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parents values(Processes.process) as cmds from datamodel=Endpoint.Processes where Processes.process_name="RemoteLibUpdater.exe" by Processes.dest Processes.user Processes.process_path | `drop_dm_object_name(Processes)` | where count>=3
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "RemoteLibUpdater.exe"
+| summarize Executions=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Parents=make_set(InitiatingProcessFileName), SampleCmd=any(ProcessCommandLine), FolderPath=any(FolderPath) by DeviceName, AccountName, SHA256
+| where Executions >= 3  // task fires every 3 minutes -> many launches over the window
+| order by Executions desc
+```
+
+### BURNYBEAR (RemoteLibUpdater.exe) loading MATCHBOIL.V2 InitTest.dll
+
+`UC_51_19` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="InitTest.dll" by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "RemoteLibUpdater.exe"
+| where FileName =~ "InitTest.dll"
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -475,7 +580,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Notepad++ Plugin Delivers MATCHBOIL.V2 in UAC-0099 Attacks
 
-`UC_49_15` · phase: **exploit** · confidence: **High**
+`UC_51_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -527,12 +632,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-66376`, `CVE-2026-8496`, `CVE-2025-49113`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `easysend.co`
+  - CVE(s): `CVE-2025-66376`, `CVE-2026-8496`, `CVE-2025-49113`, `CVE-2025-56383`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 20 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

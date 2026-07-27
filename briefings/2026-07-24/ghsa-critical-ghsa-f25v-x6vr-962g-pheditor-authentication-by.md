@@ -19,6 +19,9 @@ The forced password-change flow, triggered when the stored password is still the
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1556** — Modify Authentication Process
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
@@ -26,9 +29,43 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Pheditor forced-password-change auth bypass — POST to pheditor.php
+
+`UC_16_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url="*pheditor.php*" OR Web.uri_path="*pheditor.php") by Web.src Web.dest Web.url Web.uri_path Web.status Web.http_method Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| sort - count
+```
+
+### Web-server / PHP process writes new .php file under webroot (post-Pheditor webshell drop)
+
+`UC_16_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_path="*.php" (Filesystem.file_path="*\\inetpub\\wwwroot\\*" OR Filesystem.file_path="*\\htdocs\\*" OR Filesystem.file_path="*/var/www/*" OR Filesystem.file_path="*/www/*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType == "FileCreated"
+| where FileName endswith ".php"
+| where InitiatingProcessFileName in~ ("php-cgi.exe","php.exe","w3wp.exe","httpd.exe","apache2","nginx","php-fpm")
+| where FolderPath has_any (@"\inetpub\", @"\htdocs\", "/var/www/", "/www/")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f25v-x6vr-962g: Pheditor: Authentication Bypass in Forced
 
-`UC_14_0` · phase: **install** · confidence: **High**
+`UC_16_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,4 +99,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
