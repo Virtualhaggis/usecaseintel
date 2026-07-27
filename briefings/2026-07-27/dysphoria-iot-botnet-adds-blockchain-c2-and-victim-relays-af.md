@@ -1,6 +1,6 @@
 # [CRIT] Dysphoria IoT Botnet Adds Blockchain C2 and Victim Relays After JackSkid Disruption
 
-**Source:** The Hacker News
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-07-27
 **Article:** https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
 
@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Dysphoria botnet C2 server-list fetch — HTTP GET :9000/nodes?key=meowmeowmeow
 
-`UC_2_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_0_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Dysphoria blockchain C2 resolution — ENS (.eth) / SNS (.sol) name lookups
 
-`UC_2_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_0_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### IoT weak-credential entry — SSH/Telnet failed-auth burst then success
 
-`UC_2_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_0_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

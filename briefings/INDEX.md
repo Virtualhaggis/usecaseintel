@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,16 +11,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-27
 - [2026 mid year update on pace for our biggest year yet](./2026-07-27/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
+- [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
 - [coca cola confirms data theft in fairlife ransomware attack](./2026-07-27/coca-cola-confirms-data-theft-in-fairlife-ransomware-attack.md)
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
 - [ernst young data breach claimed by shinyhunters extortion ga](./2026-07-27/ernst-young-data-breach-claimed-by-shinyhunters-extortion-ga.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
+- [new certighost poc exploit lets attackers hijack windows dom](./2026-07-27/new-certighost-poc-exploit-lets-attackers-hijack-windows-dom.md)
+- [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
 - [shadow ai agents are multiplying here s how to find and secu](./2026-07-27/shadow-ai-agents-are-multiplying-here-s-how-to-find-and-secu.md)
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
+- [what is ai pentesting and how does it works](./2026-07-27/what-is-ai-pentesting-and-how-does-it-works.md)
 
 ## 2026-07-26
 - [github pypi add time based defenses against supply chain att](./2026-07-26/github-pypi-add-time-based-defenses-against-supply-chain-att.md)
@@ -65,7 +69,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
 - [ontrac notifies customers of data breach after network hack](./2026-07-24/ontrac-notifies-customers-of-data-breach-after-network-hack.md)
-- [slopsquatting phantom domains and hallusquatting are the sam](./2026-07-24/slopsquatting-phantom-domains-and-hallusquatting-are-the-sam.md)
 
 ## 2026-07-23
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
@@ -119,7 +122,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 - [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
-- [zimbra patches critical snmp command injection and four xss ](./2026-07-21/zimbra-patches-critical-snmp-command-injection-and-four-xss-.md)
 
 ## 2026-07-20
 - [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)

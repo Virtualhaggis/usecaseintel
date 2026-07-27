@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure hunt: unpatched CVE-2026-64600 (RefluXFS) on reflink-XFS RHEL/Fedora/Amazon Linux
 
-`UC_79_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_81_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -61,7 +61,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### RefluXFS precondition reset: unprivileged chsh execution enabling the reflink race
 
-`UC_79_13` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_81_13` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### RefluXFS post-exploit: passwordless root session shortly after unprivileged chsh
 
-`UC_79_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_81_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -438,7 +438,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nine-Year-Old RefluXFS Linux Flaw Gives Local Users Root on Default RHEL Install
 
-`UC_79_11` · phase: **install** · confidence: **High**
+`UC_81_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

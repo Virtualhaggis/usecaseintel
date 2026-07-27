@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Unprivileged user-namespace creation (unshare CLONE_NEWUSER) preceding Linux privilege escalation
 
-`UC_3242_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3243_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kernel privilege escalation: how Kubernetes container isolation impacts privileg
 
-`UC_3242_1` · phase: **install** · confidence: **High**
+`UC_3243_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

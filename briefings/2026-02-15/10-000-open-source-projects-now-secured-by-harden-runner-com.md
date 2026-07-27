@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### npm/node post-install (telemetry.js) spawning credential CLIs (gh auth token / npm whoami) — s1ngularity Nx
 
-`UC_634_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_635_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Local AI coding agents (claude/gemini/q) launched with permission-bypass flags during package install — s1ngularity
 
-`UC_634_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_635_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Shell rc files (.bashrc/.zshrc) modified by package-install process — s1ngularity persistence/shutdown
 
-`UC_634_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_635_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
