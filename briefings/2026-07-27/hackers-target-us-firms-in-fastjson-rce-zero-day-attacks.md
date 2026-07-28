@@ -11,15 +11,9 @@ By Bill Toulas
 July 27, 2026
 07:49 PM
 0 
-
-
 Hackers are actively exploiting a vulnerability in the FastJson open-source Java library, allowing remote code execution without user interaction or elevated privileges.
-
-
 The security issue affects FastJson versions 1.2.68 through 1.2.83 and is leveraged in attacks targeting various organizations in the U.S.
-
-
-The malicious activity was observed last week by the agentic security company T…
+The malicious activity was observed last week by the agentic security company ThreatBook, a…
 
 ## Indicators of Compromise (high-fidelity only)
 
