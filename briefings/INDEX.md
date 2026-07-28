@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-27
 - [2026 mid year update on pace for our biggest year yet](./2026-07-27/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [arista patches velocloud orchestrator zero day exploited in ](./2026-07-27/arista-patches-velocloud-orchestrator-zero-day-exploited-in-.md)
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
 - [coca cola confirms data theft in fairlife ransomware attack](./2026-07-27/coca-cola-confirms-data-theft-in-fairlife-ransomware-attack.md)

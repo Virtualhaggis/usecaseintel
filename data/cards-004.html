@@ -1,3 +1,368 @@
+<article class="card" id="art-89" data-art-slug="2026-07-22-sql-injection-isn-t-dead"
+  data-phases="actions,c2,exploit,install,recon" data-sev="high"
+  data-techs="T1021.001,T1190"
+  data-sources="Aikido"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="SQL injection isn&#x27;t dead The fix for SQL injection is decades old and still works. So why did WordPress core just need an emergency patch for one? The data, and how to defend against it. Category: News CVE-2026-60137 CVE-2026-63030 CVE-2024-42005 T1021.001 T1190 [LLM] wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137) [LLM] WordPress web-server/PHP process spawning a shell (wp2shell RCE) [LLM] Malicious PHP plugin/webshell dropped in wp-content by web server (wp2shell) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2026-07-22-sql-injection-isn-t-dead" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.aikido.dev/blog/sql-injection-isnt-dead" target="_blank" rel="noopener">SQL injection isn&#x27;t dead</a></h2>
+  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
+  <div class="pubmeta">
+    <span>2026-07-22</span>
+    <span>4 use cases</span>
+    <span>2 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">The fix for SQL injection is decades old and still works. So why did WordPress core just need an emergency patch for one? The data, and how to defend against it. Category: News</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-60137</span> <span class="ind cve">CVE-2026-63030</span> <span class="ind cve">CVE-2024-42005</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-89-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-89"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-89-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137) · [LLM] WordPress web-server/PHP process spawning a shell (wp2shell RCE)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Malicious PHP plugin/webshell dropped in wp-content by web server (wp2shell)</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6e60ccad2f" data-platforms="sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6e60ccad2f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts WordPress REST requests where the author__not_in parameter (normally an integer ID array) carries SQL-injection content, the core signature of CVE-2026-60137 exploited through the batch-route desync in the wp2shell chain. Targets the initial unauthenticated exploitation step against /wp-json/wp/v2/posts.
+
+Rationale: author__not_in is documented (Rapid7/VulnCheck) to accept only integer author IDs; any SQL metacharacter in it is the CVE-2026-60137 injection signature. Note: PoCs delivered inside a POST /wp-json/batch/v1 body won&#x27;t appear in access-log query strings — pair with WAF body inspection (CommonSecurityLog RequestURL/DeviceCustomString) to catch batch-wrapped payloads. Defender/Falcon/Datadog/CloudWatch left empty: WordPress web-request telemetry does not live in EDR/CloudTrail.
+
+Cross-checked against:
+  • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  • https://www.tenable.com/blog/wp2shell-cve-2026-63030-cve-2026-60137-frequently-asked-questions-about-remote-code-execution
+  • https://www.vulncheck.com/blog/wp2shell
+  • https://www.darkreading.com/cyberattacks-data-breaches/wp2shell-millions-wordpress-sites-remote-takeover</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (WPScan, Nessus, Qualys) sending SQLi test strings to /wp-json/wp/v2/posts</li><li>Security researchers / bug-bounty testers replaying the public wp2shell PoC against your own estate</li><li>Legitimate REST clients that URL-encode a comma-separated author list where an ID happens to contain a matched token (rare)</li><li>WAF-decoded double requests logging both the encoded and decoded query, doubling alert volume</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserAgent !has_any (&quot;WPScan&quot;,&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Nuclei&quot;,&quot;sqlmap&quot;) and cIP !in (&quot;&lt;your_scanner_ips&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull all requests from the source IP; confirm author__not_in carries SQL (quotes, UNION, SLEEP, information_schema) rather than integers, and note HTTP status — a 200 on a time-based/UNION probe indicates successful injection. 2) CONTAIN: Block the source IP at the WAF/edge and confirm the site is on WordPress 7.0.2 / 6.9.5 / 6.8.6; if unpatched, force the emergency update immediately (WordPress.org enabled forced auto-updates for this). 3) HUNT: Pivot to the same host for post-exploit activity — new administrator accounts, PHP files written under wp-content/plugins or wp-content/uploads, and web-server/PHP processes spawning shells (see companion UCs).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-89-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriStem has &quot;wp-json&quot; or csUriQuery has &quot;rest_route&quot;
+| where csUriQuery has &quot;author__not_in&quot;
+| where csUriQuery has_any (&quot;&#x27;&quot;,&quot;%27&quot;,&quot;union&quot;,&quot;select&quot;,&quot;sleep&quot;,&quot;information_schema&quot;,&quot;0x&quot;,&quot;--&quot;,&quot;/*&quot;)
+| project TimeGenerated, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUserAgent, Computer
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress wp2shell SQL Injection via author__not_in Parameter (CVE-2026-60137)
+id: 8f2c1a44-3e5d-4b6a-9c2f-1a7b9d0e4c11
+description: Detects SQL-injection content in the WordPress REST author__not_in parameter, which normally only accepts integer post-author IDs. Core signature of the wp2shell pre-auth RCE chain.
+references:
+  - https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  - https://www.tenable.com/blog/wp2shell-cve-2026-63030-cve-2026-60137-frequently-asked-questions-about-remote-code-execution
+author: SOC Detection Engineering
+date: 2026/07/22
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection_param:
+    cs-uri-query|contains: &#x27;author__not_in&#x27;
+  selection_sqli:
+    cs-uri-query|contains:
+      - &quot;&#x27;&quot;
+      - &#x27;%27&#x27;
+      - &#x27;union&#x27;
+      - &#x27;select&#x27;
+      - &#x27;sleep&#x27;
+      - &#x27;information_schema&#x27;
+      - &#x27;0x&#x27;
+      - &#x27;--&#x27;
+      - &#x27;/*&#x27;
+  condition: selection_param and selection_sqli
+falsepositives:
+  - Security scanners (Nessus, Qualys, WPScan) probing the endpoint
+level: high</code></pre></div>
+    <div class="tab-content" id="art-89-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where Web.url=&quot;*author__not_in*&quot; AND (Web.url=&quot;*&#x27;*&quot; OR Web.url=&quot;*%27*&quot; OR Web.url=&quot;*union*&quot; OR Web.url=&quot;*UNION*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*SELECT*&quot; OR Web.url=&quot;*sleep*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*0x*&quot; OR Web.url=&quot;*--*&quot; OR Web.url=&quot;*/*&quot;) by Web.src Web.dest Web.http_user_agent Web.url | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-89-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where Web.url=&quot;*author__not_in*&quot; AND (Web.url=&quot;*&#x27;*&quot; OR Web.url=&quot;*%27*&quot; OR Web.url=&quot;*union*&quot; OR Web.url=&quot;*UNION*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*SELECT*&quot; OR Web.url=&quot;*sleep*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*0x*&quot; OR Web.url=&quot;*--*&quot; OR Web.url=&quot;*/*&quot;) by Web.src Web.dest Web.http_user_agent Web.url | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="507719761f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">WordPress web-server/PHP process spawning a shell (wp2shell RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="507719761f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the code-execution stage of wp2shell where the web-request handler (php-fpm, php-cgi, w3wp, apache/nginx) spawns a command shell or download utility — behaviour a normal WordPress worker never exhibits. Confirms the SQLi chain has reached remote code execution.
+
+Rationale: The wp2shell chain culminates in uploading a malicious plugin for code execution; that code runs under the PHP/web-server process, so a web worker spawning cmd/sh/whoami/curl is a direct RCE confirmation. Datadog uses windows.sysmon (IIS/PHP-on-Windows); Linux hosts should use source:linux.auditd EXECVE with the same process names.
+
+Cross-checked against:
+  • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  • https://cyberinsider.com/wordpress-releases-emergency-update-for-critical-wp2shell-rce-flaw/
+  • https://www.indusface.com/blog/wp2shell-wordpress-cve-2026-60137-63030-rce/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Shell">T1505.003</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Backup plugins (UpdraftPlus, BackWPup) shelling out to mysqldump/gzip/tar</li><li>Image-optimisation plugins invoking imagemagick &#x27;convert&#x27; or &#x27;jpegoptim&#x27; via PHP exec()</li><li>wp-cron running PHP CLI jobs that legitimately call curl to fetch feed data</li><li>Server-monitoring agents that fork sh from the PHP-FPM pool for health checks</li><li>Composer/WP-CLI maintenance run interactively on the web host by an admin</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FileName in~ (&quot;sh&quot;,&quot;bash&quot;) and ProcessCommandLine has_any (&quot;mysqldump&quot;,&quot;imagemagick&quot;,&quot;convert&quot;,&quot;jpegoptim&quot;,&quot;wp-cron.php&quot;,&quot;backwpup&quot;,&quot;updraft&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Inspect the child ProcessCommandLine — reconnaissance (whoami, id, uname), outbound fetch (curl/wget to an unknown host), or an interactive shell are strong TP signals; confirm the parent PHP worker is serving the WordPress vhost. 2) CONTAIN: Isolate the host, kill the offending process tree, and rotate WordPress DB and admin credentials; take a forensic copy of wp-content before remediation. 3) HUNT: Enumerate all administrator accounts for rogue additions, list recently-modified PHP files under wp-content/plugins and wp-content/uploads, and review web logs for the preceding author__not_in / batch/v1 exploitation requests.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-89-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-89-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-89-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx.exe&quot;,&quot;nginx&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;whoami.exe&quot;,&quot;whoami&quot;,&quot;curl.exe&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python.exe&quot;,&quot;python3&quot;)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;php-cgi&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
+| where ActingProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell&quot;,&quot;pwsh&quot;,&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;whoami&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress Web-Server/PHP Process Spawning Shell (wp2shell RCE)
+id: 2b9e5c17-6d41-4a8e-b3c0-7f21a9e4d502
+description: Web-request handler (php-fpm/php-cgi/w3wp/apache/nginx) spawning a command interpreter or download tool, indicating web-shell command execution from the wp2shell chain.
+references:
+  - https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  - https://cyberinsider.com/wordpress-releases-emergency-update-for-critical-wp2shell-rce-flaw/
+author: SOC Detection Engineering
+date: 2026/07/22
+tags:
+  - attack.t1505.003
+  - attack.t1059
+  - attack.execution
+logsource:
+  category: process_creation
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;\php-cgi.exe&#x27;
+      - &#x27;\php.exe&#x27;
+      - &#x27;\w3wp.exe&#x27;
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/php&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/nginx&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;\whoami.exe&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/python3&#x27;
+  condition: selection
+falsepositives:
+  - Backup/media plugins invoking imagemagick, mysqldump or curl via shell
+level: high</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\php-cgi.exe OR *\\php.exe OR *\\w3wp.exe OR *\\W3WP.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe)</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(php-cgi|php|php-fpm|w3wp|httpd|apache2|nginx)(\.exe)?$/i
+| ImageFileName=/(cmd|powershell|pwsh|sh|bash|dash|whoami|curl|wget|python3?)(\.exe)?$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-89-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-89-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f60b2aabdf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Malicious PHP plugin/webshell dropped in wp-content by web server (wp2shell)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f60b2aabdf" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts PHP files written into wp-content/plugins or wp-content/uploads by the web-server/PHP process — the persistence/execution payload the wp2shell chain uploads after minting a rogue admin. Distinguishes attacker-dropped web shells from normal user-initiated plugin installs by anchoring on the writing process and target path.
+
+Rationale: The documented wp2shell escalation uploads a malicious plugin for code execution; a PHP file written into wp-content/plugins or the uploads dir by the PHP/web-server process is the on-disk artefact of that step. Anchored on both the target path and writing process to separate attacker drops from normal user-driven plugin installs.
+
+Cross-checked against:
+  • https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  • https://www.vulncheck.com/blog/wp2shell
+  • https://www.tenable.com/blog/wp2shell-cve-2026-63030-cve-2026-60137-frequently-asked-questions-about-remote-code-execution</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Shell">T1505.003</span> <span class="ind tech" title="Server Software Component">T1505</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Administrator installing or updating a legitimate plugin from the WordPress dashboard (writes many .php files to wp-content/plugins)</li><li>Automatic plugin/theme auto-updates writing PHP during maintenance windows</li><li>Caching plugins (W3 Total Cache, WP Rocket) generating advanced-cache.php or object-cache.php</li><li>Media/gallery plugins writing helper PHP into wp-content/uploads</li><li>WP-CLI &#x27;wp plugin install&#x27; run by an operator on the host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;wp plugin install&quot;,&quot;wp plugin update&quot;,&quot;advanced-cache.php&quot;,&quot;object-cache.php&quot;) or FolderPath has_any (&quot;w3-total-cache&quot;,&quot;wp-rocket&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Read the dropped PHP — short obfuscated files or those containing eval/base64_decode/system/assert/$_POST[ are web shells; a single .php landing directly in wp-content/uploads is almost never legitimate. Check whether the write coincides with a dashboard plugin install by a known admin. 2) CONTAIN: Quarantine the file, hash and submit it, and isolate the host if it is a web shell; revoke sessions and reset admin/DB credentials. 3) HUNT: Correlate the write time backward to author__not_in/batch/v1 exploitation in web logs and forward to web-server processes spawning shells or outbound C2, and audit wp_users for a rogue administrator created just before the drop.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-89-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-89-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-89-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FolderPath has &quot;wp-content&quot; and (FolderPath has &quot;plugins&quot; or FolderPath has &quot;uploads&quot;)
+| where FileName endswith &quot;.php&quot;
+| where InitiatingProcessFileName in~ (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;httpd&quot;,&quot;nginx.exe&quot;,&quot;nginx&quot;,&quot;apache2&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where TargetFilePath has &quot;wp-content&quot; and (TargetFilePath has &quot;plugins&quot; or TargetFilePath has &quot;uploads&quot;)
+| where TargetFileName endswith &quot;.php&quot;
+| where ActingProcessName has_any (&quot;php-cgi&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetFilePath, TargetFileName, TargetFileSHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious PHP Written to WordPress wp-content by Web Server (wp2shell)
+id: c4a7e213-9f08-4d55-8b1e-6ad2c0f79b34
+description: PHP file created under wp-content/plugins or wp-content/uploads by a web-server/PHP process, consistent with the wp2shell post-exploit malicious-plugin/web-shell drop.
+references:
+  - https://www.rapid7.com/blog/post/etr-cve-2026-63030-wp2shell-a-critical-remote-code-execution-vulnerability-in-wordpress-core/
+  - https://www.vulncheck.com/blog/wp2shell
+author: SOC Detection Engineering
+date: 2026/07/22
+tags:
+  - attack.t1505.003
+  - attack.persistence
+logsource:
+  category: file_event
+detection:
+  selection_path:
+    TargetFilename|contains:
+      - &#x27;wp-content/plugins/&#x27;
+      - &#x27;wp-content\plugins\&#x27;
+      - &#x27;wp-content/uploads/&#x27;
+      - &#x27;wp-content\uploads\&#x27;
+  selection_ext:
+    TargetFilename|endswith: &#x27;.php&#x27;
+  condition: selection_path and selection_ext
+falsepositives:
+  - Legitimate plugin install/update from the WordPress admin dashboard
+  - Media plugins caching generated PHP in uploads
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*wp-content*plugins*.php OR *wp-content*uploads*.php) @Image:(*\\php-cgi.exe OR *\\php.exe OR *\\w3wp.exe OR *\\W3WP.exe)</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/wp-content[\/\\](plugins|uploads)[\/\\].*\.php$/i
+| ContextImageFileName=/(php-cgi|php|php-fpm|w3wp|httpd|apache2|nginx)/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-89-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*wp-content*plugins*&quot; OR Filesystem.file_path=&quot;*wp-content*uploads*&quot;) AND Filesystem.file_name=&quot;*.php&quot; AND Filesystem.process_name IN (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-89-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*wp-content*plugins*&quot; OR Filesystem.file_path=&quot;*wp-content*uploads*&quot;) AND Filesystem.file_name=&quot;*.php&quot; AND Filesystem.process_name IN (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-89-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-89-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-89-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-89-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;, &quot;CVE-2024-42005&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-89-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;, &quot;CVE-2024-42005&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-89-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-89-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-89-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-89-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;, &quot;CVE-2024-42005&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-89-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;, &quot;CVE-2024-42005&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-90" data-art-slug="2026-07-22-adobe-acrobat-extension-flaw-let-malicious-sites-read-whatsa"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1021.001,T1190,T1195.002,T1486,T1528,T1539,T1555.003,T1566"
@@ -19817,132 +20182,6 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-117-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-118" data-art-slug="2026-07-21-cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2026-0770 — Langflow Inclusion of Functionality from Untrusted Control Sphere Vulnerability Langflow contains an inclusion of functionality from untrusted control sphere vulnerability that allows remote attackers to execute arbitrary code on affected installations.  Vendor: Langflow, Product: Langflow. Federal patch due: 2026-07-24. CVE-2026-0770  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-21-cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-0770 — Langflow Inclusion of Functionality from Untrusted Control Sphere Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-07-21</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Langflow contains an inclusion of functionality from untrusted control sphere vulnerability that allows remote attackers to execute arbitrary code on affected installations.  Vendor: Langflow, Product: Langflow. Federal patch due: 2026-07-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-0770</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-118-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-118"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-118-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-118-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-118-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-118-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-118-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-0770&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-118-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-0770&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-118-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-118-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-118-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-118-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-0770&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-118-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-0770&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

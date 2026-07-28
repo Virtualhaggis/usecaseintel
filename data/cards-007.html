@@ -1,3 +1,302 @@
+<article class="card" id="art-176" data-art-slug="2026-07-13-ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-45579: DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input CVE-2026-45579 T1190 [LLM] DIRAC ReqManager service (CVE-2026-45579) spawning a shell or recon/egress binary [LLM] DIRAC post-exploit read of dirac.cfg by a shell/read utility (CVE-2026-45579 credential theft) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-13-ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-9jpv-c7p4-997x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45579: DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-13</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45579</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-176-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-176"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-176-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] DIRAC ReqManager service (CVE-2026-45579) spawning a shell or recon/egress binary</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] DIRAC post-exploit read of dirac.cfg by a shell/read utility (CVE-2026-45579 credential theft)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="0790c3283b" data-platforms="def,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">DIRAC ReqManager service (CVE-2026-45579) spawning a shell or recon/egress binary</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0790c3283b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the RCE payload executing: the DIRAC RequestManager service (a Python DB-facing handler launched via dirac-service/dirac-tornado as ReqManager/TornadoReqManager) spawning /bin/sh, bash or a recon/egress tool. The eval() on the unrecognised groupingAttribute walks back to the os module, so successful exploitation manifests as this DB service forking a shell — something ReqManager never does legitimately (unlike RequestExecutingAgent, which forks a ProcessPool).
+
+Rationale: Anchored on the ReqManager/ReqManagerHandler/dirac-service parent identity (DIRAC docs: ReqManager is the DB-facing handler that never shells out) combined with any shell/recon/egress child — the exact tree the eval()-&gt;os.* chain from the advisory produces. Parent token deliberately excludes RequestExecutingAgent, which forks a legitimate ProcessPool. Datadog/Falcon left empty: their provided auditd/ProcessRollup2 schemas expose no parent command line to key the DIRAC-service parent on (only ParentBaseFileName=&#x27;python&#x27;, too generic).
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+  • https://github.com/advisories/GHSA-9jpv-c7p4-997x
+  • https://dirac.diracgrid.org/en/latest/AdministratorGuide/Systems/RequestManagement/rmsComponents.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DIRAC administrator running diagnostic shell commands under the runit/supervisor process tree during service troubleshooting</li><li>Container entrypoint/init wrapper spawning a shell during a dirac-service (re)start</li><li>Config-management (Ansible/Puppet/Salt) restarting dirac-tornado and running post-restart health-check shell hooks</li><li>Site monitoring probes (monit/nagios) that shell out from the service supervisor</li><li>A local health-check script using curl/nc to poll the ReqManager port on service start</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ChildCmd !has &quot;healthcheck&quot; and ChildCmd !has &quot;/opt/dirac/pro/versions&quot; and ChildCmd !has &quot;runsvdir&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child command line and SHA256; correlate against the ReqManager log for the exception traceback the advisory says the exploit leaves (NameError/AttributeError referencing &#x27;Request.&#x27; or dunder strings such as __class__/__globals__/__builtins__), and identify the authenticated user whose RPC to getRequestCountersWeb preceded it. 2) Contain: isolate the DIRAC host, rotate all secrets in dirac.cfg (database passwords) and revoke every stored proxy/token, then upgrade DIRAC to 8.0.79 / 9.0.22 / 9.1.10. 3) Hunt: search the same host for reads of dirac.cfg by non-DIRAC processes, outbound egress from the service, and truncation/deletion of the RequestManager log (evidence removal noted in the advisory).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-176-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-176-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-176-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-176-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-176-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(14d)
+| where InitiatingProcessCommandLine has_any (&quot;dirac-service&quot;,&quot;dirac-tornado&quot;,&quot;ReqManagerHandler&quot;,&quot;ReqManager&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;hostname&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;base64&quot;,&quot;chmod&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(14d)
+| where ParentProcessCommandLine has_any (&quot;dirac-service&quot;,&quot;dirac-tornado&quot;,&quot;ReqManagerHandler&quot;,&quot;ReqManager&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/ksh&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/socat&quot;,&quot;/id&quot;,&quot;/whoami&quot;,&quot;/hostname&quot;,&quot;/uname&quot;,&quot;/cat&quot;,&quot;/base64&quot;,&quot;/chmod&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: DIRAC ReqManager Service Spawning Shell or Recon Utility (CVE-2026-45579)
+id: 6f3a2b1e-9c4d-4f7a-8b2e-3d1c5a7e0f92
+status: experimental
+description: Detects the DIRAC RequestManager (ReqManager) service spawning a shell or recon/egress binary, the observable signature of the CVE-2026-45579 eval() RCE reaching the os module.
+references:
+  - https://github.com/advisories/GHSA-9jpv-c7p4-997x
+  - https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    ParentCommandLine|contains:
+      - &#x27;dirac-service&#x27;
+      - &#x27;dirac-tornado&#x27;
+      - &#x27;ReqManagerHandler&#x27;
+      - &#x27;ReqManager&#x27;
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/ksh&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/hostname&#x27;
+      - &#x27;/uname&#x27;
+      - &#x27;/base64&#x27;
+      - &#x27;/chmod&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-176-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-176-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-176-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-176-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*dirac-service*&quot; OR Processes.parent_process=&quot;*dirac-tornado*&quot; OR Processes.parent_process=&quot;*ReqManagerHandler*&quot; OR Processes.parent_process=&quot;*ReqManager*&quot;) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;hostname&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;base64&quot;,&quot;chmod&quot;,&quot;python&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-176-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*dirac-service*&quot; OR Processes.parent_process=&quot;*dirac-tornado*&quot; OR Processes.parent_process=&quot;*ReqManagerHandler*&quot; OR Processes.parent_process=&quot;*ReqManager*&quot;) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;hostname&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;base64&quot;,&quot;chmod&quot;,&quot;python&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1d46fc5b96" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">DIRAC post-exploit read of dirac.cfg by a shell/read utility (CVE-2026-45579 credential theft)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1d46fc5b96" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the credential-theft step the advisory describes: after the eval() RCE, the attacker reads the local dirac.cfg to harvest database passwords and export stored proxies/tokens. Keys on a read/exfil utility (cat, grep, base64, curl, etc.) whose own command line references dirac.cfg — excluding the Python DIRAC service that carries dirac.cfg as a legitimate --cfg argument.
+
+Rationale: Keys on dirac.cfg (the file the advisory names as holding DB passwords and gating proxy/token export) appearing in the command line of a read/exfil utility rather than the Python service. The reader-binary allowlist excludes the legitimate DIRAC process, which carries dirac.cfg as a --cfg argument — so any cat/grep/base64/curl of dirac.cfg is anomalous. Portable across all process-telemetry platforms because it keys on the executing process&#x27;s own command line.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+  • https://github.com/advisories/GHSA-9jpv-c7p4-997x</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Unsecured Credentials: Private Keys">T1552.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DIRAC administrator manually running cat/grep on dirac.cfg during troubleshooting over SSH</li><li>Backup jobs (tar/rsync driven via cat) reading the DIRAC etc/ directory</li><li>Config-management tooling templating or diffing dirac.cfg on each run</li><li>Monitoring/inventory scripts grepping dirac.cfg for a version or option value</li><li>Site install/upgrade scripts copying dirac.cfg with scp/curl to a new node</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and InitiatingProcessCommandLine has_any (&quot;dirac-service&quot;,&quot;dirac-tornado&quot;,&quot;ReqManagerHandler&quot;,&quot;ReqManager&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent of the reader process — if it descends from the DIRAC service (dirac-service/dirac-tornado/ReqManager) rather than an interactive admin shell, treat as confirmed exploitation; check whether the command pipes to base64/curl/nc (exfil) and whether stored proxy/token files were touched. 2) Contain: isolate the host, immediately rotate every credential in dirac.cfg and revoke all stored user proxies and tokens, and patch DIRAC to 8.0.79 / 9.0.22 / 9.1.10. 3) Hunt: pivot on the authenticated user who called getRequestCountersWeb, review the ReqManager log for the eval exception traceback, and look for outbound transfers of dirac.cfg / proxy material and any subsequent log truncation.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-176-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-176-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-176-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-176-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-176-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-176-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-176-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(14d)
+| where ProcessCommandLine has &quot;dirac.cfg&quot;
+| where FileName in~ (&quot;cat&quot;,&quot;grep&quot;,&quot;egrep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;base64&quot;,&quot;od&quot;,&quot;strings&quot;,&quot;xxd&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;scp&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(14d)
+| where ActingProcessCommandLine has &quot;dirac.cfg&quot;
+| where ActingProcessName has_any (&quot;/cat&quot;,&quot;/grep&quot;,&quot;/egrep&quot;,&quot;/less&quot;,&quot;/more&quot;,&quot;/head&quot;,&quot;/tail&quot;,&quot;/base64&quot;,&quot;/od&quot;,&quot;/strings&quot;,&quot;/xxd&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/scp&quot;,&quot;/nc&quot;,&quot;/ncat&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DIRAC dirac.cfg Read by Shell or Exfil Utility (CVE-2026-45579)
+id: b2d7c418-6e0a-4c93-9f51-2a8e4d0b7c36
+status: experimental
+description: Detects a read/exfil utility whose command line references dirac.cfg, the credential-theft step following the CVE-2026-45579 RCE (harvesting DB passwords and exporting proxies/tokens).
+references:
+  - https://github.com/advisories/GHSA-9jpv-c7p4-997x
+  - https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1552.001
+  - attack.t1552.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    CommandLine|contains: &#x27;dirac.cfg&#x27;
+    Image|endswith:
+      - &#x27;/cat&#x27;
+      - &#x27;/grep&#x27;
+      - &#x27;/egrep&#x27;
+      - &#x27;/less&#x27;
+      - &#x27;/more&#x27;
+      - &#x27;/head&#x27;
+      - &#x27;/tail&#x27;
+      - &#x27;/base64&#x27;
+      - &#x27;/od&#x27;
+      - &#x27;/strings&#x27;
+      - &#x27;/xxd&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/scp&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*dirac.cfg* (@process.name:(cat OR grep OR egrep OR less OR more OR head OR tail OR base64 OR od OR strings OR xxd OR curl OR wget OR scp OR nc OR ncat))</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/dirac\.cfg/i
+| ImageFileName=/\/(cat|grep|egrep|less|more|head|tail|base64|od|strings|xxd|curl|wget|scp|nc|ncat)$/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-176-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-176-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-176-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*dirac.cfg*&quot; (Processes.process_name IN (&quot;cat&quot;,&quot;grep&quot;,&quot;egrep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;base64&quot;,&quot;od&quot;,&quot;strings&quot;,&quot;xxd&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;scp&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-176-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*dirac.cfg*&quot; (Processes.process_name IN (&quot;cat&quot;,&quot;grep&quot;,&quot;egrep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;base64&quot;,&quot;od&quot;,&quot;strings&quot;,&quot;xxd&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;scp&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-176-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-176-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-176-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-176-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45579&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-176-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45579&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-176-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-176-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-176-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-176-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45579&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-176-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45579&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-177" data-art-slug="2026-07-13-what-is-a-dependency-firewall"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1027,T1176,T1190,T1195.002,T1555.003"
@@ -13717,564 +14016,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-205" data-art-slug="2026-07-08-ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="kubernetes,linux,vcs,windows"
-  data-uc-count="7" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE CVE-2026-52831 T1190 [LLM] Nuclio CronJob container args carry injected shell (CVE-2026-52831 header/body OS command injection) [LLM] Nuclio cron pod shell reads Kubernetes service-account token (CVE-2026-52831 credential theft) [LLM] Orphaned Nuclio CronJob without ownerReferences (CVE-2026-52831 persistence) Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-08-ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-v5px-423j-pf7p" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-08</span>
-    <span>7 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Nuclio: Unsanitized cron trigger event headers/body injected into CronJob shell command leads to persistent RCE</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-52831</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-205-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-205"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-205-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Nuclio CronJob container args carry injected shell (CVE-2026-52831 header/body OS command injection)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Orphaned Nuclio CronJob without ownerReferences (CVE-2026-52831 persistence) · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Nuclio cron pod shell reads Kubernetes service-account token (CVE-2026-52831 credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="49cae7393d" data-platforms="datadog,sent,spl" data-targets="kubernetes,linux" open>
-  <summary>
-    <span class="uc-title">Nuclio CronJob container args carry injected shell (CVE-2026-52831 header/body OS command injection)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="49cae7393d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts Kubernetes API audit events that create/update a CronJob whose container args are the Nuclio &#x27;/bin/sh -c curl ...&#x27; string but also contain shell metacharacters or a service-account-token read — the signature of CVE-2026-52831 header-key/body command injection. Nuclio&#x27;s legitimate cron CronJob is a pure curl invocation, so any command substitution or &#x27;;&#x27; break inside those args is exploitation.
-
-Rationale: Uses the article&#x27;s exact injection sink: CronJob container args = &#x27;/bin/sh -c curl --silent --header ...&#x27; (lazy.go:2212). A benign Nuclio cron job is a pure curl, so command-substitution (&#x27;$(&#x27;), a &#x27;;&#x27;-broken header, &#x27;&amp;&amp;&#x27;, backticks, or a serviceaccount/token read inside those args is unambiguous CVE-2026-52831 exploitation.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-v5px-423j-pf7p
-  • https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-52831/
-  • https://corgea.com/advisories/packages/go/github.com/nuclio/nuclio</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A Nuclio operator legitimately sets a curl &#x27;--data&#x27; body that happens to contain a literal &#x27;$(&#x27; as text (rare, but possible in templated payloads)</li><li>An admin manually editing a CronJob to add a debug &#x27;&amp;&amp; echo&#x27; step during troubleshooting</li><li>Third-party K8s tooling that wraps curl health-checks in &#x27;/bin/sh -c&#x27; with chained commands in the same namespace</li><li>A custom (non-Nuclio) CronJob that legitimately reads the service-account token and pipes it to curl for an in-cluster API call</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ReqStr has &quot;nuclio.io/skip-scan&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the flagged CronJob&#x27;s full args from the audit RequestObject; identify the injected command after the header break or inside &#x27;$()&#x27;. Trace back to the NuclioFunction trigger spec (event.headers key / event.body) that seeded it and the user/service-account that applied it. 2) Contain: &#x27;kubectl delete cronjob &lt;name&gt; -n &lt;namespace&gt;&#x27; immediately (it has NO ownerReferences so it will NOT cascade-delete), suspend the parent NuclioFunction, and rotate the pod&#x27;s service-account token if the injected command read it. 3) Hunt: enumerate all CronJobs in the nuclio namespace for the same markers, review kube-apiserver audit for other create/patch calls from the same actor, and check egress from cron pods to unexpected hosts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-205-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(30d)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where tostring(ObjectRef.resource) == &quot;cronjobs&quot;
-| where Stage == &quot;ResponseComplete&quot;
-| extend ReqStr = tostring(RequestObject)
-| where ReqStr has &quot;/bin/sh&quot; and ReqStr has &quot;curl&quot;
-| where ReqStr has_any (&quot;$(&quot;, &quot;; id&quot;, &quot;; echo&quot;, &quot;serviceaccount/token&quot;, &quot;&amp;&amp;&quot;, &quot;| sh&quot;, &quot;`&quot;)
-| extend Namespace = tostring(ObjectRef.namespace), CronJobName = tostring(ObjectRef.name), Actor = tostring(User.username)
-| project TimeGenerated, Verb, Namespace, CronJobName, Actor, ReqStr
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-205-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:cronjobs @requestObject.spec.jobTemplate.spec.template.spec.containers.args:*serviceaccount/token*</code></pre></div>
-    <div class="tab-content" id="art-205-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;kube:apiserver:audit&quot; OR sourcetype=&quot;kube_audit&quot;) verb IN (create,update,patch) objectRef.resource=cronjobs
-| spath output=cargs path=requestObject.spec.jobTemplate.spec.template.spec.containers{}.args{}
-| eval cargs=mvjoin(cargs,&quot; &quot;)
-| where match(cargs,&quot;/bin/sh&quot;) AND match(cargs,&quot;curl&quot;)
-| where match(cargs,&quot;\$\(&quot;) OR match(cargs,&quot;;\s*id&quot;) OR match(cargs,&quot;;\s*echo&quot;) OR match(cargs,&quot;serviceaccount/token&quot;) OR match(cargs,&quot;&amp;&amp;&quot;) OR match(cargs,&quot;\|\s*sh&quot;) OR match(cargs,&quot;`&quot;)
-| table _time objectRef.namespace objectRef.name user.username cargs
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b670affc07" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Nuclio cron pod shell reads Kubernetes service-account token (CVE-2026-52831 credential theft)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b670affc07" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the runtime side of CVE-2026-52831: a shell process assembled from a Nuclio cron curl command (&#x27;curl --silent --header ...&#x27;) that also reads /var/run/secrets/kubernetes.io/serviceaccount/token or contains &#x27;$()&#x27; command substitution. This is the injected payload actually executing and stealing the pod&#x27;s cluster credential.
-
-Rationale: Anchors on the PoC payload strings — &#x27;/bin/sh -c curl --silent --header ...&#x27; plus the injected &#x27;cat /var/run/secrets/kubernetes.io/serviceaccount/token&#x27; recon (article Step 6). The curl+header signature scopes to Nuclio cron pods; the token read or &#x27;$()&#x27; is the injected command running, making this high-fidelity credential-access telemetry.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-v5px-423j-pf7p
-  • https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-52831/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate Nuclio function whose curl body deliberately embeds shell-like text that survives into the command line</li><li>In-cluster health-check scripts that both curl an endpoint and echo the SA token for debugging</li><li>Security scanners / CIS benchmark tools that intentionally read the service-account token path to test exposure</li><li>A developer manually exec-ing into a cron pod and running a chained curl + id for troubleshooting</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;nuclio.io/debug&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full ProcessCommandLine and the host/pod; confirm the parent is a Nuclio cron container and decode any &#x27;$()&#x27; substitution to see what executed. Determine whether the SA token was actually exfiltrated (look for the token value flowing into a subsequent curl to an external host). 2) Contain: cordon/evict the pod, delete the offending CronJob and parent NuclioFunction, and immediately rotate the compromised service-account token (delete the secret / bounce the SA). 3) Hunt: review DeviceNetworkEvents/NetworkConnectIP4 from the pod for outbound C2, search for the stolen token being used against the kube-apiserver, and sweep other nuclio pods for the same shell pattern.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-205-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-205-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-205-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-205-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where ProcessCommandLine has &quot;curl&quot; and ProcessCommandLine has &quot;--header&quot;
-| where ProcessCommandLine has_any (&quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;$(&quot;, &quot;; id&quot;, &quot;; echo&quot;)
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-205-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where ActingProcessCommandLine has &quot;curl&quot; and ActingProcessCommandLine has &quot;--header&quot;
-| where ActingProcessCommandLine has_any (&quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;$(&quot;, &quot;; id&quot;, &quot;; echo&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessCommandLine, ParentProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-205-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Nuclio CronJob Shell Command Injection Runtime Execution (CVE-2026-52831)
-id: 3f2b9c7a-8d41-4e62-b5a9-7c1e4f0a9d21
-status: experimental
-description: Detects a shell process built from a Nuclio cron-trigger curl command that also reads the Kubernetes service-account token or contains command substitution, indicating CVE-2026-52831 exploitation.
-references:
-  - https://github.com/advisories/GHSA-v5px-423j-pf7p
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.execution
-  - attack.t1059.004
-  - attack.credential_access
-  - attack.t1552.001
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_curl:
-    CommandLine|contains|all:
-      - &#x27;curl&#x27;
-      - &#x27;--header&#x27;
-  selection_inject:
-    CommandLine|contains:
-      - &#x27;/var/run/secrets/kubernetes.io/serviceaccount/token&#x27;
-      - &#x27;$(&#x27;
-      - &#x27;; id&#x27;
-      - &#x27;; echo&#x27;
-  condition: selection_curl and selection_inject
-level: high</code></pre></div>
-    <div class="tab-content" id="art-205-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*curl* @process.command_line:*serviceaccount/token*</code></pre></div>
-    <div class="tab-content" id="art-205-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| regex(&quot;/(sh|bash|dash)$&quot;, field=ImageFileName)
-| regex(&quot;curl&quot;, field=CommandLine)
-| regex(&quot;--header&quot;, field=CommandLine)
-| regex(&quot;serviceaccount/token|\\$\\(|;\\s*id&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-205-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-205-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-205-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-205-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND Processes.process=&quot;*curl*&quot; AND Processes.process=&quot;*--header*&quot;) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| search (process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR process=&quot;*$(*&quot; OR process=&quot;*; id*&quot; OR process=&quot;*; echo*&quot;)
-| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-205-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND Processes.process=&quot;*curl*&quot; AND Processes.process=&quot;*--header*&quot;) by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| search (process=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR process=&quot;*$(*&quot; OR process=&quot;*; id*&quot; OR process=&quot;*; echo*&quot;)
-| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="64efa61b49" data-platforms="datadog,sent,spl" data-targets="kubernetes">
-  <summary>
-    <span class="uc-title">Orphaned Nuclio CronJob without ownerReferences (CVE-2026-52831 persistence)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="64efa61b49" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts Nuclio-generated CronJobs (name prefix &#x27;nuclio-cron-job-&#x27;) created/updated without any ownerReferences. Per the advisory, these carry no owner link to the NuclioFunction so Kubernetes cascade deletion never removes them — a controller crash leaves the injected CronJob executing on schedule indefinitely, the article&#x27;s stated persistence mechanism.
-
-Rationale: Uses the article&#x27;s exact artifact naming (&#x27;nuclio-cron-job-&lt;id&gt;&#x27;, Step 7 output) and the documented root cause at lazy.go:522 — Nuclio CronJobs carry no ownerReferences. An orphaned nuclio-cron-job-* is precisely the persistence primitive the advisory warns survives function deletion.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-v5px-423j-pf7p
-  • https://advisories.gitlab.com/golang/github.com/nuclio/nuclio/CVE-2026-52831/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Container Orchestration Job">T1053.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Normal Nuclio behaviour — by design these CronJobs lack ownerReferences, so every legit cron trigger fires this (baseline the expected set)</li><li>A CronJob captured mid-update where the audit snapshot predates owner attachment</li><li>Manually GitOps-managed nuclio CronJobs whose ownerReferences are stripped by a sync tool</li><li>Restored-from-backup CronJobs that lost their owner linkage</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: since ALL Nuclio cron CronJobs legitimately lack ownerReferences, cross-reference each &#x27;nuclio-cron-job-*&#x27; against currently-existing NuclioFunctions — flag any CronJob with no live parent function as a true orphan. Inspect its container args for the CVE-2026-52831 injection markers. 2) Contain: delete confirmed orphan CronJobs (&#x27;kubectl delete cronjob&#x27;), as cascade will not remove them; upgrade Nuclio to the fixed build (0.0.0-20260601075854-3356b86a8bfa or later). 3) Hunt: diff the CronJob inventory against the NuclioFunction inventory on a schedule to catch future orphans, and correlate orphan creation timestamps with any controller crash/restart events.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-205-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(30d)
-| where Verb in (&quot;create&quot;,&quot;update&quot;)
-| where tostring(ObjectRef.resource) == &quot;cronjobs&quot;
-| extend CronJobName = tostring(ObjectRef.name)
-| where CronJobName startswith &quot;nuclio-cron-job-&quot;
-| extend Owners = RequestObject.metadata.ownerReferences
-| where isnull(Owners) or array_length(todynamic(Owners)) == 0
-| extend Namespace = tostring(ObjectRef.namespace), Actor = tostring(User.username)
-| project TimeGenerated, Verb, Namespace, CronJobName, Actor
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-205-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update) @objectRef.resource:cronjobs @objectRef.name:nuclio-cron-job-* -@requestObject.metadata.ownerReferences.uid:*</code></pre></div>
-    <div class="tab-content" id="art-205-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;kube:apiserver:audit&quot; OR sourcetype=&quot;kube_audit&quot;) verb IN (create,update) objectRef.resource=cronjobs objectRef.name=nuclio-cron-job-*
-| spath output=owners path=requestObject.metadata.ownerReferences{}.uid
-| where isnull(owners)
-| table _time objectRef.namespace objectRef.name user.username
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-205-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-52831&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-52831&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-205-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-205-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-205-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-52831&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-205-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-52831&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-205-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-205-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688            // process-create (audit-policy required)
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\psexec.exe&quot;
-   or NewProcessName endswith &quot;\psexesvc.exe&quot;
-   or NewProcessName endswith &quot;\paexec.exe&quot;
-   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
-status: experimental
-description: |
-    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
-    pivots over SMB. Pair with `wmic /node:` for the full cluster.
-references:
-    - https://attack.mitre.org/techniques/T1021/002/
-    - https://attack.mitre.org/techniques/T1569/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1021.002
-    - attack.t1569.002
-    - attack.lateral-movement
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_psexec:
-        Image|endswith:
-            - &#x27;\psexec.exe&#x27;
-            - &#x27;\psexec64.exe&#x27;
-            - &#x27;\psexesvc.exe&#x27;
-            - &#x27;\paexec.exe&#x27;
-            - &#x27;\csexec.exe&#x27;
-            - &#x27;\remcom.exe&#x27;
-            - &#x27;\smbexec.py&#x27;
-    selection_wmic_remote:
-        Image|endswith:
-            - &#x27;\wmic.exe&#x27;
-        CommandLine|contains:
-            - &#x27;/node:&#x27;
-    condition: selection_psexec or selection_wmic_remote
-falsepositives:
-    - Sysadmins running approved remote-management tooling — wrap with
-      a known-admin-host watchlist
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-205-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-205-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-205-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-205-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ace0fd1925" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ace0fd1925" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-205-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-205-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
-   or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-205-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\AnyDesk.exe&quot;
-   or NewProcessName endswith &quot;\TeamViewer.exe&quot;
-   or NewProcessName endswith &quot;\TeamViewer_Service.exe&quot;
-   or NewProcessName endswith &quot;\ScreenConnect.ClientService.exe&quot;
-   or NewProcessName endswith &quot;\ConnectWiseControl.ClientService.exe&quot;
-   or NewProcessName endswith &quot;\atera_agent.exe&quot;
-   or NewProcessName endswith &quot;\SplashtopStreamer.exe&quot;
-   or NewProcessName endswith &quot;\RustDesk.exe&quot;
-   or NewProcessName endswith &quot;\NinjaOne.exe&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
-status: experimental
-description: |
-    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
-    RustDesk — RMM tools attackers commonly install for hands-on-
-    keyboard access. Filter against the IT estate&#x27;s known tool.
-references:
-    - https://attack.mitre.org/techniques/T1219/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1219
-    - attack.command-and-control
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Image|endswith:
-            - &#x27;\AnyDesk.exe&#x27;
-            - &#x27;\TeamViewer.exe&#x27;
-            - &#x27;\TeamViewer_Service.exe&#x27;
-            - &#x27;\ScreenConnect.ClientService.exe&#x27;
-            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
-            - &#x27;\atera_agent.exe&#x27;
-            - &#x27;\SplashtopStreamer.exe&#x27;
-            - &#x27;\RustDesk.exe&#x27;
-            - &#x27;\NinjaOne.exe&#x27;
-    condition: selection
-falsepositives:
-    - IT-approved RMM in use across the estate. Maintain a known-IT-
-      tool exclusion list per environment.
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-205-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-205-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-205-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-205-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-205-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="29e7141553" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="29e7141553" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-205-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-205-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-205-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-205-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/eventbody.out&quot;, &quot;/usr/local/bin/kind&quot;, &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;/dev/null&quot;, &quot;/var/run/secrets/&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-205-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/eventbody.out&quot;, &quot;/usr/local/bin/kind&quot;, &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;/dev/null&quot;, &quot;/var/run/secrets/&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-205-uc6-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-205-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-205-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-205-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/eventbody.out*&quot; OR Filesystem.file_path=&quot;*/usr/local/bin/kind*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-205-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-52831: Nuclio: Unsanitized cron trigger event headers ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/eventbody.out*&quot; OR Filesystem.file_path=&quot;*/usr/local/bin/kind*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

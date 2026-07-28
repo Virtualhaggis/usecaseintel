@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Operation BlueDash fake Teams/Zoom update payload-host infrastructure contact
 
-`UC_13_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### supportdev.exe Inno Setup loader spawning hidden-window PowerShell
 
-`UC_13_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Level RMM enrollment with BlueDash attacker API key (GxSCHE8EZwfyYN3iPQHPai8D)
 
-`UC_13_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### Multiple RMM agents co-resident on one host (BlueDash redundant access)
 
-`UC_13_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### Host reconnaissance sequence spawned from an RMM agent context (BlueDash operator checklist)
 
-`UC_13_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_14_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -478,7 +478,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Operation BlueDash Deploys Level RMM and ScreenConnect via Fake Teams Update
 
-`UC_13_10` · phase: **exploit** · confidence: **High**
+`UC_14_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

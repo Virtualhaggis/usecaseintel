@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Dysphoria botnet C2 server-list fetch — HTTP GET :9000/nodes?key=meowmeowmeow
 
-`UC_0_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Dysphoria blockchain C2 resolution — ENS (.eth) / SNS (.sol) name lookups
 
-`UC_0_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_1_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### IoT weak-credential entry — SSH/Telnet failed-auth burst then success
 
-`UC_0_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
