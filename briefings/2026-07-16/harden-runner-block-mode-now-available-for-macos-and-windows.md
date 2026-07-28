@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised @velora-dex/sdk npm package (9.4.1/9.4.2) installed on CI runner
 
-`UC_143_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_144_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceFileEvents
 
 ### CI runner egress to MiniRAT C2 89.36.224.5 (Velora SDK backdoor)
 
-`UC_143_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_144_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### CI runner egress to Megalodon secret-exfil C2 216.126.225.129:8443
 
-`UC_143_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_144_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### MiniRAT launchctl persistence established during macOS CI build
 
-`UC_143_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_144_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

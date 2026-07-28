@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous first-seen sign-in with valid EY account to GitHub/Azure/Jira (ShinyHunters supply-chain creds)
 
-`UC_12_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_16_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ AADSignInEventsBeta
 
 ### Single identity authenticating to Jira + GitHub + Azure within one hour (ShinyHunters cross-SaaS credential reuse)
 
-`UC_12_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_16_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

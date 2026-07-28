@@ -37,12 +37,15 @@ CNCERT, China's national computer emergency response team, and XLab,…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1568** — Dynamic Resolution
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1090.002** — Proxy: External Proxy
+- **T1102** — Web Service
+- **T1110.001** — Brute Force: Password Guessing
+- **T1078.001** — Valid Accounts: Default Accounts
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1090.001** — Proxy: Internal Proxy
 - **T1571** — Non-Standard Port
-- **T1110.001** — Brute Force: Password Guessing
-- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -50,33 +53,43 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Dysphoria blockchain (ENS/SNS) name-service C2 resolution — .eth/.sol lookups
+### Dysphoria IoT botnet blockchain (ENS/SNS) C2 name resolution
 
-`UC_4_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.record_type) as record_type from datamodel=Network_Resolution.DNS where (DNS.query="m3rnbvs5d.eth" OR DNS.query="burrberry.eth" OR DNS.query="24carnforth2merseyside.sol" OR DNS.query="*.eth" OR DNS.query="*.sol" OR DNS.query="*.eth.link" OR DNS.query="*.eth.limo") by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("m3rnbvs5d.eth","burrberry.eth","24carnforth2merseyside.sol") OR DNS.query IN ("*.m3rnbvs5d.eth","*.burrberry.eth","*.24carnforth2merseyside.sol") OR DNS.query="*.eth.link" OR DNS.query="*.eth.limo" OR DNS.query="*.eth" OR DNS.query="*.sol") by DNS.src DNS.dest DNS.query
+| `drop_dm_object_name("DNS")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where isnotempty(RemoteUrl)
 | where RemoteUrl has_any ("m3rnbvs5d.eth","burrberry.eth","24carnforth2merseyside.sol")
-   or RemoteUrl matches regex @"(?i)\b[a-z0-9-]{2,}\.(eth|sol)(\.(link|limo))?$"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+    or RemoteUrl endswith ".eth" or RemoteUrl endswith ".sol"
+    or RemoteUrl has_any (".eth.link",".eth.limo",".sol.link")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), Urls=make_set(RemoteUrl,10)
+    by DeviceName, InitiatingProcessFileName, RemoteIP
+| order by LastSeen desc
 ```
 
-### Dysphoria distribution-node / victim-relay egress to named XLab IOC IPs
+### Callout to Dysphoria distribution-node IPv4 addresses
 
-`UC_4_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("194.87.198.208","194.87.198.104","194.58.38.79","194.58.38.49","194.58.38.96")) by All_Traffic.src All_Traffic.dest All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("194.87.198.208","194.87.198.104","194.58.38.79","194.58.38.49","194.58.38.96") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name("All_Traffic")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -84,37 +97,101 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("194.87.198.208","194.87.198.104","194.58.38.79","194.58.38.49","194.58.38.96")
-| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort,20) by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by ConnCount desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count()
+    by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by LastSeen desc
 ```
 
-### Dysphoria reinfection vector — Telnet/SSH weak-password brute force to successful logon
+### IoT/server host contacting public blockchain RPC or ENS/SNS gateways
 
-`UC_4_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication.Authentication where Authentication.action=failure (Authentication.app IN ("ssh","sshd","telnet","telnetd") OR Authentication.dest_port IN (22,23)) by Authentication.src Authentication.dest _time span=1h | `drop_dm_object_name(Authentication)` | stats sum(count) as FailCount min(_time) as failStart by src dest | where FailCount>=20 | join type=inner src dest [| tstats `summariesonly` min(_time) as successTime from datamodel=Authentication.Authentication where Authentication.action=success (Authentication.app IN ("ssh","sshd","telnet","telnetd") OR Authentication.dest_port IN (22,23)) by Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)`] | where successTime>failStart | sort - FailCount
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("*cloudflare-eth.com","*infura.io","*ankr.com","*llamarpc.com","*publicnode.com","*mainnet-beta.solana.com","*eth.limo","*eth.link") by DNS.src DNS.query
+| `drop_dm_object_name("DNS")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let FailWindow = 7d;
-let FailThreshold = 20;   // >=20 failed SSH/Telnet auths from one source = guessing burst (P99 legit remote-admin retries << 20)
-let Failures = DeviceLogonEvents
-    | where Timestamp > ago(FailWindow)
-    | where (Protocol in~ ("Ssh","Telnet")) or (RemotePort in (22,23))
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any ("cloudflare-eth.com","mainnet.infura.io","eth-mainnet","rpc.ankr.com","llamarpc.com","publicnode.com","api.mainnet-beta.solana.com","solana-mainnet","eth.limo","eth.link")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), Hosts=make_set(RemoteUrl,10)
+    by DeviceName, InitiatingProcessFileName
+| order by Count desc
+```
+
+### Telnet/SSH weak-credential brute-force into edge/IoT devices (Dysphoria re-infection)
+
+`UC_8_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication.Authentication where Authentication.app IN ("ssh","sshd","telnet","telnetd") Authentication.action=failure by Authentication.src Authentication.dest Authentication.user _time span=1h
+| `drop_dm_object_name("Authentication")`
+| where count > 20
+| join type=inner src dest [| tstats `summariesonly` count as success_count from datamodel=Authentication.Authentication where Authentication.app IN ("ssh","sshd","telnet","telnetd") Authentication.action=success by Authentication.src Authentication.dest | `drop_dm_object_name("Authentication")`]
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+let Failed = DeviceLogonEvents
+    | where Timestamp > ago(7d)
     | where ActionType == "LogonFailed"
-    | summarize FailedCount=count(), FailStart=min(Timestamp) by DeviceName, RemoteIP
-    | where FailedCount >= FailThreshold;
+    | where RemotePort in (22, 23)
+    | summarize FailCount=count() by DeviceName, RemoteIP, bin(Timestamp, 1h)
+    | where FailCount > 20;   // >20 failed edge-device logons/hr = guessing
 DeviceLogonEvents
-| where Timestamp > ago(FailWindow)
-| where (Protocol in~ ("Ssh","Telnet")) or (RemotePort in (22,23))
+| where Timestamp > ago(7d)
 | where ActionType == "LogonSuccess"
-| join kind=inner Failures on DeviceName, RemoteIP
-| where Timestamp > FailStart
-| project Timestamp, DeviceName, AccountName, RemoteIP, RemotePort, FailedCount, FailStart
+| where RemotePort in (22, 23)
+| join kind=inner Failed on DeviceName, RemoteIP
+| project Timestamp, DeviceName, RemoteIP, AccountName, RemotePort, FailCount
 | order by Timestamp desc
+```
+
+### CVE-2025-9528 Linksys E1700 /goform/systemCommand command injection
+
+`UC_8_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/goform/systemCommand*" AND Web.url="*command=*" by Web.src Web.dest Web.http_method Web.url Web.status
+| `drop_dm_object_name("Web")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+### IoT victim-relay node behavior (fan-in relay with UPnP NAT traversal)
+
+`UC_8_12` · phase: **c2** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(All_Traffic.src_ip) as inbound_sources count from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction="inbound" All_Traffic.dest_category!="internal_service" by All_Traffic.dest _time span=1h
+| `drop_dm_object_name("All_Traffic")`
+| where inbound_sources > 30
+| sort - inbound_sources
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(3d)
+| where RemoteIPType == "Public"
+| summarize InboundSources = dcountif(RemoteIP, ActionType == "InboundConnectionAccepted"),
+            OutboundDests = dcountif(RemoteIP, ActionType in ("ConnectionSuccess","ConnectionRequest")),
+            Ports = make_set(LocalPort, 15)
+    by DeviceName, bin(Timestamp, 1h)
+| where InboundSources > 30 and OutboundDests between (1 .. 5)   // heavy fan-in, thin upstream = relay
+| order by InboundSources desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -341,4 +418,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

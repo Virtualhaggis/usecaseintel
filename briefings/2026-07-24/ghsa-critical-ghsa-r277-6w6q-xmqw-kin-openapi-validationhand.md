@@ -56,7 +56,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-r277-6w6q-xmqw: kin-openapi: ValidationHandler.Load() Fai
 
-`UC_49_1` · phase: **exploit** · confidence: **High**
+`UC_52_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,3 +1,281 @@
+<article class="card" id="art-3568" data-art-slug="2019-02-04-how-even-quick-node-js-async-functions-can-block-the-event-l"
+  data-phases="actions,c2,exploit,install" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="How even quick Node.js async functions can block the Event-Loop When I tried to fix the situation, I realized how little I actually knew about the event-loop behavior and gained some realizations that at first surprised me and some fellow developers I shared this with. I believe it’s important that as many Node developers will have this knowledge too - which led me to writing this article.  T1190 Office app spawning script/LOLBin child process Article-specific behavioural hunt — How even quick Node.js async functions can block the Event-Loop">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2019-02-04-how-even-quick-node-js-async-functions-can-block-the-event-l" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/nodejs-how-even-quick-async-functions-can-block-the-event-loop-starve-io/" target="_blank" rel="noopener">How even quick Node.js async functions can block the Event-Loop</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-02-04</span>
+    <span>2 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">When I tried to fix the situation, I realized how little I actually knew about the event-loop behavior and gained some realizations that at first surprised me and some fellow developers I shared this with. I believe it’s important that as many Node developers will have this knowledge too - which led me to writing this article.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3568-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3568"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3568-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Article-specific behavioural hunt — How even quick Node.js async functions can block the Event-Loop</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="3e2a4a3a7f" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Office app spawning script/LOLBin child process</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="3e2a4a3a7f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Classic macro/exploit pattern — Office app launching cmd/powershell/wmic/regsvr32.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3568-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3568-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3568-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3568-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3568-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-3568-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName endswith &quot;\winword.exe&quot;
+   or ParentProcessName endswith &quot;\excel.exe&quot;
+   or ParentProcessName endswith &quot;\powerpnt.exe&quot;
+   or ParentProcessName endswith &quot;\outlook.exe&quot;
+   or ParentProcessName endswith &quot;\onenote.exe&quot;
+   or ParentProcessName endswith &quot;\mspub.exe&quot;
+   or ParentProcessName endswith &quot;\visio.exe&quot;
+| where NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\pwsh.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3568-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
+status: experimental
+description: |
+    Word/Excel/Outlook/OneNote spawning powershell, cmd, wscript,
+    cscript, mshta, rundll32, regsvr32 — classic macro / embedded-
+    object payload signature.
+references:
+    - https://attack.mitre.org/techniques/T1059/
+    - https://attack.mitre.org/techniques/T1566/001/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1059
+    - attack.t1566.001
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - &#x27;\winword.exe&#x27;
+            - &#x27;\excel.exe&#x27;
+            - &#x27;\powerpnt.exe&#x27;
+            - &#x27;\outlook.exe&#x27;
+            - &#x27;\onenote.exe&#x27;
+            - &#x27;\mspub.exe&#x27;
+            - &#x27;\visio.exe&#x27;
+    selection_child:
+        Image|endswith:
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+    condition: selection_parent and selection_child
+falsepositives:
+    - Legitimate automation macros in trusted internal documents
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-3568-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3568-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3568-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3568-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3568-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="61138e5291" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — How even quick Node.js async functions can block the Event-Loop</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="61138e5291" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3568-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3568-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3568-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3568-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — How even quick Node.js async functions can block the Event-Loop
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3568-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — How even quick Node.js async functions can block the Event-Loop
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3568-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3568-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3568-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3568-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — How even quick Node.js async functions can block the Event-Loop ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3568-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — How even quick Node.js async functions can block the Event-Loop ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3569" data-art-slug="2019-01-31-severe-security-vulnerability-in-bower-s-zip-archive-extract"
   data-phases="c2,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -5468,331 +5746,6 @@ level: high
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3635" data-art-slug="2017-09-11-open-source-vulnerabilities-tripped-equifax-how-can-you-defe"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="Open source vulnerabilities tripped Equifax, how can you defend yourself?   T1190 [LLM] Apache Struts web app (java/Tomcat) spawning OS shell or recon — post-exploit RCE (CVE-2017-5638 / CVE-2017-9805) [LLM] Apache Struts OGNL / XStream exploit payload in WAF &amp; web logs (CVE-2017-5638 + CVE-2017-9805) Article-specific behavioural hunt — Open source vulnerabilities tripped Equifax, how can you defend yourself?">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2017-09-11-open-source-vulnerabilities-tripped-equifax-how-can-you-defe" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/equifax-breach-vulnerable-open-source-libraries/" target="_blank" rel="noopener">Open source vulnerabilities tripped Equifax, how can you defend yourself?</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2017-09-11</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary"></p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3635-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3635"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3635-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Apache Struts web app (java/Tomcat) spawning OS shell or recon — post-exploit RCE (CVE-2017-5638 / CVE-2017-9805) · [LLM] Apache Struts OGNL / XStream exploit payload in WAF &amp; web logs (CVE-2017-5638 + CVE-2017-9805) · Article-specific behavioural hunt — Open source vulnerabilities tripped Equifax, how can you defend yourself?</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="3ed21a1498" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Apache Struts web app (java/Tomcat) spawning OS shell or recon — post-exploit RCE (CVE-2017-5638 / CVE-2017-9805)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3ed21a1498" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the execution outcome of the Apache Struts RCEs that breached Equifax: a Java/Tomcat/web-server process (the Struts container) spawning a command shell or host-recon binary via ProcessBuilder/Runtime.exec. Both the March OGNL flaw (CVE-2017-5638) and the September REST/XStream flaw (CVE-2017-9805) end in the web-server process directly executing OS commands, which is almost never legitimate for a public-facing web app.
-
-Rationale: Anchored on the two CVEs the article points to (March CVE-2017-5638 OGNL; September CVE-2017-9805 XStream), both confirmed by F5/ModSecurity, Imperva and Tenable to terminate in ProcessBuilder/Runtime.exec — so the high-fidelity host signal is the Struts container (java/Tomcat/httpd) parenting cmd/sh/recon binaries. Parent list and recon-child list are the exploitation outcome, not a generic LOLBin sweep.
-
-Cross-checked against:
-  • https://www.f5.com/company/blog/nginx/modsecurity-apache-struts-cve-2017-5638
-  • https://www.imperva.com/blog/archive/cve-2017-9805-analysis-of-apache-struts-rce-vulnerability-in-rest-plugin/
-  • https://www.tenable.com/blog/apache-struts-rest-plugin-xstream-xml-request-deserialization-rce-cve-2017-9805
-  • https://www.blackduck.com/blog/equifax-apache-struts-vulnerability-cve-2017-5638.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Jenkins/TeamCity/Bamboo CI agents running on Java that spawn cmd.exe/bash for build steps</li><li>Java-based monitoring or RMM agents (Nagios plugins, app-deploy wrappers) shelling out for health checks</li><li>Application-server startup or service-wrapper scripts invoking cmd/sh at boot</li><li>Elasticsearch/other Java daemons running OS commands for plugin or keystore operations</li><li>Admins running diagnostics through a Java management console</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath has_any (&quot;jenkins&quot;,&quot;buildagent&quot;,&quot;teamcity&quot;,&quot;bamboo&quot;,&quot;elasticsearch&quot;) or ProcessCommandLine has_any (&quot;gradlew&quot;,&quot;mvnw&quot;,&quot;\\build\\&quot;,&quot;healthcheck&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full parent chain and child command line. Confirm the parent is an internet-facing Struts/Tomcat instance (check DeviceInfo.IsInternetFacing) and the child runs recon (whoami/net/ipconfig) or downloads tooling (certutil/curl/wget) — benign Java shell-outs are build/monitoring scripts on known CI hosts. 2) CONTAIN: Isolate the host, kill the child process tree, and block egress from the web-server account. Capture the Struts version (jar manifests) to confirm exposure to CVE-2017-5638/9805. 3) HUNT: Search the same host for follow-on web shells in the webroot, new local accounts, outbound C2 from java.exe, and pivot on the source IP of the triggering HTTP request (see the WAF UC) across all Struts assets.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3635-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3635-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3635-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3635-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3635-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3635-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3635-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;catalina.exe&quot;,&quot;httpd.exe&quot;,&quot;w3wp.exe&quot;,&quot;java&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;hostname.exe&quot;,&quot;nltest.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;whoami&quot;,&quot;id&quot;)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFolderPath !has &quot;jenkins&quot; and InitiatingProcessFolderPath !has &quot;buildagent&quot; and InitiatingProcessFolderPath !has &quot;teamcity&quot;
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3635-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat&quot;,&quot;catalina&quot;,&quot;httpd.exe&quot;,&quot;w3wp.exe&quot;)
-| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;hostname.exe&quot;,&quot;nltest.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
-| where SubjectUserName !endswith &quot;$&quot;
-| where ParentProcessName !has &quot;jenkins&quot; and ParentProcessName !has &quot;buildagent&quot;
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3635-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Apache Struts Web Server Process Spawning Shell or Recon (Post-Exploit RCE)
-id: 6f1c2b8e-4d3a-4f1b-9a2c-1e7d5b8c9a01
-description: Detects a Java/Tomcat/web-server process spawning a command shell or host-recon binary, the execution outcome of Apache Struts RCE flaws CVE-2017-5638 and CVE-2017-9805 (the Equifax breach vector).
-references:
-  - https://snyk.io/blog/equifax-breach-vulnerable-open-source-libraries/
-  - https://www.f5.com/company/blog/nginx/modsecurity-apache-struts-cve-2017-5638
-  - https://www.imperva.com/blog/archive/cve-2017-9805-analysis-of-apache-struts-rce-vulnerability-in-rest-plugin/
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1059.003
-  - attack.t1059.004
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\java.exe&#x27;
-      - &#x27;\javaw.exe&#x27;
-      - &#x27;\tomcat9.exe&#x27;
-      - &#x27;\tomcat8.exe&#x27;
-      - &#x27;\tomcat7.exe&#x27;
-      - &#x27;\catalina.exe&#x27;
-      - &#x27;\httpd.exe&#x27;
-      - &#x27;\w3wp.exe&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\net.exe&#x27;
-      - &#x27;\net1.exe&#x27;
-      - &#x27;\ipconfig.exe&#x27;
-      - &#x27;\systeminfo.exe&#x27;
-      - &#x27;\hostname.exe&#x27;
-      - &#x27;\nltest.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-      - &#x27;\bitsadmin.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\wget.exe&#x27;
-  condition: selection_parent and selection_child
-falsepositives:
-  - CI/build agents (Jenkins, TeamCity) running on Java that legitimately shell out
-  - Java-based monitoring or RMM agents executing OS commands
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3635-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\java.exe OR *\\javaw.exe OR *\\tomcat9.exe OR *\\tomcat8.exe OR *\\catalina.exe OR *\\httpd.exe OR *\\w3wp.exe OR *\\Java.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\whoami.exe OR *\\net.exe OR *\\net1.exe OR *\\ipconfig.exe OR *\\systeminfo.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\wget.exe)</code></pre></div>
-    <div class="tab-content" id="art-3635-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/(java|javaw|tomcat\d*|catalina|httpd|w3wp)(\.exe)?$/i
-| ImageFileName=/\\?(cmd|powershell|pwsh|whoami|net1?|ipconfig|systeminfo|hostname|nltest|certutil|bitsadmin|curl|wget|sh|bash|id)(\.exe)?$/i
-| NOT ParentImageFileName=/(jenkins|buildagent|teamcity|bamboo)/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3635-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3635-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3635-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3635-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;catalina.exe&quot;,&quot;httpd.exe&quot;,&quot;w3wp.exe&quot;,&quot;java&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;hostname.exe&quot;,&quot;nltest.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;whoami&quot;,&quot;id&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(parent_process, &quot;(?i)jenkins|buildagent|teamcity|bamboo&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3635-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;catalina.exe&quot;,&quot;httpd.exe&quot;,&quot;w3wp.exe&quot;,&quot;java&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;hostname.exe&quot;,&quot;nltest.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;whoami&quot;,&quot;id&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(parent_process, &quot;(?i)jenkins|buildagent|teamcity|bamboo&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="124f8501aa" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Apache Struts OGNL / XStream exploit payload in WAF &amp; web logs (CVE-2017-5638 + CVE-2017-9805)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="124f8501aa" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the inbound exploit attempt for the two Apache Struts RCEs named in the Equifax article: the CVE-2017-5638 OGNL injection in the Content-Type/Content-Disposition/Content-Length headers (markers #cmd=, #cmds=, %{(#, @java.lang.Runtime@getRuntime) and the CVE-2017-9805 REST-plugin XStream XML body (&lt;java.lang.ProcessBuilder&gt;, &lt;command&gt;&lt;string&gt;). Targets WAF/IDS telemetry that inspects request headers and bodies, giving an early warning before RCE succeeds.
-
-Rationale: Uses the exact second-source-confirmed exploit signatures: F5/ModSecurity documents #cmd=/#cmds= and OGNL DEFAULT_MEMBER_ACCESS markers for CVE-2017-5638, and Imperva/Tenable document the &lt;java.lang.ProcessBuilder&gt;/&lt;command&gt;&lt;string&gt; XStream body for CVE-2017-9805 — both extremely specific to Struts exploitation, hence High confidence / low FP.
-
-Cross-checked against:
-  • https://www.f5.com/company/blog/nginx/modsecurity-apache-struts-cve-2017-5638
-  • https://www.imperva.com/blog/archive/cve-2017-9805-analysis-of-apache-struts-rce-vulnerability-in-rest-plugin/
-  • https://www.tenable.com/blog/apache-struts-rest-plugin-xstream-xml-request-deserialization-rce-cve-2017-9805</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Nessus, Qualys, Rapid7) probing for the Struts CVEs</li><li>Scheduled internal pen-test or red-team engagements against Struts assets</li><li>Internet-wide research scanners (Nuclei templates) hitting public-facing apps</li><li>Bug-bounty researchers sending PoC payloads</li><li>WAF replay/regression-testing traffic from the security team</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has &quot;Nessus&quot; and RequestClientApplication !has &quot;Qualys&quot; and RequestClientApplication !has &quot;Nuclei&quot; and RequestClientApplication !has &quot;Rapid7&quot; and SourceIP !startswith &quot;10.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify whether the WAF blocked or allowed the request (DeviceAction). Confirm the destination is a Struts/Tomcat asset and check the source IP/user-agent against approved scanner inventory; an allowed request to a real Struts endpoint is a likely true positive. 2) CONTAIN: Block the source IP at the WAF/edge, and if the request was allowed, isolate the target host and snapshot it for forensics. 3) HUNT: Correlate the source IP and exact timestamp with the endpoint UC (java/Tomcat spawning shell) on the destination host to confirm code execution; sweep all internet-facing Struts assets for the same payload and verify Struts is patched to &gt;= 2.3.34 / 2.5.13.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3635-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3635-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3635-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL contains &quot;java.lang.ProcessBuilder&quot;
-    or RequestURL contains &quot;@java.lang.Runtime@getRuntime&quot;
-    or RequestURL contains &quot;#cmd=&quot;
-    or RequestURL contains &quot;#cmds=&quot;
-    or RequestURL contains &quot;(#_memberAccess&quot;
-    or RequestURL contains &quot;DEFAULT_MEMBER_ACCESS&quot;
-    or RequestURL contains &quot;&lt;command&gt;&lt;string&gt;&quot;
-    or Message contains &quot;java.lang.ProcessBuilder&quot;
-    or Message contains &quot;@java.lang.Runtime@getRuntime&quot;
-    or Message contains &quot;#cmd=&quot;
-    or Message contains &quot;(#_memberAccess&quot;
-    or RequestContext contains &quot;java.lang.ProcessBuilder&quot;
-    or RequestContext contains &quot;#cmd=&quot;
-    or RequestContext contains &quot;&lt;command&gt;&lt;string&gt;&quot;
-| where RequestClientApplication !has &quot;Nessus&quot; and RequestClientApplication !has &quot;Qualys&quot; and RequestClientApplication !has &quot;Nuclei&quot;
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, DeviceAction, Message
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3635-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3635-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3635-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3635-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*java.lang.ProcessBuilder*&quot;,&quot;*@java.lang.Runtime@getRuntime*&quot;,&quot;*#cmd=*&quot;,&quot;*#cmds=*&quot;,&quot;*(#_memberAccess*&quot;,&quot;*DEFAULT_MEMBER_ACCESS*&quot;,&quot;*ognl.OgnlContext*&quot;,&quot;*&lt;command&gt;&lt;string&gt;*&quot;) OR Web.http_user_agent IN (&quot;*java.lang.ProcessBuilder*&quot;,&quot;*#cmd=*&quot;)) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status Web.action | `drop_dm_object_name(Web)` | where NOT match(http_user_agent, &quot;(?i)Nessus|Qualys|Nuclei|Rapid7|Acunetix&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3635-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*java.lang.ProcessBuilder*&quot;,&quot;*@java.lang.Runtime@getRuntime*&quot;,&quot;*#cmd=*&quot;,&quot;*#cmds=*&quot;,&quot;*(#_memberAccess*&quot;,&quot;*DEFAULT_MEMBER_ACCESS*&quot;,&quot;*ognl.OgnlContext*&quot;,&quot;*&lt;command&gt;&lt;string&gt;*&quot;) OR Web.http_user_agent IN (&quot;*java.lang.ProcessBuilder*&quot;,&quot;*#cmd=*&quot;)) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status Web.action | `drop_dm_object_name(Web)` | where NOT match(http_user_agent, &quot;(?i)Nessus|Qualys|Nuclei|Rapid7|Acunetix&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c39413d321" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Open source vulnerabilities tripped Equifax, how can you defend yourself?</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c39413d321" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3635-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3635-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3635-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3635-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Open source vulnerabilities tripped Equifax, how can you defend yourself?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3635-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Open source vulnerabilities tripped Equifax, how can you defend yourself?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3635-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3635-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3635-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3635-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Open source vulnerabilities tripped Equifax, how can you defend yourself? ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3635-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Open source vulnerabilities tripped Equifax, how can you defend yourself? ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>
