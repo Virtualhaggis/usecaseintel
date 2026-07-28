@@ -30,10 +30,9 @@ The critical issue, tracked as CVE-2026-53921 and rated 9.8 on CVSS 3.1 in OpenW
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1046** — Network Service Discovery
+- **T1046** — Network Service Scanning
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1083** — File and Directory Discovery
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
 
 ## Kill chain phases observed
 
@@ -41,40 +40,43 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inbound DHCPv6 REQUEST/SOLICIT to UDP 547 from non-link-local source (CVE-2026-53921)
+### Inbound DHCPv6 to odhcpd (UDP 547) from non-link-local source — CVE-2026-53921 exploit reach
 
-`UC_8_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as targets dc(All_Traffic.dest) as target_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_port=547 NOT (All_Traffic.src IN ("fe80::/10","fc00::/7","::1")) by All_Traffic.src All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where target_count >= 1 | sort - count
+| tstats `summariesonly` count as conn_count dc(All_Traffic.dest) as target_count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_port=547 by All_Traffic.src
+| `drop_dm_object_name("All_Traffic")`
+| where NOT match(src,"(?i)^fe80")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - conn_count
 ```
 
-### Shell or network tool spawned as child of odhcpd (post-exploit code execution as root)
+### LuCI luci-app-commands / ddns command injection with shell metacharacters — root RCE
 
-`UC_8_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.parent_process_name=odhcpd Processes.process_name IN ("sh","ash","bash","dash","busybox","nc","netcat","wget","curl","telnetd","nc.traditional") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method from datamodel=Web.Web where (Web.url="*luci/command/*" OR Web.url="*admin/system/commands*" OR Web.url="*ddns_dateformat=*" OR Web.url="*keytype=*") by Web.src Web.dest
+| `drop_dm_object_name("Web")`
+| where match(url,"(?i)(%7c|\||%3b|;|%60|`|\$\(|%24%28)")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - count
 ```
 
-### LuCI luci-app-commands unauthenticated command injection via bare pipe / public param
+### cgi-io path traversal reading root files — CVE-2026-62947
 
-`UC_8_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as uas values(Web.status) as statuses from datamodel=Web.Web where (Web.url="*/cgi-bin/luci/*command*" OR Web.uri_path="*/command/*") (Web.url="*%7C*" OR Web.url="*|*" OR Web.uri_query="*%7C*" OR Web.uri_query="*%3B*" OR Web.uri_query="*%24%28*" OR Web.uri_query="*%60*") by Web.src Web.dest Web.http_method Web.url | `drop_dm_object_name(Web)` | sort - lastTime
-```
-
-### LuCI cgi-io / ddns path-traversal arbitrary file read (CVE-2026-62947, service_name traversal)
-
-`UC_8_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses from datamodel=Web.Web where (Web.url="*cgi-io*" OR Web.url="*luci*ddns*" OR Web.uri_query="*service_name*") (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%252f*" OR Web.url="*%2e%2e%2f*" OR Web.uri_query="*../*" OR Web.uri_query="*..%2f*") by Web.src Web.dest Web.http_method Web.url | `drop_dm_object_name(Web)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method from datamodel=Web.Web where Web.url="*cgi-io*" by Web.src Web.dest
+| `drop_dm_object_name("Web")`
+| where match(url,"(?i)(\.\./|%2e%2e|/etc/(shadow|passwd|config)|%2fetc%2f)")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - count
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -292,4 +294,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

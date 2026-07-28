@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat Chrome extension (<=26.5.2.2) present — HermeticReader/CVE-2026-48294
 
-`UC_103_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_104_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### WhatsApp Web DOM exfiltrated via cross-origin form POST (HermeticReader data theft)
 
-`UC_103_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

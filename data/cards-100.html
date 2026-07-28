@@ -1,314 +1,3 @@
-<article class="card" id="art-3311" data-art-slug="2020-08-24-prototype-pollution-in-express-fileupload"
-  data-phases="c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="vcs,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="Prototype pollution in express-fileupload Welcome to the Snyk Monthly Vulnerability Profile. In this series, Snyk looks back on the vulnerabilities discovered by or reported to our Security Research Team. This month we’re looking at a prototype pollution vulnerability discovered in express-fileupload. CVE-2020-7699 T1190 [LLM] Node.js (Express) process spawning a command shell — express-fileupload prototype-pollution RCE outcome [LLM] Prototype-pollution payload (__proto__ / constructor.prototype) in inbound web requests to Express app [LLM] Exposure: hosts running express-fileupload vulnerable to CVE-2020-7699 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2020-08-24-prototype-pollution-in-express-fileupload" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/prototype-pollution-in-express-fileupload/" target="_blank" rel="noopener">Prototype pollution in express-fileupload</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-08-24</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Welcome to the Snyk Monthly Vulnerability Profile. In this series, Snyk looks back on the vulnerabilities discovered by or reported to our Security Research Team. This month we’re looking at a prototype pollution vulnerability discovered in express-fileupload.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-7699</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3311-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3311"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3311-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Node.js (Express) process spawning a command shell — express-fileupload prototype-pollution RCE outcome · [LLM] Prototype-pollution payload (__proto__ / constructor.prototype) in inbound web requests to Express app · [LLM] Exposure: hosts running express-fileupload vulnerable to CVE-2020-7699</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4e0c3c93cd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">Node.js (Express) process spawning a command shell — express-fileupload prototype-pollution RCE outcome</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="4e0c3c93cd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the post-exploitation manifestation of CVE-2020-7699: a server-side node.exe/node process spawning a command interpreter (cmd/powershell/sh/bash) via child_process after Object.prototype is polluted through express-fileupload&#x27;s parseNested path. A web-server Node process spawning a shell is the highest-fidelity signal that the prototype-pollution RCE succeeded.
-
-Rationale: Uses the confirmed RCE outcome of CVE-2020-7699 (express-fileupload parseNested prototype pollution → child_process execSync) rather than a generic LOLBin pattern: a web-server Node runtime spawning a shell. Cross-checked the GitHub Advisory (GHSA-9wcg-jrwf-8gg7), Snyk advisory, and Kirill89&#x27;s prototype-pollution-exploits PoC repo which confirm the __proto__/constructor.prototype vectors leading to command execution.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-9wcg-jrwf-8gg7
-  • https://security.snyk.io/vuln/SNYK-JS-EXPRESSFILEUPLOAD-595969
-  • https://github.com/Kirill89/prototype-pollution-exploits/blob/master/express-fileupload/README.md
-  • https://securityaffairs.com/106782/security/nodejs-express-fileupload-module-flaw.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/CD build agents where Node runs npm/yarn lifecycle scripts (postinstall, node-gyp native builds) that legitimately spawn sh/cmd</li><li>Electron or Node desktop apps spawning cmd.exe for updater/helper tasks</li><li>Node-based dev tooling (webpack, nodemon, vite) shelling out during local development</li><li>Custom Node automation/monitoring agents that legitimately invoke system commands</li><li>Container entrypoints where a Node app wraps shell health-checks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has &quot;node_modules&quot; and ProcessCommandLine !has_any (&quot;node-gyp&quot;,&quot;prebuild&quot;,&quot;npm &quot;,&quot;yarn &quot;,&quot;postinstall&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the node process command line, working directory, and which TCP ports it is listening on; confirm it is an internet-facing Express service using express-fileupload (parseNested enabled) rather than a build/dev host. Inspect the spawned shell&#x27;s command line for downloaders or recon. 2) Contain: isolate the host and kill/restart the Node service from a clean image; block the source IP at the WAF and rotate any secrets readable by the service account. 3) Hunt: pivot to web/WAF logs for inbound POSTs containing __proto__ or constructor.prototype to the same host in the minutes before the spawn, and check for files written or outbound connections initiated by the node process.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3311-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3311-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3311-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3311-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3311-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;node.exe&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where AccountName !endswith &quot;$&quot;
-| where ProcessCommandLine !has &quot;node_modules&quot; and not(ProcessCommandLine has_any (&quot;node-gyp&quot;,&quot;prebuild&quot;,&quot;npm &quot;,&quot;yarn &quot;))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3311-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where tolower(ParentProcessName) endswith &quot;node.exe&quot;
-| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;)
-| where SubjectUserName !endswith &quot;$&quot;
-| where CommandLine !has &quot;node_modules&quot; and not(CommandLine has_any (&quot;node-gyp&quot;,&quot;prebuild&quot;,&quot;npm &quot;,&quot;yarn &quot;))
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3311-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js Web Process Spawning Command Interpreter (express-fileupload CVE-2020-7699 RCE)
-id: 6b2f4c1e-9d3a-4f8c-8a1b-7e5c2d9f0a31
-status: experimental
-description: Detects a node.exe/node process spawning a system command interpreter, the post-exploitation outcome of prototype-pollution RCE in express-fileupload (CVE-2020-7699).
-references:
-  - https://snyk.io/blog/prototype-pollution-in-express-fileupload/
-  - https://github.com/advisories/GHSA-9wcg-jrwf-8gg7
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1059.003
-  - attack.t1059.004
-logsource:
-  category: process_creation
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\bash.exe&#x27;
-      - &#x27;\sh.exe&#x27;
-      - &#x27;\wsl.exe&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-  filter_build:
-    CommandLine|contains:
-      - &#x27;node_modules&#x27;
-      - &#x27;node-gyp&#x27;
-      - &#x27;prebuild&#x27;
-  condition: selection and not filter_build
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3311-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\node.exe OR *\Node.exe OR *\NODE.EXE) @Image:(*\cmd.exe OR *\Cmd.exe OR *\CMD.EXE OR *\powershell.exe OR *\PowerShell.exe OR *\POWERSHELL.EXE OR *\pwsh.exe OR *\bash.exe OR *\sh.exe OR *\wsl.exe) -@CommandLine:*node_modules*</code></pre></div>
-    <div class="tab-content" id="art-3311-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/node(\.exe)?$/i
-| ImageFileName=/(\\(cmd|powershell|pwsh|wsl)\.exe|\/(bash|sh|dash))$/i
-| NOT (CommandLine=/node_modules|node-gyp|prebuild/i)
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3311-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3311-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3311-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3311-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;node.exe&quot; OR Processes.parent_process_name=&quot;node&quot;) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process, &quot;node_modules|node-gyp|prebuild|npm-cli|yarn&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3311-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;node.exe&quot; OR Processes.parent_process_name=&quot;node&quot;) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process, &quot;node_modules|node-gyp|prebuild|npm-cli|yarn&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b55f0a9939" data-platforms="sent,sigma,spl" data-targets="vcs">
-  <summary>
-    <span class="uc-title">Prototype-pollution payload (__proto__ / constructor.prototype) in inbound web requests to Express app</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="b55f0a9939" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests carrying the CVE-2020-7699 pollution vectors — the literal tokens &#x27;__proto__&#x27; or &#x27;constructor.prototype&#x27; — in the URI/query of requests to web servers. express-fileupload&#x27;s parseNested interprets these in request parameters to walk and poison Object.prototype. Surfaces exploitation attempts and reconnaissance before the RCE fires.
-
-Rationale: Anchored on the two corroborated pollution vectors for CVE-2020-7699 — &#x27;__proto__&#x27; and &#x27;constructor.prototype&#x27; (the latter is the documented bypass for the incomplete 1.1.8 fix) — confirmed in the Kirill89 PoC repo and Snyk/GitHub advisories. Defender/Datadog/Falcon left empty: inbound HTTP server logs are not in M365 Defender AH, the Datadog standard-source list, or FDR; multipart-body field names won&#x27;t appear in URI logs, so this is a Low-confidence hunt best paired with UC1.
-
-Cross-checked against:
-  • https://github.com/Kirill89/prototype-pollution-exploits/blob/master/express-fileupload/README.md
-  • https://github.com/advisories/GHSA-9wcg-jrwf-8gg7
-  • https://security.snyk.io/vuln/SNYK-JS-EXPRESSFILEUPLOAD-595969</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated vulnerability scanners (Nessus, Burp, Nuclei) probing for prototype-pollution across all endpoints</li><li>Authorized pentest / bug-bounty activity against the app</li><li>Legitimate APIs that accept a parameter literally named __proto__ or a path containing &#x27;prototype&#x27;</li><li>Search/analytics endpoints echoing user-supplied query strings that happen to include these tokens</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check the source IP reputation and request volume/spread (single endpoint vs spraying), the HTTP response status (200 suggests the param was processed), and confirm the target app actually uses express-fileupload with parseNested enabled. 2) Contain: block the source IP at the WAF/load balancer and upgrade express-fileupload to &gt;=1.1.10 (or set parseNested:false) on the affected service. 3) Hunt: correlate to UC1 — look for the same host&#x27;s node process spawning a shell shortly after the request, and review for any persistence/files written by the web service account.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3311-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3311-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3311-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-  (W3CIISLog | where TimeGenerated &gt; ago(7d) | extend ReqUri = strcat(csUriStem, &quot;?&quot;, csUriQuery), SrcIP = cIP, Method = csMethod, Status = scStatus, UA = csUserAgent, Host = sSiteName),
-  (AppServiceHTTPLogs | where TimeGenerated &gt; ago(7d) | extend ReqUri = strcat(CsUriStem, &quot;?&quot;, CsUriQuery), SrcIP = CIp, Method = CsMethod, Status = ScStatus, UA = UserAgent, Host = CsHost)
-| where ReqUri has_any (&quot;__proto__&quot;, &quot;constructor.prototype&quot;, &quot;constructor]&quot;, &quot;prototype]&quot;)
-| project TimeGenerated, Host, SrcIP, Method, ReqUri, Status, UA
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3311-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Prototype Pollution Token in Web Request URI (express-fileupload CVE-2020-7699)
-id: a1d9f73c-2b48-4e6a-9c0d-1f8e3a5b7c20
-status: experimental
-description: Detects inbound web requests whose URI/query carries the __proto__ or constructor.prototype prototype-pollution vectors used to exploit express-fileupload (CVE-2020-7699).
-references:
-  - https://snyk.io/blog/prototype-pollution-in-express-fileupload/
-  - https://github.com/Kirill89/prototype-pollution-exploits/blob/master/express-fileupload/README.md
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-query|contains:
-      - &#x27;__proto__&#x27;
-      - &#x27;constructor.prototype&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3311-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3311-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3311-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3311-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*__proto__*&quot; OR Web.url=&quot;*constructor.prototype*&quot; OR Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*constructor.prototype*&quot;) by Web.src Web.dest Web.http_method Web.url Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3311-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*__proto__*&quot; OR Web.url=&quot;*constructor.prototype*&quot; OR Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*constructor.prototype*&quot;) by Web.src Web.dest Web.http_method Web.url Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="77ed0e494d" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Exposure: hosts running express-fileupload vulnerable to CVE-2020-7699</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="77ed0e494d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces managed devices whose software inventory reports CVE-2020-7699 (express-fileupload prototype pollution, fixed in 1.1.10). This is the exposure pivot — find the attack surface before it is exploited, and scope which web hosts the behavioural detections (UC1/UC2) should be prioritised on.
-
-Rationale: Deterministic, deployable exposure query keyed on the exact CVE named in the article (CVE-2020-7699), with the article&#x27;s stated fixed version (1.1.10) as the remediation target. Cross-checked the GitHub Advisory and Snyk DB entries which both pin the fix at 1.1.10. Sigma/Datadog/Falcon/CloudWatch left empty: vulnerability inventory is not a single-event log shape nor present in those telemetry sources.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-9wcg-jrwf-8gg7
-  • https://security.snyk.io/vuln/SNYK-JS-EXPRESSFILEUPLOAD-595969</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal-only / non-internet-facing services where the vuln is present but not remotely reachable (lower priority, not a false match)</li><li>Hosts where parseNested is already disabled in the express-fileupload config (mitigated despite vulnerable version)</li><li>Dev/test builds pulling the package transitively but never serving uploads</li><li>TVM stale inventory after a package upgrade not yet rescanned</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each device, confirm the reported SoftwareVersion is &lt;1.1.10 and whether the service is internet-facing and has parseNested enabled. 2) Contain: upgrade express-fileupload to &gt;=1.1.10 (or set parseNested:false as the documented workaround) and redeploy; prioritise internet-facing hosts. 3) Hunt: enable/prioritise UC1 and UC2 on the identified hosts and retro-hunt their web logs for __proto__/constructor.prototype requests and any node-spawned shells.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3311-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3311-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2020-7699&quot;
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-3311-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2020-7699&quot;
-| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-3311-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3311-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3311-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3311-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2020-7699&quot; OR Vulnerabilities.signature=&quot;CVE-2020-7699&quot;) by Vulnerabilities.dest Vulnerabilities.severity Vulnerabilities.cve Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3311-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2020-7699&quot; OR Vulnerabilities.signature=&quot;CVE-2020-7699&quot;) by Vulnerabilities.dest Vulnerabilities.severity Vulnerabilities.cve Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3311-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3311-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3311-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-7699&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3311-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2020-7699&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3311-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3311-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3311-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3311-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-7699&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3311-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2020-7699&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3319" data-art-slug="2020-08-05-breaking-out-of-message-brokers"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -5941,6 +5630,347 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3411" data-art-slug="2020-02-26-ghostcat-breach-affects-all-tomcat-versions"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="Ghostcat breach affects all Tomcat versions The vulnerability was found in the Apache JServ Protocol (AJP). The issue is that this binary protocol allows an attacker to read or include any file into Tomcat webapp directories. CVE-2020-1938 T1190 [LLM] Ghostcat: inbound AJP (TCP/8009) connections from untrusted/public sources to Tomcat [LLM] Ghostcat RCE: Tomcat/java process spawning a command shell (JSP webshell execution) [LLM] Ghostcat exposure: assets running Tomcat versions vulnerable to CVE-2020-1938 Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2020-02-26-ghostcat-breach-affects-all-tomcat-versions" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/ghostcat-breach-affects-all-tomcat-versions/" target="_blank" rel="noopener">Ghostcat breach affects all Tomcat versions</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2020-02-26</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">The vulnerability was found in the Apache JServ Protocol (AJP). The issue is that this binary protocol allows an attacker to read or include any file into Tomcat webapp directories.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-1938</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3411-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3411"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3411-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Ghostcat: inbound AJP (TCP/8009) connections from untrusted/public sources to Tomcat · [LLM] Ghostcat RCE: Tomcat/java process spawning a command shell (JSP webshell execution) · [LLM] Ghostcat exposure: assets running Tomcat versions vulnerable to CVE-2020-1938</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="f340cbea4e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Ghostcat: inbound AJP (TCP/8009) connections from untrusted/public sources to Tomcat</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f340cbea4e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts external or non-internal hosts opening the Apache JServ Protocol (AJP) connector on TCP 8009, the exploitation channel for CVE-2020-1938. AJP is meant to be reachable only from a co-located reverse proxy; any public/untrusted source reaching 8009 is a direct Ghostcat exploitation or recon attempt.
+
+Rationale: Anchors on the article&#x27;s exact exploitation channel — AJP on TCP/8009. AJP is high-trust and should only be hit by a co-located reverse proxy, so any public/non-RFC1918 source on 8009 is high-fidelity Ghostcat activity (corroborated by Trend Micro and Tenable write-ups).
+
+Cross-checked against:
+  • https://www.trendmicro.com/en_us/research/20/c/busting-ghostcat-an-analysis-of-the-apache-tomcat-vulnerability-cve-2020-1938-and-cnvd-2020-10487.html
+  • https://www.tenable.com/blog/cve-2020-1938-ghostcat-apache-tomcat-ajp-file-readinclusion-vulnerability-cnvd-2020-10487
+  • https://nvd.nist.gov/vuln/detail/cve-2020-1938</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internet-wide scanners (Shodan, Censys, BinaryEdge) probing 8009</li><li>Authorized external vulnerability scanners (Qualys, Nessus, Tenable.io) reaching the AJP port</li><li>A load balancer or reverse proxy mistakenly NAT&#x27;d behind a public IP performing AJP health checks</li><li>Penetration-test source ranges during an authorized engagement</li><li>Cloud-provider managed proxy connecting from a public egress IP</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the destination host actually runs Tomcat with an AJP connector enabled in conf/server.xml on 8009, and whether the source IP is a known scanner/proxy or a true external. 2) Contain: firewall-block 8009 from all non-proxy sources; if AJP is unused, comment out the Connector; if used, set a requiredSecret/secret and patch to 7.0.100 / 8.5.51 / 9.0.31+. 3) Hunt: pull Tomcat access/catalina logs and host process telemetry for the source IP for evidence of /WEB-INF/web.xml reads or java/Tomcat spawning shells (see companion UC).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3411-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3411-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3411-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3411-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3411-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where LocalPort == 8009
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where RemoteIPType == &quot;Public&quot;
+| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemoteIP, LocalPort, InitiatingProcessFileName
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-3411-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where DestinationPort == 8009
+| where isnotempty(SourceIP) and not(ipv4_is_private(SourceIP))
+| summarize ConnCount = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by DestinationIP, SourceIP, DeviceVendor, DeviceProduct
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-3411-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Inbound AJP Connector Access (Ghostcat CVE-2020-1938)
+id: 6b1a9d2e-3c4f-4a7b-9e21-0f5c8d7a1b22
+description: Detects inbound connections to the Apache JServ Protocol (AJP) connector on TCP 8009, the exploitation channel for Ghostcat (CVE-2020-1938).
+references:
+  - https://snyk.io/blog/ghostcat-breach-affects-all-tomcat-versions/
+  - https://www.trendmicro.com/en_us/research/20/c/busting-ghostcat-an-analysis-of-the-apache-tomcat-vulnerability-cve-2020-1938-and-cnvd-2020-10487.html
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    DestinationPort: 8009
+    Initiated: &#x27;false&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3411-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:8009</code></pre></div>
+    <div class="tab-content" id="art-3411-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=8009
+| groupBy([aid, ComputerName, RemoteAddressIP4, ContextImageFileName], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-3411-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3411-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3411-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3411-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8009 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-3411-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8009 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="55404e5cd1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Ghostcat RCE: Tomcat/java process spawning a command shell (JSP webshell execution)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="55404e5cd1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the second-stage Ghostcat outcome — a uploaded JSP processed via the AJP file-inclusion bug yielding RCE inside the Tomcat JVM. Detects the Tomcat java worker (or tomcatN.exe service) spawning interactive shells or recon binaries, which legitimate Tomcat almost never does.
+
+Rationale: Targets the article&#x27;s explicit RCE path: an uploaded JSP processed via AJP file inclusion runs inside the Tomcat JVM, so the high-fidelity signal is the java/tomcatN worker parenting an interactive shell or recon binary — behaviour Tomcat does not exhibit in normal operation.
+
+Cross-checked against:
+  • https://www.trendmicro.com/en_us/research/20/c/busting-ghostcat-an-analysis-of-the-apache-tomcat-vulnerability-cve-2020-1938-and-cnvd-2020-10487.html
+  • https://www.tenable.com/blog/cve-2020-1938-ghostcat-apache-tomcat-ajp-file-readinclusion-vulnerability-cnvd-2020-10487</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Java/Tomcat application legitimately invoking Runtime.exec for tasks (PDF/report generation, ImageMagick/ffmpeg conversion, git operations)</li><li>Jenkins/CI agents running as java spawning build shell steps</li><li>Monitoring or backup scripts launched by the Tomcat service account</li><li>Admin troubleshooting that runs commands from within the app server context</li><li>Custom in-house apps that shell out to system utilities by design</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;catalina&quot;,&quot;setclasspath.sh&quot;,&quot;configtest&quot;,&quot;jenkins&quot;,&quot;gradlew&quot;,&quot;mvnw&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine — webshell RCE typically shows whoami/ipconfig/net user or download cradles; benign cases show app-specific tooling. Correlate the host/time with inbound 8009 connections (companion UC). 2) Contain: isolate the host, kill the suspicious child process, and pull/quarantine recently-written .jsp files under webapps/ for review. 3) Hunt: review Tomcat webapps directories for newly dropped JSP files, search for outbound C2 from the java PID, and check other internet-facing Tomcat instances for the same AJP exposure.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3411-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3411-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3411-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3411-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3411-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName has_any (&quot;java.exe&quot;,&quot;java&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;tomcat.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;python&quot;,&quot;python3&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3411-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;java.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;tomcat.exe&quot;)
+| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;)
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3411-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Tomcat Java Worker Spawning Command Shell (Ghostcat JSP RCE)
+id: 9f3c1d77-2a8e-4b16-bd44-7e0a9c2f5d10
+description: Detects the Apache Tomcat java worker or service process spawning shells/recon binaries, consistent with JSP web-shell RCE following Ghostcat (CVE-2020-1938) AJP file inclusion.
+references:
+  - https://snyk.io/blog/ghostcat-breach-affects-all-tomcat-versions/
+  - https://www.trendmicro.com/en_us/research/20/c/busting-ghostcat-an-analysis-of-the-apache-tomcat-vulnerability-cve-2020-1938-and-cnvd-2020-10487.html
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1505.003
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;\tomcat9.exe&#x27;
+      - &#x27;\tomcat8.exe&#x27;
+      - &#x27;\tomcat7.exe&#x27;
+      - &#x27;\tomcat.exe&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\whoami.exe&#x27;
+      - &#x27;\net.exe&#x27;
+      - &#x27;\net1.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3411-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\java.exe OR *\Java.exe OR *\tomcat9.exe OR *\tomcat8.exe OR *\tomcat7.exe OR *\Tomcat9.exe) @Image:(*\cmd.exe OR *\Cmd.exe OR *\powershell.exe OR *\PowerShell.exe OR *\pwsh.exe OR *\whoami.exe OR *\net.exe OR *\net1.exe)</code></pre></div>
+    <div class="tab-content" id="art-3411-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(java|tomcat\d?)(\.exe)?$/i
+| ImageFileName=/(cmd|powershell|pwsh|wscript|cscript|whoami|net1?|bash|sh|dash|python3?)(\.exe)?$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3411-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3411-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3411-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3411-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;java&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;tomcat.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-3411-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;java&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat8.exe&quot;,&quot;tomcat7.exe&quot;,&quot;tomcat.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="2aeb476018" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Ghostcat exposure: assets running Tomcat versions vulnerable to CVE-2020-1938</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="2aeb476018" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Posture hunt that enumerates managed devices carrying an unpatched Apache Tomcat affected by CVE-2020-1938, so the SOC can prioritise patching to 7.0.100 / 8.5.51 / 9.0.31 (or disabling/securing the AJP connector) before exploitation.
+
+Rationale: Uses the article&#x27;s exact CVE (CVE-2020-1938) and patched-version thresholds (7.0.100/8.5.51/9.0.31) to surface the actual exploitable surface — a posture pivot specific to this disclosure rather than a generic technique template.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/cve-2020-1938
+  • https://www.tenable.com/blog/cve-2020-1938-ghostcat-apache-tomcat-ajp-file-readinclusion-vulnerability-cnvd-2020-10487</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Spring Boot apps reporting embedded Tomcat as vulnerable even though no AJP connector is enabled by default (article notes default Spring Boot is not exploitable)</li><li>Internal-only Tomcat instances with 8009 firewalled, flagged but not externally reachable</li><li>Tomcat already patched but the scanner version banner not yet refreshed</li><li>Decommissioned/offline hosts still in the inventory</li><li>Version-string parsing mismatches between scanner and actual build</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each flagged host confirm whether an AJP connector is actually enabled on 8009 in conf/server.xml and whether it is internet-reachable (cross-check the inbound-8009 UC). 2) Contain: prioritise patching to 7.0.100/8.5.51/9.0.31+; where patching is blocked, comment out the AJP Connector or add a strong requiredSecret/secret and firewall 8009 to the reverse proxy only. 3) Hunt: for any host that was externally exposed, retro-hunt access logs and process telemetry for prior /WEB-INF/web.xml reads or java-spawned shells indicating pre-patch compromise.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3411-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3411-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2020-1938&quot;
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, CveId
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-3411-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2020-1938&quot;
+| summarize arg_max(TimeGenerated, *) by DeviceId, SoftwareName, SoftwareVersion
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, CveId</code></pre></div>
+    <div class="tab-content" id="art-3411-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3411-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3411-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3411-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2020-1938&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count</code></pre><pre class="spl-mode-body" id="art-3411-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2020-1938&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3411-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3411-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3411-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-1938&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3411-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-1938&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3411-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3411-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3411-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3411-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-1938&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3411-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-1938&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
 - [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
+- [cisa shares advice on isolating vital systems during cyberat](./2026-07-28/cisa-shares-advice-on-isolating-vital-systems-during-cyberat.md)
 - [compromised npm packages joyfill components and joyfill layo](./2026-07-28/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
@@ -23,6 +24,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
+- [vbulletin fixes critical pre auth rce flaw with public explo](./2026-07-28/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-explo.md)
 
 ## 2026-07-27
 - [arista patches velocloud orchestrator zero day exploited in ](./2026-07-27/arista-patches-velocloud-orchestrator-zero-day-exploited-in-.md)
@@ -52,10 +54,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ctm360 research reveals how insurance phishing has evolved i](./2026-07-25/ctm360-research-reveals-how-insurance-phishing-has-evolved-i.md)
 - [devman raas portal centralizes payload builds victim managem](./2026-07-25/devman-raas-portal-centralizes-payload-builds-victim-managem.md)
 - [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
-- [malicious sites use javascript to build malware in browser m](./2026-07-25/malicious-sites-use-javascript-to-build-malware-in-browser-m.md)
 - [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
-- [shinyhunters data leaks fuel 2 000 sextortion email scam](./2026-07-25/shinyhunters-data-leaks-fuel-2-000-sextortion-email-scam.md)
 - [steam forum clickfix attacks infect gamers with xmrig crypto](./2026-07-25/steam-forum-clickfix-attacks-infect-gamers-with-xmrig-crypto.md)
 
 ## 2026-07-24
@@ -108,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 50522 microsoft sharepoint deserialization](./2026-07-22/cisa-kev-cve-2026-50522-microsoft-sharepoint-deserialization.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
-- [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
 - [real world incident response microsoft and axa xl strengthen](./2026-07-22/real-world-incident-response-microsoft-and-axa-xl-strengthen.md)
 - [sol searching can frontier models tackle autonomous long hor](./2026-07-22/sol-searching-can-frontier-models-tackle-autonomous-long-hor.md)
 - [sql injection isn t dead](./2026-07-22/sql-injection-isn-t-dead.md)
