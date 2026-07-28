@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-28
+- [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
 
 ## 2026-07-27
 - [2026 mid year update on pace for our biggest year yet](./2026-07-27/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
@@ -112,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
 - [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)
 - [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
-- [critical sharepoint rce cve 2026 50522 under active exploita](./2026-07-21/critical-sharepoint-rce-cve-2026-50522-under-active-exploita.md)
 - [ghsa critical cve 2026 20896 gitea docker image reverse prox](./2026-07-21/ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox.md)
 - [ghsa critical cve 2026 22874 gitea incomplete ssrf protectio](./2026-07-21/ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio.md)
 - [ghsa critical cve 2026 56750 gitea remember me token theft n](./2026-07-21/ghsa-critical-cve-2026-56750-gitea-remember-me-token-theft-n.md)
@@ -122,7 +124,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa p63j vcc4 9vmv vitest browser browser mod](./2026-07-21/ghsa-critical-ghsa-p63j-vcc4-9vmv-vitest-browser-browser-mod.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
 - [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
-- [qilin ransomware attackers exploit pan os authentication byp](./2026-07-21/qilin-ransomware-attackers-exploit-pan-os-authentication-byp.md)
 
 ## 2026-07-20
 - [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)

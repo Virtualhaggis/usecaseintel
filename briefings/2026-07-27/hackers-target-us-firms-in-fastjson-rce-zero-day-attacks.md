@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound FastJson @type payload with jar:/ldap:/rmi: reference to Spring Boot app (CVE-2026-16723)
 
-`UC_0_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Spring Boot Java fat-JAR spawning shell/recon child process (FastJson CVE-2026-16723 RCE)
 
-`UC_0_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### Java application making outbound LDAP/RMI connection (FastJson CVE-2026-16723 remote class load)
 
-`UC_0_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Hackers target US firms in FastJson RCE zero-day attacks
 
-`UC_0_1` · phase: **exploit** · confidence: **High**
+`UC_2_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

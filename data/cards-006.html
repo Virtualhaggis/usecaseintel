@@ -1,383 +1,3 @@
-<article class="card" id="art-150" data-art-slug="2026-07-15-ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1539"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-47156: MantisBT: SOAP API Authentication Bypass with Privilege Escalation to Administrator MantisBT: SOAP API Authentication Bypass with Privilege Escalation to Administrator CVE-2026-47156 T1190 T1539 [LLM] MantisBT self-registration (signup.php) followed by SOAP replay to mantisconnect.php from same source [LLM] MantisBT SOAP endpoint (mantisconnect.php) high-volume POST burst — mass data exfiltration [LLM] First-seen SOAP client on MantisBT mantisconnect.php (new source, post-bypass admin activity) Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-15-ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-c2xg-qjqw-2v98" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47156: MantisBT: SOAP API Authentication Bypass with Privilege Escalation to Administrator</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-15</span>
-    <span>5 use cases</span>
-    <span>2 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">MantisBT: SOAP API Authentication Bypass with Privilege Escalation to Administrator</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47156</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-150-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-150"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-150-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] MantisBT self-registration (signup.php) followed by SOAP replay to mantisconnect.php from same source · [LLM] First-seen SOAP client on MantisBT mantisconnect.php (new source, post-bypass admin activity)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] MantisBT SOAP endpoint (mantisconnect.php) high-volume POST burst — mass data exfiltration · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="8ab5d9f72b" data-platforms="sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">MantisBT self-registration (signup.php) followed by SOAP replay to mantisconnect.php from same source</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8ab5d9f72b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-47156 exploitation path: an attacker self-registers via signup.php then immediately drives the SOAP API (/api/soap/mantisconnect.php) using the auth-bypass to impersonate the administrator. Flags a single source IP that touches the self-registration page and the SOAP endpoint within a short window — the article-specific signup-to-SOAP pivot.
-
-Rationale: Uses the two concrete URIs from the attack chain — signup.php (default self-registration, $g_allow_signup=ON) and /api/soap/mantisconnect.php (the SOAP endpoint) — correlated by source IP inside 30 min. Legit SOAP integrations authenticate with pre-provisioned service accounts and never register, so signup→SOAP from one IP is high-fidelity for CVE-2026-47156. Cross-checked watchTowr credit and the MantisBT 2.28.4 advisory confirming the endpoint and default self-registration.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/composer/mantisbt/mantisbt/CVE-2026-47156/
-  • https://mantisbt.org/blog/archives/mantisbt/846
-  • https://mantisbt.org/blog/archives/mantisbt/852
-  • https://mantisbt.org/docs/master-1.3.x/en-US/Admin_Guide/html/admin.config.soap.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate new user self-registers and their team&#x27;s SOAP integration client shares the same NAT/egress IP</li><li>Security scanner (Nessus/Qualys) crawling both the signup page and the SOAP WSDL from one IP</li><li>Internal QA/staging test harness that registers a throwaway account then exercises the SOAP API</li><li>Shared corporate proxy where many users egress from one IP, coincidentally overlapping signup and SOAP traffic</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT (uris IN (&quot;/scanner/*&quot;)) // exclude known vuln-scanner paths; add your integration egress IPs to an allowlist lookup and filter with `| search NOT [| inputlookup mantis_soap_allowlist.csv | fields src]`</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the source IP&#x27;s full request timeline; confirm the signup.php POST created a new account (correlate with MantisBT user_create audit) and that mantisconnect.php POSTs returned HTTP 200. Check the User-Agent — SOAP libraries (PHP-SOAP, python-zeep, curl) vs a browser. 2) Contain: disable the newly-registered account, rotate the administrator&#x27;s cookie_string by forcing an admin password reset (invalidates MANTIS_STRING_COOKIE), and set $g_allow_signup=OFF until patched to 2.28.4. 3) Hunt: enumerate every account created since the first malicious signup and every SOAP operation from that IP; review private issues/attachments/user-account reads for data exfiltration and check for destructive ops (project/issue deletes).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 30m;
-let signup = W3CIISLog
-    | where TimeGenerated &gt; ago(7d)
-    | where csUriStem endswith &quot;signup.php&quot;
-    | project SignupTime=TimeGenerated, cIP;
-W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem endswith &quot;mantisconnect.php&quot;
-| where csMethod == &quot;POST&quot;
-| join kind=inner signup on cIP
-| where TimeGenerated between (SignupTime .. SignupTime + win)
-| project SignupTime, SoapTime=TimeGenerated, cIP, csUriStem, csMethod, scStatus, UserAgent=csUserAgent
-| order by SoapTime desc</code></pre></div>
-    <div class="tab-content" id="art-150-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path=&quot;*signup.php&quot; OR Web.uri_path=&quot;*account_prof_menu_page.php&quot; OR Web.uri_path=&quot;*mantisconnect.php&quot;) by Web.src Web.uri_path Web.http_method
-| `drop_dm_object_name(Web)`
-| eval isSignup=if(like(uri_path,&quot;%signup.php&quot;),1,0), isSoap=if(like(uri_path,&quot;%mantisconnect.php&quot;),1,0)
-| stats sum(isSignup) as signupHits sum(isSoap) as soapHits min(firstTime) as firstTime max(lastTime) as lastTime values(uri_path) as uris by src
-| where signupHits&gt;0 AND soapHits&gt;0
-| eval spanSeconds=lastTime-firstTime
-| where spanSeconds &lt; 1800
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-150-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path=&quot;*signup.php&quot; OR Web.uri_path=&quot;*account_prof_menu_page.php&quot; OR Web.uri_path=&quot;*mantisconnect.php&quot;) by Web.src Web.uri_path Web.http_method
-| `drop_dm_object_name(Web)`
-| eval isSignup=if(like(uri_path,&quot;%signup.php&quot;),1,0), isSoap=if(like(uri_path,&quot;%mantisconnect.php&quot;),1,0)
-| stats sum(isSignup) as signupHits sum(isSoap) as soapHits min(firstTime) as firstTime max(lastTime) as lastTime values(uri_path) as uris by src
-| where signupHits&gt;0 AND soapHits&gt;0
-| eval spanSeconds=lastTime-firstTime
-| where spanSeconds &lt; 1800
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="739e826a25" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">MantisBT SOAP endpoint (mantisconnect.php) high-volume POST burst — mass data exfiltration</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="739e826a25" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the actions-on-objective phase of CVE-2026-47156 where an admin-impersonating client hammers the SOAP API to enumerate/exfiltrate all issues, attachments and user accounts across the 71 SOAP operations. Alerts on a single source IP exceeding a per-window POST threshold to /api/soap/mantisconnect.php with large aggregate response bytes.
-
-Rationale: Anchors on the exact SOAP endpoint URI and POST method; the &gt;100-req/10-min threshold plus large scBytes captures the &#x27;71 SOAP operations / full data exfiltration&#x27; impact called out in the advisory. Distinct pivot from UC1 (volume/bytes vs signup correlation).
-
-Cross-checked against:
-  • https://advisories.gitlab.com/composer/mantisbt/mantisbt/CVE-2026-47156/
-  • https://mantisbt.org/blog/archives/mantisbt/846</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Automated Collection">T1119</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A busy legitimate SOAP integration (CI bot, dashboard, mobile app) polling issues at high frequency</li><li>Bulk import/export migration job run by an admin via the SOAP API</li><li>Monitoring/synthetic health-check hitting mantisconnect.php on a tight interval</li><li>A misconfigured client retrying failed SOAP calls in a tight loop (check scStatus for repeated 500s)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP !in (&quot;10.0.0.0&quot;) // replace with a lookup of sanctioned SOAP integration IPs; `| search NOT [| inputlookup mantis_soap_allowlist.csv | fields src]` in Splunk</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the source IP and whether it maps to a sanctioned integration; inspect scStatus distribution (many 200s + large scBytes = successful bulk pulls) and User-Agent. 2) Contain: block the IP at the WAF/reverse proxy, disable the account it authenticated as, and rotate the admin cookie_string; if the org is unpatched, take the SOAP API offline ($g_enable_soap_api / webserver rule) until 2.28.4 is deployed. 3) Hunt: quantify what was read — map SOAP calls to private issues, attachments and the user-account table (id/name/email); look for follow-on destructive operations and for the same IP reappearing against other public-facing apps.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(1d)
-| where csUriStem endswith &quot;mantisconnect.php&quot;
-| where csMethod == &quot;POST&quot;
-| summarize ReqCount=count(), TotalBytesOut=sum(scBytes), SuccessCount=countif(scStatus==200), UserAgents=make_set(csUserAgent,10) by cIP, bin(TimeGenerated, 10m)
-| where ReqCount &gt; 100   // legit SOAP clients rarely exceed 100 ops / 10 min; mass enumeration blows past this
-| order by ReqCount desc</code></pre></div>
-    <div class="tab-content" id="art-150-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count sum(Web.bytes_out) as bytes_out dc(Web.status) as statusVariety from datamodel=Web where Web.uri_path=&quot;*mantisconnect.php&quot; AND Web.http_method=POST by Web.src _time span=10m
-| `drop_dm_object_name(Web)`
-| where count &gt; 100
-| eval MB_out=round(bytes_out/1024/1024,2)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-150-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count sum(Web.bytes_out) as bytes_out dc(Web.status) as statusVariety from datamodel=Web where Web.uri_path=&quot;*mantisconnect.php&quot; AND Web.http_method=POST by Web.src _time span=10m
-| `drop_dm_object_name(Web)`
-| where count &gt; 100
-| eval MB_out=round(bytes_out/1024/1024,2)
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="627b478cce" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">First-seen SOAP client on MantisBT mantisconnect.php (new source, post-bypass admin activity)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="627b478cce" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Baseline anti-join surfacing source IPs that hit /api/soap/mantisconnect.php for the first time in 30 days — the shape of an attacker abusing the CVE-2026-47156 bypass to act with administrator privileges from a source that was never a legitimate SOAP integration. Prioritises new clients returning HTTP 200 with large payloads.
-
-Rationale: SOAP integrations are stable, allow-listable source IPs; a never-before-seen IP driving mantisconnect.php POSTs is the cleanest available proxy for post-bypass privileged abuse when request bodies aren&#x27;t logged. Leftanti/append baseline anti-join is a distinct pivot from UC1 (correlation) and UC2 (threshold).
-
-Cross-checked against:
-  • https://advisories.gitlab.com/composer/mantisbt/mantisbt/CVE-2026-47156/
-  • https://mantisbt.org/docs/master-1.3.x/en-US/Admin_Guide/html/admin.config.soap.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A newly-deployed or relocated legitimate SOAP integration (new server, new egress IP after cloud migration)</li><li>Occasional developer testing the SOAP API from a workstation</li><li>DHCP/NAT change putting an existing integration behind a different public IP</li><li>Vulnerability scanner probing the SOAP endpoint for the first time this month</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where src NOT IN [| inputlookup mantis_soap_allowlist.csv | fields src] // maintain an allowlist of sanctioned SOAP integration source IPs to suppress known-good new-but-authorized clients</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the new source IP (ASN/geo/reverse DNS) and compare its User-Agent to known integrations; confirm POSTs returned 200 with non-trivial bytes. 2) Contain: if unrecognised, block at the WAF and disable any account seen authenticating from it; rotate the admin cookie_string. 3) Hunt: 30-day baseline warms this rule — during warmup, manually validate each new IP against the sanctioned-integration inventory and pivot into UC2 (volume) and UC1 (signup) for the same IP to confirm the full CVE-2026-47156 chain.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let baseline = W3CIISLog
-    | where TimeGenerated between (ago(30d) .. ago(1d))
-    | where csUriStem endswith &quot;mantisconnect.php&quot;
-    | distinct cIP;
-W3CIISLog
-| where TimeGenerated &gt; ago(1d)
-| where csUriStem endswith &quot;mantisconnect.php&quot;
-| where csMethod == &quot;POST&quot;
-| join kind=leftanti baseline on cIP
-| summarize Requests=count(), Success=countif(scStatus==200), BytesOut=sum(scBytes), FirstSeen=min(TimeGenerated), UserAgents=make_set(csUserAgent,10) by cIP
-| order by BytesOut desc</code></pre></div>
-    <div class="tab-content" id="art-150-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where earliest=-30d latest=-1d Web.uri_path=&quot;*mantisconnect.php&quot; by Web.src
-| `drop_dm_object_name(Web)`
-| eval baseline=1 | fields src baseline
-| append [| tstats `summariesonly` count as recentCount sum(Web.bytes_out) as recentBytes from datamodel=Web where earliest=-1d Web.uri_path=&quot;*mantisconnect.php&quot; AND Web.http_method=POST by Web.src | `drop_dm_object_name(Web)`]
-| stats sum(baseline) as baseline sum(recentCount) as recentCount sum(recentBytes) as recentBytes by src
-| where (isnull(baseline) OR baseline=0) AND recentCount &gt; 0
-| sort - recentBytes</code></pre><pre class="spl-mode-body" id="art-150-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where earliest=-30d latest=-1d Web.uri_path=&quot;*mantisconnect.php&quot; by Web.src
-| `drop_dm_object_name(Web)`
-| eval baseline=1 | fields src baseline
-| append [| tstats summariesonly=false count as recentCount sum(Web.bytes_out) as recentBytes from datamodel=Web where earliest=-1d Web.uri_path=&quot;*mantisconnect.php&quot; AND Web.http_method=POST by Web.src | `drop_dm_object_name(Web)`]
-| stats sum(baseline) as baseline sum(recentCount) as recentCount sum(recentBytes) as recentBytes by src
-| where (isnull(baseline) OR baseline=0) AND recentCount &gt; 0
-| sort - recentBytes</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-150-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-150-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-150-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-150-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-150-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-150-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-150-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47156&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47156&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-150-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-150-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-150-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-150-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47156&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-150-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47156&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-151" data-art-slug="2026-07-15-turning-threat-intelligence-into-decisive-action-with-defend"
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1190,T1486,T1528,T1566"
@@ -12878,6 +12498,305 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-175-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-61667&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-176" data-art-slug="2026-07-13-ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-45579: DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input CVE-2026-45579 T1190 [LLM] DIRAC ReqManager service (CVE-2026-45579) spawning a shell or recon/egress binary [LLM] DIRAC post-exploit read of dirac.cfg by a shell/read utility (CVE-2026-45579 credential theft) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-13-ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-9jpv-c7p4-997x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45579: DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-13</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">DIRAC is vulnerable to RCE in RequestManager due to eval on untrusted input</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45579</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-176-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-176"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-176-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] DIRAC ReqManager service (CVE-2026-45579) spawning a shell or recon/egress binary</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] DIRAC post-exploit read of dirac.cfg by a shell/read utility (CVE-2026-45579 credential theft)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="0790c3283b" data-platforms="def,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">DIRAC ReqManager service (CVE-2026-45579) spawning a shell or recon/egress binary</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0790c3283b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the RCE payload executing: the DIRAC RequestManager service (a Python DB-facing handler launched via dirac-service/dirac-tornado as ReqManager/TornadoReqManager) spawning /bin/sh, bash or a recon/egress tool. The eval() on the unrecognised groupingAttribute walks back to the os module, so successful exploitation manifests as this DB service forking a shell — something ReqManager never does legitimately (unlike RequestExecutingAgent, which forks a ProcessPool).
+
+Rationale: Anchored on the ReqManager/ReqManagerHandler/dirac-service parent identity (DIRAC docs: ReqManager is the DB-facing handler that never shells out) combined with any shell/recon/egress child — the exact tree the eval()-&gt;os.* chain from the advisory produces. Parent token deliberately excludes RequestExecutingAgent, which forks a legitimate ProcessPool. Datadog/Falcon left empty: their provided auditd/ProcessRollup2 schemas expose no parent command line to key the DIRAC-service parent on (only ParentBaseFileName=&#x27;python&#x27;, too generic).
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+  • https://github.com/advisories/GHSA-9jpv-c7p4-997x
+  • https://dirac.diracgrid.org/en/latest/AdministratorGuide/Systems/RequestManagement/rmsComponents.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DIRAC administrator running diagnostic shell commands under the runit/supervisor process tree during service troubleshooting</li><li>Container entrypoint/init wrapper spawning a shell during a dirac-service (re)start</li><li>Config-management (Ansible/Puppet/Salt) restarting dirac-tornado and running post-restart health-check shell hooks</li><li>Site monitoring probes (monit/nagios) that shell out from the service supervisor</li><li>A local health-check script using curl/nc to poll the ReqManager port on service start</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ChildCmd !has &quot;healthcheck&quot; and ChildCmd !has &quot;/opt/dirac/pro/versions&quot; and ChildCmd !has &quot;runsvdir&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the child command line and SHA256; correlate against the ReqManager log for the exception traceback the advisory says the exploit leaves (NameError/AttributeError referencing &#x27;Request.&#x27; or dunder strings such as __class__/__globals__/__builtins__), and identify the authenticated user whose RPC to getRequestCountersWeb preceded it. 2) Contain: isolate the DIRAC host, rotate all secrets in dirac.cfg (database passwords) and revoke every stored proxy/token, then upgrade DIRAC to 8.0.79 / 9.0.22 / 9.1.10. 3) Hunt: search the same host for reads of dirac.cfg by non-DIRAC processes, outbound egress from the service, and truncation/deletion of the RequestManager log (evidence removal noted in the advisory).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-176-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-176-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-176-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-176-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-176-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(14d)
+| where InitiatingProcessCommandLine has_any (&quot;dirac-service&quot;,&quot;dirac-tornado&quot;,&quot;ReqManagerHandler&quot;,&quot;ReqManager&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;hostname&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;base64&quot;,&quot;chmod&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(14d)
+| where ParentProcessCommandLine has_any (&quot;dirac-service&quot;,&quot;dirac-tornado&quot;,&quot;ReqManagerHandler&quot;,&quot;ReqManager&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/ksh&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/socat&quot;,&quot;/id&quot;,&quot;/whoami&quot;,&quot;/hostname&quot;,&quot;/uname&quot;,&quot;/cat&quot;,&quot;/base64&quot;,&quot;/chmod&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: DIRAC ReqManager Service Spawning Shell or Recon Utility (CVE-2026-45579)
+id: 6f3a2b1e-9c4d-4f7a-8b2e-3d1c5a7e0f92
+status: experimental
+description: Detects the DIRAC RequestManager (ReqManager) service spawning a shell or recon/egress binary, the observable signature of the CVE-2026-45579 eval() RCE reaching the os module.
+references:
+  - https://github.com/advisories/GHSA-9jpv-c7p4-997x
+  - https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    ParentCommandLine|contains:
+      - &#x27;dirac-service&#x27;
+      - &#x27;dirac-tornado&#x27;
+      - &#x27;ReqManagerHandler&#x27;
+      - &#x27;ReqManager&#x27;
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/ksh&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/hostname&#x27;
+      - &#x27;/uname&#x27;
+      - &#x27;/base64&#x27;
+      - &#x27;/chmod&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-176-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-176-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-176-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-176-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*dirac-service*&quot; OR Processes.parent_process=&quot;*dirac-tornado*&quot; OR Processes.parent_process=&quot;*ReqManagerHandler*&quot; OR Processes.parent_process=&quot;*ReqManager*&quot;) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;hostname&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;base64&quot;,&quot;chmod&quot;,&quot;python&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-176-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*dirac-service*&quot; OR Processes.parent_process=&quot;*dirac-tornado*&quot; OR Processes.parent_process=&quot;*ReqManagerHandler*&quot; OR Processes.parent_process=&quot;*ReqManager*&quot;) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;hostname&quot;,&quot;uname&quot;,&quot;cat&quot;,&quot;base64&quot;,&quot;chmod&quot;,&quot;python&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1d46fc5b96" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">DIRAC post-exploit read of dirac.cfg by a shell/read utility (CVE-2026-45579 credential theft)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1d46fc5b96" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the credential-theft step the advisory describes: after the eval() RCE, the attacker reads the local dirac.cfg to harvest database passwords and export stored proxies/tokens. Keys on a read/exfil utility (cat, grep, base64, curl, etc.) whose own command line references dirac.cfg — excluding the Python DIRAC service that carries dirac.cfg as a legitimate --cfg argument.
+
+Rationale: Keys on dirac.cfg (the file the advisory names as holding DB passwords and gating proxy/token export) appearing in the command line of a read/exfil utility rather than the Python service. The reader-binary allowlist excludes the legitimate DIRAC process, which carries dirac.cfg as a --cfg argument — so any cat/grep/base64/curl of dirac.cfg is anomalous. Portable across all process-telemetry platforms because it keys on the executing process&#x27;s own command line.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+  • https://github.com/advisories/GHSA-9jpv-c7p4-997x</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Unsecured Credentials: Private Keys">T1552.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DIRAC administrator manually running cat/grep on dirac.cfg during troubleshooting over SSH</li><li>Backup jobs (tar/rsync driven via cat) reading the DIRAC etc/ directory</li><li>Config-management tooling templating or diffing dirac.cfg on each run</li><li>Monitoring/inventory scripts grepping dirac.cfg for a version or option value</li><li>Site install/upgrade scripts copying dirac.cfg with scp/curl to a new node</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and InitiatingProcessCommandLine has_any (&quot;dirac-service&quot;,&quot;dirac-tornado&quot;,&quot;ReqManagerHandler&quot;,&quot;ReqManager&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent of the reader process — if it descends from the DIRAC service (dirac-service/dirac-tornado/ReqManager) rather than an interactive admin shell, treat as confirmed exploitation; check whether the command pipes to base64/curl/nc (exfil) and whether stored proxy/token files were touched. 2) Contain: isolate the host, immediately rotate every credential in dirac.cfg and revoke all stored user proxies and tokens, and patch DIRAC to 8.0.79 / 9.0.22 / 9.1.10. 3) Hunt: pivot on the authenticated user who called getRequestCountersWeb, review the ReqManager log for the eval exception traceback, and look for outbound transfers of dirac.cfg / proxy material and any subsequent log truncation.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-176-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-176-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-176-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-176-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-176-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-176-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-176-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(14d)
+| where ProcessCommandLine has &quot;dirac.cfg&quot;
+| where FileName in~ (&quot;cat&quot;,&quot;grep&quot;,&quot;egrep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;base64&quot;,&quot;od&quot;,&quot;strings&quot;,&quot;xxd&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;scp&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(14d)
+| where ActingProcessCommandLine has &quot;dirac.cfg&quot;
+| where ActingProcessName has_any (&quot;/cat&quot;,&quot;/grep&quot;,&quot;/egrep&quot;,&quot;/less&quot;,&quot;/more&quot;,&quot;/head&quot;,&quot;/tail&quot;,&quot;/base64&quot;,&quot;/od&quot;,&quot;/strings&quot;,&quot;/xxd&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/scp&quot;,&quot;/nc&quot;,&quot;/ncat&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DIRAC dirac.cfg Read by Shell or Exfil Utility (CVE-2026-45579)
+id: b2d7c418-6e0a-4c93-9f51-2a8e4d0b7c36
+status: experimental
+description: Detects a read/exfil utility whose command line references dirac.cfg, the credential-theft step following the CVE-2026-45579 RCE (harvesting DB passwords and exporting proxies/tokens).
+references:
+  - https://github.com/advisories/GHSA-9jpv-c7p4-997x
+  - https://advisories.gitlab.com/pypi/dirac/CVE-2026-45579/
+author: SOC Detection Engineering
+date: 2026/07/14
+tags:
+  - attack.t1552.001
+  - attack.t1552.004
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    CommandLine|contains: &#x27;dirac.cfg&#x27;
+    Image|endswith:
+      - &#x27;/cat&#x27;
+      - &#x27;/grep&#x27;
+      - &#x27;/egrep&#x27;
+      - &#x27;/less&#x27;
+      - &#x27;/more&#x27;
+      - &#x27;/head&#x27;
+      - &#x27;/tail&#x27;
+      - &#x27;/base64&#x27;
+      - &#x27;/od&#x27;
+      - &#x27;/strings&#x27;
+      - &#x27;/xxd&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/scp&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*dirac.cfg* (@process.name:(cat OR grep OR egrep OR less OR more OR head OR tail OR base64 OR od OR strings OR xxd OR curl OR wget OR scp OR nc OR ncat))</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/dirac\.cfg/i
+| ImageFileName=/\/(cat|grep|egrep|less|more|head|tail|base64|od|strings|xxd|curl|wget|scp|nc|ncat)$/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-176-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-176-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-176-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-176-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*dirac.cfg*&quot; (Processes.process_name IN (&quot;cat&quot;,&quot;grep&quot;,&quot;egrep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;base64&quot;,&quot;od&quot;,&quot;strings&quot;,&quot;xxd&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;scp&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-176-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*dirac.cfg*&quot; (Processes.process_name IN (&quot;cat&quot;,&quot;grep&quot;,&quot;egrep&quot;,&quot;less&quot;,&quot;more&quot;,&quot;head&quot;,&quot;tail&quot;,&quot;base64&quot;,&quot;od&quot;,&quot;strings&quot;,&quot;xxd&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;scp&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-176-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-176-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-176-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-176-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45579&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-176-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45579&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-176-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-176-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-176-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-176-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45579&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-176-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45579&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

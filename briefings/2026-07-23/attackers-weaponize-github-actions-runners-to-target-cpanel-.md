@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Network callback to GitHub Actions cPanel-campaign C2 43.228.157.68
 
-`UC_77_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_79_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### DNSHook beacon to dnshook.site (campaign UUID f5b0b742-...)
 
-`UC_77_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_79_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Inbound scanning of cPanel/WHM control-panel ports (CVE-2026-41940 exploitation)
 
-`UC_77_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_79_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
