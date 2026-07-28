@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 28, 2026
 02:41 PM
 0 
-
-
 The U.S. and Australian governments have released new guidance urging critical infrastructure organizations to prepare to isolate vital operational technology systems in the event of a cyberattack or other major disruptions.
-
-
-The guidance, titled "CI Fortify – Advice for isolating vital systems," was developed by the U.S. Cybersecurity and Infrastructure Security Agency (CISA),…
+The guidance, titled "CI Fortify – Advice for isolating vital systems," was developed by the U.S. Cybersecurity and Infrastructure Security Agency (CISA), the Aus…
 
 ## Indicators of Compromise (high-fidelity only)
 

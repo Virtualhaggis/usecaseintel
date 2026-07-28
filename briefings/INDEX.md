@@ -16,12 +16,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [compromised npm packages joyfill components and joyfill layo](./2026-07-28/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
+- [cubepilot drone software dev hit by dns hijacking to interce](./2026-07-28/cubepilot-drone-software-dev-hit-by-dns-hijacking-to-interce.md)
 - [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
 - [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
+- [openai models used artifactory zero days to escape to the in](./2026-07-28/openai-models-used-artifactory-zero-days-to-escape-to-the-in.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
 - [vbulletin fixes critical pre auth rce flaw with public explo](./2026-07-28/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-explo.md)
@@ -45,9 +47,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 - [what is ai pentesting and how does it works](./2026-07-27/what-is-ai-pentesting-and-how-does-it-works.md)
 
-## 2026-07-26
-- [github pypi add time based defenses against supply chain att](./2026-07-26/github-pypi-add-time-based-defenses-against-supply-chain-att.md)
-
 ## 2026-07-25
 - [cl0p affiliates target internet exposed ptc windchill and fl](./2026-07-25/cl0p-affiliates-target-internet-exposed-ptc-windchill-and-fl.md)
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
@@ -56,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
 - [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
-- [steam forum clickfix attacks infect gamers with xmrig crypto](./2026-07-25/steam-forum-clickfix-attacks-infect-gamers-with-xmrig-crypto.md)
 
 ## 2026-07-24
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)

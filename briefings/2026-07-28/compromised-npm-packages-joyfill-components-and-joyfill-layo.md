@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Install of compromised @joyfill 2773-beta npm packages (Joyfill supply-chain RAT)
 
-`UC_0_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union
 
 ### Node process resolving blockchain C2 dead-drop or calling Joyfill RAT C2 hosts
 
-`UC_0_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### Node spawning detached 'node -e' or Python child (Joyfill implant second stage)
 
-`UC_0_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### Developer-tool binaries patched by node/python (Joyfill self-reload persistence)
 
-`UC_0_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -277,7 +277,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised npm Packages: @joyfill/components and @joyfill/layouts Ship an Obfus
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_2_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

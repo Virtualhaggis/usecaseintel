@@ -12987,11 +12987,11 @@ level: critical
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1021.001,T1190,T1195.002,T1486,T1528,T1555.003,T1566"
   data-sources="The Hacker News"
-  data-platforms="def,falcon,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
-  data-targets="azure,linux,m365,vcs,windows"
-  data-uc-count="15" data-llm-uc-count="3"
-  data-search="Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authentication A high-severity security flaw impacting open-source developer platform Windmill has come under active exploitation in the wild, per VulnCheck. The vulnerability in question is CVE-2026-29059 (CVSS score: 7.5), a case of unauthenticated path traversal impacting Windmill&#x27;s &quot;get_log_file&quot; endpoint (&quot;/api/w/{workspace}/jobs_u/get_log_file/{filename}&quot;). &quot;The filename parameter is concatenated into CVE-2026-29059 CVE-2026-60137 CVE-2026-63030 CVE-2021-27137 CVE-2026-0770 T1021.001 T1190 T1195.002 T1486 T1528 T1555.003 T1566 [LLM] Windmill get_log_file unauthenticated path traversal exploitation (CVE-2026-29059) [LLM] Windmill traversal reads /etc/passwd or /proc/1/environ (SUPERADMIN_SECRET theft) [LLM] Windmill get_log_file traversal enumeration / mass file-read from single source Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat">
+  data-targets="azure,linux,m365,windows"
+  data-uc-count="17" data-llm-uc-count="5"
+  data-search="Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authentication A high-severity security flaw impacting open-source developer platform Windmill has come under active exploitation in the wild, per VulnCheck. The vulnerability in question is CVE-2026-29059 (CVSS score: 7.5), a case of unauthenticated path traversal impacting Windmill&#x27;s &quot;get_log_file&quot; endpoint (&quot;/api/w/{workspace}/jobs_u/get_log_file/{filename}&quot;). &quot;The filename parameter is concatenated into CVE-2026-29059 CVE-2026-60137 CVE-2026-63030 CVE-2021-27137 CVE-2026-0770 T1021.001 T1190 T1195.002 T1486 T1528 T1555.003 T1566 [LLM] Windmill get_log_file unauthenticated path traversal exploitation (CVE-2026-29059) [LLM] Windmill SUPERADMIN_SECRET theft via /proc/1/environ traversal (CVE-2026-29059) [LLM] Windmill traversal endpoint enumeration / mass file-read scanning (CVE-2026-29059) [LLM] Langflow /api/v1/validate/code unauthenticated RCE requests (CVE-2026-0770) [LLM] Langflow post-exploitation: cloud-metadata/credential theft and recon via spawned shell (CVE-2026-0770) Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-22-hackers-exploit-windmill-flaw-to-read-arbitrary-server-files" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -13000,7 +13000,7 @@ level: critical
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-22</span>
-    <span>15 use cases</span>
+    <span>17 use cases</span>
     <span>7 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -13048,15 +13048,15 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Windmill get_log_file traversal enumeration / mass file-read from single source · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Windmill traversal endpoint enumeration / mass file-read scanning (CVE-2026-29059) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Windmill get_log_file unauthenticated path traversal exploitation (CVE-2026-29059) · Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Suspicious browser extension installation · Article-specific behavioural hunt — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Windmill get_log_file unauthenticated path traversal exploitation (CVE-2026-29059) · [LLM] Windmill SUPERADMIN_SECRET theft via /proc/1/environ traversal (CVE-2026-29059) · [LLM] Langflow /api/v1/validate/code unauthenticated RCE requests (CVE-2026-0770) · Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Langflow post-exploitation: cloud-metadata/credential theft and recon via spawned shell (CVE-2026-0770) · Suspicious browser extension installation · Article-specific behavioural hunt — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Windmill traversal reads /etc/passwd or /proc/1/environ (SUPERADMIN_SECRET theft) · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="c7c03e49f3" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="c7c03e49f3" data-platforms="datadog,sent,sigma,spl" data-targets="linux" open>
   <summary>
     <span class="uc-title">Windmill get_log_file unauthenticated path traversal exploitation (CVE-2026-29059)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
@@ -13066,40 +13066,41 @@ level: critical
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests to Windmill&#x27;s /api/w/{workspace}/jobs_u/get_log_file/{filename} endpoint that carry directory-traversal sequences in the filename segment. This is the exact exploitation primitive for CVE-2026-29059, which VulnCheck reports under active exploitation against ~170 exposed instances.
+    <div class="uc-desc">Hunts unauthenticated HTTP requests to Windmill&#x27;s &#x27;get_log_file&#x27; endpoint carrying directory-traversal sequences used to read arbitrary server files. Article-specific because it anchors on the exact vulnerable path &#x27;/api/w/{workspace}/jobs_u/get_log_file/{filename}&#x27; plus &#x27;../&#x27; and encoded variants, covering both direct Windmill endpoints and the Nextcloud proxy path called out by VulnCheck.
 
-Rationale: Anchored on the exact vulnerable endpoint path &#x27;jobs_u/get_log_file&#x27; plus traversal tokens (../, %2e%2e, double-encoded %252e) named in the Windmill advisory and VulnCheck reporting — the combination is not something a legitimate Windmill log-download request would ever contain.
+Rationale: Anchors on the exact CVE-2026-29059 vulnerable path &#x27;jobs_u/get_log_file&#x27; plus raw and URL-encoded traversal tokens and the specific target files (/etc/passwd, /proc) that VulnCheck observed in the wild; the endpoint string makes this Windmill-specific rather than a generic traversal template. Cross-checked SentinelOne, OSV and Field Effect confirming endpoint and payloads.
 
 Cross-checked against:
   • https://www.sentinelone.com/vulnerability-database/cve-2026-29059/
-  • https://github.com/windmill-labs/windmill/security/advisories/GHSA-24fr-44f8-fqwg
-  • https://github.com/Chocapikk/Windfall</div>
+  • https://osv.dev/vulnerability/CVE-2026-29059
+  • https://fieldeffect.com/blog/active-exploitation-windmill-vulnerability</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Nuclei/Nessus/Qualys) probing the CVE-2026-29059 template</li><li>DAST tooling in CI/CD hitting a staging Windmill instance</li><li>Red-team / pentest engagement against the Windmill host</li><li>Legitimate log filenames that legitimately contain double-dot substrings (rare; would not resolve outside the log dir)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (dynamic([&quot;&lt;approved_scanner_ips_reference_list&gt;&quot;])) // maintain as a Sentinel watchlist of sanctioned scanner IPs; keep unknown sources in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all requests from the source IP to this Windmill host; inspect the exact traversal target and the HTTP response code/size to judge whether a file was actually returned (200/206 + non-trivial body = successful read). 2) Contain: block the source IP at the WAF/edge and confirm the Windmill instance is upgraded to 1.603.3+; if not, take it off the internet and patch. 3) Hunt: check whether /proc/1/environ or SUPERADMIN_SECRET was read (see the sensitive-file UC), review Windmill for any superadmin job-preview runs from external IPs, and rotate SUPERADMIN_SECRET and any secrets stored on the host.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised vulnerability scanners (Nessus/Nuclei/VulnCheck) probing the get_log_file endpoint from a known scanning subnet</li><li>Windmill&#x27;s own UI legitimately fetching job log files (path contains &#x27;jobs_u/get_log_file&#x27; but NO traversal tokens — excluded by the traversal clause)</li><li>Security researchers or internal red team validating patch status against 1.603.3</li><li>URL-encoded &#x27;..&#x27; appearing in a legitimate workspace or filename value that is not actually a traversal</li><li>WAF already blocked the request (EventOutcome=blocked) — still logged but not a successful read</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has &quot;Nessus&quot; and RequestClientApplication !has &quot;Nuclei&quot; and SourceIP !in (&quot;&lt;approved-scanner-ips&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestURL and scStatus/EventOutcome for the SourceIP; a 200/206 to a get_log_file request containing &#x27;../&#x27; or &#x27;/proc/&#x27; confirms a successful arbitrary read. Check whether the instance is &lt; 1.603.3. 2) Contain: block the SourceIP at the WAF/edge, and if patch is missing, take the Windmill instance offline or gate it behind auth; rotate SUPERADMIN_SECRET and any credentials reachable via file read. 3) Hunt: search the same SourceIP for follow-on reads of /proc/1/environ (secret theft) and subsequent authenticated Bearer-token calls to Windmill job/preview APIs indicating superadmin RCE.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-105-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-105-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-105-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Windmill CVE-2026-29059 path traversal against get_log_file. Point at reverse-proxy/WAF logs normalized to ASIM ImWebSession.
-ImWebSession
+    <div class="tab-content active" id="art-105-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(7d)
-| where Url has &quot;get_log_file&quot;
-| where Url contains &quot;..&quot; or Url contains &quot;%2e%2e&quot; or Url contains &quot;%2E%2E&quot; or Url contains &quot;%252e&quot;
-| project TimeGenerated, SrcIpAddr, SrcHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent, DstIpAddr, DstHostname
-| sort by TimeGenerated desc</code></pre></div>
+| where RequestURL has &quot;jobs_u/get_log_file&quot;
+| where RequestURL has_any (&quot;../&quot;, &quot;..%2f&quot;, &quot;..%252f&quot;, &quot;%2e%2e&quot;, &quot;/proc/&quot;, &quot;%2fproc%2f&quot;, &quot;/etc/passwd&quot;, &quot;%2fetc%2fpasswd&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, RequestMethod, RequestURL, RequestClientApplication, EventOutcome
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-105-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Windmill get_log_file Path Traversal Exploitation (CVE-2026-29059)
-id: b3d1f2a4-8c7e-4a19-9f2c-1a2b3c4d5e6f
-description: Detects unauthenticated directory-traversal requests to Windmill&#x27;s /api/w/{workspace}/jobs_u/get_log_file/{filename} endpoint (CVE-2026-29059), used to read arbitrary server files.
+id: 6b1f2c9e-4a7d-4e2b-9c3a-1f8d2e6b7a01
+status: experimental
+description: Detects unauthenticated path traversal against the Windmill get_log_file endpoint (CVE-2026-29059) used to read arbitrary server files such as /etc/passwd.
 references:
   - https://thehackernews.com/2026/07/hackers-exploit-windmill-flaw-to-read.html
-  - https://github.com/windmill-labs/windmill/security/advisories/GHSA-24fr-44f8-fqwg
+  - https://www.sentinelone.com/vulnerability-database/cve-2026-29059/
 author: SOC Detection Engineering
-date: 2026/07/23
+date: 2026/07/28
 tags:
+  - attack.initial_access
   - attack.t1190
-  - attack.t1083
 logsource:
   category: webserver
 detection:
@@ -13107,145 +13108,293 @@ detection:
     c-uri|contains: &#x27;jobs_u/get_log_file&#x27;
   selection_traversal:
     c-uri|contains:
-      - &#x27;../&#x27;
-      - &#x27;..%2f&#x27;
-      - &#x27;..%2F&#x27;
+      - &#x27;..&#x27;
       - &#x27;%2e%2e&#x27;
-      - &#x27;..%5c&#x27;
-      - &#x27;....//&#x27;
-      - &#x27;%252e%252e&#x27;
+      - &#x27;/proc/&#x27;
+      - &#x27;/etc/passwd&#x27;
   condition: selection_endpoint and selection_traversal
 level: high</code></pre></div>
-    <div class="tab-content" id="art-105-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*get_log_file*&quot; AND (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2E%2E*&quot; OR Web.url=&quot;*%252e*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+    <div class="tab-content" id="art-105-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog jobs_u/get_log_file (*../* OR *..%2f* OR *%2e%2e* OR */proc/* OR */etc/passwd*)</code></pre></div>
+    <div class="tab-content" id="art-105-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*jobs_u/get_log_file*&quot; OR Web.uri_path=&quot;*jobs_u/get_log_file*&quot;) (Web.url=&quot;*../*&quot; OR Web.url=&quot;*..%2f*&quot; OR Web.url=&quot;*..%252f*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*/proc/*&quot; OR Web.url=&quot;*%2fproc%2f*&quot; OR Web.url=&quot;*/etc/passwd*&quot; OR Web.url=&quot;*%2fetc%2fpasswd*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*get_log_file*&quot; AND (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2E%2E*&quot; OR Web.url=&quot;*%252e*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*jobs_u/get_log_file*&quot; OR Web.uri_path=&quot;*jobs_u/get_log_file*&quot;) (Web.url=&quot;*../*&quot; OR Web.url=&quot;*..%2f*&quot; OR Web.url=&quot;*..%252f*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*/proc/*&quot; OR Web.url=&quot;*%2fproc%2f*&quot; OR Web.url=&quot;*/etc/passwd*&quot; OR Web.url=&quot;*%2fetc%2fpasswd*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="279cab432a" data-platforms="falcon,sent,sigma,spl" data-targets="linux,vcs">
+<details class="uc" data-uc-slug="21e4016b9d" data-platforms="datadog,sent,sigma,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">Windmill traversal reads /etc/passwd or /proc/1/environ (SUPERADMIN_SECRET theft)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-title">Windmill SUPERADMIN_SECRET theft via /proc/1/environ traversal (CVE-2026-29059)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="279cab432a" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="21e4016b9d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts successful (200/206) Windmill get_log_file traversal requests whose target is a high-value system file — /etc/passwd or /proc/1/environ. Per the advisory, /proc/1/environ leaks the SUPERADMIN_SECRET env var, and VulnCheck observed in-the-wild extraction of /etc/passwd; a returned body here is confirmed sensitive-file disclosure. A host-side Falcon variant catches the Windmill process opening those files on a monitored Linux server.
+    <div class="uc-desc">Hunts the specific escalation step where the Windmill path traversal is aimed at /proc/1/environ (or /proc/self/environ) to read the SUPERADMIN_SECRET environment variable, which is then usable as a Bearer token for superadmin RCE via the job-preview API. Narrower and higher-severity than generic file read because this target is the direct path to full compromise.
 
-Rationale: Uses the two files the advisory/VulnCheck name explicitly (/etc/passwd observed in the wild, /proc/1/environ = SUPERADMIN_SECRET leak) plus a 200/206 success filter so it fires on actual disclosure, not just attempts; Falcon variant catches the windmill process opening those paths on a monitored Linux host.
+Rationale: Uses the article&#x27;s precise credential-theft primitive: reading /proc/1/environ via the get_log_file traversal to obtain SUPERADMIN_SECRET (confirmed by SentinelOne and OSV). Targeting the process environ file makes this a near-zero-FP indicator of secret theft, not just recon.
 
 Cross-checked against:
   • https://www.sentinelone.com/vulnerability-database/cve-2026-29059/
-  • https://github.com/windmill-labs/windmill/security/advisories/GHSA-24fr-44f8-fqwg</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized scanner confirming the CVE with a benign /etc/passwd read</li><li>Pentest proof-of-exploitation screenshot capture</li><li>Backup/monitoring agent legitimately reading /etc/passwd on the host (Falcon variant) — but not via the windmill binary</li><li>Configuration-management tooling (Ansible/Salt) reading /etc/passwd under a different parent process (Falcon variant)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm a body was returned (HttpResponseBodyBytes &gt; 0 / 200-206) and identify which file leaked — /proc/1/environ implies SUPERADMIN_SECRET exposure, a critical escalation path. 2) Contain: treat SUPERADMIN_SECRET and all host-stored secrets as compromised — rotate them immediately, block the source IP, and patch to Windmill 1.603.3+. 3) Hunt: search Windmill/web logs for subsequent authenticated superadmin job-preview or job-run activity from external IPs (Bearer-token abuse -&gt; RCE), and review the host for new processes, cron entries, or outbound connections after the read.</div></details>
+  • https://osv.dev/vulnerability/CVE-2026-29059</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised pentest/red-team validating the full exploit chain to prove SUPERADMIN_SECRET exposure</li><li>Vulnerability scanner plugin that specifically reads /proc/1/environ as its PoC check</li><li>Internal patch-verification tooling replaying the CVE against a staging Windmill</li><li>A monitoring agent path that coincidentally references &#x27;environ&#x27; but not via the get_log_file endpoint (excluded by the endpoint clause)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;approved-scanner-ips&gt;&quot;) and RequestClientApplication !has &quot;Nuclei&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm a 200/206 response to the get_log_file request containing /proc/1/environ from an external SourceIP — this means SUPERADMIN_SECRET was likely disclosed. 2) Contain: immediately rotate SUPERADMIN_SECRET and any other secrets stored in the Windmill container environment, revoke active superadmin tokens, block the SourceIP, and patch to 1.603.3+. 3) Hunt: review Windmill API logs for Bearer-token authenticated calls (especially job run/preview) from that SourceIP or new IPs after the read timestamp, indicating the stolen secret was used for RCE.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-105-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-105-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-105-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-105-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Successful Windmill CVE-2026-29059 disclosure of /etc/passwd or /proc/1/environ (SUPERADMIN_SECRET).
-ImWebSession
+    <div class="tab-content active" id="art-105-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(7d)
-| where Url has &quot;get_log_file&quot;
-| where Url contains &quot;..&quot; or Url contains &quot;%2e%2e&quot; or Url contains &quot;%2E%2E&quot;
-| where Url has_any (&quot;passwd&quot;,&quot;environ&quot;,&quot;shadow&quot;) or Url contains &quot;proc/1/environ&quot; or Url contains &quot;etc/passwd&quot; or Url contains &quot;etc%2fpasswd&quot;
-| where tostring(HttpStatusCode) in (&quot;200&quot;,&quot;206&quot;)
-| project TimeGenerated, SrcIpAddr, HttpMethod, Url, HttpStatusCode, HttpResponseBodyBytes, HttpRequestHeaderUserAgent, DstHostname, DstIpAddr
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Windmill Traversal Discloses /etc/passwd or /proc/1/environ (CVE-2026-29059)
-id: 7f4c9a02-6b1d-4e83-9a6b-2c3d4e5f6a7b
-description: Detects successful Windmill get_log_file traversal requests targeting /etc/passwd or /proc/1/environ, the primary sensitive files exposed by CVE-2026-29059 (SUPERADMIN_SECRET leak).
+| where RequestURL has &quot;jobs_u/get_log_file&quot;
+| where RequestURL has_any (&quot;/proc/1/environ&quot;, &quot;proc%2f1%2fenviron&quot;, &quot;/proc/self/environ&quot;, &quot;proc%2fself%2fenviron&quot;)
+| project TimeGenerated, SourceIP, DestinationIP, RequestMethod, RequestURL, RequestClientApplication, EventOutcome
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Windmill SUPERADMIN_SECRET Theft via /proc/1/environ Traversal (CVE-2026-29059)
+id: 8d3a1f47-2c6b-4e91-a0d5-7b2e4c9f1a02
+status: experimental
+description: Detects Windmill get_log_file traversal specifically targeting /proc/1/environ to steal the SUPERADMIN_SECRET environment variable, the precursor to superadmin RCE.
 references:
   - https://thehackernews.com/2026/07/hackers-exploit-windmill-flaw-to-read.html
-  - https://github.com/windmill-labs/windmill/security/advisories/GHSA-24fr-44f8-fqwg
+  - https://osv.dev/vulnerability/CVE-2026-29059
 author: SOC Detection Engineering
-date: 2026/07/23
+date: 2026/07/28
 tags:
+  - attack.credential_access
   - attack.t1552.001
-  - attack.t1005
-  - attack.t1083
 logsource:
   category: webserver
 detection:
   selection_endpoint:
     c-uri|contains: &#x27;jobs_u/get_log_file&#x27;
-  selection_traversal:
+  selection_secret:
     c-uri|contains:
-      - &#x27;../&#x27;
-      - &#x27;%2e%2e&#x27;
-  selection_target:
-    c-uri|contains:
-      - &#x27;passwd&#x27;
-      - &#x27;environ&#x27;
-      - &#x27;shadow&#x27;
-  selection_success:
-    sc-status:
-      - 200
-      - 206
-  condition: selection_endpoint and selection_traversal and selection_target and selection_success
-level: high</code></pre></div>
-    <div class="tab-content" id="art-105-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
-| TargetFileName=/(\/etc\/passwd|\/etc\/shadow|\/proc\/1\/environ)/i
-| ContextImageFileName=/windmill/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-105-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*get_log_file*&quot; AND (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot;) AND (Web.url=&quot;*passwd*&quot; OR Web.url=&quot;*environ*&quot; OR Web.url=&quot;*shadow*&quot;) AND (Web.status=200 OR Web.status=206) by Web.src Web.dest Web.url Web.status Web.http_user_agent
+      - &#x27;/proc/1/environ&#x27;
+      - &#x27;proc%2f1%2fenviron&#x27;
+      - &#x27;/proc/self/environ&#x27;
+      - &#x27;SUPERADMIN_SECRET&#x27;
+  condition: selection_endpoint and selection_secret
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-105-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog jobs_u/get_log_file (*proc/1/environ* OR *proc%2f1%2fenviron* OR *proc/self/environ* OR *SUPERADMIN_SECRET*)</code></pre></div>
+    <div class="tab-content" id="art-105-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*jobs_u/get_log_file*&quot;) (Web.url=&quot;*/proc/1/environ*&quot; OR Web.url=&quot;*proc%2f1%2fenviron*&quot; OR Web.url=&quot;*/proc/self/environ*&quot; OR Web.url=&quot;*proc%2fself%2fenviron*&quot; OR Web.url=&quot;*SUPERADMIN_SECRET*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-105-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*get_log_file*&quot; AND (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot;) AND (Web.url=&quot;*passwd*&quot; OR Web.url=&quot;*environ*&quot; OR Web.url=&quot;*shadow*&quot;) AND (Web.status=200 OR Web.status=206) by Web.src Web.dest Web.url Web.status Web.http_user_agent
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*jobs_u/get_log_file*&quot;) (Web.url=&quot;*/proc/1/environ*&quot; OR Web.url=&quot;*proc%2f1%2fenviron*&quot; OR Web.url=&quot;*/proc/self/environ*&quot; OR Web.url=&quot;*proc%2fself%2fenviron*&quot; OR Web.url=&quot;*SUPERADMIN_SECRET*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="4d22a74757" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="93dfb8d3aa" data-platforms="datadog,sent,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">Windmill get_log_file traversal enumeration / mass file-read from single source</span>
+    <span class="uc-title">Windmill traversal endpoint enumeration / mass file-read scanning (CVE-2026-29059)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="4d22a74757" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="93dfb8d3aa" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Aggregates Windmill get_log_file traversal requests per source IP to surface rapid enumeration — an attacker walking many traversal paths (systematic file discovery) rather than a single opportunistic probe. Complements the single-request detections by catching automated exploitation and post-read filesystem sweeping.
+    <div class="uc-desc">Hunts a single source rapidly issuing many distinct get_log_file traversal requests — the enumeration/scanning behaviour VulnCheck saw across ~170 exposed hosts, and the post-exploitation shift from one manual file read to systematic discovery of additional targets. Threshold-based on distinct traversal paths per source in a short window.
 
-Rationale: Reuses the CVE-specific get_log_file + traversal signature but pivots on volume/distinct-path count per source, distinguishing an automated exploit chain or systematic file sweep from a single scanner hit; thresholds are commented for tuning.
+Rationale: Turns the article&#x27;s observed scanning at scale (170 hosts, 24 countries) into a per-source velocity signal keyed on the get_log_file traversal path; the distinct-path count separates a probing/enumeration campaign from a one-off manual read. Threshold-based, so Sigma is intentionally omitted.
 
 Cross-checked against:
-  • https://github.com/Chocapikk/Windfall
-  • https://www.sentinelone.com/vulnerability-database/cve-2026-29059/</div>
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-29059/
+  • https://fieldeffect.com/blog/active-exploitation-windmill-vulnerability</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanner running the full CVE test suite (many requests, many paths)</li><li>DAST/fuzzing job in CI/CD against a staging Windmill</li><li>Red-team engagement enumerating the filesystem</li><li>A legitimate log-viewer UI polling many distinct valid log filenames (would lack traversal tokens and be filtered out)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (dynamic([&quot;&lt;approved_scanner_ips_reference_list&gt;&quot;])) // Sentinel watchlist of sanctioned scanner/CI egress IPs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review SamplePaths for the source IP to gauge intent (system files like /etc, /proc, app configs, .env, SSH keys = malicious sweep) and whether responses succeeded. 2) Contain: block the source IP, confirm Windmill is patched to 1.603.3+, and if unpatched pull the instance off the internet. 3) Hunt: enumerate every distinct file successfully returned to that source, treat all as compromised (rotate secrets/keys), and check for follow-on superadmin API use or second-stage host activity.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised authenticated vulnerability scanner sweeping many payload variants against the endpoint</li><li>Load/performance testing that replays log-fetch requests at volume</li><li>A single CDN/proxy egress IP aggregating many legitimate Windmill users (NAT) — tune threshold or exclude known proxy IPs</li><li>Bug-bounty researcher fuzzing the endpoint with a wordlist</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;approved-scanner-ips&gt;&quot;, &quot;&lt;known-nat-egress-ips&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review sampleTargets for one SourceIP — a spread of system-file paths (/etc/*, /proc/*) with 200 responses confirms active enumeration and successful reads. 2) Contain: block the SourceIP at the edge/WAF and confirm the instance is patched to 1.603.3+; if reads succeeded, treat secrets/config on the host as exposed. 3) Hunt: pivot on that SourceIP across all internet-facing apps for the same traversal pattern, and check whether any request reached /proc/1/environ (secret theft) or transitioned to authenticated API calls.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-105-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-105-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Rapid enumeration of Windmill get_log_file traversal paths from one source (CVE-2026-29059 automated exploitation / filesystem sweep).
-ImWebSession
+    <div class="tab-content active" id="art-105-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(1d)
-| where Url has &quot;get_log_file&quot;
-| where Url contains &quot;..&quot; or Url contains &quot;%2e%2e&quot; or Url contains &quot;%2E%2E&quot;
-| summarize AttemptCount = count(), DistinctPaths = dcount(Url), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), SamplePaths = make_set(Url, 10) by SrcIpAddr, DstHostname, bin(TimeGenerated, 1h)
-| where AttemptCount &gt;= 10 or DistinctPaths &gt;= 5   // &gt;=10 traversal reqs/hr OR &gt;=5 distinct traversal targets = enumeration, not a one-off probe
-| sort by AttemptCount desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count dc(Web.url) as distinct_paths min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*get_log_file*&quot; AND (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot;) by Web.src Web.dest span=1h
+| where RequestURL has &quot;jobs_u/get_log_file&quot;
+| where RequestURL has_any (&quot;../&quot;, &quot;..%2f&quot;, &quot;%2e%2e&quot;, &quot;/proc/&quot;, &quot;/etc/&quot;)
+| summarize reqCount=count(), distinctPaths=dcount(RequestURL), sampleTargets=make_set(RequestURL, 20), firstSeen=min(TimeGenerated), lastSeen=max(TimeGenerated) by SourceIP, DestinationIP, bin(TimeGenerated, 10m)
+| where distinctPaths &gt;= 10   // &gt;=10 distinct traversal targets from one source in 10m = enumeration, not a single manual read
+| order by reqCount desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog jobs_u/get_log_file (*../* OR *%2e%2e* OR */proc/* OR */etc/*)</code></pre></div>
+    <div class="tab-content" id="art-105-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as reqCount dc(Web.url) as distinctPaths values(Web.status) as statuses min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*jobs_u/get_log_file*&quot;) (Web.url=&quot;*../*&quot; OR Web.url=&quot;*..%2f*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*/proc/*&quot; OR Web.url=&quot;*/etc/*&quot;) by Web.src Web.dest _time span=10m
 | `drop_dm_object_name(Web)`
-| where count&gt;=10 OR distinct_paths&gt;=5
+| where distinctPaths &gt;= 10
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-105-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count dc(Web.url) as distinct_paths min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*get_log_file*&quot; AND (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot;) by Web.src Web.dest span=1h
+| sort - reqCount</code></pre><pre class="spl-mode-body" id="art-105-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as reqCount dc(Web.url) as distinctPaths values(Web.status) as statuses min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*jobs_u/get_log_file*&quot;) (Web.url=&quot;*../*&quot; OR Web.url=&quot;*..%2f*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*/proc/*&quot; OR Web.url=&quot;*/etc/*&quot;) by Web.src Web.dest _time span=10m
 | `drop_dm_object_name(Web)`
-| where count&gt;=10 OR distinct_paths&gt;=5
+| where distinctPaths &gt;= 10
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
+| sort - reqCount</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="67cc11f30f" data-platforms="datadog,sent,sigma,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">Langflow /api/v1/validate/code unauthenticated RCE requests (CVE-2026-0770)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="67cc11f30f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts unauthenticated POST requests to Langflow&#x27;s &#x27;/api/v1/validate/code&#x27; (exec_globals) endpoint — the vector CISA flagged as actively exploited alongside the Windmill flaw. Article-specific via the exact vulnerable endpoint and the observed payloads (id/whoami, /etc/passwd read, AWS-credential and container-metadata theft, wget/curl malware fetch).
+
+Rationale: Targets the confirmed CVE-2026-0770 vulnerable endpoint /api/v1/validate/code (SentinelOne, BleepingComputer, THN KEV writeup) — the exec_globals RCE path. POST bodies (containing __import__/subprocess) aren&#x27;t always in access logs, so this is scoped as a hunting pivot on the endpoint itself; pair with UC5 for confirmed execution.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/cisa-adds-4-actively-exploited-adobe.html
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-0770/
+  • https://www.bleepingcomputer.com/news/security/cisa-orders-feds-to-patch-actively-exploited-langflow-rce-flaw/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internal Langflow users building/validating flows via the UI, which calls /api/v1/validate/code during normal component editing</li><li>CI/CD or automated flow-import pipelines that validate code blocks</li><li>Authorised scanner/PoC (0xBlackash / 0xgh057r3c0n GitHub PoCs) testing the endpoint</li><li>Health-check probes hitting the API path without a malicious body</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;internal-langflow-user-subnets&gt;&quot;, &quot;&lt;approved-scanner-ips&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: separate external SourceIPs from internal; a POST to /api/v1/validate/code from an untrusted IP against an unauthenticated/internet-facing Langflow (&lt;= 1.4.2) is high priority. Retrieve the request body from WAF/app logs and look for __import__/subprocess/os.system. 2) Contain: block the SourceIP, restrict the endpoint behind auth, and if a body confirms code execution assume root-level host compromise — isolate the host. 3) Hunt: correlate to UC5 (langflow-spawned shell/curl/wget, cloud-metadata access) on the same host to confirm successful RCE and identify what was stolen.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-105-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-105-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-105-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod =~ &quot;POST&quot;
+| where RequestURL has &quot;/api/v1/validate/code&quot;
+| project TimeGenerated, SourceIP, DestinationIP, RequestMethod, RequestURL, RequestClientApplication, EventOutcome
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow validate/code Unauthenticated RCE Endpoint Access (CVE-2026-0770)
+id: c4e9a72b-5d18-4f3a-8e1c-9a6b3d2f4b03
+status: experimental
+description: Detects POST requests to the Langflow /api/v1/validate/code endpoint abused for unauthenticated remote code execution via exec_globals (CVE-2026-0770).
+references:
+  - https://thehackernews.com/2026/07/cisa-adds-4-actively-exploited-adobe.html
+  - https://www.sentinelone.com/vulnerability-database/cve-2026-0770/
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;POST&#x27;
+    c-uri|contains: &#x27;/api/v1/validate/code&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-105-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;/api/v1/validate/code&quot; (POST OR __import__ OR subprocess)</code></pre></div>
+    <div class="tab-content" id="art-105-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url=&quot;*/api/v1/validate/code*&quot; OR Web.uri_path=&quot;*/api/v1/validate/code*&quot;) by Web.src Web.dest Web.status Web.http_user_agent Web.url
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url=&quot;*/api/v1/validate/code*&quot; OR Web.uri_path=&quot;*/api/v1/validate/code*&quot;) by Web.src Web.dest Web.status Web.http_user_agent Web.url
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fe4e663fa0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Langflow post-exploitation: cloud-metadata/credential theft and recon via spawned shell (CVE-2026-0770)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="fe4e663fa0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Confirms successful CVE-2026-0770 RCE on the host by detecting Langflow/Python-parented processes running the observed post-exploitation commands: id/whoami recon, reads of /etc/passwd and /proc/self/environ, access to AWS credentials, and SSRF to the 169.254.169.254 cloud metadata endpoint, or wget/curl second-stage downloads.
+
+Rationale: Maps the article&#x27;s Langflow post-exploitation payloads verbatim — id/whoami, /etc/passwd, AWS credentials, container metadata (169.254.169.254), wget/curl second-stage downloads — to a Langflow/Python parent process chain. The 169.254.169.254 + credential-file combination under a Langflow parent is a high-fidelity confirmed-RCE signal. Corroborated by SentinelOne and CISA/BleepingComputer.
+
+Cross-checked against:
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-0770/
+  • https://www.bleepingcomputer.com/news/security/cisa-orders-feds-to-patch-actively-exploited-langflow-rce-flaw/
+  • https://thehackernews.com/2026/07/cisa-adds-4-actively-exploited-adobe.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Langflow flows that intentionally shell out (curl/wget to fetch data) as part of a designed component</li><li>Cloud-init / SSM / instance agents that legitimately query 169.254.169.254 (excluded here by the Langflow/Python parent constraint)</li><li>Admin or CI running id/whoami/curl during troubleshooting under a python venv unrelated to Langflow</li><li>A Langflow component performing an authorised outbound HTTP call to an internal API</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has &quot;169.254.169.254&quot; and InitiatingProcessFileName in~ (&quot;cloud-init&quot;,&quot;amazon-ssm-agent&quot;,&quot;cloud-init-per&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent chain traces to the Langflow service and inspect the child command line — access to 169.254.169.254 or .aws/credentials from a web-app process is almost never benign. Check Langflow version (&lt;= 1.4.2) and internet exposure. 2) Contain: isolate the host, revoke/rotate any IAM role credentials the instance profile grants (assume IMDS creds are stolen), kill the Langflow process, and block outbound to attacker infrastructure. 3) Hunt: review outbound connections for wget/curl-downloaded second-stage payloads, new persistence (cron, systemd), and use of the stolen cloud credentials in CloudTrail (AssumeRole/GetCallerIdentity from new IPs).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-105-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-105-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-105-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-105-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessCommandLine has &quot;langflow&quot; or InitiatingProcessFolderPath has &quot;langflow&quot; or InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+    or ProcessCommandLine has_any (&quot;169.254.169.254&quot;,&quot;/latest/meta-data&quot;,&quot;.aws/credentials&quot;,&quot;/proc/self/environ&quot;,&quot;/etc/passwd&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessCommandLine has &quot;langflow&quot; or ParentProcessName has &quot;langflow&quot; or ParentProcessName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+    or ActingProcessCommandLine has_any (&quot;169.254.169.254&quot;,&quot;/latest/meta-data&quot;,&quot;.aws/credentials&quot;,&quot;/proc/self/environ&quot;,&quot;/etc/passwd&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow RCE Post-Exploitation Recon and Cloud Credential Theft (CVE-2026-0770)
+id: 1a7f6d29-3b84-4c50-9d2e-6f8a1b4c9d04
+status: experimental
+description: Detects Langflow/Python-parented shell, download, and recon utilities reading credential files or reaching the cloud metadata endpoint after CVE-2026-0770 RCE.
+references:
+  - https://thehackernews.com/2026/07/hackers-exploit-windmill-flaw-to-read.html
+  - https://www.sentinelone.com/vulnerability-database/cve-2026-0770/
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.execution
+  - attack.t1059.004
+  - attack.t1552.005
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentImage|contains:
+      - &#x27;langflow&#x27;
+      - &#x27;uvicorn&#x27;
+      - &#x27;gunicorn&#x27;
+      - &#x27;python&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/nc&#x27;
+  selection_cmd:
+    CommandLine|contains:
+      - &#x27;169.254.169.254&#x27;
+      - &#x27;/latest/meta-data&#x27;
+      - &#x27;.aws/credentials&#x27;
+      - &#x27;/proc/self/environ&#x27;
+      - &#x27;/etc/passwd&#x27;
+  condition: selection_parent and (selection_child or selection_cmd)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:(*169.254.169.254* OR *&quot;/latest/meta-data&quot;* OR *&quot;.aws/credentials&quot;* OR *&quot;/proc/self/environ&quot;* OR *&quot;/etc/passwd&quot;*) OR @process.name:(id OR whoami OR curl OR wget OR nc OR ncat))</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(langflow|python3?|uvicorn|gunicorn)/i
+| ImageFileName=/\/(sh|bash|dash|curl|wget|id|whoami|nc|ncat)$/i OR CommandLine=/169\.254\.169\.254|\/latest\/meta-data|\.aws\/credentials|\/proc\/self\/environ|\/etc\/passwd/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name=&quot;*langflow*&quot; OR Endpoint.Processes.parent_process=&quot;*langflow*&quot; OR Endpoint.Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)) (Endpoint.Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;nc&quot;,&quot;ncat&quot;) OR Endpoint.Processes.process=&quot;*169.254.169.254*&quot; OR Endpoint.Processes.process=&quot;*/latest/meta-data*&quot; OR Endpoint.Processes.process=&quot;*.aws/credentials*&quot; OR Endpoint.Processes.process=&quot;*/proc/self/environ*&quot; OR Endpoint.Processes.process=&quot;*/etc/passwd*&quot;) by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process
+| `drop_dm_object_name(Endpoint.Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name=&quot;*langflow*&quot; OR Endpoint.Processes.parent_process=&quot;*langflow*&quot; OR Endpoint.Processes.parent_process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)) (Endpoint.Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;nc&quot;,&quot;ncat&quot;) OR Endpoint.Processes.process=&quot;*169.254.169.254*&quot; OR Endpoint.Processes.process=&quot;*/latest/meta-data*&quot; OR Endpoint.Processes.process=&quot;*.aws/credentials*&quot; OR Endpoint.Processes.process=&quot;*/proc/self/environ*&quot; OR Endpoint.Processes.process=&quot;*/etc/passwd*&quot;) by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process
+| `drop_dm_object_name(Endpoint.Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows">
@@ -13263,18 +13412,18 @@ ImWebSession
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+    <div class="tab-content active" id="art-105-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
-    <div class="tab-content" id="art-105-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
+    <div class="tab-content" id="art-105-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
 | where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
@@ -13284,7 +13433,7 @@ ImWebSession
           RegistryValue, RegistryValueData, ActingProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
+    <div class="tab-content" id="art-105-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
 status: experimental
 description: |
@@ -13312,13 +13461,13 @@ falsepositives:
     - Group-policy-managed extension whitelists
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Registry
     where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
     by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-105-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-105-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Registry
     where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
         OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
@@ -13342,12 +13491,12 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-105-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
@@ -13355,7 +13504,7 @@ level: medium
 | where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+    <div class="tab-content" id="art-105-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
 ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
@@ -13367,7 +13516,7 @@ ImFileEvent
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+    <div class="tab-content" id="art-105-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
 status: experimental
 description: |
@@ -13411,7 +13560,7 @@ falsepositives:
     - Browser sync agents from non-stock vendors
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -13420,7 +13569,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-105-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-105-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -13447,11 +13596,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-105-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -13460,7 +13609,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-105-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -13472,12 +13621,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-29059&quot;, &quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;, &quot;CVE-2021-27137&quot;, &quot;CVE-2026-0770&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-105-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-105-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-29059&quot;, &quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;, &quot;CVE-2021-27137&quot;, &quot;CVE-2026-0770&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -13509,11 +13658,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-105-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -13553,7 +13702,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-105-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -13578,7 +13727,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc6-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-105-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -13610,7 +13759,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-105-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-105-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -13660,11 +13809,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc7-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-105-uc9-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -13678,7 +13827,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-105-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-105-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -13701,7 +13850,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-105-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -13712,7 +13861,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-105-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-105-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -13741,18 +13890,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-105-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-105-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-105-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -13775,7 +13924,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-105-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -13819,13 +13968,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-105-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-105-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -13849,17 +13998,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc9-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-105-uc11-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-105-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-105-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -13870,7 +14019,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-105-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -13896,7 +14045,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc9-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc11-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -13905,7 +14054,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-105-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-105-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -13932,11 +14081,11 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc12-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc12-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc12-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-105-uc12-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(1d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where ActionType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
@@ -13945,7 +14094,7 @@ level: medium
                        //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-105-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(1d)
 | where ActorUsername !endswith &quot;$&quot;
 | where EventType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
@@ -13954,13 +14103,13 @@ level: medium
 | where files &gt; 200    // P99 of legit bulk-tooling per-minute rename volume
 | order by files desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    <div class="tab-content" id="art-105-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
     by Filesystem.dest, Filesystem.user, _time span=1m
 | `drop_dm_object_name(Filesystem)`
 | where files &gt; 200
-| sort - files</code></pre><pre class="spl-mode-body" id="art-105-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Filesystem.file_name) AS files
+| sort - files</code></pre><pre class="spl-mode-body" id="art-105-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Filesystem.file_name) AS files
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
     by Filesystem.dest, Filesystem.user, _time span=1m
@@ -13984,12 +14133,12 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc13-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc13-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc13-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc13-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
+    <div class="tab-content active" id="art-105-uc13-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where ActionType == &quot;OpenProcessApiCall&quot;
@@ -14001,7 +14150,7 @@ level: medium
           InitiatingProcessFileName, InitiatingProcessCommandLine,
           InitiatingProcessFolderPath, AccountName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010
+    <div class="tab-content" id="art-105-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010
 // indicate read access to lsass.exe — credential-dump signature. Audit
 // Object Access &gt; Audit File System policy required.
 SecurityEvent
@@ -14013,7 +14162,7 @@ SecurityEvent
           AccessMask, AccessReason
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
+    <div class="tab-content" id="art-105-uc13-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
 status: experimental
 description: |
@@ -14048,14 +14197,14 @@ falsepositives:
     - Third-party EDR / forensic tools — extend the filter list
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc13-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
         OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
         OR Processes.process=&quot;*procdump*lsass*&quot;)
        OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-105-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-105-uc13-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
         OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
@@ -14080,12 +14229,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc12-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc12-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc14-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc14-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc14-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc14-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc12-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-105-uc14-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
@@ -14093,7 +14242,7 @@ level: high
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-105-uc14-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688            // process-create (audit-policy required)
 | where Account !endswith &quot;$&quot;
@@ -14105,7 +14254,7 @@ level: high
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+    <div class="tab-content" id="art-105-uc14-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
 status: experimental
 description: |
@@ -14145,12 +14294,12 @@ falsepositives:
       a known-admin-host watchlist
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc14-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc14-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc14-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc14-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-105-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-105-uc14-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
@@ -14173,18 +14322,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc13-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc13-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc13-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc13-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc15-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc15-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc15-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc15-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc13-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-105-uc15-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-105-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-105-uc15-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -14204,7 +14353,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc13-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-105-uc15-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -14246,12 +14395,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc13-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc15-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc15-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc15-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc15-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-105-uc13-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-105-uc15-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -14274,11 +14423,11 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc14-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc14-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc14-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc16-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc16-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc16-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc14-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat
+    <div class="tab-content active" id="art-105-uc16-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -14291,7 +14440,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc14-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-105-uc16-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat
@@ -14307,14 +14456,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc14-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc14-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc14-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc14-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat ```
+    <div class="tab-content" id="art-105-uc16-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc16-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc16-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc16-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-105-uc14-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-105-uc16-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Windmill Flaw to Read Arbitrary Server Files Without Authenticat ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)

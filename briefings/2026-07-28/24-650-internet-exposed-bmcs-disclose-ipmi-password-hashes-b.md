@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-exposed BMC: inbound external traffic to IPMI UDP/623 (CVE-2013-4786 exposure)
 
-`UC_6_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_8_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### Internal host fan-out to many BMCs on IPMI UDP/623 (RAKP hash-dump sweep)
 
-`UC_6_11` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_8_11` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### Non-management endpoint reaching IPMI UDP/623 (RAKP credential-retrieval tool e.g. ipmitool)
 
-`UC_6_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_8_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,15 +11,9 @@ By Bill Toulas
 July 28, 2026
 02:08 PM
 0 
-
-
 A critical vulnerability in the vBulletin forum software allows unauthenticated attackers to execute arbitrary PHP code through template rendering.
-
-
 The security issue is tracked as CVE-2026-61511 and affects vBulletin versions in the 5.x and 6.x branches up to 5.7.5 and 6.2.1, respectively.
-
-
-vBulletin is a PHP-based proprietary forum platform released in 2000 and used by large onl…
+vBulletin is a PHP-based proprietary forum platform released in 2000 and used by large online communit…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -38,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### vBulletin CVE-2026-61511 pre-auth RCE via ajax/render/pagenav template request
 
-`UC_3_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### vBulletin web-server process (php-fpm/apache/nginx) spawning OS shell after CVE-2026-61511
 
-`UC_3_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
