@@ -14,12 +14,20 @@ The threats change every week. Subscribe, and we’ll alert you when each ne…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `172.93.185.150`
+- **Domain (defanged):** `update.apex-arena-router.com`
+- **Domain (defanged):** `arena.apexfdn.xyz`
+- **Domain (defanged):** `apexfdn.xyz`
+- **Domain (defanged):** `docs.apexfdn.xyz`
+- **SHA256:** `ecd1113fae1ede9869afd9d1af612bab7f1a2054e5c45a346e18c107c22b9164`
+- **SHA1:** `233f90180b529aa32911901e5222e9ed9c3cd24c`
+- **SHA1:** `3b9a880ae4e1c5b7bbd68e118a1c3c8b592f7bfb`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -62,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### npm postinstall dropper spawns osascript (AMOS macOS stealer via @copilot-mcp/apex)
 
-`UC_68_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_68_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +89,7 @@ DeviceProcessEvents
 
 ### AMOS stealer exfil staging /tmp/osalogging.zip + LaunchAgent C2 persistence (macOS)
 
-`UC_68_18` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_68_20` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +108,7 @@ DeviceFileEvents
 
 ### FakeAgent: ClaudeDesktop.exe execution + tampered libcef.dll side-load (SectopRAT)
 
-`UC_68_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_68_21` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +132,7 @@ union ClaudeLure, LibcefSideload
 
 ### FakeAgent SectopRAT persistence: DockerDesktop.exe scheduled task + Defender exclusion
 
-`UC_68_20` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_68_22` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -665,7 +673,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Android Spyware, PLC Attacks, AI Image Prompt Injection + 12 More St
 
-`UC_68_16` · phase: **exploit** · confidence: **High**
+`UC_68_18` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -712,7 +720,17 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `172.93.185.150`, `update.apex-arena-router.com`, `arena.apexfdn.xyz`, `apexfdn.xyz`, `docs.apexfdn.xyz`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `ecd1113fae1ede9869afd9d1af612bab7f1a2054e5c45a346e18c107c22b9164`, `233f90180b529aa32911901e5222e9ed9c3cd24c`, `3b9a880ae4e1c5b7bbd68e118a1c3c8b592f7bfb`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 21 use case(s) fired, 35 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 23 use case(s) fired, 36 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

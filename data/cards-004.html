@@ -10477,10 +10477,10 @@ DeviceTvmSoftwareVulnerabilities
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,web"
+  data-splunk-cats="application,web"
   data-targets="vcs"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-58443: Gitea: Public-only repository tokens can update private PR head branches Gitea: Public-only repository tokens can update private PR head branches CVE-2026-58443 T1190 [LLM] Gitea vulnerable PR-update API route access (CVE-2026-58443 public-only token bypass) [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (version &lt;= 1.26.4) Asset exposure — vulnerability matches article CVE(s)">
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-58443: Gitea: Public-only repository tokens can update private PR head branches Gitea: Public-only repository tokens can update private PR head branches CVE-2026-58443 T1190 [LLM] Gitea CVE-2026-58443: POST to /pulls/{index}/update (public-only token private PR write) [LLM] Gitea first-seen actor updating PR branch via API (CVE-2026-58443 anomalous token) [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (version &lt;= 1.26.4) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-58443-gitea-public-only-repository-to" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -10489,7 +10489,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-21</span>
-    <span>3 use cases</span>
+    <span>4 use cases</span>
     <span>1 technique</span>
     <span>2 kill-chain phases detected</span>
   </div>
@@ -10540,33 +10540,32 @@ DeviceTvmSoftwareVulnerabilities
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea vulnerable PR-update API route access (CVE-2026-58443 public-only token bypass) · [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (version &lt;= 1.26.4)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea CVE-2026-58443: POST to /pulls/{index}/update (public-only token private PR write) · [LLM] Gitea first-seen actor updating PR branch via API (CVE-2026-58443 anomalous token) · [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (version &lt;= 1.26.4)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="63d4a0cb18" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="fdc159d3f0" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">Gitea vulnerable PR-update API route access (CVE-2026-58443 public-only token bypass)</span>
+    <span class="uc-title">Gitea CVE-2026-58443: POST to /pulls/{index}/update (public-only token private PR write)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="63d4a0cb18" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="fdc159d3f0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP POST requests to Gitea&#x27;s pull-request update endpoint POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update, the exact route CVE-2026-58443 abuses so a public-only,write:repository token pushes public base commits into a PRIVATE head branch. Article-specific because the route path, method, and behaviour are the vulnerability signature; correlate the captured source IP / authenticated principal against token scope in Gitea&#x27;s own admin/audit view to confirm exploitation.
+    <div class="uc-desc">Hunts the exploit request for CVE-2026-58443 — a POST to the Gitea pull-request update API on a public base repository that, with a public-only,write:repository token, forces a server-side write into a private PR head branch. Fires on requests matching POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update in reverse-proxy / web-access telemetry.
 
-Rationale: Uses the exact vulnerable route from the advisory (POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update) plus HTTP method — the concrete CVE-2026-58443 signature. Defender/Datadog/Falcon/CloudWatch left empty: none of those telemetry sets ship Gitea reverse-proxy request paths+methods; token-scope-vs-target-repo correlation must be finished in Gitea&#x27;s own audit log. Corroborated fixed version (1.27.0) and route via GitLab advisory and multiple vendor write-ups.
+Rationale: Keys on the verbatim vulnerable endpoint from the advisory — POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update — the only network-observable artifact of the exploit. HTTP logs cannot reveal the private head-repo target or token scope, so triage must correlate against Gitea admin token metadata; the query surfaces the base owner/repo/PR index so an analyst can pivot immediately.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-xxjv-752h-3vp2
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
   • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/
-  • https://cybersecuritynews.com/gitea-vulnerability/
-  • https://securityonline.info/gitea-vulnerability/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+  • https://blog.gitea.com/release-of-1.27.0/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate maintainers clicking the Gitea &#x27;Update branch&#x27; button (calls the same API route)</li><li>CI/CD service accounts programmatically syncing PR branches with the base branch</li><li>Automated merge/rebase bots (e.g. renovate/dependabot-style) that update PRs</li><li>Repository owners updating their own private-repo PRs via a fully-scoped token</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit, pull the source IP and authenticated principal from the Gitea admin panel; in Gitea, check whether the token used carried the public-only scope and whether the PR&#x27;s HEAD repository is PRIVATE while the base (route) repo is public — that combination is the exploit, a same-owner fully-scoped update is benign. 2) Contain: revoke and rotate the offending token, and upgrade Gitea to 1.27.0 (patch #38406); temporarily restrict PR-update to authenticated maintainers if patching is delayed. 3) Hunt: enumerate Actions workflow runs in the affected private repo around the event time (the malicious push can trigger private CI), review git push events into private head branches attributable to that token, and check for secrets exfil in those workflow logs.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers legitimately clicking Gitea&#x27;s &quot;Update branch&quot; button (UI calls the same API route)</li><li>CI/automation service accounts (Renovate/Dependabot-style bots) rebasing or updating open PRs</li><li>Mirror-sync or scheduled jobs that refresh long-lived PR branches</li><li>Load balancer / uptime checks replaying recorded POSTs against a staging Gitea</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceUserName !in~ (&quot;gitea-actions&quot;,&quot;renovate&quot;,&quot;dependabot&quot;,&quot;ci-bot&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request and identify the authenticated principal (SourceUserName / token). In Gitea admin, check the token&#x27;s scope — is it public-only,write:repository? — and whether the PR index referenced targets a PRIVATE head repository. A public-only token writing into a private head repo confirms exploitation. 2) Contain: revoke the offending token, and upgrade Gitea to 1.27.0 (fixes CVE-2026-58443; affected &lt;=1.26.4). Review recent commits pushed into affected private head branches for tampering. 3) Hunt: enumerate other /pulls/*/update calls from the same token/IP, git push events into private repos triggered by PR update (PushTriggerPRUpdateWithBase), and any Actions workflow runs that fired in private repos as a downstream effect.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc0-sigma">Sigma</button>
@@ -10576,20 +10575,22 @@ Cross-checked against:
 | where TimeGenerated &gt; ago(7d)
 | where RequestMethod == &quot;POST&quot;
 | where RequestURL matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
-| project TimeGenerated, SourceIP, SourceUserName, DestinationHostName, RequestURL, RequestMethod, RequestClientApplication, DeviceAction, DeviceVendor, DeviceProduct
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Vulnerable PR Update Endpoint Access (CVE-2026-58443)
-id: 3f2b1c7a-8d5e-4a92-b6c1-9e0f4d7a2b31
-status: experimental
-description: Detects HTTP POST requests to the Gitea pull-request update API endpoint abused by CVE-2026-58443, where a public-only,write:repository token pushes public base commits into a private PR head branch.
+| extend BaseOwner = extract(@&quot;(?i)/api/v1/repos/([^/]+)/[^/]+/pulls/[0-9]+/update&quot;, 1, RequestURL)
+| extend BaseRepo  = extract(@&quot;(?i)/api/v1/repos/[^/]+/([^/]+)/pulls/[0-9]+/update&quot;, 1, RequestURL)
+| extend PrIndex   = extract(@&quot;(?i)/pulls/([0-9]+)/update&quot;, 1, RequestURL)
+| project TimeGenerated, SourceIP, SourceUserName, DestinationHostName, BaseOwner, BaseRepo, PrIndex, RequestURL, RequestClientApplication, DeviceAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Pull Request Update API Call (CVE-2026-58443 exploit request)
+id: 6b0f2e4a-7c1d-4a2b-9f3e-1c8d5a2b7e40
+description: Detects POST requests to the Gitea pull-request update endpoint abused by CVE-2026-58443 to push into private PR head branches via a public base repository route.
 references:
-  - https://github.com/advisories/GHSA-xxjv-752h-3vp2
+  - https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
   - https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/
 author: SOC Detection Engineering
-date: 2026/07/22
+date: 2026/07/28
 tags:
-  - attack.t1190
   - attack.t1550.001
+  - attack.t1068
   - attack.privilege_escalation
 logsource:
   category: webserver
@@ -10598,59 +10599,120 @@ detection:
     cs-method: POST
     cs-uri-stem|re: &#x27;/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&#x27;
   condition: selection
+falsepositives:
+  - Legitimate developers or CI bots updating a PR branch via API
+  - Gitea web UI &quot;Update branch&quot; button (calls the same endpoint)
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src Web.dest Web.user Web.url Web.http_method
+    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.src) as src from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.user, Web.dest, Web.url
 | `drop_dm_object_name(Web)`
+| rex field=url &quot;/api/v1/repos/(?&lt;base_owner&gt;[^/]+)/(?&lt;base_repo&gt;[^/]+)/pulls/(?&lt;pr_index&gt;\d+)/update&quot;
+| where isnotnull(pr_index)
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src Web.dest Web.user Web.url Web.http_method
+| table firstTime lastTime dest src user base_owner base_repo pr_index url status count
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.src) as src from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.user, Web.dest, Web.url
 | `drop_dm_object_name(Web)`
+| rex field=url &quot;/api/v1/repos/(?&lt;base_owner&gt;[^/]+)/(?&lt;base_repo&gt;[^/]+)/pulls/(?&lt;pr_index&gt;\d+)/update&quot;
+| where isnotnull(pr_index)
 | convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime dest src user base_owner base_repo pr_index url status count
 | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="fe44b863e3" data-platforms="def,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="2e283d74d0" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Vulnerable Gitea instance exposed to CVE-2026-58443 (version &lt;= 1.26.4)</span>
+    <span class="uc-title">Gitea first-seen actor updating PR branch via API (CVE-2026-58443 anomalous token)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="fe44b863e3" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="2e283d74d0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces managed hosts running a Gitea build vulnerable to CVE-2026-58443 (all releases up to and including 1.26.4; fixed in 1.27.0) so exposure can be remediated before the public-token-to-private-repo bypass is exploited. Article-specific via the exact CVE identifier and affected product.
+    <div class="uc-desc">Behavioural baseline for CVE-2026-58443: PR-branch updates are normally driven by the PR author, repo admins, or CI service accounts. This surfaces principals hitting POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update for the first time in 30 days — the signature of a low-privilege public-only token being abused to reach a private head branch.
 
-Rationale: Keys on the concrete CVE-2026-58443 identifier and the Gitea product name; affected-range (&lt;=1.26.4) and fix (1.27.0) confirmed against the GitLab advisory mirror and multiple vendor write-ups. Falcon/Datadog/CloudWatch left empty as vuln-state exposure is not carried in FDR/CloudTrail/Datadog log telemetry here.
+Rationale: Uses the same verbatim vulnerable route but pivots on actor novelty (leftanti/NOT-subsearch against a 30-day baseline of PR-update principals), directly implementing the reviewer&#x27;s &#x27;anomalous actor updating PR branch metadata&#x27; hypothesis. A first-time or low-reputation principal exercising this admin-style API is far more likely to be an abused public-only token than routine developer/CI traffic.
 
 Cross-checked against:
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/
-  • https://blog.gitea.com/release-of-1.27.0/
-  • https://cybersecuritynews.com/gitea-vulnerability/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Host already patched to 1.27.0 but scanner catalog not yet refreshed (stale finding)</li><li>Air-gapped/internal-only Gitea with no untrusted token issuance (real but low-risk exposure)</li><li>Custom/forked Gitea build whose version banner mis-maps to the CVE</li><li>Container image tag pinned &lt;=1.26.4 in a non-production sandbox</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SoftwareVersion is truly &lt;= 1.26.4 and that the instance issues API tokens to users beyond trusted admins (public-only tokens are the attack precondition). 2) Contain: schedule/apply the upgrade to Gitea 1.27.0 (patch #38406); until patched, audit and where possible revoke public-only,write:repository tokens and restrict PR-update on public base repos. 3) Hunt: pivot to the CVE-2026-58443 web-route detection for this host to see if the vulnerable endpoint was already exercised, and review recent private-repo Actions workflow triggers.</div></details>
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A new developer or contributor updating their first PR branch via API</li><li>Onboarding of a new CI/CD service account that rebases PRs</li><li>A newly issued personal access token used legitimately for the first time</li><li>Migration/tooling change that switches PR updates from UI to API</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceUserName !in~ (&quot;gitea-actions&quot;,&quot;renovate&quot;,&quot;dependabot&quot;,&quot;ci-bot&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each new principal, resolve the token in Gitea admin and check its scope and the visibility of the head repo behind the PR index — a public-only,write:repository token touching a private head repo is a true positive. 2) Contain: revoke the token, force-expire the session, and patch Gitea to 1.27.0. 3) Hunt: expand to all PR-update and git-push activity from that principal/IP over 30 days, and check whether any private-repo Actions workflows were triggered as a side effect of the injected commits.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+    <div class="tab-content active" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Baseline = CommonSecurityLog
+    | where TimeGenerated between (ago(31d) .. ago(1d))
+    | where RequestMethod == &quot;POST&quot;
+    | where RequestURL matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
+    | where isnotempty(SourceUserName)
+    | distinct SourceUserName;
+CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
+| where isnotempty(SourceUserName)
+| join kind=leftanti Baseline on SourceUserName
+| project TimeGenerated, SourceIP, SourceUserName, DestinationHostName, RequestURL, RequestClientApplication
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count values(Web.src) as src values(Web.url) as url values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; earliest=-1d by Web.user
+| `drop_dm_object_name(Web)`
+| search NOT [| tstats summariesonly=true count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; earliest=-31d latest=-1d by Web.user | `drop_dm_object_name(Web)` | fields user]
+| where isnotnull(user) AND user!=&quot;-&quot;
+| table user dest src url count
+| sort - count</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count values(Web.src) as src values(Web.url) as url values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; earliest=-1d by Web.user
+| `drop_dm_object_name(Web)`
+| search NOT [| tstats summariesonly=false count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; earliest=-31d latest=-1d by Web.user | `drop_dm_object_name(Web)` | fields user]
+| where isnotnull(user) AND user!=&quot;-&quot;
+| table user dest src url count
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="552698ef56" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Vulnerable Gitea instance exposed to CVE-2026-58443 (version &lt;= 1.26.4)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="552698ef56" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Posture hunt for hosts running a Gitea version affected by CVE-2026-58443 (all releases through 1.26.4; fixed in 1.27.0). Identifies the exploitable surface so it can be prioritised for the 1.27.0 upgrade before a public-only token abuse occurs.
+
+Rationale: Grounded in the confirmed patched version from the Gitea 1.27.0 release notes and GitLab advisory (affected &lt;=1.26.4). CveId == &quot;CVE-2026-58443&quot; is a deterministic, high-confidence match against TVM/scanner inventory — no behavioural inference, so it is safe to alert on.
+
+Cross-checked against:
+  • https://blog.gitea.com/release-of-1.27.0/
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Scanner still reporting a host that has already been upgraded to 1.27.0 but not re-scanned (stale finding)</li><li>Air-gapped/internal-only Gitea with no untrusted token issuance (exploitable but lower risk)</li><li>Vendor-backported fix on a 1.26.x package that the scanner CVE-maps as still vulnerable</li><li>Container image tag pinned to old version but not actually running/exposed</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SoftwareVersion is &lt;= 1.26.4 and the instance issues or accepts scoped API tokens (public-only tokens present?). 2) Contain: schedule/execute upgrade to Gitea 1.27.0; in the interim audit and, where feasible, restrict public-only,write:repository tokens. 3) Hunt: on any confirmed-vulnerable host, run the CVE-2026-58443 exploit-request hunt (POST /pulls/{index}/update) over the retention window to check for prior abuse before patching.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-101-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-101-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where CveId == &quot;CVE-2026-58443&quot;
-| where SoftwareName has &quot;gitea&quot;
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| sort by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
 | where CveId == &quot;CVE-2026-58443&quot;
 | project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest
 | `drop_dm_object_name(Vulnerabilities)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| table dest signature severity firstTime lastTime count
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest
 | `drop_dm_object_name(Vulnerabilities)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
+| table dest signature severity firstTime lastTime count
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -10668,11 +10730,11 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -10681,7 +10743,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -10693,12 +10755,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-58443&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-58443&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -10711,11 +10773,11 @@ DeviceTvmSoftwareVulnerabilities
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
+  data-platforms="datadog,def,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
-  data-targets="windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC ambiguity allows cross-repository artifact read and cross-task upload-state write Gitea Actions Artifacts V4 signed URL HMAC ambiguity allows cross-repository artifact read and cross-task upload-state write CVE-2026-58426 T1190 [LLM] Gitea Actions Artifacts V4 HMAC signature reuse across different taskID/artifactName (CVE-2026-58426) [LLM] Gitea artifact V4 forged over-long artifactID digit string in signed URL (CVE-2026-58426) [LLM] Gitea artifact V4 cross-task DownloadArtifact read fan-out (CVE-2026-58426 private-repo disclosure) [LLM] Gitea artifact V4 cross-task UploadArtifact staging write (CVE-2026-58426 I:H) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb">
+  data-targets="linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC ambiguity allows cross-repository artifact read and cross-task upload-state write Gitea Actions Artifacts V4 signed URL HMAC ambiguity allows cross-repository artifact read and cross-task upload-state write CVE-2026-58426 T1190 [LLM] Gitea Artifacts V4 signed-URL HMAC reuse across divergent taskID/artifactName tuples [LLM] Gitea Artifacts V4 forged over-length artifactID in signed download/upload URL [LLM] Gitea Artifacts V4 single source enumerating DownloadArtifact across many taskIDs Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-58426-gitea-actions-artifacts-v4-sign" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -10724,7 +10786,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-21</span>
-    <span>6 use cases</span>
+    <span>5 use cases</span>
     <span>1 technique</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -10775,179 +10837,195 @@ DeviceTvmSoftwareVulnerabilities
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea Actions Artifacts V4 HMAC signature reuse across different taskID/artifactName (CVE-2026-58426) · [LLM] Gitea artifact V4 forged over-long artifactID digit string in signed URL (CVE-2026-58426)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea Artifacts V4 signed-URL HMAC reuse across divergent taskID/artifactName tuples · [LLM] Gitea Artifacts V4 forged over-length artifactID in signed download/upload URL</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gitea artifact V4 cross-task DownloadArtifact read fan-out (CVE-2026-58426 private-repo disclosure) · [LLM] Gitea artifact V4 cross-task UploadArtifact staging write (CVE-2026-58426 I:H)</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gitea Artifacts V4 single source enumerating DownloadArtifact across many taskIDs</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="672fb1d5e4" data-platforms="sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="a559261137" data-platforms="datadog,sent,spl" data-targets="linux" open>
   <summary>
-    <span class="uc-title">Gitea Actions Artifacts V4 HMAC signature reuse across different taskID/artifactName (CVE-2026-58426)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="672fb1d5e4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the defining artifact of CVE-2026-58426: a single V4 artifact signed-URL HMAC (sig=) replayed against UploadArtifact/DownloadArtifact requests carrying two or more distinct taskID or artifactName values. Because buildSignature concatenates artifactName+taskID+artifactID without delimiters, one valid signature is reusable across forged tuples to cross task/repository boundaries — a legitimate runner only ever presents a given sig with one fixed tuple.
-
-Rationale: Anchors on the exact vulnerable primitive named in the advisory: the delimiter-free HMAC (buildSignature) means one sig value is valid for multiple (artifactName,taskID,artifactID) tuples. Counting distinct taskID/artifactName per sig against UploadArtifact/DownloadArtifact directly surfaces the tuple-boundary collision the PoC exploits — a signature legitimately binds to exactly one tuple.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-58426
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A single runner legitimately retrying the same DownloadArtifact URL (identical sig AND identical taskID/artifactName) — excluded because both tuple fields are held constant in the true-positive path</li><li>Reverse proxy / CDN caching layer replaying the same signed request with an unchanged tuple</li><li>Log duplication where the proxy and Gitea both emit the same request line for one sig</li><li>Load-test or CI benchmarking tooling issuing many identical signed requests</li><li>Client retry storms on flaky networks re-sending the same signed URL</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DistinctTasks &gt; 1  // require genuinely different task contexts, not sig retries against one fixed tuple</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull all requests sharing the flagged sig; confirm the taskID/artifactName values genuinely differ (not just retries) and identify which repositories/runs those taskIDs belong to and whether they cross a repo boundary. Step 2 (contain): Upgrade Gitea to 1.26.4 (fix line began at 1.26.2); rotate GetGeneralTokenSigningSecret so all outstanding signed URLs are invalidated; suspend the source runner/PAT that issued the reused signature. Step 3 (hunt): For every taskID touched by the reused sig, enumerate its artifacts for unexpected reads (private-repo disclosure) and appended/oversized staging writes; review FinalizeArtifact events for artifacts whose FileSize grew after the forged upload.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL has_any (&quot;UploadArtifact&quot;, &quot;DownloadArtifact&quot;)
-| where RequestURL has &quot;sig=&quot;
-| extend sig = extract(@&quot;[?&amp;]sig=([^&amp;]+)&quot;, 1, RequestURL)
-| extend taskID = extract(@&quot;[?&amp;]taskID=(\d+)&quot;, 1, RequestURL)
-| extend artifactName = extract(@&quot;[?&amp;]artifactName=([^&amp;]+)&quot;, 1, RequestURL)
-| where isnotempty(sig)
-| summarize DistinctTasks=dcount(taskID), DistinctNames=dcount(artifactName), Tasks=make_set(taskID,20), Names=make_set(artifactName,20), Sources=make_set(SourceIP,20), Methods=make_set(RequestMethod,5), Requests=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by sig
-| where DistinctTasks &gt; 1 or DistinctNames &gt; 1
-| order by Requests desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*UploadArtifact*&quot; OR Web.url=&quot;*DownloadArtifact*&quot;) Web.url=&quot;*sig=*&quot; by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;sig=(?&lt;sig&gt;[^&amp;]+)&quot; | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot; | where isnotnull(sig) | stats dc(taskID) as distinct_tasks dc(artifactName) as distinct_names values(taskID) as taskIDs values(artifactName) as names values(src) as sources values(http_method) as methods sum(count) as requests min(firstTime) as firstTime max(lastTime) as lastTime by sig | where distinct_tasks&gt;1 OR distinct_names&gt;1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - requests</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*UploadArtifact*&quot; OR Web.url=&quot;*DownloadArtifact*&quot;) Web.url=&quot;*sig=*&quot; by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;sig=(?&lt;sig&gt;[^&amp;]+)&quot; | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot; | where isnotnull(sig) | stats dc(taskID) as distinct_tasks dc(artifactName) as distinct_names values(taskID) as taskIDs values(artifactName) as names values(src) as sources values(http_method) as methods sum(count) as requests min(firstTime) as firstTime max(lastTime) as lastTime by sig | where distinct_tasks&gt;1 OR distinct_names&gt;1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - requests</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c115cd6b33" data-platforms="sent,sigma,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Gitea artifact V4 forged over-long artifactID digit string in signed URL (CVE-2026-58426)</span>
+    <span class="uc-title">Gitea Artifacts V4 signed-URL HMAC reuse across divergent taskID/artifactName tuples</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c115cd6b33" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="a559261137" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the CVE-2026-58426 forgery mechanic where the attacker inflates the artifactID query parameter with concatenated digits (e.g. taskID+attacker-id like 48&lt;attacker artifact id&gt;) so the ambiguous HMAC input suffix matches while the value still parses as int64. Real Gitea artifact database IDs are small sequential integers; an artifactID of 12+ digits on an UploadArtifact/DownloadArtifact URL is a strong forgery signal.
+    <div class="uc-desc">Hunts the defining fingerprint of CVE-2026-58426: the same HMAC `sig` value appearing on more than one distinct (taskID, artifactName) tuple against the UploadArtifact/DownloadArtifact endpoints. A legitimate signed URL is bound to exactly one tuple; a signature that verifies for two different taskID/artifactName combinations is the boundary-shift forgery itself.
 
-Rationale: Uses the article&#x27;s concrete forgery detail — the forged artifactID carries &#x27;digits that preserve the original HMAC input&#x27; (48&lt;attacker artifact id&gt;), producing a value far longer than the small sequential DB IDs normal signed URLs carry. The 12-digit floor is a conservative anomaly threshold that keeps real IDs out while catching the concatenation.
+Rationale: Uses the article&#x27;s exact route names UploadArtifact/DownloadArtifact and the ambiguous signed tuple (sig, taskID, artifactName, artifactID). One sig validating against two taskID/artifactName values is the direct observable of the delimiter-free HMAC concatenation described at artifactsv4.go:164-171 — no legitimate client ever reuses a sig across tuples. Datadog/Sentinel do rule-level dcount grouping on the extracted sig facet.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-58426
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism: Temporary Elevated Cloud Access">T1548.005</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Very large, long-lived Gitea instances whose artifact table has legitimately reached 12-digit IDs (rare; verify max(id) in the artifacts table)</li><li>Migrated instances that seeded artifact IDs at a high offset</li><li>Load/perf test harnesses injecting synthetic large IDs</li><li>Proxy that URL-encodes and re-emits the parameter, altering apparent length</li><li>Third-party artifact tooling that pads numeric IDs</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Compare the flagged artifactID digit-length against the instance&#x27;s real max artifact ID (SELECT max(id) FROM action_artifact); a value orders of magnitude larger confirms forgery. Note the taskID and whether its run belongs to a repo the source principal should not reach. Step 2 (contain): Upgrade to Gitea 1.26.4 and rotate the general token signing secret to void outstanding signed URLs. Step 3 (hunt): Correlate the same source IP/sig with UC &#x27;HMAC signature reuse&#x27; to confirm exploitation, and inspect the target task&#x27;s artifact staging path for unauthorized appended bytes.</div></details>
+  • https://github.com/advisories/GHSA-hg5r-vq93-9fv6
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/
+  • https://www.mallory.ai/stories/019f2b51-04a6-79ce-8770-2ba9a917d861
+  • https://www.thehackerwire.com/gitea-actions-artifacts-hmac-ambiguity-allows-cross-repository-access/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Client retry of the same upload/download replaying the identical sig with the SAME taskID+artifactName (excluded — detection requires DISTINCT tuples)</li><li>Load-balancer or CDN request coalescing that rewrites query-string ordering but not values</li><li>Synthetic monitoring hitting the same artifact endpoint repeatedly with one valid URL</li><li>Log-parser mis-extraction when SyslogMessage truncates a long URL mid-query-string</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where distinct_tasks &gt; 1 or distinct_names &gt; 1  // both retries and CDN reordering keep the tuple constant; only a forged boundary-shift changes taskID/artifactName under a fixed sig</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull every request carrying the flagged sig; confirm the taskIDs/artifactNames genuinely differ and resolve which Gitea repos/runs those taskIDs belong to (are they the same actor&#x27;s job or a foreign private repo?). 2) Contain: confirm Gitea is &lt;1.26.2 and schedule the upgrade to 1.26.2; if patching is delayed, disable Actions artifact V4 upload/download for untrusted repos or front the endpoints with a WAF rule rejecting reused signatures. 3) Hunt: for the offending src, enumerate all DownloadArtifact taskIDs it touched to scope private-artifact disclosure, and all UploadArtifact PUTs to detect staging-write tampering of foreign tasks (integrity impact).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(1d)
+| where SyslogMessage has_any (&quot;DownloadArtifact&quot;,&quot;UploadArtifact&quot;)
+| where SyslogMessage has &quot;artifactID=&quot; and SyslogMessage has &quot;sig=&quot;
+| extend sig = extract(@&quot;sig=([^&amp;\s&quot;&quot;]+)&quot;, 1, SyslogMessage)
+| extend taskID = extract(@&quot;taskID=(\d+)&quot;, 1, SyslogMessage)
+| extend artifactName = extract(@&quot;artifactName=([^&amp;\s&quot;&quot;]+)&quot;, 1, SyslogMessage)
+| where isnotempty(sig)
+| summarize distinct_tasks=dcount(taskID), distinct_names=dcount(artifactName), taskIDs=make_set(taskID,20), artifactNames=make_set(artifactName,20), hosts=make_set(Computer,10), requests=count() by sig
+| where distinct_tasks &gt; 1 or distinct_names &gt; 1
+| order by requests desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (*DownloadArtifact* OR *UploadArtifact*) *artifactID=* *sig=*</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where (Web.url=&quot;*DownloadArtifact*&quot; OR Web.url=&quot;*UploadArtifact*&quot;) Web.url=&quot;*artifactID=*&quot; Web.url=&quot;*sig=*&quot; by Web.src, Web.url, Web.uri_query, Web.http_method, _time span=1h
+| `drop_dm_object_name(&quot;Web&quot;)`
+| rex field=uri_query &quot;sig=(?&lt;sig&gt;[^&amp;]+)&quot;
+| rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot;
+| rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot;
+| where isnotnull(sig)
+| stats dc(taskID) as distinct_tasks, dc(artifactName) as distinct_names, values(taskID) as taskIDs, values(artifactName) as artifactNames, values(src) as src, values(http_method) as methods, count as requests by sig
+| where distinct_tasks &gt; 1 OR distinct_names &gt; 1</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where (Web.url=&quot;*DownloadArtifact*&quot; OR Web.url=&quot;*UploadArtifact*&quot;) Web.url=&quot;*artifactID=*&quot; Web.url=&quot;*sig=*&quot; by Web.src, Web.url, Web.uri_query, Web.http_method, _time span=1h
+| `drop_dm_object_name(&quot;Web&quot;)`
+| rex field=uri_query &quot;sig=(?&lt;sig&gt;[^&amp;]+)&quot;
+| rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot;
+| rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot;
+| where isnotnull(sig)
+| stats dc(taskID) as distinct_tasks, dc(artifactName) as distinct_names, values(taskID) as taskIDs, values(artifactName) as artifactNames, values(src) as src, values(http_method) as methods, count as requests by sig
+| where distinct_tasks &gt; 1 OR distinct_names &gt; 1</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="29996f4334" data-platforms="datadog,sent,sigma,spl" data-targets="linux,vcs">
+  <summary>
+    <span class="uc-title">Gitea Artifacts V4 forged over-length artifactID in signed download/upload URL</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="29996f4334" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Single-request detection for the boundary-shift forgery: the crafted artifactID carries the target taskID digits prepended to the attacker artifactID (e.g. 48&lt;attacker id&gt;), producing an abnormally long decimal. Legit Gitea artifact DB IDs are small sequential int64s; a 10+ digit artifactID on UploadArtifact/DownloadArtifact is the forged-tuple structure.
+
+Rationale: Grounded in the article&#x27;s worked example forged tuple (taskID 53, artifactID 48&lt;attacker artifact id&gt;) which shows the forged artifactID must carry extra prefix digits to preserve the HMAC input suffix. Digit-length &gt;=10 flags that concatenation cheaply on a single event; the Datadog `?`-wildcard run approximates the same ten-plus-digit shape for interactive triage.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-hg5r-vq93-9fv6
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/
+  • https://cvereports.com/reports/CVE-2026-58426</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Very large, long-lived Gitea instance where sequential artifact IDs have legitimately grown past 10 digits (raise threshold to 12+)</li><li>A storage backend that returns direct backend URLs with its own long numeric object IDs (article notes these bypass Gitea signed handlers — scope out that route)</li><li>Snowflake/UUID-style artifact IDs if a fork customises ID generation</li><li>Log parser concatenating adjacent numeric fields into artifactID during extraction</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where id_len &gt;= 10 and (isnull(taskID) or substr(artifactID,1,len(taskID))==taskID or true)  // tighten threshold per-instance to just above the real max artifact_id</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: decode the flagged artifactID — check whether its leading digits equal a currently-running taskID other than the one in the same URL; that prefix match confirms the boundary-shift. 2) Contain: block the source principal&#x27;s Actions runner token and upgrade Gitea to 1.26.2; add a WAF/reverse-proxy rule rejecting artifactID query values longer than the instance&#x27;s true max artifact ID. 3) Hunt: correlate the src with UC1 (sig reuse) and UC3 (cross-task fan-out) to determine whether reads (disclosure) or writes (staging tamper) succeeded, and review FinalizeArtifact events for the touched taskIDs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL has_any (&quot;UploadArtifact&quot;, &quot;DownloadArtifact&quot;)
-| where RequestURL has &quot;artifactID=&quot;
-| extend artifactID = extract(@&quot;[?&amp;]artifactID=(\d+)&quot;, 1, RequestURL)
-| extend taskID = extract(@&quot;[?&amp;]taskID=(\d+)&quot;, 1, RequestURL)
-| where isnotempty(artifactID) and strlen(artifactID) &gt;= 12   // real Gitea DB artifact IDs are small sequential ints; 12+ digits = concatenated forgery
-| project TimeGenerated, SourceIP, DestinationHostName, RequestMethod, taskID, artifactID, ArtifactIDLen=strlen(artifactID), RequestURL
+    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(1d)
+| where SyslogMessage has_any (&quot;DownloadArtifact&quot;,&quot;UploadArtifact&quot;)
+| where SyslogMessage has &quot;artifactID=&quot;
+| extend artifactID = extract(@&quot;artifactID=(\d+)&quot;, 1, SyslogMessage)
+| extend taskID = extract(@&quot;taskID=(\d+)&quot;, 1, SyslogMessage)
+| where isnotempty(artifactID)
+| extend id_len = strlen(artifactID)
+| where id_len &gt;= 10   // legit sequential artifact IDs are short; forged IDs prepend target taskID digits
+| project TimeGenerated, Computer, taskID, artifactID, id_len, SyslogMessage
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Actions V4 Artifact Signed URL Forged Over-Long artifactID
-id: 6f3c2b41-9d8a-4c17-bd52-7e9a1f4c8b30
-description: Detects a Gitea Actions Artifacts V4 UploadArtifact/DownloadArtifact request whose artifactID query parameter is an abnormally long digit string, indicating the CVE-2026-58426 HMAC tuple-boundary forgery where taskID and attacker artifact id are concatenated.
+    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Actions Artifacts V4 forged over-length artifactID signed URL
+id: 6b2f8a1e-3c74-4d9a-9b2e-8f1c0a5d7e42
+description: Detects UploadArtifact/DownloadArtifact requests whose artifactID query parameter is an abnormally long decimal, the structural signature of the CVE-2026-58426 boundary-shift forgery where the target taskID digits are prepended to the attacker artifactID.
 references:
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-58426
+  - https://github.com/advisories/GHSA-hg5r-vq93-9fv6
   - https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/
 author: SOC Detection Engineering
-date: 2026/07/22
+date: 2026/07/28
 tags:
-  - attack.t1548.005
+  - attack.t1550.001
   - attack.t1190
+  - attack.defense_evasion
 logsource:
   category: webserver
 detection:
   selection:
     cs-uri-stem|contains:
-      - &#x27;UploadArtifact&#x27;
       - &#x27;DownloadArtifact&#x27;
-    cs-uri-query|re: &#x27;artifactID=\d{12,}&#x27;
+      - &#x27;UploadArtifact&#x27;
+    cs-uri-query|re: &#x27;artifactID=[0-9]{10,}&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*UploadArtifact*&quot; OR Web.url=&quot;*DownloadArtifact*&quot;) Web.url=&quot;*artifactID=*&quot; by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;artifactID=(?&lt;artifactID&gt;\d+)&quot; | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | eval idlen=len(artifactID) | where idlen&gt;=12 | table firstTime, lastTime, src, dest, http_method, taskID, artifactID, idlen, url | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*UploadArtifact*&quot; OR Web.url=&quot;*DownloadArtifact*&quot;) Web.url=&quot;*artifactID=*&quot; by Web.src, Web.dest, Web.http_method, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;artifactID=(?&lt;artifactID&gt;\d+)&quot; | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | eval idlen=len(artifactID) | where idlen&gt;=12 | table firstTime, lastTime, src, dest, http_method, taskID, artifactID, idlen, url | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (*DownloadArtifact* OR *UploadArtifact*) *artifactID=??????????*</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where (Web.url=&quot;*DownloadArtifact*&quot; OR Web.url=&quot;*UploadArtifact*&quot;) Web.url=&quot;*artifactID=*&quot; by Web.src, Web.url, Web.uri_query, Web.http_method, _time
+| `drop_dm_object_name(&quot;Web&quot;)`
+| rex field=uri_query &quot;artifactID=(?&lt;artifactID&gt;\d+)&quot;
+| rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot;
+| eval id_len=len(artifactID)
+| where id_len &gt;= 10
+| table _time, src, http_method, url, taskID, artifactID, id_len
+| sort - _time</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where (Web.url=&quot;*DownloadArtifact*&quot; OR Web.url=&quot;*UploadArtifact*&quot;) Web.url=&quot;*artifactID=*&quot; by Web.src, Web.url, Web.uri_query, Web.http_method, _time
+| `drop_dm_object_name(&quot;Web&quot;)`
+| rex field=uri_query &quot;artifactID=(?&lt;artifactID&gt;\d+)&quot;
+| rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot;
+| eval id_len=len(artifactID)
+| where id_len &gt;= 10
+| table _time, src, http_method, url, taskID, artifactID, id_len
+| sort - _time</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="a0267feeed" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="c60ec67bda" data-platforms="datadog,sent,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">Gitea artifact V4 cross-task DownloadArtifact read fan-out (CVE-2026-58426 private-repo disclosure)</span>
+    <span class="uc-title">Gitea Artifacts V4 single source enumerating DownloadArtifact across many taskIDs</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="a0267feeed" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c60ec67bda" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the C:H exploit path of CVE-2026-58426: a single source retrieving V4 DownloadArtifact URLs bound to three or more distinct taskID values within a short window. A legitimate Actions runner only downloads artifacts for its own task context, so one client fanning out across many task IDs indicates URL rewriting to read artifacts from other tasks and private repositories.
+    <div class="uc-desc">Detects cross-task / cross-repository artifact read via CVE-2026-58426: one source rapidly requesting DownloadArtifact for 3+ distinct taskIDs within a short window, indicating URL rewriting to escape the attacker&#x27;s own task/repository scope and harvest artifacts (including private-repo artifacts) from foreign running tasks.
 
-Rationale: Targets the advisory&#x27;s independently-scored C:H path (&#x27;cross-repository private artifact disclosure&#x27;). The pivot is behavioural: DownloadArtifact bound to many distinct taskID values from one source in a minute, which no single legitimate task runner produces, using the literal endpoint and taskID parameter from the vulnerable code.
+Rationale: Targets the C:H DownloadArtifact exploit path from the article (&#x27;reads artifacts from another task context ... including in a private repository&#x27;). A single runner normally only downloads its own task&#x27;s artifacts, so distinct-taskID fan-out from one source is the volumetric tell of scope-escaping URL rewrites — a different pivot (distinct-count over a window) than UC1&#x27;s per-signature correlation. Datadog/Sentinel apply the dcount(taskID)&gt;=3 threshold at rule level.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-58426
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Transfer Data to Cloud Account">T1537</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A CI orchestration job that legitimately aggregates artifacts from several dependent jobs (matrix/fan-in workflows) via its own authorized task context</li><li>Backup or artifact-archival tooling batch-downloading artifacts across many tasks</li><li>A shared NAT/egress IP collapsing many independent runners behind one SourceIP</li><li>Gitea admin manually exporting artifacts for maintenance</li><li>Migration tooling reading all artifacts during an instance move</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT (SourceIP in (&#x27;10.0.0.0/8&#x27;))  // optionally scope out trusted internal aggregation runners once their egress IPs are baselined</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Resolve each downloaded taskID to its run/repository; determine whether they belong to different repositories and whether the source principal/runner has grants to them. Confirm the requests reused a signature (join to the HMAC-reuse UC). Step 2 (contain): Upgrade to Gitea 1.26.4, rotate the token signing secret, and revoke the runner registration/PAT tied to the source. Treat any private-repo artifacts read as potentially disclosed. Step 3 (hunt): Enumerate all private repositories whose taskIDs appeared; notify owners; review those artifacts for secrets (tokens, kubeconfigs) that now warrant rotation.</div></details>
+  • https://github.com/advisories/GHSA-hg5r-vq93-9fv6
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/
+  • https://www.thehackerwire.com/gitea-actions-artifacts-hmac-ambiguity-allows-cross-repository-access/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A matrix/fan-out workflow whose runner legitimately downloads artifacts from several of its own upstream job tasks (validate taskIDs share the same run)</li><li>Shared CI cache proxy or artifact-mirroring service pulling many tasks from one egress IP</li><li>Gitea instance behind NAT so many runners appear as one src — raise threshold or group by authenticated principal instead of IP</li><li>Backup/export tooling bulk-reading artifacts through the V4 endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where distinct_tasks &gt;= 3   // exclude legit intra-run matrix pulls by additionally filtering to taskIDs spanning &gt;1 repository once repo context is joined</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: map the distinct taskIDs to their owning repos/runs and check whether they belong to repositories the source principal has no grant on — cross-repo, cross-owner reads confirm exploitation. 2) Contain: revoke the runner/job token, upgrade to Gitea 1.26.2, and rotate any secrets or artifacts exposed in the accessed private repos. 3) Hunt: pivot the same src into UC1 (reused sig) and UC2 (over-length artifactID) for confirmation, and review whether the same source also issued UploadArtifact PUTs (staging-write tampering) against any of the enumerated taskIDs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL has &quot;DownloadArtifact&quot;
-| where RequestMethod == &quot;GET&quot; and RequestURL has &quot;taskID=&quot;
-| extend taskID = extract(@&quot;[?&amp;]taskID=(\d+)&quot;, 1, RequestURL)
-| extend artifactName = extract(@&quot;[?&amp;]artifactName=([^&amp;]+)&quot;, 1, RequestURL)
+    <div class="tab-content active" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(1d)
+| where SyslogMessage has &quot;DownloadArtifact&quot;
+| where SyslogMessage has &quot;taskID=&quot;
+| extend taskID = extract(@&quot;taskID=(\d+)&quot;, 1, SyslogMessage)
+| extend src = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
 | where isnotempty(taskID)
-| summarize DistinctTasks=dcount(taskID), Tasks=make_set(taskID,50), Names=make_set(artifactName,50), Downloads=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SourceIP, bin(TimeGenerated, 1m)
-| where DistinctTasks &gt;= 3   // one runner reads only its own task; 3+ distinct task contexts from one IP/min = cross-task read
-| order by DistinctTasks desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*DownloadArtifact*&quot; Web.url=&quot;*taskID=*&quot; Web.http_method=&quot;GET&quot; by _time span=1m, Web.src, Web.dest, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot; | bin _time span=1m | stats dc(taskID) as distinct_tasks values(taskID) as taskIDs values(artifactName) as names sum(count) as downloads by _time, src | where distinct_tasks&gt;=3 | sort - distinct_tasks</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*DownloadArtifact*&quot; Web.url=&quot;*taskID=*&quot; Web.http_method=&quot;GET&quot; by _time span=1m, Web.src, Web.dest, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot; | bin _time span=1m | stats dc(taskID) as distinct_tasks values(taskID) as taskIDs values(artifactName) as names sum(count) as downloads by _time, src | where distinct_tasks&gt;=3 | sort - distinct_tasks</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1ba581ec47" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Gitea artifact V4 cross-task UploadArtifact staging write (CVE-2026-58426 I:H)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1ba581ec47" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the I:H exploit path of CVE-2026-58426: a single source issuing PUT UploadArtifact requests bound to two or more distinct taskID values, indicating attacker-controlled data being appended into other tasks&#x27; artifact staging context and mutating target artifact metadata (FileSize/FileCompressedSize). A runner only uploads to its own task, so cross-task upload writes from one client are anomalous.
-
-Rationale: Targets the advisory&#x27;s I:H path: uploadArtifact resolves the target by forged task/run/name and appends attacker bytes then calls UpdateArtifactByID. The behavioural signal — PUT UploadArtifact spanning multiple distinct taskIDs from one source — captures the cross-task staging write using the literal endpoint, method and taskID parameter from the vulnerable code.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-58426
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58426/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Manipulation: Transmitted Data Manipulation">T1565.002</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A single build job legitimately uploading multiple artifacts under its own one task context (only one taskID — excluded by the 2+ distinct-task requirement)</li><li>Chunked/multipart uploads for a large artifact re-sending PUTs to the same taskID</li><li>Shared NAT/egress IP collapsing several runners&#x27; uploads behind one SourceIP</li><li>Artifact re-upload after transient failure to the same task</li><li>Migration/import tooling seeding artifacts across tasks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DistinctTasks &gt;= 2  // one-task multi-artifact and chunked re-uploads collapse to a single taskID and are excluded</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each taskID written by the source, confirm the task belongs to a different run/repo than the source&#x27;s own job and check whether the same request reused a signature. Inspect the target artifacts&#x27; FileSize growth and staging path for unexpected appended bytes. Step 2 (contain): Upgrade to Gitea 1.26.4, rotate the token signing secret, and quarantine/re-run any downstream job that consumed a mutated artifact via FinalizeArtifact before the write was caught. Step 3 (hunt): Enumerate all target tasks/artifacts that received cross-task writes; treat their finalized outputs as tampered and rebuild from clean source; review those pipelines for supply-chain injection into deploy steps.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL has &quot;UploadArtifact&quot;
-| where RequestMethod == &quot;PUT&quot; and RequestURL has &quot;taskID=&quot;
-| extend taskID = extract(@&quot;[?&amp;]taskID=(\d+)&quot;, 1, RequestURL)
-| extend artifactName = extract(@&quot;[?&amp;]artifactName=([^&amp;]+)&quot;, 1, RequestURL)
-| where isnotempty(taskID)
-| summarize DistinctTasks=dcount(taskID), Tasks=make_set(taskID,50), Names=make_set(artifactName,50), Uploads=count(), BytesWritten=sum(tolong(ReceivedBytes)), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SourceIP, bin(TimeGenerated, 5m)
-| where DistinctTasks &gt;= 2   // a runner uploads only to its own task; 2+ distinct task contexts = cross-task staging write
-| order by DistinctTasks desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(Web.bytes_in) as bytes_written from datamodel=Web where Web.url=&quot;*UploadArtifact*&quot; Web.url=&quot;*taskID=*&quot; Web.http_method=&quot;PUT&quot; by _time span=5m, Web.src, Web.dest, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot; | bin _time span=5m | stats dc(taskID) as distinct_tasks values(taskID) as taskIDs values(artifactName) as names sum(count) as uploads sum(bytes_written) as bytes_written by _time, src | where distinct_tasks&gt;=2 | sort - distinct_tasks</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime sum(Web.bytes_in) as bytes_written from datamodel=Web where Web.url=&quot;*UploadArtifact*&quot; Web.url=&quot;*taskID=*&quot; Web.http_method=&quot;PUT&quot; by _time span=5m, Web.src, Web.dest, Web.url, Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot; | rex field=uri_query &quot;artifactName=(?&lt;artifactName&gt;[^&amp;]+)&quot; | bin _time span=5m | stats dc(taskID) as distinct_tasks values(taskID) as taskIDs values(artifactName) as names sum(count) as uploads sum(bytes_written) as bytes_written by _time, src | where distinct_tasks&gt;=2 | sort - distinct_tasks</code></pre></div></div>
+| summarize distinct_tasks=dcount(taskID), taskIDs=make_set(taskID,50), requests=count() by src=coalesce(src, Computer), bin(TimeGenerated, 10m)
+| where distinct_tasks &gt;= 3   // 3+ distinct task contexts from one source in 10m = cross-task enumeration
+| order by distinct_tasks desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog *DownloadArtifact* *taskID=*</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.url=&quot;*DownloadArtifact*&quot; Web.url=&quot;*taskID=*&quot; by Web.src, Web.uri_query, _time span=5m
+| `drop_dm_object_name(&quot;Web&quot;)`
+| rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot;
+| bin _time span=10m
+| stats dc(taskID) as distinct_tasks, values(taskID) as taskIDs, sum(count) as requests by src, _time
+| where distinct_tasks &gt;= 3   // one runner legitimately reads its own task&#x27;s artifacts; 3+ distinct tasks in 10m = scope escape
+| sort - distinct_tasks</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.url=&quot;*DownloadArtifact*&quot; Web.url=&quot;*taskID=*&quot; by Web.src, Web.uri_query, _time span=5m
+| `drop_dm_object_name(&quot;Web&quot;)`
+| rex field=uri_query &quot;taskID=(?&lt;taskID&gt;\d+)&quot;
+| bin _time span=10m
+| stats dc(taskID) as distinct_tasks, values(taskID) as taskIDs, sum(count) as requests by src, _time
+| where distinct_tasks &gt;= 3   // one runner legitimately reads its own task&#x27;s artifacts; 3+ distinct tasks in 10m = scope escape
+| sort - distinct_tasks</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -10965,11 +11043,11 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -10978,7 +11056,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -10990,12 +11068,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-58426&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-58426&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -11018,11 +11096,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb
+    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -11035,7 +11113,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb
@@ -11051,14 +11129,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb ```
+    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/home/kali/gitea/pocs*&quot; OR Filesystem.file_path=&quot;*/home/kali/gitea/repo*&quot; OR Filesystem.file_path=&quot;*/home/kali/gitea/version-tests/gitea-v1.26.1*&quot; OR Filesystem.file_path=&quot;*/home/kali/gitea/version-tests/gitea-v1.25.5*&quot; OR Filesystem.file_path=&quot;*/home/kali/gitea/version-tests/gitea-v1.24.7*&quot; OR Filesystem.file_path=&quot;*/home/kali/gitea/version-tests/gitea-v1.23.8*&quot; OR Filesystem.file_path=&quot;*/home/kali/gitea/version-tests/gitea-v1.22.6*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-58426: Gitea Actions Artifacts V4 signed URL HMAC amb ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
@@ -11792,11 +11870,11 @@ DeviceTvmSoftwareVulnerabilities
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
+  data-platforms="datadog,def,sent,sigma,spl"
   data-splunk-cats="application,web"
-  data-targets="azure"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-56750: Gitea Remember-Me Token Theft Not Invalidating Attacker Session Gitea Remember-Me Token Theft Not Invalidating Attacker Session CVE-2026-56750  [LLM] Gitea CVE-2026-56750: automated POST /user/login probing with gitea_incredible remember-me cookie [LLM] Gitea CVE-2026-56750 exploitation: ErrAuthTokenInvalidHash followed by surviving valid session [LLM] Gitea remember-me token replay: ErrAuthTokenInvalidHash for one account from 3+ source IPs [LLM] Gitea hijacked-session persistence: account credential change after ErrAuthTokenInvalidHash Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  data-targets="azure,linux,windows"
+  data-uc-count="7" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] CVE-2026-56750: Gitea Remember-Me Token Theft Not Invalidating Attacker Session Gitea Remember-Me Token Theft Not Invalidating Attacker Session CVE-2026-56750  [LLM] Gitea /user/login probing with tampered gitea_incredible remember-me cookie (CVE-2026-56750) [LLM] Gitea Remember-Me hash mismatch (ErrAuthTokenInvalidHash) with attacker session surviving — CVE-2026-56750 core exploit [LLM] Gitea single-user Remember-Me hash mismatch from 3+ source IPs (distributed token replay) — CVE-2026-56750 [LLM] Gitea account persistence after token theft: SSH key / PAT / 2FA change following Remember-Me hijack (CVE-2026-56750) [LLM] Gitea autoSignIn via gitea_incredible cookie on a dormant account (stolen Remember-Me reuse) — CVE-2026-56750 Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-56750-gitea-remember-me-token-theft-n" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -11805,7 +11883,7 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-21</span>
-    <span>6 use cases</span>
+    <span>7 use cases</span>
     <span>0 techniques</span>
     <span>4 kill-chain phases detected</span>
   </div>
@@ -11852,210 +11930,291 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Gitea /user/login probing with tampered gitea_incredible remember-me cookie (CVE-2026-56750) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea CVE-2026-56750: automated POST /user/login probing with gitea_incredible remember-me cookie · [LLM] Gitea remember-me token replay: ErrAuthTokenInvalidHash for one account from 3+ source IPs</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Gitea hijacked-session persistence: account credential change after ErrAuthTokenInvalidHash</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea single-user Remember-Me hash mismatch from 3+ source IPs (distributed token replay) — CVE-2026-56750</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Gitea Remember-Me hash mismatch (ErrAuthTokenInvalidHash) with attacker session surviving — CVE-2026-56750 core exploit · [LLM] Gitea account persistence after token theft: SSH key / PAT / 2FA change following Remember-Me hijack (CVE-2026-56750)</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gitea CVE-2026-56750 exploitation: ErrAuthTokenInvalidHash followed by surviving valid session · OAuth consent / suspicious app grant</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gitea autoSignIn via gitea_incredible cookie on a dormant account (stolen Remember-Me reuse) — CVE-2026-56750 · OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="b9e3642218" data-platforms="sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="b25e17b6fc" data-platforms="datadog,sent,spl" data-targets="linux" open>
   <summary>
-    <span class="uc-title">Gitea CVE-2026-56750: automated POST /user/login probing with gitea_incredible remember-me cookie</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b9e3642218" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Gitea /user/login probing with tampered gitea_incredible remember-me cookie (CVE-2026-56750)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b25e17b6fc" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts high-rate POST requests to Gitea&#x27;s /user/login endpoint carrying the gitea_incredible remember-me cookie from a single source, indicating automated probing/fuzzing of the CVE-2026-56750 token-validation path. Article-specific because it keys on the exact vulnerable endpoint and cookie name rather than generic brute-force.
+    <div class="uc-desc">Hunts rapid, repeated POSTs to Gitea&#x27;s /user/login endpoint carrying a gitea_incredible Remember-Me cookie, the exact autoSignIn path affected by CVE-2026-56750. A burst of such requests from one source indicates an actor fuzzing stolen/forged split-tokens to trigger the hash-mismatch condition and test session persistence.
 
-Rationale: Keys on the exact vulnerable endpoint (POST /user/login) and remember-me cookie name (gitea_incredible / COOKIE_REMEMBER_NAME) named in the advisory. Defender/Falcon/CloudWatch/Datadog are empty because Gitea HTTP telemetry does not land in those; Splunk Web DM lacks a cookie field so it thresholds on endpoint+rate instead.
+Rationale: Anchors on the article&#x27;s named vulnerable endpoint POST /user/login plus the gitea_incredible cookie name; a per-minute rate ceiling separates automated token-fuzzing from normal interactive logins.
 
 Cross-checked against:
   • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
   • https://blog.gitea.com/release-of-1.27.0/
-  • https://fossies.org/linux/gitea/services/auth/auth_token.go</div>
+  • https://radar.offseq.com/threat/gitea-remember-me-token-theft-not-invalidating-attacker-session-cve-2026-56750-48de19920dd712bf</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/CD runner or bot repeatedly reusing a remember-me cookie against /user/login</li><li>Vulnerability scanner (Nessus/Nuclei) authorised pentest of the Gitea host</li><li>Load balancer health-check or synthetic-monitoring probe hitting /user/login</li><li>Misconfigured mobile/desktop Git client retrying login on expired session</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(user_agents like &quot;%GiteaHealthCheck%&quot; or user_agents like &quot;%kube-probe%&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the SourceIP&#x27;s full request sequence to /user/login; check whether the UA is a browser or a scanner/library string and whether any attempt returned a session-establishing 302/200. 2) Contain: if non-corporate/unexpected IP, block at WAF and confirm the Gitea instance is &gt;= 1.27.0; if still &lt;1.27.0 prioritise upgrade. 3) Hunt: for any account whose cookie was probed, review subsequent authenticated activity and correlate with the ErrAuthTokenInvalidHash detections (UC2/UC3).</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User with saved credentials on a flaky network retrying login rapidly</li><li>Load-balancer / uptime monitor health-checking /user/login</li><li>Browser autofill extensions replaying the login form</li><li>Legitimate CI/automation authenticating against the web login instead of the API</li><li>NAT gateway aggregating many real users behind one source IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SrcIP in (&quot;10.0.0.0/8&quot;) )   // exclude internal health-check/monitoring subnets after enumerating them</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all /user/login POSTs from the source IP; check whether the gitea_incredible cookie values differ per request (fuzzing) or repeat (single stolen token replay), and inspect the User-Agent for scanner strings. 2) Contain: block the source IP at the WAF/proxy and force a global Remember-Me token purge (Gitea admin: revoke auth tokens) for any account that produced a hash-mismatch. 3) Hunt: confirm Gitea is &lt;1.27.0; if so patch immediately, then pivot to the affected usernames and review subsequent authenticated actions (settings changes, repo clones) from the same IP.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-105-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-105-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(1d)
-| where RequestMethod == &quot;POST&quot;
-| where RequestURL has &quot;/user/login&quot;
-| where RequestCookies has &quot;gitea_incredible&quot;
-| summarize Attempts = count(), UserAgents = make_set(RequestClientApplication, 5), Statuses = make_set(EventOutcome, 5), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SourceIP, bin(TimeGenerated, 1m)
-| where Attempts &gt; 5   // &gt;5 remember-me login POSTs from one IP in 60s = automated CVE-2026-56750 probing
-| order by Attempts desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count as attempts, values(Web.http_user_agent) as user_agents, values(Web.status) as statuses, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method=&quot;POST&quot; AND Web.uri_path=&quot;/user/login&quot; by Web.src, _time span=1m
-| `drop_dm_object_name(Web)`
-| where attempts &gt; 5
-| convert ctime(firstTime) ctime(lastTime)
-| sort - attempts</code></pre><pre class="spl-mode-body" id="art-105-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as attempts, values(Web.http_user_agent) as user_agents, values(Web.status) as statuses, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method=&quot;POST&quot; AND Web.uri_path=&quot;/user/login&quot; by Web.src, _time span=1m
-| `drop_dm_object_name(Web)`
-| where attempts &gt; 5
-| convert ctime(firstTime) ctime(lastTime)
-| sort - attempts</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="514d59699e" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Gitea CVE-2026-56750 exploitation: ErrAuthTokenInvalidHash followed by surviving valid session</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="514d59699e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates a remember-me hash-mismatch (ErrAuthTokenInvalidHash) event with continued successful authenticated activity from the same source within 5 minutes. This is the core of CVE-2026-56750: Gitea detects the compromised token but fails to delete it, so the session survives — the anomaly is a session that keeps working after a mismatch was logged.
-
-Rationale: Uses the exact internal error string ErrAuthTokenInvalidHash from CheckAuthToken plus the advisory&#x27;s central claim that the session survives the mismatch. Time-window correlation of failure-&gt;surviving-success is not expressible as a single event, so no Sigma. Defender/Falcon/CloudWatch/Datadog empty (no Gitea auth telemetry).
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
-  • https://fossies.org/linux/gitea/services/auth/auth_token.go</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span> <span class="ind tech" title="Remote Service Session Hijacking">T1563</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Benign token-rotation race: user has two tabs/devices and one presents a just-rotated stale hash while the other continues normally</li><li>Load balancer sharing one egress IP so mismatch and legitimate session come from the same NATed address</li><li>Flaky client resending an expired remember-me cookie then re-authenticating cleanly</li><li>Gitea debug logging enabled in a test environment generating benign mismatches</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the account tied to the ErrAuthTokenInvalidHash event; confirm whether the surviving session&#x27;s IP/UA matches the user&#x27;s known devices or a foreign host. 2) Contain: force-logout the account (invalidate all sessions / rotate its remember-me tokens server-side) and reset credentials; verify Gitea is upgraded to &gt;=1.27.0 which deletes the compromised token. 3) Hunt: enumerate that account&#x27;s actions during the surviving session — new SSH keys, tokens, repo clones/pushes (see UC4) — and check UC3 for the same token being replayed from other IPs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-105-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 5m;
-let Mismatch = Syslog
-    | where TimeGenerated &gt; ago(1d)
-    | where SyslogMessage has &quot;gitea&quot; or ProcessName has &quot;gitea&quot;
-    | where SyslogMessage has &quot;ErrAuthTokenInvalidHash&quot;
-    | extend SrcIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
-    | where isnotempty(SrcIP)
-    | project MismatchTime = TimeGenerated, SrcIP, MismatchMsg = SyslogMessage;
+    <div class="tab-content active" id="art-105-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowMin = 1m;
+let AttemptThreshold = 5;   // &gt;5 login POSTs/min from one IP = probing, not a human re-auth
 Syslog
-| where TimeGenerated &gt; ago(1d)
-| where SyslogMessage has &quot;gitea&quot; or ProcessName has &quot;gitea&quot;
-| where SyslogMessage has_any (&quot;/api/v1/&quot;, &quot;/user/settings&quot;, &quot;/repos/&quot;)
-| where SyslogMessage has_any (&quot; 200 &quot;, &quot; 302 &quot;)
+| where TimeGenerated &gt; ago(24h)
+| where ProcessName has &quot;gitea&quot; or SyslogMessage has &quot;gitea&quot;
+| where SyslogMessage has &quot;/user/login&quot; and SyslogMessage has &quot;POST&quot;
 | extend SrcIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
-| where isnotempty(SrcIP)
-| join kind=inner Mismatch on SrcIP
-| where TimeGenerated between (MismatchTime .. MismatchTime + Window)
-| project MismatchTime, ActionTime = TimeGenerated, SrcIP, MismatchMsg, ActionMsg = SyslogMessage
-| order by MismatchTime desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count as events, count(eval(match(&#x27;Authentication.reason&#x27;,&quot;ErrAuthTokenInvalidHash&quot;))) as hash_mismatch, count(eval(&#x27;Authentication.action&#x27;==&quot;success&quot;)) as successes, values(Authentication.user) as user, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.app=&quot;gitea&quot; by Authentication.src, _time span=5m
-| `drop_dm_object_name(Authentication)`
-| where hash_mismatch &gt; 0 AND successes &gt; 0
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as events, count(eval(match(&#x27;Authentication.reason&#x27;,&quot;ErrAuthTokenInvalidHash&quot;))) as hash_mismatch, count(eval(&#x27;Authentication.action&#x27;==&quot;success&quot;)) as successes, values(Authentication.user) as user, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.app=&quot;gitea&quot; by Authentication.src, _time span=5m
-| `drop_dm_object_name(Authentication)`
-| where hash_mismatch &gt; 0 AND successes &gt; 0
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| summarize Attempts = count(), Sample = any(SyslogMessage) by SrcIP, Computer, bin(TimeGenerated, WindowMin)
+| where Attempts &gt; AttemptThreshold
+| order by Attempts desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog gitea AND &quot;/user/login&quot; AND POST</code></pre></div>
+    <div class="tab-content" id="art-105-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;/user/login&quot; (Web.cookie=&quot;*gitea_incredible*&quot; OR Web.cookie=&quot;*&quot;) by _time span=60s, Web.src, Web.dest, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| where count &gt; 5
+| sort - count</code></pre><pre class="spl-mode-body" id="art-105-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;/user/login&quot; (Web.cookie=&quot;*gitea_incredible*&quot; OR Web.cookie=&quot;*&quot;) by _time span=60s, Web.src, Web.dest, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| where count &gt; 5
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="6739b12014" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="caa7337e2b" data-platforms="datadog,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Gitea remember-me token replay: ErrAuthTokenInvalidHash for one account from 3+ source IPs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="6739b12014" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Flags a single Gitea account generating remember-me hash-mismatch errors from three or more distinct source IPs within 30 minutes, indicating a stolen token being replayed across attacker infrastructure (or a leaked token DB). Article-specific: the split-token design means the same token ID failing hash checks from many IPs is a direct exploitation tell of CVE-2026-56750.
-
-Rationale: Leverages the split-token (ID:Hash) design from the advisory: the same token ID producing ErrAuthTokenInvalidHash from many IPs is the fingerprint of a replayed/leaked token. dcount-of-src threshold cannot be a single-event Sigma. Non-Gitea telemetry sources left empty.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
-  • https://fossies.org/linux/gitea/services/auth/auth_token.go</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Mobile user roaming across cellular/Wi-Fi networks producing several IPs with one stale cookie</li><li>Corporate users behind multiple NAT egress IPs / geo-distributed proxies</li><li>Shared service account whose cached cookie is used from several build agents</li><li>VPN split-tunnel causing the same client to appear from rotating exit IPs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(UserRef in~ (&quot;ci-bot&quot;,&quot;drone&quot;,&quot;actions-runner&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the DistinctIPs belong to different networks/geos rather than one NAT pool; map to the affected account. 2) Contain: invalidate all remember-me tokens for that account server-side and reset credentials; block clearly hostile IPs at the WAF. 3) Hunt: pivot each source IP to see whether any established a surviving session (UC2) or performed account modifications (UC4); confirm the instance is patched to &gt;=1.27.0.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-105-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(1d)
-| where SyslogMessage has &quot;gitea&quot; or ProcessName has &quot;gitea&quot;
-| where SyslogMessage has &quot;ErrAuthTokenInvalidHash&quot;
-| extend SrcIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
-| extend UserRef = extract(@&quot;(?i)(?:uid|user|user_id)[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage)
-| where isnotempty(SrcIP) and isnotempty(UserRef)
-| summarize DistinctIPs = dcount(SrcIP), IPs = make_set(SrcIP, 20), Hits = count() by UserRef, bin(TimeGenerated, 30m)
-| where DistinctIPs &gt;= 3   // one account&#x27;s remember-me token failing hash check from 3+ IPs in 30m = replay/distribution
-| order by DistinctIPs desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t dc(Authentication.src) as distinct_src, values(Authentication.src) as src_ips, count as hits, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.app=&quot;gitea&quot; AND Authentication.reason=&quot;*ErrAuthTokenInvalidHash*&quot; by Authentication.user, _time span=30m
-| `drop_dm_object_name(Authentication)`
-| where distinct_src &gt;= 3
-| convert ctime(firstTime) ctime(lastTime)
-| sort - distinct_src</code></pre><pre class="spl-mode-body" id="art-105-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Authentication.src) as distinct_src, values(Authentication.src) as src_ips, count as hits, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.app=&quot;gitea&quot; AND Authentication.reason=&quot;*ErrAuthTokenInvalidHash*&quot; by Authentication.user, _time span=30m
-| `drop_dm_object_name(Authentication)`
-| where distinct_src &gt;= 3
-| convert ctime(firstTime) ctime(lastTime)
-| sort - distinct_src</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c893f4703b" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Gitea hijacked-session persistence: account credential change after ErrAuthTokenInvalidHash</span>
+    <span class="uc-title">Gitea Remember-Me hash mismatch (ErrAuthTokenInvalidHash) with attacker session surviving — CVE-2026-56750 core exploit</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c893f4703b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="caa7337e2b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates a remember-me hash-mismatch (ErrAuthTokenInvalidHash) from a source IP with a subsequent sensitive account modification from that same IP within 30 minutes — new SSH/GPG key, new access token, or email/account change on /user/settings. Captures the post-hijack persistence step an attacker takes once CVE-2026-56750 hands them a durable session.
+    <div class="uc-desc">Detects the core of CVE-2026-56750: Gitea logs a Remember-Me hash mismatch for a user (compromised-token signal per the Paragonie spec) yet authenticated activity continues from a different source IP within minutes. Because Gitea &lt;1.27.0 fails to delete the compromised DB token, the attacker&#x27;s session is never invalidated.
 
-Rationale: Combines the advisory&#x27;s ErrAuthTokenInvalidHash signal with concrete Gitea account-settings endpoints (/user/settings/keys, /user/settings/applications, /user/settings/account) that an attacker abuses to add credentials for persistence (T1098). Cross-table time-window correlation, so no Sigma. Empty for non-Gitea telemetry stacks.
+Rationale: Uses the exact error identifier ErrAuthTokenInvalidHash from the article&#x27;s CheckAuthToken code path as the compromised-token trigger, then correlates continued authenticated activity from a second IP within 5 min — the observable proof that the attacker session survived.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
+  • https://github.com/go-gitea/gitea/releases/tag/v1.27.0-rc0</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Service Session Hijacking">T1563</span> <span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User logs in from a new device/IP while an old-cookie tab retries, producing a benign mismatch</li><li>Corporate VPN egress rotating the user&#x27;s public IP mid-session</li><li>Mobile-to-Wi-Fi handoff changing source IP during active use</li><li>Shared account legitimately used from two locations</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ActiveAttackerIP != MismatchIP and not (ActiveAttackerIP startswith &quot;10.&quot; and MismatchIP startswith &quot;10.&quot;)   // ignore intra-VPN IP churn</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm Gitea version &lt;1.27.0 and pull the ErrAuthTokenInvalidHash line for the user — note the mismatch IP vs the IP still performing authenticated actions. 2) Contain: in Gitea admin, revoke ALL of that user&#x27;s Remember-Me/auth tokens and active sessions, force a password reset, and rotate any of the user&#x27;s PATs/SSH keys. 3) Hunt: review that user&#x27;s repo clones/pushes, settings changes, and API-token creation since the mismatch; block the surviving attacker IP and check other users for the same mismatch pattern.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-105-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-105-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-105-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let CorrWindow = 5m;
+let Mismatch = Syslog
+    | where TimeGenerated &gt; ago(24h)
+    | where SyslogMessage has_any (&quot;ErrAuthTokenInvalidHash&quot;, &quot;invalid auth token hash&quot;)
+    | extend User = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage),
+             MismatchIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
+    | project MismatchTime = TimeGenerated, User, MismatchIP, Computer, MismatchMsg = SyslogMessage;
+Syslog
+| where TimeGenerated &gt; ago(24h)
+| where SyslogMessage has &quot;gitea_incredible&quot; or SyslogMessage has &quot;/user/settings&quot; or SyslogMessage has &quot;.git&quot;
+| extend ActIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage),
+         ActUser = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage)
+| join kind=inner Mismatch on $left.ActUser == $right.User
+| where TimeGenerated between (MismatchTime .. MismatchTime + CorrWindow) and ActIP != MismatchIP
+| project MismatchTime, ActivityTime = TimeGenerated, User = ActUser, MismatchIP, ActiveAttackerIP = ActIP, MismatchMsg, ActivityMsg = SyslogMessage
+| order by ActivityTime desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Remember-Me Token Hash Mismatch (Compromised Split-Token) CVE-2026-56750
+id: 6b1f8c9a-2d47-4e13-9a5c-77c0e3f9ab21
+description: Gitea logs a Remember-Me hash mismatch, which per the Paragonie split-token spec signals a stolen token; on Gitea &lt;1.27.0 the compromised session is not invalidated.
+references:
+  - https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
+  - https://blog.gitea.com/release-of-1.27.0/
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.t1563
+  - attack.t1550.004
+logsource:
+  product: gitea
+  service: application
+detection:
+  selection:
+    SyslogMessage|contains:
+      - &#x27;ErrAuthTokenInvalidHash&#x27;
+      - &#x27;invalid auth token hash&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-105-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog gitea AND (&quot;ErrAuthTokenInvalidHash&quot; OR &quot;invalid auth token hash&quot;)</code></pre></div>
+    <div class="tab-content" id="art-105-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(Web.src) as src, dc(Web.src) as src_count from datamodel=Web.Web where Web.cookie=&quot;*gitea_incredible*&quot; (Web.uri_path=&quot;/user/settings*&quot; OR Web.uri_path=&quot;/api/v1/*&quot; OR Web.uri_path=&quot;*.git/*&quot;) by Web.user, _time span=5m
+| `drop_dm_object_name(Web)`
+| where src_count &gt; 1
+| sort - src_count</code></pre><pre class="spl-mode-body" id="art-105-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Web.src) as src, dc(Web.src) as src_count from datamodel=Web.Web where Web.cookie=&quot;*gitea_incredible*&quot; (Web.uri_path=&quot;/user/settings*&quot; OR Web.uri_path=&quot;/api/v1/*&quot; OR Web.uri_path=&quot;*.git/*&quot;) by Web.user, _time span=5m
+| `drop_dm_object_name(Web)`
+| where src_count &gt; 1
+| sort - src_count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1c32e7d296" data-platforms="datadog,sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">Gitea single-user Remember-Me hash mismatch from 3+ source IPs (distributed token replay) — CVE-2026-56750</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1c32e7d296" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a single Gitea account producing ErrAuthTokenInvalidHash / repeated gitea_incredible re-auth from three or more distinct source IPs within 30 minutes. Because CVE-2026-56750 never invalidates a compromised split-token, a stolen token distributed across attacker infrastructure keeps re-authenticating from many hosts.
+
+Rationale: Pivots on one username generating the gitea_incredible/ErrAuthTokenInvalidHash signal from many IPs — a shape only possible because CVE-2026-56750 leaves a stolen split-token valid across attacker nodes; 3-IP/30-min threshold suppresses single-user roaming.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
+  • https://radar.offseq.com/threat/gitea-remember-me-token-theft-not-invalidating-attacker-session-cve-2026-56750-48de19920dd712bf</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Power user moving between office, home, and mobile networks within 30 minutes</li><li>User behind a rotating carrier-grade NAT presenting multiple public IPs</li><li>Automation/scripts running as a user account from several build agents</li><li>Shared bot/service account intentionally used from multiple hosts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where User !endswith &quot;-bot&quot; and User !startswith &quot;svc-&quot;   // exclude known service accounts that legitimately run from many hosts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: list the distinct IPs for the account and geolocate/ASN them — genuinely dispersed geographies or hosting-provider ASNs strongly indicate replay. 2) Contain: revoke all Remember-Me tokens and sessions for the account, force password reset, and block the offending IPs. 3) Hunt: check whether the same set of IPs is replaying tokens for other Gitea accounts (token DB leak), and confirm patch status to 1.27.0.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-105-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-105-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-105-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let CorrWindow = 30m;
+let IPThreshold = 3;   // 3+ distinct IPs replaying one user&#x27;s token in 30m
+Syslog
+| where TimeGenerated &gt; ago(24h)
+| where SyslogMessage has_any (&quot;ErrAuthTokenInvalidHash&quot;, &quot;gitea_incredible&quot;)
+| where SyslogMessage has &quot;gitea&quot; or ProcessName has &quot;gitea&quot;
+| extend User = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage),
+         SrcIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
+| where isnotempty(User) and isnotempty(SrcIP)
+| summarize DistinctIPs = dcount(SrcIP), IPs = make_set(SrcIP, 20), Events = count()
+          by User, bin(TimeGenerated, CorrWindow)
+| where DistinctIPs &gt;= IPThreshold
+| order by DistinctIPs desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog gitea AND gitea_incredible AND (&quot;ErrAuthTokenInvalidHash&quot; OR &quot;/user/login&quot;)</code></pre></div>
+    <div class="tab-content" id="art-105-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(Web.src) as src_count, values(Web.src) as src_ips, count from datamodel=Web.Web where Web.url=&quot;/user/login&quot; Web.http_method=POST Web.cookie=&quot;*gitea_incredible*&quot; by Web.user, _time span=30m
+| `drop_dm_object_name(Web)`
+| where src_count &gt;= 3
+| sort - src_count</code></pre><pre class="spl-mode-body" id="art-105-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.src) as src_count, values(Web.src) as src_ips, count from datamodel=Web.Web where Web.url=&quot;/user/login&quot; Web.http_method=POST Web.cookie=&quot;*gitea_incredible*&quot; by Web.user, _time span=30m
+| `drop_dm_object_name(Web)`
+| where src_count &gt;= 3
+| sort - src_count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="17fba91dc1" data-platforms="datadog,sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">Gitea account persistence after token theft: SSH key / PAT / 2FA change following Remember-Me hijack (CVE-2026-56750)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="17fba91dc1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects post-hijack persistence: within an hour of a Remember-Me hash mismatch, the same Gitea user&#x27;s account is modified via the settings endpoints — new SSH public key, new API access token, email change, or 2FA disable. This is how an attacker holding a non-invalidated CVE-2026-56750 session converts stolen access into durable footholds.
+
+Rationale: Chains the article&#x27;s compromised-session outcome to concrete Gitea persistence routes (/user/settings/keys, /applications, /security 2FA disable, /account email), correlated to the ErrAuthTokenInvalidHash signal so it fires only on credential changes made by a hijacked session.
 
 Cross-checked against:
   • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
   • https://blog.gitea.com/release-of-1.27.0/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate user rotating their own SSH key or creating an access token shortly after a benign cookie re-auth</li><li>Admin onboarding automation adding keys/tokens via the settings endpoints</li><li>Shared egress IP where an unrelated user&#x27;s mismatch coincides with another user&#x27;s genuine key add</li><li>Developer laptop that legitimately re-logged in (mismatch on old cookie) then added a deploy key</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the account and the exact modification (which key/token/email) from the settings request; confirm whether the change was expected by the user out-of-band. 2) Contain: revoke the newly added SSH key/access token, reset the account password and invalidate all sessions; if email was changed, restore it and re-verify ownership. 3) Hunt: review repos the account can reach for unauthorised clones/pushes during the session, search other accounts for the same source IP, and confirm the instance is patched to &gt;=1.27.0.</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User legitimately adding a new laptop SSH key or rotating a PAT after a normal re-login</li><li>Admin-driven bulk credential rotation during offboarding/onboarding</li><li>User enabling/reconfiguring 2FA (not disabling) during normal account hygiene</li><li>Automation updating a deploy key via the API under the user&#x27;s token</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SettingsChange has_any (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;) and not (SettingsChange has &quot;two_factor/enroll&quot;)   // keep 2FA *disable*, drop enrollment</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify what changed (new SSH key fingerprint, new PAT scope, email address, 2FA state) and whether the change IP matches the ErrAuthTokenInvalidHash source. 2) Contain: revoke the newly added SSH key/PAT, restore email/2FA, kill all sessions, and reset the password. 3) Hunt: enumerate repos the new key/token could reach, review clone/push events from the attacker IP, and audit all accounts for settings changes correlated to a token mismatch.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-105-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc3-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-105-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 30m;
+    <div class="tab-content active" id="art-105-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let CorrWindow = 1h;
 let Mismatch = Syslog
-    | where TimeGenerated &gt; ago(1d)
-    | where SyslogMessage has &quot;gitea&quot; or ProcessName has &quot;gitea&quot;
+    | where TimeGenerated &gt; ago(24h)
     | where SyslogMessage has &quot;ErrAuthTokenInvalidHash&quot;
-    | extend SourceIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
-    | where isnotempty(SourceIP)
-    | project MismatchTime = TimeGenerated, SourceIP;
-CommonSecurityLog
-| where TimeGenerated &gt; ago(1d)
-| where RequestMethod in (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;,&quot;PATCH&quot;)
-| where RequestURL has_any (&quot;/user/settings/keys&quot;,&quot;/user/settings/applications&quot;,&quot;/user/settings/account&quot;)
-| join kind=inner Mismatch on SourceIP
-| where TimeGenerated between (MismatchTime .. MismatchTime + Window)
-| project ChangeTime = TimeGenerated, SourceIP, RequestMethod, RequestURL, MismatchTime, MinutesAfter = datetime_diff(&#x27;minute&#x27;, TimeGenerated, MismatchTime)
+    | extend User = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage)
+    | project MismatchTime = TimeGenerated, User;
+Syslog
+| where TimeGenerated &gt; ago(24h)
+| where SyslogMessage has_any (&quot;/user/settings/keys&quot;, &quot;/user/settings/applications&quot;, &quot;/user/settings/security&quot;, &quot;/user/settings/account&quot;, &quot;/api/v1/user/keys&quot;, &quot;/tokens&quot;)
+| where SyslogMessage has_any (&quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;PATCH&quot;)
+| extend ActUser = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage),
+         SrcIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
+| join kind=inner Mismatch on $left.ActUser == $right.User
+| where TimeGenerated between (MismatchTime .. MismatchTime + CorrWindow)
+| project ChangeTime = TimeGenerated, User = ActUser, SrcIP, MismatchTime, SettingsChange = SyslogMessage
 | order by ChangeTime desc</code></pre></div>
-    <div class="tab-content" id="art-105-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count as changes, values(Web.uri_path) as endpoints, values(Web.http_method) as methods, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;,&quot;PATCH&quot;) AND (Web.uri_path=&quot;/user/settings/keys&quot; OR Web.uri_path=&quot;/user/settings/applications&quot; OR Web.uri_path=&quot;/user/settings/account&quot;) by Web.src
+    <div class="tab-content" id="art-105-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog gitea AND (&quot;/user/settings/keys&quot; OR &quot;/user/settings/applications&quot; OR &quot;/user/settings/security&quot; OR &quot;/api/v1/user/keys&quot;) AND (POST OR PUT OR DELETE)</code></pre></div>
+    <div class="tab-content" id="art-105-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(Web.uri_path) as endpoints, values(Web.src) as src from datamodel=Web.Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;) Web.cookie=&quot;*gitea_incredible*&quot; (Web.uri_path=&quot;/user/settings/keys&quot; OR Web.uri_path=&quot;/user/settings/applications&quot; OR Web.uri_path=&quot;/user/settings/security*&quot; OR Web.uri_path=&quot;/user/settings/account*&quot; OR Web.uri_path=&quot;/api/v1/user/keys&quot; OR Web.uri_path=&quot;/api/v1/users/*/tokens&quot;) by Web.user, Web.src, _time span=1h
 | `drop_dm_object_name(Web)`
-| join type=inner src [
-    | tstats summariesonly=t count as mismatches from datamodel=Authentication where Authentication.app=&quot;gitea&quot; AND Authentication.reason=&quot;*ErrAuthTokenInvalidHash*&quot; by Authentication.src
-    | rename Authentication.src as src ]
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-105-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as changes, values(Web.uri_path) as endpoints, values(Web.http_method) as methods, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;,&quot;PATCH&quot;) AND (Web.uri_path=&quot;/user/settings/keys&quot; OR Web.uri_path=&quot;/user/settings/applications&quot; OR Web.uri_path=&quot;/user/settings/account&quot;) by Web.src
+| sort - _time</code></pre><pre class="spl-mode-body" id="art-105-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Web.uri_path) as endpoints, values(Web.src) as src from datamodel=Web.Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;) Web.cookie=&quot;*gitea_incredible*&quot; (Web.uri_path=&quot;/user/settings/keys&quot; OR Web.uri_path=&quot;/user/settings/applications&quot; OR Web.uri_path=&quot;/user/settings/security*&quot; OR Web.uri_path=&quot;/user/settings/account*&quot; OR Web.uri_path=&quot;/api/v1/user/keys&quot; OR Web.uri_path=&quot;/api/v1/users/*/tokens&quot;) by Web.user, Web.src, _time span=1h
 | `drop_dm_object_name(Web)`
-| join type=inner src [
-    | tstats summariesonly=false count as mismatches from datamodel=Authentication where Authentication.app=&quot;gitea&quot; AND Authentication.reason=&quot;*ErrAuthTokenInvalidHash*&quot; by Authentication.src
-    | rename Authentication.src as src ]
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1f10cc5bd6" data-platforms="datadog,sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">Gitea autoSignIn via gitea_incredible cookie on a dormant account (stolen Remember-Me reuse) — CVE-2026-56750</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1f10cc5bd6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts authenticated Gitea activity driven by a gitea_incredible Remember-Me cookie for an account that had no login/activity in the prior 7 days. A dormant account suddenly resurrected purely through autoSignIn — the exact code path in CVE-2026-56750 — is a strong indicator of an attacker exercising a stolen, never-invalidated token.
+
+Rationale: Uses the article&#x27;s autoSignIn/gitea_incredible cookie path and a 7-day dormancy anti-join: a stolen Remember-Me token reviving an idle account is high-signal because legitimate dormant users typically log in interactively rather than via a silent cookie replay.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-56750/
+  • https://blog.gitea.com/release-of-1.27.0/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Genuinely infrequent user (e.g. monthly contributor) returning via a kept-me-signed-in browser</li><li>Long-lived service/bot account that only occasionally acts and relies on a persistent cookie</li><li>User returning from &gt;1 week PTO with a still-valid Remember-Me cookie</li><li>Cookie logging inconsistently applied so baseline undercounts prior activity</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where User !endswith &quot;-bot&quot; and User !startswith &quot;svc-&quot;   // exclude low-frequency service accounts that legitimately reuse cookies</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the account truly had zero interactive logins in the prior 7 days and inspect the reviving source IP/ASN and User-Agent. 2) Contain: if the origin is unfamiliar, revoke the account&#x27;s Remember-Me tokens and sessions and require a fresh interactive login + password reset. 3) Hunt: review what the resurrected session did (repo access, settings changes) and check for a preceding ErrAuthTokenInvalidHash for the same account; verify Gitea is patched to 1.27.0.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-105-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-105-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-105-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let Dormancy = 7d;
+let ActiveNow = Syslog
+    | where TimeGenerated &gt; ago(24h)
+    | where SyslogMessage has &quot;gitea_incredible&quot;
+    | extend User = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage),
+             SrcIP = extract(@&quot;(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
+    | where isnotempty(User)
+    | summarize FirstSeen = min(TimeGenerated), IPs = make_set(SrcIP, 10) by User;
+let PriorActivity = Syslog
+    | where TimeGenerated between (ago(Dormancy + 1d) .. ago(1d))
+    | where SyslogMessage has &quot;gitea&quot;
+    | extend User = extract(@&quot;user(?:name|id)?[=:\s]+([\w.@-]+)&quot;, 1, SyslogMessage)
+    | where isnotempty(User)
+    | summarize by User;
+ActiveNow
+| join kind=leftanti PriorActivity on User
+| project User, FirstSeen, IPs
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog gitea AND gitea_incredible AND autoSignIn</code></pre></div>
+    <div class="tab-content" id="art-105-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc4-spl-acc"><button class="copy-btn">COPY</button><code>let recent window not available in tstats; using baseline anti-join
+| tstats `summariesonly` min(_time) as firstToday, count from datamodel=Web.Web where Web.cookie=&quot;*gitea_incredible*&quot; earliest=-24h by Web.user, Web.src
+| `drop_dm_object_name(Web)`
+| join type=left user [
+    | tstats `summariesonly` count as prior_activity from datamodel=Web.Web where earliest=-8d latest=-24h by Web.user
+    | `drop_dm_object_name(Web)`
+  ]
+| where isnull(prior_activity) OR prior_activity=0
+| sort - firstToday</code></pre><pre class="spl-mode-body" id="art-105-uc4-spl-raw"><button class="copy-btn">COPY</button><code>let recent window not available in tstats; using baseline anti-join
+| tstats summariesonly=false min(_time) as firstToday, count from datamodel=Web.Web where Web.cookie=&quot;*gitea_incredible*&quot; earliest=-24h by Web.user, Web.src
+| `drop_dm_object_name(Web)`
+| join type=left user [
+    | tstats summariesonly=false count as prior_activity from datamodel=Web.Web where earliest=-8d latest=-24h by Web.user
+    | `drop_dm_object_name(Web)`
+  ]
+| where isnull(prior_activity) OR prior_activity=0
+| sort - firstToday</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -12073,11 +12232,11 @@ CommonSecurityLog
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-105-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -12086,7 +12245,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-105-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -12098,12 +12257,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-56750&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-105-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-105-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-56750&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -12126,17 +12285,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-105-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-105-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-105-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-105-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-105-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-105-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-105-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-105-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-105-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-105-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-105-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-105-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -12147,7 +12306,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-105-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -12173,7 +12332,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-105-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-105-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-105-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-105-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-105-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -12182,7 +12341,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-105-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-105-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (

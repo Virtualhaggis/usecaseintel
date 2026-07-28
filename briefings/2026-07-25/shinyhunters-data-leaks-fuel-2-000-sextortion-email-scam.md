@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Fake ShinyHunters sextortion email by fixed subject + spoofed display name
 
-`UC_25_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_26_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ EmailEvents
 
 ### ShinyHunters sextortion campaign fan-out (one subject, many random senders/recipients)
 
-`UC_25_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_26_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
