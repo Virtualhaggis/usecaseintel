@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,6 +14,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
+- [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
+- [over 24 000 exposed server bmcs leak password hash via decad](./2026-07-28/over-24-000-exposed-server-bmcs-leak-password-hash-via-decad.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 
 ## 2026-07-27
@@ -76,7 +78,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hacker runs hermes ai agent unattended for post exploitation](./2026-07-24/hacker-runs-hermes-ai-agent-unattended-for-post-exploitation.md)
 - [kimi k3 agents found redis zero days and built rce exploit r](./2026-07-24/kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r.md)
 - [nodebb patches eight ai found flaws exposing admin access an](./2026-07-24/nodebb-patches-eight-ai-found-flaws-exposing-admin-access-an.md)
-- [ontrac notifies customers of data breach after network hack](./2026-07-24/ontrac-notifies-customers-of-data-breach-after-network-hack.md)
 
 ## 2026-07-23
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)

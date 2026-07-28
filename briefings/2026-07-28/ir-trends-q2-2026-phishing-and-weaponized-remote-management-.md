@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Trojanized MeshAgent installed as SYSTEM auto-start service (Sinobi backdoor)
 
-`UC_0_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### Sinobi/ARToken attacker-infrastructure callbacks (pamconj.com C2 domains)
 
-`UC_0_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### Warlock (Storm-2603) Zoho Assist Unattended Agent deployment
 
-`UC_0_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### rclone.exe cloud-exfiltration staging (Sinobi pre-ransom double-extortion)
 
-`UC_0_18` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2_18` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### Mass file rename to .SINOBI extension (ransomware encryption in progress)
 
-`UC_0_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,7 +196,7 @@ DeviceFileEvents
 
 ### OAuth device-code authentication flow sign-in (ARToken/EvilTokens MFA bypass)
 
-`UC_0_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_20` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ AADSignInEventsBeta
 
 ### UAT-11764 QR-phishing credential-harvesting host (workers.dev) click/callback
 
-`UC_0_21` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2_21` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -668,7 +668,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q2 2026: Phishing and weaponized remote management tools drive attack
 
-`UC_0_14` · phase: **exploit** · confidence: **High**
+`UC_2_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

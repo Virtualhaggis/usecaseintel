@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Root process executing from anonymous memfd (CVE-2026-53264 core_pattern LPE payload)
 
-`UC_3_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### tc clsact qdisc + flower filter setup (CVE-2026-53264 UAF trigger path)
 
-`UC_3_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Unprivileged process spawns root child without sudo/su/pkexec (Linux LPE)
 
-`UC_3_7` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_5_7` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Exposure: hosts running kernel vulnerable to CVE-2026-53264 (unpatched TC UAF)
 
-`UC_3_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

@@ -1,3 +1,191 @@
+<article class="card" id="art-232" data-art-slug="2026-07-06-ghsa-critical-cve-2026-48204-apache-camel-camel-mongodb-grid"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="2" data-llm-uc-count="1"
+  data-search="[GHSA / CRITICAL] CVE-2026-48204: Apache Camel: camel-mongodb-gridfs producer allows GridFS operation override and NoSQL operator injection via unfiltered  gridfs.*  HTTP headers Apache Camel: camel-mongodb-gridfs producer allows GridFS operation override and NoSQL operator injection via unfiltered  gridfs.*  HTTP headers CVE-2026-48204  [LLM] Apache Camel gridfs.* control-header injection inbound (CVE-2026-48204 exploit) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-48204-apache-camel-camel-mongodb-grid" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-f7g3-2cg6-f5hj" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-48204: Apache Camel: camel-mongodb-gridfs producer allows GridFS operation override and NoSQL operator injection via unfiltered  gridfs.*  HTTP headers</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-06</span>
+    <span>2 use cases</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Apache Camel: camel-mongodb-gridfs producer allows GridFS operation override and NoSQL operator injection via unfiltered  gridfs.*  HTTP headers</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48204</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-232-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-232"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-232-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Apache Camel gridfs.* control-header injection inbound (CVE-2026-48204 exploit)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="1ed8feb3a8" data-platforms="datadog,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">Apache Camel gridfs.* control-header injection inbound (CVE-2026-48204 exploit)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1ed8feb3a8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound HTTP requests carrying the unfiltered gridfs.* control headers (gridfs.operation / gridfs.objectid / gridfs.metadata / gridfs.chunksize / gridfs.fileid) that a camel-mongodb-gridfs producer will treat as an operation override or NoSQL-operator injection. Article-specific because it anchors on the exact literal header names that HttpHeaderFilterStrategy fails to strip and on the override operation values (remove/listAll/findOne) named in CVE-2026-48204.
+
+Rationale: Anchors on the five literal control-header names (gridfs.operation/objectid/metadata/chunksize/fileid) that GHSA-f7g3-2cg6-f5hj states bypass HttpHeaderFilterStrategy because they lack the camel/Camel prefix, plus the override operation tokens remove/listAll/findOne - all high-fidelity because no benign HTTP client sends these header names. Cross-checked cvedetails and the sibling Camel header-filter-bypass CVEs (CVE-2025-27636, CVE-2025-29891) which confirm the same unfiltered-header exploitation class.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f7g3-2cg6-f5hj
+  • https://cve.threatint.eu/CVE/CVE-2026-48204
+  • https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-26278/Apache-Camel.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application or System Exploitation">T1499.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal QA / DAST scanners (Burp, ZAP, Nuclei) fuzzing the Camel HTTP endpoint with gridfs.* headers as part of authorized testing</li><li>A legitimate downstream integration that intentionally drives GridFS operations via the raw gridfs.* header names (pre-upgrade, not yet migrated to the CamelGridFs* constants)</li><li>Vulnerability-management scanners (Tenable, Qualys) probing for CVE-2026-48204 and logging benign detection traffic</li><li>WAF log noise where &#x27;gridfs.&#x27; appears in an unrelated URL path segment rather than a control header</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where isnull(OverrideOp) == false and OverrideOp in~ (&quot;remove&quot;,&quot;listAll&quot;,&quot;findOne&quot;,&quot;delete&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request for the flagged source IP - confirm gridfs.operation is set to remove/listAll/findOne (not upload) and whether gridfs.metadata carries MongoDB operators ($where/$gt/$ne). Check the Camel app version against the fixed builds (4.14.8 / 4.18.3 / 4.21.0). 2) Contain: if the bridging consumer is unauthenticated and the version is vulnerable, block the source IP at the WAF and add a rule stripping gridfs.* request headers before the producer; set an explicit operation on the mongodb-gridfs endpoint. 3) Hunt: review GridFS/MongoDB audit logs for unexpected file deletions (remove), full-bucket listAll enumeration, or findOne reads from the app&#x27;s service account in the same window; pivot on the source IP across all public-facing Camel routes.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-232-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-232-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-232-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-232-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-232-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where DeviceProduct has_any (&quot;WAF&quot;,&quot;Application Gateway&quot;,&quot;F5&quot;,&quot;ModSecurity&quot;,&quot;Imperva&quot;) or isnotempty(RequestURL)
+| where RequestURL has &quot;gridfs.&quot; or Message has &quot;gridfs.&quot; or RequestContext has &quot;gridfs.&quot;
+| extend Hay = strcat(tostring(RequestURL), &quot; &quot;, tostring(Message), &quot; &quot;, tostring(RequestContext))
+| where Hay has_any (&quot;gridfs.operation&quot;,&quot;gridfs.metadata&quot;,&quot;gridfs.objectid&quot;,&quot;gridfs.fileid&quot;,&quot;gridfs.chunksize&quot;)
+| extend OverrideOp = extract(@&quot;gridfs\.operation[=:\s&quot;&quot;&#x27;]+(\w+)&quot;, 1, Hay)
+| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Hits = count(), Ops = make_set(OverrideOp, 10), SampleReq = any(RequestURL) by SourceIP, DestinationIP, RequestMethod, DeviceProduct
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-232-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Apache Camel camel-mongodb-gridfs Control-Header Injection (CVE-2026-48204)
+id: 6f2b1d94-8c3a-4f7e-9d21-7a1c0e5b2f88
+description: Detects inbound HTTP requests carrying unfiltered gridfs.* control headers that override the camel-mongodb-gridfs producer operation or inject a NoSQL metadata document (CVE-2026-48204).
+references:
+  - https://github.com/advisories/GHSA-f7g3-2cg6-f5hj
+  - https://cve.threatint.eu/CVE/CVE-2026-48204
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - &#x27;gridfs.operation&#x27;
+      - &#x27;gridfs.metadata&#x27;
+      - &#x27;gridfs.objectid&#x27;
+      - &#x27;gridfs.fileid&#x27;
+      - &#x27;gridfs.chunksize&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-232-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.syslog OR source:nginx OR source:apache) (@http.url:(*gridfs.operation* OR *gridfs.metadata* OR *gridfs.objectid* OR *gridfs.fileid* OR *gridfs.chunksize*) OR @message:(*gridfs.operation* OR *gridfs.metadata* OR *gridfs.objectid*))</code></pre></div>
+    <div class="tab-content" id="art-232-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*gridfs.operation*&quot; OR Web.url=&quot;*gridfs.metadata*&quot; OR Web.url=&quot;*gridfs.objectid*&quot; OR Web.url=&quot;*gridfs.fileid*&quot; OR Web.url=&quot;*gridfs.chunksize*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | rename url as request | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-232-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*gridfs.operation*&quot; OR Web.url=&quot;*gridfs.metadata*&quot; OR Web.url=&quot;*gridfs.objectid*&quot; OR Web.url=&quot;*gridfs.fileid*&quot; OR Web.url=&quot;*gridfs.chunksize*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | rename url as request | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-232-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-232-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-232-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-232-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48204&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-232-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48204&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-232-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48204&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-232-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48204&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-233" data-art-slug="2026-07-06-when-checking-the-url-isn-t-enough-a-device-code-phishing-at"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1528,T1566,T1566.001"
@@ -14726,673 +14914,6 @@ level: critical
         where Processes.process_hash IN (&quot;8bce95ebfb895537fec243e069d7193980361de9d916339906b11a14ffded94f&quot;, &quot;702161756dfd150ad3c214fbf97ce98fdc960ea7b3970b5300702ed8c953cafd&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-261" data-art-slug="2026-07-01-mass-npm-supply-chain-attack-20-leo-platform-packages-compro"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
-  data-techs="T1027,T1190,T1195.002"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="linux,windows"
-  data-uc-count="7" data-llm-uc-count="4"
-  data-search="Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised On June 24, 2026, an attacker published malicious versions of 20 npm packages belonging to the Leo Platform ecosystem in a coordinated burst spanning less than three seconds. All 20 packages carry an identical CI/CD attack toolkit that steals secrets from GitHub Actions runners, cloud credential stores, package registries, and password managers, then exfiltrates them via the victim&#x27;s own GitHub token. Together these packages receive approximately 13,600 downloads per week.  T1027 T1190 T1195.002 [LLM] Bun v1.3.13 runtime pulled from GitHub Releases during npm install (Phantom Gyp staging) [LLM] GitHub Actions Runner.Worker memory read via /proc/&lt;pid&gt;/mem (CI secret unmasking) [LLM] Passwordless sudo backdoor written for runner account (runner ALL=(ALL) NOPASSWD:ALL) [LLM] Bun executes dropped temp payload /tmp/p*.js (Miasma stealer launch) Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-07-01-mass-npm-supply-chain-attack-20-leo-platform-packages-compro" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised" target="_blank" rel="noopener">Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-07-01</span>
-    <span>7 use cases</span>
-    <span>3 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">On June 24, 2026, an attacker published malicious versions of 20 npm packages belonging to the Leo Platform ecosystem in a coordinated burst spanning less than three seconds. All 20 packages carry an identical CI/CD attack toolkit that steals secrets from GitHub Actions runners, cloud credential stores, package registries, and password managers, then exfiltrates them via the victim&#x27;s own GitHub token. Together these packages receive approximately 13,600 downloads per week.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-<div class="ind-group"><span class="ind-label">SHA1</span><span class="ind ">24a0d9e496ec07ca…</span> <span class="ind ">d45ad3cffbcc7c4b…</span> <span class="ind ">1dcc0a39e1cd7293…</span> <span class="ind ">ed9a17d6567101fa…</span> <span class="ind ">effa8576594fdd59…</span></div>
-<div class="ind-group"><span class="ind-label">MD5</span><span class="ind ">ad9f0ecdbf6075f8…</span> <span class="ind ">54089e0f368fa9a7…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-261-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-261"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-261-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Bun executes dropped temp payload /tmp/p*.js (Miasma stealer launch) · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Passwordless sudo backdoor written for runner account (runner ALL=(ALL) NOPASSWD:ALL) · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Bun v1.3.13 runtime pulled from GitHub Releases during npm install (Phantom Gyp staging)</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] GitHub Actions Runner.Worker memory read via /proc/&lt;pid&gt;/mem (CI secret unmasking)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="26ee11a840" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Bun v1.3.13 runtime pulled from GitHub Releases during npm install (Phantom Gyp staging)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="26ee11a840" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the Leo Platform / Miasma toolkit fetching the pinned Bun v1.3.13 single-file binary from github.com/oven-sh/bun/releases during a node/npm install. The stealer runs its core logic under this downloaded Bun runtime specifically to evade Node-child monitoring, so an install-context process reaching this exact release URL is a high-fidelity stager signal.
-
-Rationale: Anchored on the article&#x27;s exact version-pinned Bun download URL (github.com/oven-sh/bun/releases/download/bun-v1.3.13/) scoped to install-tooling initiators; Snyk and Microsoft both confirm the downloaded-Bun evasion for the same toolkit.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
-  • https://snyk.io/blog/bun-based-stealer-hits-sap-cap-js-mbt-npm-packages/
-  • https://www.microsoft.com/en-us/security/blog/2026/05/20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-credential-theft/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate projects that genuinely vendor Bun v1.3.13 and download it during CI build (e.g. Bun-based test suites)</li><li>Internal mirror/proxy caching the Bun release that then serves it to many build agents</li><li>Developer manually pinning bun-v1.3.13 in a setup script invoked by npm postinstall of a trusted package</li><li>Renovate/Dependabot dry-run installs that fetch toolchains</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;bun-types&quot;,&quot;@biomejs&quot;) and DeviceName startswith &quot;trusted-bun-ci&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the package + version being installed when the download fired (correlate InitiatingProcessCommandLine / build log) and confirm whether the repo legitimately uses Bun; check the host against the 20 Leo Platform packages and the 2026-06-24T23:04:55Z publish window. 2) Contain: isolate/cordon the runner, revoke the GITHUB_TOKEN and any cloud creds (AWS/GCP/Azure/Vault) reachable from it, and rotate npm publish tokens for accounts that ran the build. 3) Hunt: pivot on the same host/account for bun executing /tmp/p*.js, /proc/&lt;pid&gt;/mem reads of Runner.Worker, and sudoers NOPASSWD writes; search the org for any leo-* package at the malicious versions in package-lock files.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-261-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteUrl has_any (&quot;oven-sh/bun/releases/download/bun-v1.3.13&quot;, &quot;bun-v1.3.13&quot;)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;node-gyp&quot;,&quot;bun&quot;,&quot;yarn&quot;,&quot;pnpm&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has_any (&quot;oven-sh/bun/releases/download/bun-v1.3.13&quot;, &quot;bun-v1.3.13&quot;)
-| project TimeGenerated, SrcIpAddr, SrcHostname, SrcUsername, Url, UserAgent = HttpRequestHeaderUserAgent, DstHostname, DvcAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Bun v1.3.13 Release Download During npm Install (Leo Platform / Miasma)
-id: 6b2f1c0a-9d44-4e21-8a17-2f3c5e7b9a01
-description: Detects retrieval of the pinned Bun v1.3.13 single-file runtime from GitHub Releases, used by the Leo Platform/Miasma npm toolkit to run its stealer outside the Node process tree.
-references:
-  - https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised
-  - https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1105
-  - attack.t1195.002
-  - attack.command_and_control
-logsource:
-  category: proxy
-detection:
-  selection:
-    c-uri|contains:
-      - &#x27;oven-sh/bun/releases/download/bun-v1.3.13&#x27;
-      - &#x27;bun-v1.3.13&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-261-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*oven-sh/bun/releases/download/bun-v1.3.13*&quot; OR Web.url=&quot;*bun-v1.3.13*&quot;) by Web.src Web.dest Web.url Web.http_user_agent Web.site
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*oven-sh/bun/releases/download/bun-v1.3.13*&quot; OR Web.url=&quot;*bun-v1.3.13*&quot;) by Web.src Web.dest Web.url Web.http_user_agent Web.site
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="08c5dadc1e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">GitHub Actions Runner.Worker memory read via /proc/&lt;pid&gt;/mem (CI secret unmasking)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="08c5dadc1e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the toolkit locating the GitHub Actions Runner.Worker process and reading /proc/&lt;pid&gt;/mem directly (sometimes via a sudo python3 helper) to recover secrets that are masked in workflow logs. Reading another process&#x27;s /proc memory on a CI runner is definitively malicious and is the campaign&#x27;s core credential-access step.
-
-Rationale: Uses the article&#x27;s definitive CI indicator (read of /proc/{pid}/mem where the target is Runner.Worker); the regex on /proc/&lt;pid&gt;/mem captures both the direct-read and sudo-python3 helper variants documented by Microsoft for the same toolkit.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm
-  • https://www.microsoft.com/en-us/security/blog/2026/05/20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-credential-theft/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping: Proc Filesystem">T1003.007</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate debuggers/profilers (gdb, perf, gcore) attaching to a process during a build-time crash dump</li><li>Container/runtime health tooling snapshotting memory for diagnostics</li><li>Security agents themselves enumerating /proc (allowlist the EDR/AV process)</li><li>Coredump collection scripts that copy /proc/&lt;pid&gt;/mem ranges</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;gdb&quot;,&quot;gcore&quot;,&quot;perf&quot;,&quot;mdatp&quot;,&quot;wdavdaemon&quot;,&quot;crash&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reader is NOT a known debugger/EDR and that the target PID resolves to Runner.Worker (check /proc/&lt;pid&gt;/cmdline access just before); treat any read in a GitHub Actions context as confirmed. 2) Contain: kill the runner, revoke the workflow GITHUB_TOKEN/OIDC token immediately and rotate every secret exposed to that workflow (cloud keys, registry tokens, 1Password items). 3) Hunt: look for the preceding Bun v1.3.13 download and subsequent GitHub GraphQL writes to newly-created dead-drop repos under the build&#x27;s own token, and check for npm bypass_2fa republish activity.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-261-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-261-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-261-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine matches regex @&quot;/proc/[0-9]+/mem&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(30d)
-| where SyslogMessage matches regex @&quot;/proc/[0-9]+/mem&quot;
-| project TimeGenerated, Computer, Facility, ProcessName, ProcessID, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Process Reads GitHub Runner /proc/&lt;pid&gt;/mem (Leo Platform / Miasma CI Secret Theft)
-id: 1f8c44e9-2a6b-4c3d-9e51-7b0a2d6f4c33
-description: Detects a process referencing /proc/&lt;pid&gt;/mem on a Linux CI runner, the Miasma/Leo Platform toolkit technique for unmasking GitHub Actions secrets from the Runner.Worker process.
-references:
-  - https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised
-  - https://www.microsoft.com/en-us/security/blog/2026/05/20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-credential-theft/
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1003.007
-  - attack.credential_access
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    CommandLine|re: &#x27;/proc/[0-9]+/mem&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-261-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) @process.command_line:*/proc/* AND @process.command_line:*/mem*</code></pre></div>
-    <div class="tab-content" id="art-261-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
-| TargetFileName=/\/proc\/[0-9]+\/mem/
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-261-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process=&quot;*/proc/*&quot; AND Endpoint.Processes.process=&quot;*/mem*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| regex process=&quot;/proc/[0-9]+/mem&quot;
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process=&quot;*/proc/*&quot; AND Endpoint.Processes.process=&quot;*/mem*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| regex process=&quot;/proc/[0-9]+/mem&quot;
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7b880ef38a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Passwordless sudo backdoor written for runner account (runner ALL=(ALL) NOPASSWD:ALL)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7b880ef38a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the toolkit granting itself passwordless sudo on GitHub-hosted runners by writing &#x27;runner ALL=(ALL) NOPASSWD:ALL&#x27; into the sudoers configuration. The exact account+NOPASSWD string is a narrow, high-fidelity privilege-escalation indicator unique to this campaign&#x27;s runner targeting.
-
-Rationale: Anchored on the article&#x27;s verbatim escalation string &#x27;runner ALL=(ALL) NOPASSWD:ALL&#x27;; matching NOPASSWD:ALL plus the runner principal keeps it tight to this campaign&#x27;s GitHub-hosted-runner targeting rather than generic sudoers edits.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised
-  • https://www.stepsecurity.io/blog/binding-gyp-npm-supply-chain-attack-spreads-like-worm</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism: Sudo and Sudo Caching">T1548.003</span> <span class="ind tech" title="Account Manipulation">T1098</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Provisioning/IaC (Ansible, cloud-init) that legitimately grants the runner/build user NOPASSWD sudo on self-hosted runners</li><li>Container base-image build steps adding a NOPASSWD entry for a service account named runner</li><li>Admins troubleshooting sudo on a CI host</li><li>Vendor runner setup scripts that intentionally configure passwordless sudo</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ansible&quot;,&quot;cloud-init&quot;,&quot;python3-ansible&quot;,&quot;chef-client&quot;,&quot;puppet&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the sudoers write originated from a known provisioning tool/parent (Ansible, cloud-init) or from a build/npm-install descendant; the latter is malicious. 2) Contain: remove the sudoers entry, terminate the runner, and rotate credentials reachable from it; for ephemeral GitHub-hosted runners assume the runner is fully compromised and tear it down. 3) Hunt: correlate with the same host&#x27;s Bun v1.3.13 download, /proc/&lt;pid&gt;/mem reads, and any GitHub Actions workflow files modified to add id-token: write and attacker-pinned action SHAs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-261-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-261-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-261-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine contains &quot;NOPASSWD:ALL&quot; and ProcessCommandLine has &quot;runner&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessCommandLine contains &quot;NOPASSWD:ALL&quot; and TargetProcessCommandLine has &quot;runner&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Passwordless Sudo Backdoor for runner Account (Leo Platform / Miasma)
-id: 9c0d77a2-5e18-4b6f-a3c2-1d4e8f0b6a55
-description: Detects creation of a &#x27;runner ALL=(ALL) NOPASSWD:ALL&#x27; sudoers entry, the Leo Platform/Miasma toolkit privilege-escalation step on GitHub-hosted runners.
-references:
-  - https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1548.003
-  - attack.privilege_escalation
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    CommandLine|contains|all:
-      - &#x27;NOPASSWD:ALL&#x27;
-      - &#x27;runner&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-261-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) @process.command_line:*NOPASSWD* AND @process.command_line:*runner*</code></pre></div>
-    <div class="tab-content" id="art-261-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/NOPASSWD:ALL/i
-| CommandLine=/runner/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-261-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process=&quot;*NOPASSWD:ALL*&quot; AND Endpoint.Processes.process=&quot;*runner*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process=&quot;*NOPASSWD:ALL*&quot; AND Endpoint.Processes.process=&quot;*runner*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="94aa0d10a1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Bun executes dropped temp payload /tmp/p*.js (Miasma stealer launch)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="94aa0d10a1" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the downloaded Bun runtime executing the toolkit&#x27;s dropped payload at /tmp/p*.js — the definitive behavioral indicator that the obfuscated stealer logic has launched out-of-band from the Node install process. Bun running a script out of /tmp during a package install is anomalous and campaign-specific.
-
-Rationale: Uses the article&#x27;s stated payload drop/exec location (/tmp/p*.js executed by bun) tied to the bun binary name; this parent-runtime + temp-path JS combination is the campaign&#x27;s definitive behavioral execution indicator and near-zero in normal builds.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised
-  • https://snyk.io/blog/bun-based-stealer-hits-sap-cap-js-mbt-npm-packages/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer running an ad-hoc Bun script saved under /tmp during local debugging</li><li>CI scratch scripts written to /tmp and executed by a Bun-based build that happen to match the p*.js pattern</li><li>Test harnesses that generate temp .js fixtures and run them under Bun</li><li>Bun&#x27;s own cache/transpile artifacts if relocated to /tmp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;node-gyp&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;yarn&quot;,&quot;pnpm&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the /tmp/p*.js contents (or its hash) before it self-deletes and confirm the parent chain is node/npm install rather than an intentional Bun project. 2) Contain: kill the bun process and runner, revoke the workflow token and rotate all cloud/registry/Vault/1Password secrets exposed to the job. 3) Hunt: pivot to the host&#x27;s outbound Bun v1.3.13 download, /proc/&lt;pid&gt;/mem Runner.Worker reads, sudoers NOPASSWD writes, and any npm publishes via bypass_2fa from accounts that ran the build; scan repos for leo-* packages pinned to the malicious versions.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-261-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-261-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-261-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where FileName =~ &quot;bun&quot;
-| where ProcessCommandLine matches regex @&quot;/tmp/p[^/ ]*\.js&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where TargetProcessName has &quot;bun&quot;
-| where TargetProcessCommandLine matches regex @&quot;/tmp/p[^/ ]*\.js&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Bun Executes /tmp/p*.js Dropped Payload (Leo Platform / Miasma)
-id: 4a7e91b3-6c2d-4f80-b1e9-3c5a7d2e8f10
-description: Detects the Bun runtime executing a payload script from /tmp/p*.js, the Leo Platform/Miasma toolkit stealer launch location.
-references:
-  - https://www.stepsecurity.io/blog/mass-npm-supply-chain-attack-20-leo-platform-packages-compromised
-  - https://snyk.io/blog/bun-based-stealer-hits-sap-cap-js-mbt-npm-packages/
-author: SOC Detection Engineering
-date: 2026/06/26
-tags:
-  - attack.t1059.007
-  - attack.t1195.002
-  - attack.execution
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Image|endswith: &#x27;/bun&#x27;
-    CommandLine|re: &#x27;/tmp/p[^/ ]*\.js&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-261-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) @process.name:bun @process.command_line:*/tmp/p* AND @process.command_line:*.js</code></pre></div>
-    <div class="tab-content" id="art-261-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/bun$/i
-| CommandLine=/\/tmp\/p[^\/\s]*\.js/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-261-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=&quot;bun&quot; AND Endpoint.Processes.process=&quot;*/tmp/p*.js*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=&quot;bun&quot; AND Endpoint.Processes.process=&quot;*/tmp/p*.js*&quot; by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process Endpoint.Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-261-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-261-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-261-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-261-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-261-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-261-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;) or SHA1 in~ (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;) or MD5 in~ (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;) or SHA1 in~ (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;) or MD5 in~ (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-261-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-261-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-261-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-261-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;24a0d9e496ec07ca978fab602d5f5e0b39fa03a0&quot;, &quot;d45ad3cffbcc7c4b354ebe9d71d002fa585379ec&quot;, &quot;1dcc0a39e1cd7293a9058cfc41e1afe8b397c943&quot;, &quot;ed9a17d6567101fa4f9f552a4a52cfcca88fa662&quot;, &quot;effa8576594fdd59907b5c5c07293ce28a9a3393&quot;, &quot;47d73156df1c767bb168c4309fd17b92324d587d&quot;, &quot;5e75c14b8acd5752819ab7a10874ddd6389f5238&quot;, &quot;809ce3680adfdb8f0746189b68b6b5a6888a960f&quot;, &quot;68a1cd589b2ce322f5f03fe7f85dc3f176a759d4&quot;, &quot;be3b1f7f1b50f5d53b164a72fb3a9845f4734325&quot;, &quot;f03a3e0dca9ef402352ce61cad59e5d850744960&quot;, &quot;888094a9b842cfe98e8e24c8f729be1fb6384563&quot;, &quot;d7224b6b1f5d2f9403f1cebc8f82518c20b4d0f7&quot;, &quot;e973173fb757d2dab9c6424b440dd9f7cbe4f14a&quot;, &quot;92221eb202e9f2ac577e5c33658c8a05c6d67556&quot;, &quot;be6bb1cf88c46e9e4a6f1a68ed001b77769d58de&quot;, &quot;1a5a1445fcd73133f22a0e7895993ac0a42b56da&quot;, &quot;a8cb86b78ca56befe90dc466642cb04b98079909&quot;, &quot;ef8bf6dd92cbc29ef8d23f3f0fa786ed20a856b1&quot;, &quot;9be49287057cd6a54ef4a70a8d541a7259efbd2d&quot;, &quot;ad9f0ecdbf6075f8cc4ca8bdd62bd27c&quot;, &quot;54089e0f368fa9a7e2050de9b0db121a&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="863a6241ed" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="863a6241ed" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-261-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-261-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-261-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-261-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;index.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/dev/null&quot;) or FileName in~ (&quot;index.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;index.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/dev/null&quot;) or FileName in~ (&quot;index.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-261-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;index.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;index.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-261-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mass npm Supply Chain Attack: 20 Leo Platform Packages Compromised ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;index.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;index.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -90,7 +90,7 @@ _(none detected from narrative keywords)_
 
 ### Kratos/SneakyLog phishing kit web tell: barr.svg + lg.svg asset load then POST to next.php/save.php
 
-`UC_102_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_103_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### SneakyLog W-2 / tax-themed QR-code phishing email delivering fake M365 login
 
-`UC_102_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_103_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ EmailEvents
 
 ### Network / DNS callouts to Kratos takedown infrastructure (disclosed IPs & domains)
 
-`UC_102_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceNetworkEvents
 
 ### Successful M365 sign-in sourced from Kratos AiTM proxy IPs
 
-`UC_102_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_103_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ AADSignInEventsBeta
 
 ### AiTM session-cookie replay: MFA 'previously satisfied' from a first-seen IP
 
-`UC_102_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_103_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ AADSignInEventsBeta
 
 ### Post-compromise M365 mailbox forwarding / inbox-rule creation (BEC prep)
 
-`UC_102_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_103_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -581,7 +581,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Police Dismantle Kratos Phishing Kit Built to Steal Microsoft 365 Sessions and B
 
-`UC_102_12` · phase: **exploit** · confidence: **High**
+`UC_103_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

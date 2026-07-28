@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### NightLedger DLL search-order hijack: SspiCli.dll loaded by AppVShNotify.exe from non-system path
 
-`UC_4_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceImageLoadEvents
 
 ### NightLedger C2 beacon to realhealthshop.com / tjconsultingservices.com
 
-`UC_4_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_6_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### BridgeHead/ArcBridge WebSocket tunnel to smartconnect.azurewebsites.net
 
-`UC_4_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_6_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### BridgeHead tunneler DLL planted as unbcl.dll / libwinpthread-1.dll in atypical directories
 
-`UC_4_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceFileEvents
 
 ### NightLedger staging: NetSetup.log copied out of C:\Windows\debug
 
-`UC_4_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -369,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware
 
-`UC_4_7` · phase: **exploit** · confidence: **High**
+`UC_6_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
