@@ -27,10 +27,13 @@ The intrusions involve the use of a previously undocumented Windows backdoor cal
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 - **T1005** — Data from Local System
-- **T1016** — System Network Configuration Discovery
-- **T1057** — Process Discovery
+- **T1082** — System Information Discovery
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1090** — Proxy
+- **T1572** — Protocol Tunneling
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
@@ -38,45 +41,80 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Nimbus Manticore BridgeHead/NightLedger side-load: unbcl.dll loaded outside System32
+### NightLedger collection of domain-join diagnostic log C:\Windows\debug\NetSetup.log
 
-`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="unbcl*.dll" NOT (Filesystem.file_path IN ("*\\System32\\*","*\\SysWOW64\\*","*\\WinSxS\\*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.action Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="NetSetup.log" AND NOT Filesystem.file_path="*\\Windows\\debug\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "NetSetup.log"
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath !has @"\Windows\debug\"      // original diagnostic log lives here; a copy elsewhere = staging for exfil
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("svchost.exe","TiWorker.exe","dsregcmd.exe","msiexec.exe","netsetup.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### BridgeHead unbcl.dll DLL side-load from non-system path
+
+`UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="unbcl.dll" AND NOT (Filesystem.file_path="*\\System32\\*" OR Filesystem.file_path="*\\SysWOW64\\*" OR Filesystem.file_path="*\\WinSxS\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceImageLoadEvents
 | where Timestamp > ago(30d)
-| where FileName startswith "unbcl" and FileName endswith ".dll"
-| where not (FolderPath startswith @"C:\Windows\System32" or FolderPath startswith @"C:\Windows\SysWOW64" or FolderPath has @"\WinSxS\")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          LoadedDll = FileName, LoadedFrom = FolderPath, SHA256,
-          HostProcess = InitiatingProcessFileName, HostPath = InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine
+| where FileName =~ "unbcl.dll"
+| where FolderPath !startswith @"C:\Windows\System32\"
+| where FolderPath !startswith @"C:\Windows\SysWOW64\"
+| where FolderPath !has @"\WinSxS\"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### NightLedger collection of domain-join diagnostics (C:\Windows\debug\NetSetup.log)
+### BridgeHead/NightLedger covert relay egress via unbcl.dll host to public IPs
 
-`UC_1_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*NetSetup.log*" NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` dc(All_Traffic.dest_ip) as distinct_dest count as conns values(All_Traffic.dest_port) as dest_ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.process="*unbcl.dll*" AND All_Traffic.dest_category="public" by All_Traffic.src All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where distinct_dest > 20
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "NetSetup.log"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where InitiatingProcessCommandLine has "unbcl.dll" or InitiatingProcessFileName =~ "unbcl.dll"
+| where RemoteIPType == "Public"
+| summarize ConnCount = count(), DistinctRemoteIPs = dcount(RemoteIP), RemotePorts = make_set(RemotePort, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName
+| order by DistinctRemoteIPs desc
+```
+
+### HOLLOWGRAPH Microsoft 365 calendar C2 — far-future (2050) events with attachments
+
+`UC_7_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where ActionType has_any ("Create","Update","Send")
+| where tostring(RawEventData) has "2050"
+| where tostring(RawEventData) has_any ("calendar","Calendar","IPM.Appointment","events","Event")
+| project Timestamp, AccountDisplayName, AccountObjectId, Application, ActionType, ObjectName, ObjectType, IPAddress, UserAgent, RawEventData
 | order by Timestamp desc
 ```
 
@@ -293,7 +331,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nimbus Manticore Deploys NightLedger and Turns Victim Systems Into Covert Relays
 
-`UC_1_5` · phase: **exploit** · confidence: **High**
+`UC_7_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -343,4 +381,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

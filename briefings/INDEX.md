@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,17 +9,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-28
+- [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
+- [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
 - [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
+- [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
 - [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
+- [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
-- [over 24 000 exposed server bmcs leak password hash via decad](./2026-07-28/over-24-000-exposed-server-bmcs-leak-password-hash-via-decad.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
+- [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
 
 ## 2026-07-27
-- [2026 mid year update on pace for our biggest year yet](./2026-07-27/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [arista patches velocloud orchestrator zero day exploited in ](./2026-07-27/arista-patches-velocloud-orchestrator-zero-day-exploited-in-.md)
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
@@ -103,16 +106,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 50522 microsoft sharepoint deserialization](./2026-07-22/cisa-kev-cve-2026-50522-microsoft-sharepoint-deserialization.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
 - [hackers exploit windmill flaw to read arbitrary server files](./2026-07-22/hackers-exploit-windmill-flaw-to-read-arbitrary-server-files.md)
-- [microsoft azure devops mcp flaw lets hidden pr comments hija](./2026-07-22/microsoft-azure-devops-mcp-flaw-lets-hidden-pr-comments-hija.md)
 - [openai says its ai models escaped sandbox targeted hugging f](./2026-07-22/openai-says-its-ai-models-escaped-sandbox-targeted-hugging-f.md)
-- [police dismantle kratos phishing kit built to steal microsof](./2026-07-22/police-dismantle-kratos-phishing-kit-built-to-steal-microsof.md)
 - [real world incident response microsoft and axa xl strengthen](./2026-07-22/real-world-incident-response-microsoft-and-axa-xl-strengthen.md)
 - [sol searching can frontier models tackle autonomous long hor](./2026-07-22/sol-searching-can-frontier-models-tackle-autonomous-long-hor.md)
 - [sql injection isn t dead](./2026-07-22/sql-injection-isn-t-dead.md)
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
-- [trojanized newtonsoft json fork hides game rigging code in a](./2026-07-22/trojanized-newtonsoft-json-fork-hides-game-rigging-code-in-a.md)
 - [ubuntu snap confine flaw could give local users root on defa](./2026-07-22/ubuntu-snap-confine-flaw-could-give-local-users-root-on-defa.md)
-- [why modern socs need multi layered detections](./2026-07-22/why-modern-socs-need-multi-layered-detections.md)
 
 ## 2026-07-21
 - [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
@@ -296,7 +295,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
 
 ## 2026-06-26
-- [ghsa critical cve 2026 48797 backpropagate backprop ui auth ](./2026-06-26/ghsa-critical-cve-2026-48797-backpropagate-backprop-ui-auth-.md)
 - [ghsa critical cve 2026 49252 deepstream is vulnerable to pro](./2026-06-26/ghsa-critical-cve-2026-49252-deepstream-is-vulnerable-to-pro.md)
 - [ghsa critical cve 2026 49257 mcp pinot unauthenticated tool ](./2026-06-26/ghsa-critical-cve-2026-49257-mcp-pinot-unauthenticated-tool-.md)
 - [ghsa critical cve 2026 49454 relyra saml signaturevalue not ](./2026-06-26/ghsa-critical-cve-2026-49454-relyra-saml-signaturevalue-not-.md)

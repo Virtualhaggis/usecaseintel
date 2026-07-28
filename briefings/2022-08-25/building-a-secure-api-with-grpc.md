@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Building a secure API with gRPC
 
-`UC_2041_0` · phase: **exploit** · confidence: **High**
+`UC_2040_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

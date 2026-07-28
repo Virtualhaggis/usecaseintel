@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Ghostcat: inbound AJP (TCP/8009) connections from untrusted/public sources to Tomcat
 
-`UC_3412_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3411_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Ghostcat RCE: Tomcat/java process spawning a command shell (JSP webshell execution)
 
-`UC_3412_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3411_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Ghostcat exposure: assets running Tomcat versions vulnerable to CVE-2020-1938
 
-`UC_3412_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3411_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

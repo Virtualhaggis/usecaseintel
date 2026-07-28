@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious udev .rules file written to /run/udev/rules.d by non-root process (CVE-2026-8933)
 
-`UC_93_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_97_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### systemd-udevd spawning a shell or interpreter as root (snap-confine CVE-2026-8933 payload execution)
 
-`UC_93_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_97_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### snap-confine spawned by an interactive user shell instead of snapd (CVE-2026-8933 trigger)
 
-`UC_93_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_97_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Unprivileged FUSE mount over snap-confine /tmp scratch directory (CVE-2026-8933)
 
-`UC_93_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_97_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### Ubuntu hosts exposed to snap-confine LPE CVE-2026-8933 (unpatched snapd)
 
-`UC_93_15` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_97_15` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

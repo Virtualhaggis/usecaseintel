@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Exploring extensions of dependency confusion attacks via npm package aliasing
 
-`UC_2774_1` · phase: **exploit** · confidence: **High**
+`UC_2773_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable npm/yarn/pnpm version exposed to bin-key file overwrite (CVE-2019-16776/16777/10773)
 
-`UC_3438_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3437_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### npm/yarn/pnpm planting or overwriting a binary in a system bin directory
 
-`UC_3438_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3437_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Understanding filesystem takeover vulnerabilities in npm JavaScript package mana
 
-`UC_3438_1` · phase: **exploit** · confidence: **High**
+`UC_3437_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
