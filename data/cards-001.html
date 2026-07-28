@@ -889,9 +889,9 @@ level: critical
   data-sources="The Hacker News|BleepingComputer"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
-  data-targets="azure,linux,m365,windows"
+  data-targets="azure,m365,vcs,windows"
   data-uc-count="10" data-llm-uc-count="3"
-  data-search="Dysphoria IoT Botnet Adds Blockchain C2 and Victim Relays After JackSkid Disruption Dysphoria, an Internet of Things (IoT) botnet line tracked by CNCERT and XLab, has adopted blockchain-based name services and infected-device relays after a March law-enforcement operation against JackSkid infrastructure. The researchers say the design makes the botnet harder to disrupt. CNCERT, China&#x27;s national computer emergency response team, and XLab, the threat-intelligence lab of Chinese CVE-2025-9528 T1190 T1566 T1566.002 [LLM] Dysphoria botnet blockchain C2 resolution via ENS/SNS gateways (.eth/.sol) [LLM] Dysphoria distribution-node / victim-relay traffic to hardcoded C2 IPs [LLM] IoT/edge SSH &amp; Telnet weak-password brute force followed by successful login Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
+  data-search="Dysphoria IoT Botnet Adds Blockchain C2 and Victim Relays After JackSkid Disruption Dysphoria, an Internet of Things (IoT) botnet line tracked by CNCERT and XLab, has adopted blockchain-based name services and infected-device relays after a March law-enforcement operation against JackSkid infrastructure. The researchers say the design makes the botnet harder to disrupt. CNCERT, China&#x27;s national computer emergency response team, and XLab, the threat-intelligence lab of Chinese CVE-2025-9528 T1190 T1566 T1566.002 [LLM] Dysphoria botnet distribution-node / victim-relay IP contact (5 named IPs) [LLM] Dysphoria blockchain (ENS/SNS) C2 name resolution — .eth / .sol records [LLM] CVE-2025-9528 Linksys E1700 command injection (/goform/systemCommand) — Dysphoria propagation Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-27-dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -953,140 +953,64 @@ level: critical
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] IoT/edge SSH &amp; Telnet weak-password brute force followed by successful login · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] CVE-2025-9528 Linksys E1700 command injection (/goform/systemCommand) — Dysphoria propagation · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Dysphoria botnet blockchain C2 resolution via ENS/SNS gateways (.eth/.sol) · [LLM] Dysphoria distribution-node / victim-relay traffic to hardcoded C2 IPs · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Dysphoria botnet distribution-node / victim-relay IP contact (5 named IPs) · [LLM] Dysphoria blockchain (ENS/SNS) C2 name resolution — .eth / .sol records · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="9ed00ce2c5" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="f17ddc3536" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Dysphoria botnet blockchain C2 resolution via ENS/SNS gateways (.eth/.sol)</span>
+    <span class="uc-title">Dysphoria botnet distribution-node / victim-relay IP contact (5 named IPs)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9ed00ce2c5" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f17ddc3536" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts internal hosts resolving the botnet&#x27;s blockchain name-service records (m3rnbvs5d.eth, burrberry.eth, 24carnforth2merseyside.sol) or reaching public ENS/SNS resolver gateways used to recover the hidden distribution-node list. Enterprise servers and IoT/edge devices almost never touch ENS/Solana name resolution, so this is the headline &#x27;blockchain C2&#x27; pivot the campaign introduced.
+    <div class="uc-desc">Alerts when any internal host connects to the five IPv4 distribution/relay endpoints XLab/CNCERT attributed to the Dysphoria IoT botnet&#x27;s relay mesh. These addresses front the real controllers (the article notes listed endpoints are infected machines relaying to the true C2), so a hit means an enterprise IoT/edge asset is either an infected relay or a bot fetching its server list.
 
-Rationale: Uses the exact ENS/SNS records (m3rnbvs5d.eth, burrberry.eth, 24carnforth2merseyside.sol) plus the public ENS/Solana gateway domains that malware must hit to resolve blockchain names into IPs; corroborated by Nokia Deepfield/Comcast (m3rnbvs5d.eth) and BleepingComputer&#x27;s ENS/SNS + fake-IPv6 byte-transform write-up.
+Rationale: Anchored on the five distribution/relay IPv4 addresses XLab/CNCERT tied to Dysphoria; these are IOC-grade destinations (relay mesh fronting the real controllers), so any hit is high-fidelity regardless of platform.
 
 Cross-checked against:
   • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
-  • https://www.nokia.com/blog/breaking-a-botnet-ddos-enigma-code/
-  • https://corporate.comcast.com/stories/reverse-engineering-jackskid-from-bare-bones-mirai-fork-to-persistent-tv-box-botnet</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Dynamic Resolution">T1568</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Web Service: Dead Drop Resolver">T1102.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Blockchain/Web3 developer workstations resolving *.eth via eth.limo or ensideas for legitimate dApp work</li><li>Crypto-wallet browser extensions (MetaMask) performing ENS lookups through cloudflare-eth.com</li><li>Security researchers detonating malware in a sandbox on the corporate DNS resolver</li><li>NFT/DeFi marketing team hosts querying Solana mainnet RPC</li><li>Threat-intel enrichment tooling that pre-resolves IOC domains</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;chrome&quot;,&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox&quot;,&quot;firefox.exe&quot;,&quot;brave&quot;,&quot;safari&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the querying host from DeviceName/ClientIP; if it is an IoT device, router, camera, or Linux server with no business reason to touch ENS/SNS, treat as compromised. Pull the initiating process/command line. 2) Contain: block the ENS/SNS gateway domains and the resolved distribution-node IPs at egress, isolate the host, and disable remote management/UPnP on the segment. 3) Hunt: pivot on the host&#x27;s outbound connections to the five distribution-node IPs (UC2), sweep the subnet for other devices resolving the same .eth/.sol records, and check for inbound SSH/Telnet brute force (UC3) preceding the beacon.</div></details>
+  • https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Proxy: Internal Proxy">T1090.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Shared hosting / bulletproof-adjacent providers on the 194.87.198.0 and 194.58.38.0 ranges may host benign co-tenant sites reachable by users</li><li>Corporate VPN or research sandbox egressing test traffic to Russian-hosted infrastructure</li><li>Threat-intel or scanning appliances actively probing the flagged IPs from inside the network</li><li>Security researchers replaying IOCs in a lab segment</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;nessus.exe&quot;,&quot;qualysagent.exe&quot;) or DeviceName has_any (&quot;scanner&quot;,&quot;vulnmgmt&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal src_ip and asset class — if it is an IoT/camera/router/gateway or an unmanaged edge device, treat as likely infected relay; capture dest_port and connection direction (many inbound + relayed outbound = relay behavior). 2) Contain: block the five IPs at the perimeter, isolate the source asset from the network, and disable UPnP/remote management on the affected segment. 3) Hunt: pivot on the src asset for DNS/HTTP resolution of .eth/.sol names (UC2), inbound /goform/systemCommand exploitation (UC3), and check for other hosts contacting the same relay IPs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-02-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-02-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-02-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-02-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-02-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-02-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where RemoteUrl has_any (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;,&quot;eth.link&quot;,&quot;eth.limo&quot;,&quot;cloudflare-eth.com&quot;,&quot;api.ensideas.com&quot;,&quot;mainnet-beta.solana.com&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
-| where TimeGenerated &gt; ago(14d)
-| where Name has_any (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;,&quot;eth.link&quot;,&quot;eth.limo&quot;,&quot;cloudflare-eth.com&quot;,&quot;api.ensideas.com&quot;,&quot;mainnet-beta.solana.com&quot;)
-| project TimeGenerated, Computer, ClientIP, Name, QueryType, ResolvedIPs = Result
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria Botnet Blockchain (ENS/SNS) C2 Name Resolution
-id: 8e3b1f4a-6c2d-4a11-9f07-7c9b2d5e1a01
-description: Detects DNS resolution of Dysphoria botnet ENS/SNS C2 records or public ENS/Solana name-service gateways used to recover hidden distribution nodes.
+| where Timestamp &gt; ago(30d)
+| where RemoteIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort,10) by DeviceName, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where DestinationIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Events=count(), Ports=make_set(DestinationPort,10) by SourceIP, DestinationIP, DeviceVendor, DeviceProduct, DeviceAction
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria IoT Botnet Distribution/Relay Node Contact
+id: 3f7c1a92-2d8e-4c1b-9a5f-1e2b7d0c4a11
+description: Detects network connections to IPv4 distribution/relay endpoints attributed to the Dysphoria IoT botnet by XLab/CNCERT.
 references:
   - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
   - https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
 author: SOC Detection Engineering
 date: 2026/07/28
 tags:
-  - attack.command_and_control
-  - attack.t1568
-  - attack.t1071.001
-  - attack.t1102.001
-logsource:
-  category: dns
-detection:
-  selection:
-    query|contains:
-      - &#x27;m3rnbvs5d.eth&#x27;
-      - &#x27;burrberry.eth&#x27;
-      - &#x27;24carnforth2merseyside.sol&#x27;
-      - &#x27;eth.link&#x27;
-      - &#x27;eth.limo&#x27;
-      - &#x27;cloudflare-eth.com&#x27;
-      - &#x27;api.ensideas.com&#x27;
-      - &#x27;mainnet-beta.solana.com&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (&quot;m3rnbvs5d.eth&quot; OR &quot;burrberry.eth&quot; OR &quot;24carnforth2merseyside.sol&quot; OR &quot;eth.limo&quot; OR &quot;eth.link&quot; OR &quot;mainnet-beta.solana.com&quot; OR &quot;api.ensideas.com&quot;)</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| DomainName=/(m3rnbvs5d\.eth|burrberry\.eth|24carnforth2merseyside\.sol|eth\.link|eth\.limo|cloudflare-eth\.com|api\.ensideas\.com|mainnet-beta\.solana\.com)/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;*m3rnbvs5d.eth&quot; OR DNS.query=&quot;*burrberry.eth&quot; OR DNS.query=&quot;*24carnforth2merseyside.sol&quot; OR DNS.query=&quot;*eth.link&quot; OR DNS.query=&quot;*eth.limo&quot; OR DNS.query=&quot;*cloudflare-eth.com&quot; OR DNS.query=&quot;*api.ensideas.com&quot; OR DNS.query=&quot;*mainnet-beta.solana.com&quot;) by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;*m3rnbvs5d.eth&quot; OR DNS.query=&quot;*burrberry.eth&quot; OR DNS.query=&quot;*24carnforth2merseyside.sol&quot; OR DNS.query=&quot;*eth.link&quot; OR DNS.query=&quot;*eth.limo&quot; OR DNS.query=&quot;*cloudflare-eth.com&quot; OR DNS.query=&quot;*api.ensideas.com&quot; OR DNS.query=&quot;*mainnet-beta.solana.com&quot;) by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d769cd6877" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Dysphoria distribution-node / victim-relay traffic to hardcoded C2 IPs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d769cd6877" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects internal hosts connecting to the five Dysphoria distribution-node IPs (194.87.198.208/104, 194.58.38.79/49/96) where the DDoS sample pulls its HTTP server list and where victim relays forward traffic. Because these IPs are fixed campaign infrastructure, any egress to them from an IoT/edge/server host is high-fidelity.
-
-Rationale: Uses the five extracted distribution-node IPs verbatim; the article states these endpoints are infected machines relaying traffic and that the DDoS sample pulls its server list from them over HTTP, matching the ~5-IP ENS footprint independently reported by Nokia/Comcast.
-
-Cross-checked against:
-  • https://www.nokia.com/blog/breaking-a-botnet-ddos-enigma-code/
-  • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy">T1090</span> <span class="ind tech" title="Web Service">T1102</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/EDR tooling actively sinkholing or probing the listed IOC IPs</li><li>A researcher&#x27;s detonation VM beaconing from an isolated but logged subnet</li><li>Shared-hosting reuse if one of the IPs is later reallocated to a benign service (re-validate IOC freshness quarterly)</li><li>Corporate proxy egress aggregating many hosts behind one SourceIP, obscuring the true origin</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the connection direction and the initiating process; inbound to one of these IPs from your relay host vs. outbound from a bot both indicate compromise. 2) Contain: block all five IPs (both directions) at the perimeter, isolate the host, and capture memory/pcap before reimage. 3) Hunt: check the same host for ENS/SNS resolution (UC1) and preceding SSH/Telnet brute force (UC3); enumerate any other internal hosts that touched these IPs and inspect for UPnP port-map / listening relay sockets.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-02-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-02-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-02-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where RemoteIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(14d)
-| where DestinationIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
-   or SourceIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, RequestURL, DeviceAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria Botnet Distribution-Node C2 IP Connection
-id: 5a1d9c02-4b77-4e3a-8b21-2f6c3e7a9d14
-description: Detects network connections to the five fixed Dysphoria/JackSkid distribution-node IPs used for HTTP server-list retrieval and victim-relay forwarding.
-references:
-  - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
-  - https://www.nokia.com/blog/breaking-a-botnet-ddos-enigma-code/
-author: SOC Detection Engineering
-date: 2026/07/28
-tags:
-  - attack.command_and_control
-  - attack.t1071.001
-  - attack.t1090
+  - attack.t1071
+  - attack.t1090.001
 logsource:
   category: network_connection
+  product: windows
 detection:
   selection:
     DestinationIp:
@@ -1097,82 +1021,146 @@ detection:
       - &#x27;194.58.38.96&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(194.87.198.208 OR 194.87.198.104 OR 194.58.38.79 OR 194.58.38.49 OR 194.58.38.96)</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^NetworkConnectIP(4|6)$/
-| RemoteAddressIP4=/^(194\.87\.198\.(208|104)|194\.58\.38\.(79|49|96))$/
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
-| filter dstAddr in [&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;] or srcAddr in [&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(194.87.198.208 OR 194.87.198.104 OR 194.58.38.79 OR 194.58.38.49 OR 194.58.38.96)</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemoteAddressIP4=&quot;194.87.198.208&quot; OR RemoteAddressIP4=&quot;194.87.198.104&quot; OR RemoteAddressIP4=&quot;194.58.38.79&quot; OR RemoteAddressIP4=&quot;194.58.38.49&quot; OR RemoteAddressIP4=&quot;194.58.38.96&quot;)
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
+| filter dstAddr in [&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;]
+| stats count(*) as flows, sum(bytes) as totalBytes by srcAddr, dstAddr, dstPort, action
+| sort flows desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="882136b061" data-platforms="cloudwatch,datadog,def,falcon,sent,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="81d68469c6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">IoT/edge SSH &amp; Telnet weak-password brute force followed by successful login</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Dysphoria blockchain (ENS/SNS) C2 name resolution — .eth / .sol records</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="882136b061" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="81d68469c6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the botnet&#x27;s primary entry vector: high-volume SSH/Telnet password guessing from a single external source that culminates in a successful authentication on an internet-facing device. Scoped to failed-then-success correlation per source IP so it surfaces the credential-stuffing foothold Dysphoria uses to re-infect gear after the JackSkid takedown.
+    <div class="uc-desc">Hunts enterprise DNS/name-resolution telemetry for the Ethereum Name Service and Solana Name Service records Dysphoria uses to conceal C2 (m3rnbvs5d.eth, burrberry.eth, 24carnforth2merseyside.sol) plus any resolution of .eth/.sol TLDs from non-developer assets. This targets the headline innovation — blockchain-name-service C2 that survives conventional server seizure.
 
-Rationale: The article and CNCERT/XLab both state weak Telnet and SSH credential guessing is the most consistent entry vector for Dysphoria&#x27;s post-disruption re-infection; the failed-then-success per-source-IP correlation targets that foothold rather than generic auth noise.
+Rationale: Uses the three named ENS/SNS records plus the .eth/.sol TLD pattern that XLab identified as Dysphoria&#x27;s blockchain resolution channel; second-sourced against BleepingComputer&#x27;s XLab summary confirming ENS/SNS C2 with hidden records.
 
 Cross-checked against:
   • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
-  • https://corporate.comcast.com/stories/evolution-of-jackskid-botnet-what-we-found-and-how-residential-proxies-amplify-its-reach</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Brute Force: Password Guessing">T1110.001</span> <span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal vulnerability scanners (Nessus/Qualys) performing authenticated SSH scans against IoT ranges</li><li>CI/CD or config-management (Ansible) hosts opening many short-lived SSH sessions</li><li>A locked-out admin fat-fingering a password repeatedly before succeeding</li><li>Load-balancer / health-check probes hitting port 22 that generate auth failures</li><li>Legitimate bastion/jump host with high SSH throughput to managed devices</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_private(RemoteIP)) and AccountsTried &gt; 1   // real brute force sprays multiple usernames; single-account lockouts are usually benign</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source IP is external/untrusted and the target is an internet-facing IoT/edge device; review the account that succeeded and whether it is a default/weak credential. 2) Contain: block the source IP, force-rotate the compromised credential, disable Telnet and password SSH auth on the device, and pull it from public exposure. 3) Hunt: on the compromised device look for immediate outbound to the distribution-node IPs (UC2) or ENS/SNS resolution (UC1), new listening sockets / UPnP port maps, and sweep the subnet for the same source IP hitting other devices.</div></details>
+  • https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Dynamic Resolution">T1568</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Web3/blockchain developers or crypto teams legitimately resolving .eth names via MetaMask, ethers.js or ENS gateways</li><li>IPFS/decentralized-web gateways and NFT marketplaces resolving .eth on behalf of users</li><li>Browser wallet extensions performing background ENS lookups on corporate laptops</li><li>Security research/sandbox hosts intentionally resolving the IOCs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ClientIP !in (dynamic([])) and Computer !has_any (&quot;dev&quot;,&quot;web3&quot;,&quot;crypto&quot;,&quot;blockchain&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the querying asset is NOT a sanctioned developer/crypto workstation — .eth/.sol from an IoT device, server, or camera VLAN is high-signal. 2) Contain: sinkhole/block the three named records and the resolving gateway IP, isolate the source host if it is an unmanaged/edge asset. 3) Hunt: correlate the same src to the relay IPs in UC1 and to any /goform/systemCommand exploitation (UC3); sweep the org for other assets resolving the same records or high-frequency .eth/.sol lookups.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-02-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-02-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-02-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;)
+   or RemoteUrl matches regex @&quot;(?i)\.(eth|sol)($|[:/])&quot;
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count() by DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
+| where TimeGenerated &gt; ago(30d)
+| where Name has_any (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;)
+   or Name matches regex @&quot;(?i)\.(eth|sol)$&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Queries=count() by Computer, ClientIP, Name, QueryType
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria Blockchain Name Service (ENS/SNS) C2 Resolution
+id: b1e4f6a3-7c22-4d9f-8a10-9d3e2c5b7f04
+description: Detects DNS resolution of Dysphoria ENS/SNS C2 records and .eth/.sol TLD lookups used for blockchain-based command-and-control.
+references:
+  - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
+  - https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.t1568
+  - attack.t1071.001
+logsource:
+  category: dns
+detection:
+  selection_named:
+    query:
+      - &#x27;m3rnbvs5d.eth&#x27;
+      - &#x27;burrberry.eth&#x27;
+      - &#x27;24carnforth2merseyside.sol&#x27;
+  selection_tld:
+    query|endswith:
+      - &#x27;.eth&#x27;
+      - &#x27;.sol&#x27;
+  condition: selection_named or selection_tld
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:22 (@QueryName:*.eth OR @QueryName:*.sol OR @QueryName:m3rnbvs5d.eth OR @QueryName:burrberry.eth OR @QueryName:24carnforth2merseyside.sol)</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest (DomainName=/\.eth$/i OR DomainName=/\.sol$/i OR DomainName=/m3rnbvs5d\.eth/i OR DomainName=/burrberry\.eth/i OR DomainName=/24carnforth2merseyside\.sol/i)
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;) OR DNS.query=&quot;*.eth&quot; OR DNS.query=&quot;*.sol&quot; by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;) OR DNS.query=&quot;*.eth&quot; OR DNS.query=&quot;*.sol&quot; by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ffb6ccfc37" data-platforms="def,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">CVE-2025-9528 Linksys E1700 command injection (/goform/systemCommand) — Dysphoria propagation</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="ffb6ccfc37" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP requests to the vulnerable Linksys E1700 endpoint /goform/systemCommand carrying a &#x27;command&#x27; parameter — the OS command-injection path (CVE-2025-9528) named in both the XLab and CNCERT propagation lists. Catches both inbound exploitation of exposed IoT gear and outbound scanning by an already-infected internal relay spreading the botnet.
+
+Rationale: Anchored on the exact CVE-2025-9528 injection path /goform/systemCommand (function systemCommand, &#x27;command&#x27; argument) confirmed via NVD/GitHub Advisory — the one propagation CVE common to both the XLab and CNCERT lists.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2025-9528
+  • https://github.com/advisories/GHSA-3m47-gr9p-qrv3
+  • https://www.tenable.com/cve/CVE-2025-9528</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Nessus, Qualys, Nuclei) probing /goform/systemCommand across the IoT estate</li><li>Penetration testers validating CVE-2025-9528 remediation</li><li>Legitimate Linksys admin actions if the firmware genuinely uses that goform endpoint</li><li>Internet background-noise scanners hitting an internet-facing device (benign but noisy)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (dynamic([])) and DstHostname !has_any (&quot;scanner&quot;,&quot;vulnmgmt&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: determine direction — inbound to an exposed Linksys/IoT device (exploitation attempt) vs outbound from an internal host (infected relay scanning). Inspect the request/body for shell metacharacters in the command parameter. 2) Contain: block the source IP, remove the vulnerable device from internet exposure or patch/replace it (E1700 is EOL — vendor unresponsive), and isolate any internal host generating outbound probes. 3) Hunt: from any exploited or scanning host, pivot to relay-IP contact (UC1) and .eth/.sol resolution (UC2); sweep for other /goform/systemCommand requests and successful HTTP 200 responses indicating code execution.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-02-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-02-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-02-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-02-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceLogonEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIPType == &quot;Public&quot;
-| where ActionType in (&quot;LogonFailed&quot;,&quot;LogonSuccess&quot;)
-| summarize Failed = countif(ActionType == &quot;LogonFailed&quot;),
-            Success = countif(ActionType == &quot;LogonSuccess&quot;),
-            AccountsTried = dcount(AccountName),
-            FirstFail = minif(Timestamp, ActionType == &quot;LogonFailed&quot;),
-            SuccessTime = maxif(Timestamp, ActionType == &quot;LogonSuccess&quot;)
-    by DeviceName, RemoteIP
-| where Failed &gt;= 20 and Success &gt;= 1   // 20 = brute-force floor for a single source IP
-| where SuccessTime &gt; FirstFail
-| order by Failed desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where ProcessName in (&quot;sshd&quot;,&quot;telnetd&quot;,&quot;in.telnetd&quot;)
-| extend SrcIP = extract(@&quot;from (\d+\.\d+\.\d+\.\d+)&quot;, 1, SyslogMessage)
-| extend Outcome = case(SyslogMessage has &quot;Failed password&quot; or SyslogMessage has &quot;authentication failure&quot; or SyslogMessage has &quot;Invalid user&quot;, &quot;Failed&quot;,
-                        SyslogMessage has &quot;Accepted password&quot; or SyslogMessage has &quot;Accepted publickey&quot;, &quot;Success&quot;, &quot;Other&quot;)
-| where isnotempty(SrcIP) and Outcome != &quot;Other&quot;
-| summarize Failed = countif(Outcome == &quot;Failed&quot;), Success = countif(Outcome == &quot;Success&quot;),
-            FirstFail = minif(TimeGenerated, Outcome == &quot;Failed&quot;), SuccessTime = maxif(TimeGenerated, Outcome == &quot;Success&quot;)
-    by Computer, SrcIP
-| where Failed &gt;= 20 and Success &gt;= 1   // 20 = brute-force floor per source IP
-| where SuccessTime &gt; FirstFail
-| order by Failed desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog @process.name:(sshd OR telnetd OR in.telnetd) (&quot;Failed password&quot; OR &quot;authentication failure&quot; OR &quot;Invalid user&quot;)</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=UserLogon
-| LogonType=/^(2|3|10)$/
-| RemoteAddressIP4=/\d+\.\d+\.\d+\.\d+/
-| groupBy([aid, ComputerName, RemoteAddressIP4, UserName], function=count())
-| _count &gt; 20</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/guardduty/findings
-fields @timestamp, type, severity, resource.instanceDetails.instanceId, service.action.networkConnectionAction.remoteIpDetails.ipAddressV4
-| filter type like /SSHBruteForce/ or type like /RDPBruteForce/
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count(eval(Authentication.action=&quot;failure&quot;)) as failures count(eval(Authentication.action=&quot;success&quot;)) as successes min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.app IN (&quot;sshd&quot;,&quot;ssh&quot;,&quot;telnetd&quot;,&quot;telnet&quot;) by Authentication.src Authentication.dest span=1h | `drop_dm_object_name(Authentication)` | where failures &gt;= 20 AND successes &gt;= 1 | sort - failures</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count(eval(Authentication.action=&quot;failure&quot;)) as failures count(eval(Authentication.action=&quot;success&quot;)) as successes min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.app IN (&quot;sshd&quot;,&quot;ssh&quot;,&quot;telnetd&quot;,&quot;telnet&quot;) by Authentication.src Authentication.dest span=1h | `drop_dm_object_name(Authentication)` | where failures &gt;= 20 AND successes &gt;= 1 | sort - failures</code></pre></div></div>
+    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl has &quot;/goform/systemCommand&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where Url has &quot;/goform/systemCommand&quot;
+| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, HttpMethod, HttpStatusCode, Url, UserAgent = HttpRequestHeaderUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: CVE-2025-9528 Linksys E1700 systemCommand OS Command Injection
+id: c7a2d9e1-4f60-4b83-9c22-6a1e0f7d2b55
+description: Detects HTTP requests to the Linksys E1700 /goform/systemCommand endpoint (CVE-2025-9528) used by Dysphoria to spread across IoT devices.
+references:
+  - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
+  - https://nvd.nist.gov/vuln/detail/CVE-2025-9528
+  - https://github.com/advisories/GHSA-3m47-gr9p-qrv3
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem|contains: &#x27;/goform/systemCommand&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/goform/systemCommand*&quot; by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/goform/systemCommand*&quot; by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -1846,9 +1834,9 @@ level: high
   data-sources="BleepingComputer"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network"
-  data-targets="vcs,windows"
+  data-targets="identity,vcs,windows"
   data-uc-count="7" data-llm-uc-count="5"
-  data-search="New Certighost PoC exploit lets attackers hijack Windows domains A proof-of-concept exploit for &quot;Certighost,&quot; a Windows Active Directory Certificate Services vulnerability, has been released that can allow authenticated attackers to potentially compromise a Windows domain. [...] CVE-2026-54121 T1021.002 T1190 T1558 T1649 [LLM] Machine account creation by low-privileged user (Certighost precursor, MachineAccountQuota abuse) [LLM] AD CS Certification Authority (certsrv.exe) initiating SMB/LDAP to a non-DC host (Certighost chase redirection) [LLM] PKINIT TGT request for a Domain Controller computer account (Certighost forged-cert auth) [LLM] DCSync (directory replication) requested by a non-DC principal — krbtgt secret theft [LLM] AD CS certificate request carrying cdc/rmd chase attributes or targeting a DC account (Certighost enrollment) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — New Certighost PoC exploit lets attackers hijack Windows domains">
+  data-search="New Certighost PoC exploit lets attackers hijack Windows domains A proof-of-concept exploit for &quot;Certighost,&quot; a Windows Active Directory Certificate Services vulnerability, has been released that can allow authenticated attackers to potentially compromise a Windows domain. [...] CVE-2026-54121 T1021.002 T1190 T1558 T1649 [LLM] Machine account creation by low-privileged user (Certighost prerequisite) [LLM] AD CS CA host issuing SMB/LDAP/LSA lookups to a non-DC endpoint (chase abuse) [LLM] DC machine-account TGT immediately followed by directory replication (PKINIT→DCSync chain) [LLM] Directory replication (DCSync) requested by a non-domain-controller principal [LLM] AD CS certificate enrollment request/issuance targeting a Domain Controller account Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — New Certighost PoC exploit lets attackers hijack Windows domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-27-new-certighost-poc-exploit-lets-attackers-hijack-windows-dom" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1908,32 +1896,32 @@ level: high
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Machine account creation by low-privileged user (Certighost precursor, MachineAccountQuota abuse) · [LLM] AD CS Certification Authority (certsrv.exe) initiating SMB/LDAP to a non-DC host (Certighost chase redirection) · [LLM] AD CS certificate request carrying cdc/rmd chase attributes or targeting a DC account (Certighost enrollment) · Article-specific behavioural hunt — New Certighost PoC exploit lets attackers hijack Windows domains</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Machine account creation by low-privileged user (Certighost prerequisite) · [LLM] AD CS CA host issuing SMB/LDAP/LSA lookups to a non-DC endpoint (chase abuse) · [LLM] AD CS certificate enrollment request/issuance targeting a Domain Controller account · Article-specific behavioural hunt — New Certighost PoC exploit lets attackers hijack Windows domains</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] PKINIT TGT request for a Domain Controller computer account (Certighost forged-cert auth)</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] DCSync (directory replication) requested by a non-DC principal — krbtgt secret theft</em></div></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] DC machine-account TGT immediately followed by directory replication (PKINIT→DCSync chain)</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Directory replication (DCSync) requested by a non-domain-controller principal</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="47ec70c0f0" data-platforms="datadog,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="30a9c3ebf5" data-platforms="datadog,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">Machine account creation by low-privileged user (Certighost precursor, MachineAccountQuota abuse)</span>
+    <span class="uc-title">Machine account creation by low-privileged user (Certighost prerequisite)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="47ec70c0f0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="30a9c3ebf5" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the first stepping-stone of the Certighost (CVE-2026-54121) chain: a non-privileged domain user creating one or more computer accounts under the default ms-DS-MachineAccountQuota to obtain a valid principal that satisfies the CA&#x27;s chase authentication checks. Surfaces creator, new computer account name and volume so an analyst can spot quota abuse preceding a rogue-CA cert request.
+    <div class="uc-desc">Hunts the Certighost stepping stone: a non-admin/non-service domain user creating a computer account via the default ms-DS-MachineAccountQuota, which the attacker later uses as the rogue chase endpoint. Flags Security event 4741 where the creator is a regular user rather than a delegated admin/service account.
 
-Rationale: Anchored on the article&#x27;s explicit statement that &#x27;a low-privileged user first creates a machine account, which is permitted under the default ms-DS-MachineAccountQuota&#x27;. Event 4741 with a non-machine creator is the earliest observable of the chain. Defender XDR does not cleanly emit 4741 as a queryable ActionType, so defender_kql is intentionally empty; the reliable telemetry is DC Security 4741 (Sentinel SecurityEvent / Splunk Change DM).
+Rationale: Anchors on the article&#x27;s stated initial step (&#x27;a low-privileged user first creates a machine account, permitted under default ms-DS-MachineAccountQuota&#x27;) via 4741 with a non-privileged creator; the PoC repo confirms rogue accounts (e.g. GHOST-prefixed) are minted this way. Defender AH has no reliable 4741 equivalent so that field is intentionally empty.
 
 Cross-checked against:
+  • https://github.com/aniqfakhrul/CVE-2026-54121
   • https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
-  • https://thehackernews.com/2026/07/certighost-exploit-lets-low-privileged.html
-  • https://www.helpnetsecurity.com/2026/07/27/certighost-cve-2026-54121-poc-exploit-released/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create Account: Domain Account">T1136.002</span> <span class="ind tech" title="Valid Accounts: Domain Accounts">T1078.002</span></div>
+  • https://thehackernews.com/2026/07/certighost-exploit-lets-low-privileged.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Domain Accounts">T1078.002</span> <span class="ind tech" title="Create Account: Domain Account">T1136.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SCCM/MECM or Autopilot device provisioning workflows joining new endpoints</li><li>Helpdesk staff staging computer accounts before OS deployment</li><li>Automation/service accounts that legitimately pre-create machine accounts but are not named with a trailing $</li><li>VDI/non-persistent desktop pools cycling machine objects</li><li>Domain-join scripts run under a delegated (but non-admin) user context</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SubjectUserName !in~ (&quot;svc-sccm&quot;,&quot;svc-mdt&quot;,&quot;svc-autopilot&quot;) and Computer !in~ (&quot;SCCM01&quot;,&quot;MDT01&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the creator principal and whether it belongs to a provisioning/helpdesk group; check if the new computer account was subsequently used in a certificate enrollment (correlate with UC5) or PKINIT logon (UC3). 2) Contain: if creator is unexpected, disable the newly created machine account(s) and the creator, and set ms-DS-MachineAccountQuota to 0 to stop further abuse. 3) Hunt: pivot on the creator&#x27;s workstation for certsrv chase connections (UC2), 4886/4887 requests carrying cdc/rmd (UC5), and any 4662 replication access (UC4) in the following hours.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Autopilot/Intune or SCCM domain-join provisioning under a delegated (non-admin-named) join account</li><li>Developers/QA staff joining lab or test machines to the domain</li><li>Delegated OU admins whose accounts don&#x27;t match the admin/svc naming filter</li><li>VDI/Autopilot bulk enrollment creating many machine accounts rapidly</li><li>MDT/imaging service accounts not caught by the svc-/MSOL_ exclusions</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Creator !startswith &quot;MSOL_&quot; and Creator !contains &quot;admin&quot; and Creator !startswith &quot;svc-&quot; and Creator !startswith &quot;join-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the creator is genuinely non-privileged and not a sanctioned join/imaging account; note the new machine account name and creation time. 2) Contain: disable the newly created machine account and the creating user pending review; block that user&#x27;s ability to enroll certificates. 3) Hunt: pivot on the new machine account name across 4768/4769 and AD CS 4886/4887 to see if it was used as a chase endpoint or to request a certificate for a DC computer account.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-03-uc0-sigma">Sigma</button>
@@ -1943,14 +1931,15 @@ Cross-checked against:
     <div class="tab-content active" id="art-03-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4741   // A computer account was created
-| where SubjectUserName !endswith &quot;$&quot;   // exclude machine/SYSTEM creators
-| where SubjectUserName !in~ (&quot;ANONYMOUS LOGON&quot;)
-| summarize AccountsCreated = dcount(TargetUserName), NewComputers = make_set(TargetUserName, 25), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SubjectUserName, SubjectDomainName, Computer, bin(TimeGenerated, 1h)
-| where AccountsCreated &gt;= 1   // any low-priv creator is worth review; raise for noisy provisioning tools
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Machine Account Created by Non-Privileged User (Certighost Precursor)
-id: 7c1e0a92-4b3d-4d21-9f2a-2a6f5c9e8b11
-description: Detects creation of a computer (machine) account by an interactive user principal, the MachineAccountQuota stepping-stone used by CVE-2026-54121 Certighost.
+| extend Creator = SubjectUserName, MachineAccount = TargetUserName
+| where MachineAccount endswith &quot;$&quot;
+| where not(Creator endswith &quot;$&quot;)               // exclude service/machine creators
+| where Creator !startswith &quot;MSOL_&quot; and Creator !contains &quot;admin&quot; and Creator !startswith &quot;svc-&quot;
+| summarize CreatedAccounts = make_set(MachineAccount), Count = dcount(MachineAccount), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by Creator, Computer
+| order by Count desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Machine Account Created by Non-Privileged User (Certighost prerequisite)
+id: 3f2c9a41-6b1e-4d77-9c2a-7e5f0a1b2c34
+description: Detects creation of a computer/machine account by a standard domain user, the Certighost (CVE-2026-54121) rogue-endpoint prerequisite.
 references:
   - https://www.bleepingcomputer.com/news/security/new-certighost-poc-exploit-lets-attackers-hijack-windows-domains/
   - https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
@@ -1965,247 +1954,214 @@ logsource:
 detection:
   selection:
     EventID: 4741
+    TargetUserName|endswith: &#x27;$&#x27;
   filter_machine:
     SubjectUserName|endswith: &#x27;$&#x27;
-  condition: selection and not filter_machine
+  filter_svc:
+    SubjectUserName|contains:
+      - &#x27;admin&#x27;
+      - &#x27;MSOL_&#x27;
+      - &#x27;svc-&#x27;
+  condition: selection and not filter_machine and not filter_svc
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4741 -@SubjectUserName:*$</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(All_Changes.object) as accounts_created values(All_Changes.object) as new_computer_accounts min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.action=created AND All_Changes.object=&quot;*$&quot; AND NOT All_Changes.user=&quot;*$&quot; by All_Changes.user All_Changes.dest All_Changes.vendor_product
-| `drop_dm_object_name(&quot;All_Changes&quot;)`
-| where accounts_created&gt;=1
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-03-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(All_Changes.object) as accounts_created values(All_Changes.object) as new_computer_accounts min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.action=created AND All_Changes.object=&quot;*$&quot; AND NOT All_Changes.user=&quot;*$&quot; by All_Changes.user All_Changes.dest All_Changes.vendor_product
-| `drop_dm_object_name(&quot;All_Changes&quot;)`
-| where accounts_created&gt;=1
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-03-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4741 @TargetUserName:*$ -@SubjectUserName:(*$ OR *admin* OR MSOL_* OR svc-*)</code></pre></div>
+    <div class="tab-content" id="art-03-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.action=created All_Changes.object_category=user by All_Changes.user All_Changes.object All_Changes.dest | `drop_dm_object_name(All_Changes)` | rename object as MachineAccount user as Creator | search MachineAccount=&quot;*$&quot; NOT Creator IN (&quot;*$&quot;,&quot;MSOL_*&quot;,&quot;svc-*&quot;,&quot;*admin*&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-03-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.action=created All_Changes.object_category=user by All_Changes.user All_Changes.object All_Changes.dest | `drop_dm_object_name(All_Changes)` | rename object as MachineAccount user as Creator | search MachineAccount=&quot;*$&quot; NOT Creator IN (&quot;*$&quot;,&quot;MSOL_*&quot;,&quot;svc-*&quot;,&quot;*admin*&quot;) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="e37ef05879" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="182b162e37" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">AD CS Certification Authority (certsrv.exe) initiating SMB/LDAP to a non-DC host (Certighost chase redirection)</span>
+    <span class="uc-title">AD CS CA host issuing SMB/LDAP/LSA lookups to a non-DC endpoint (chase abuse)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e37ef05879" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="182b162e37" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the core Certighost primitive: the CA process being redirected by an attacker-controlled cdc value to connect to a rogue SMB/LSA/LDAP endpoint. A Certification Authority making outbound 445/389/636 connections to a member workstation or attacker host is extremely rare and directly evidences the abused &#x27;chase&#x27; fallback.
+    <div class="uc-desc">Hunts the core Certighost &#x27;chase&#x27;: the CA is redirected via the attacker-controlled cdc attribute to a rogue SMB/LSA/LDAP service (445/389/636) on a host that is not a legitimate domain controller. Scope this to your AD CS CA server(s) and review outbound auth-protocol connections to workstation/member-server IPs.
 
-Rationale: Article: &#x27;the CA connects to the server specified in the cdc value and searches for the specified rmd ... systems previously did not verify that the server supplied through the attacker-controlled cdc value was a legitimate domain controller.&#x27; A CA (certsrv.exe) opening SMB/LDAP to a non-DC is the direct network artifact of the redirected chase. Sentinel omitted because process-attributed outbound connections (certsrv.exe on 445/389) are not cleanly available in ASIM ImNetworkSession, which lacks the initiating-process field; use Defender/Sysmon on the CA host.
+Rationale: Targets the article&#x27;s mechanism &#x27;the CA connects to the server specified in the cdc value... allowed an attacker to run rogue SMB, LSA, and LDAP services and direct the CA to the attacker-controlled system&#x27;; ports 445/389 confirmed in the PoC repo. Deliberately hunting-tier and scoped to CA hosts because lsass auth traffic is high-volume elsewhere.
 
 Cross-checked against:
-  • https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
+  • https://github.com/aniqfakhrul/CVE-2026-54121
   • https://www.helpnetsecurity.com/2026/07/27/certighost-cve-2026-54121-poc-exploit-released/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Forced Authentication">T1187</span> <span class="ind tech" title="Steal or Forge Authentication Certificates">T1649</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CA server legitimately querying its own domain controllers over LDAP/LDAPS during normal enrollment (whitelist DC IPs)</li><li>Backup/agent software running under certsrv context reaching file shares</li><li>CA cluster/HA replication traffic to a peer CA</li><li>Vulnerability scanners probing the CA host that generate reciprocal sessions</li><li>Certificate template or CRL publishing to an SMB share on a member server</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP !in (&quot;10.10.10.10&quot;,&quot;10.10.10.11&quot;)   // replace with your actual DC IPs to suppress legitimate CA-&gt;DC LDAP</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the RemoteIP is NOT a domain controller (compare against your DC inventory); pull the concurrent 4886/4887 request on the CA and the cdc/rmd attributes (UC5). 2) Contain: block the rogue RemoteIP, isolate the source machine account host, and if confirmed apply the EDITF_ENABLECHASECLIENTDC disable workaround or the July patch on the CA. 3) Hunt: check whether a certificate was issued to a DC computer account and whether PKINIT (UC3) then DCSync (UC4) followed; treat the domain as potentially compromised (krbtgt).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CA server legitimately querying a genuine domain controller for object resolution (needs DC-inventory allowlisting)</li><li>Backup/monitoring agents on the CA making SMB connections to file shares</li><li>Certificate template replication or CA clustering traffic</li><li>Vulnerability scanners probing LDAP/SMB from a management host</li><li>GPO/DFS traffic from the CA to member servers</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source host is a CA and the remote IP/host is NOT a domain controller; check if the remote host is a recently-created machine account&#x27;s system. 2) Contain: block the CA→rogue-host path and isolate the rogue endpoint; consider disabling the chase fallback (certutil -setreg policy\EditFlags -EDITF_ENABLECHASECLIENTDC; Restart-Service CertSvc -Force) if the July patch is not yet applied. 3) Hunt: correlate the destination host to any machine account created in the last 7 days and to AD CS 4886/4887 enrollment for a DC computer account.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-03-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-03-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-03-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-03-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-03-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-03-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;certsrv.exe&quot;   // the AD CS CA service process
-| where RemotePort in (445, 389, 636)   // SMB / LDAP / LDAPS the CA reaches for during a chase
-| where RemoteIPType == &quot;Private&quot;
-| summarize ConnCount = count(), Ports = make_set(RemotePort), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+    <div class="tab-content active" id="art-03-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Scope to AD CS CA servers via device group before wide use
 DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;certsrv.exe&quot;   // the AD CS CA service process
-| where RemotePort in (445, 389, 636)   // SMB / LDAP / LDAPS the CA reaches for during a chase
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;lsass.exe&quot;,&quot;certsrv.exe&quot;)
+| where RemotePort in (445, 389, 636)
 | where RemoteIPType == &quot;Private&quot;
-| summarize ConnCount = count(), Ports = make_set(RemotePort), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by DeviceName, InitiatingProcessFileName, RemoteIP
+| summarize Connections = count(), Ports = make_set(RemotePort), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemoteIP, DeviceName, InitiatingProcessFileName
 | order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: AD CS CA Process Making Outbound SMB/LDAP Connection (Certighost Chase)
-id: b2f9d7c4-1a55-4e0c-8b6d-9f3a4c72e5aa
-description: Detects the certsrv.exe (AD CS Certification Authority) process initiating outbound SMB/LDAP/LDAPS connections, indicative of the attacker-controlled cdc chase redirection in CVE-2026-54121 Certighost.
-references:
-  - https://www.bleepingcomputer.com/news/security/new-certighost-poc-exploit-lets-attackers-hijack-windows-domains/
-author: SOC Detection Engineering
-date: 2026/07/28
-tags:
-  - attack.t1187
-  - attack.t1649
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection:
-    Image|endswith: &#x27;\certsrv.exe&#x27;
-    DestinationPort:
-      - 445
-      - 389
-      - 636
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\\certsrv.exe OR *\\CertSrv.exe OR *\\CERTSRV.EXE) @DestinationPort:(445 OR 389 OR 636)</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/certsrv\.exe$/i
-| RemotePort=/^(445|389|636)$/
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=certsrv.exe AND (All_Traffic.dest_port=445 OR All_Traffic.dest_port=389 OR All_Traffic.dest_port=636) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name
-| `drop_dm_object_name(&quot;All_Traffic&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-03-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=certsrv.exe AND (All_Traffic.dest_port=445 OR All_Traffic.dest_port=389 OR All_Traffic.dest_port=636) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name
-| `drop_dm_object_name(&quot;All_Traffic&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-03-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstPortNumber in (445, 389, 636)
+| where NetworkApplicationProtocol has_any (&quot;smb&quot;,&quot;ldap&quot;) or DstPortNumber in (445,389,636)
+| summarize Connections = count(), Ports = make_set(DstPortNumber), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SrcHostname, DstIpAddr, DstHostname
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationPort:445 OR @DestinationPort:389 OR @DestinationPort:636) @Image:(*\\lsass.exe OR *\\LSASS.exe OR *\\certsrv.exe OR *\\CertSrv.exe)</code></pre></div>
+    <div class="tab-content" id="art-03-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemotePort=445 OR RemotePort=389 OR RemotePort=636) ContextImageFileName=/(lsass|certsrv)\.exe$/i | groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-03-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=445 OR All_Traffic.dest_port=389 OR All_Traffic.dest_port=636) All_Traffic.app IN (&quot;lsass.exe&quot;,&quot;certsrv.exe&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - count</code></pre><pre class="spl-mode-body" id="art-03-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=445 OR All_Traffic.dest_port=389 OR All_Traffic.dest_port=636) All_Traffic.app IN (&quot;lsass.exe&quot;,&quot;certsrv.exe&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="3bc879a953" data-platforms="datadog,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="252ee2cfc9" data-platforms="datadog,def,sent,spl" data-targets="identity,windows">
   <summary>
-    <span class="uc-title">PKINIT TGT request for a Domain Controller computer account (Certighost forged-cert auth)</span>
+    <span class="uc-title">DC machine-account TGT immediately followed by directory replication (PKINIT→DCSync chain)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3bc879a953" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="252ee2cfc9" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the authentication stage of Certighost: a certificate-based (PKINIT) Kerberos TGT request where the target principal is a computer account, i.e. the attacker authenticating as the impersonated Domain Controller using the fraudulently issued certificate. Surfaces the source IP so an analyst can spot a DC$ TGT originating from a non-DC host.
+    <div class="uc-desc">Correlates the Certighost end-to-end abuse: a domain controller computer account obtains a Kerberos TGT (4768) and, within a short window, that same principal performs directory replication (4662 / MDI replication). This ties PKINIT authentication-as-DC to the subsequent DCSync of krbtgt.
 
-Rationale: Article: &#x27;using the certificate to authenticate through PKINIT as the targeted domain controller, saving the resulting Kerberos credentials to a .ccache file.&#x27; PreAuthType 16 / populated Certificate Information on a 4768 for a computer account is the PKINIT DC-impersonation tell. Defender/Falcon omitted: DC-side Kerberos ticket events with certificate fields are not shipped in Defender XDR DeviceLogonEvents or Falcon FDR; the authoritative source is DC Security 4768.
+Rationale: Encodes the article&#x27;s chain &#x27;authenticate through PKINIT as the targeted domain controller... the attacker can request account secrets, including the krbtgt secret&#x27; as a temporal 4768(DC $ account TGT)→4662/replication correlation; the 10-minute window and machine-account filter make it high-fidelity because a legitimate DC does not re-authenticate then replicate off a fresh TGT this way.
 
 Cross-checked against:
   • https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
   • https://thehackernews.com/2026/07/certighost-exploit-lets-low-privileged.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal or Forge Authentication Certificates">T1649</span> <span class="ind tech" title="Use Alternate Authentication Material: Pass the Ticket">T1550.003</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal or Forge Kerberos Tickets: AS-REP Roasting / PKINIT">T1558.004</span> <span class="ind tech" title="OS Credential Dumping: DCSync">T1003.006</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate smart-card / certificate logon by a service running under a gMSA or computer identity</li><li>Windows Hello for Business certificate-trust deployments issuing PKINIT logons</li><li>A genuine domain controller requesting its own TGT via cert-based auth from its own IP</li><li>Certificate-based device authentication in NDES/SCEP environments</li><li>Third-party PKI logon appliances performing machine PKINIT</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: compare the SourceIP of the DC$ TGT request against the DC&#x27;s real IP; a DC computer account getting a PKINIT TGT from a workstation/attacker IP is malicious. Pull the issuing certificate thumbprint and the 4886/4887 that produced it (UC5). 2) Contain: disable the involved certificate (revoke), reset the impersonated DC computer account and, given DCSync risk, plan a double krbtgt reset. 3) Hunt: immediately check for 4662 replication access (UC4) from the same session and any secretsdump-style DCSync activity.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate inter-DC replication cycles where a real DC requests a TGT then replicates</li><li>New DC promotion (dcpromo) generating fresh machine-account auth plus replication</li><li>Azure AD Connect / MSOL_ sync accounts performing directory reads</li><li>Backup solutions using replication APIs under a service context</li><li>DC reboot causing machine-account re-auth followed by normal replication</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where TgtSrcIP !in (&quot;127.0.0.1&quot;,&quot;::1&quot;) and principal !startswith &quot;MSOL_&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: verify whether the TGT source IP (TgtSrcIP) is the DC&#x27;s own address; a DC-account TGT sourced from a workstation/member IP is the tell. 2) Contain: reset the impacted DC computer account (twice for krbtgt if krbtgt was replicated), revoke issued certificates, and isolate the source host. 3) Hunt: pull all 4886/4887 enrollments for that DC account and any machine account created in the prior 24h; assume krbtgt compromise and plan a double krbtgt reset if replication targeted it.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-03-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-03-uc2-sigma">Sigma</button>
+      <button class="tab-btn active" data-target="art-03-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-03-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-03-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-03-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-03-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content active" id="art-03-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let TgtDcAccounts = IdentityLogonEvents
+| where Timestamp &gt; ago(7d)
+| where Protocol == &quot;Kerberos&quot;
+| where AccountName endswith &quot;$&quot;
+| project TgtTime = Timestamp, AccountName, IPAddress, DeviceName;
+IdentityDirectoryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;Directory Services replication&quot;
+| project ReplTime = Timestamp, AccountName, DestinationDeviceName, IPAddress
+| join kind=inner TgtDcAccounts on AccountName
+| where ReplTime between (TgtTime .. TgtTime + 10m)
+| project TgtTime, ReplTime, DelaySec = datetime_diff(&#x27;second&#x27;, ReplTime, TgtTime), AccountName, TgtSrcIP = IPAddress1, ReplSrcIP = IPAddress
+| order by TgtTime desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Repl = SecurityEvent
 | where TimeGenerated &gt; ago(7d)
-| where EventID == 4768   // Kerberos TGT requested
-| where TargetUserName endswith &quot;$&quot;   // TGT requested for a computer account (e.g. impersonated DC)
-| where isnotempty(IpAddress) and IpAddress !in (&quot;::1&quot;, &quot;127.0.0.1&quot;, &quot;-&quot;)
-| summarize TgtRequests = count(), SourceIPs = make_set(IpAddress, 20), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by TargetUserName, Computer
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PKINIT Kerberos TGT Request for a Computer Account (Certighost)
-id: 3d9a1f66-8c2b-4a7e-b1d0-5e4c7a9f2b34
-description: Detects a certificate-based (PKINIT) Kerberos TGT request where the target is a machine account, evidencing forged-certificate DC impersonation in CVE-2026-54121 Certighost.
-references:
-  - https://www.bleepingcomputer.com/news/security/new-certighost-poc-exploit-lets-attackers-hijack-windows-domains/
-author: SOC Detection Engineering
-date: 2026/07/28
-tags:
-  - attack.t1649
-  - attack.t1550.003
-logsource:
-  product: windows
-  service: security
-detection:
-  selection:
-    EventID: 4768
-    TargetUserName|endswith: &#x27;$&#x27;
-  pkinit:
-    PreAuthType: 16
-  condition: selection and pkinit
-level: medium</code></pre></div>
+| where EventID == 4662 and AccessMask == &quot;0x100&quot;
+| project ReplTime = TimeGenerated, principal = SubjectUserName, ReplComputer = Computer;
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4768 and TargetUserName endswith &quot;$&quot;
+| project TgtTime = TimeGenerated, principal = TargetUserName, TgtSrcIP = IpAddress
+| join kind=inner Repl on principal
+| where ReplTime between (TgtTime .. TgtTime + 10m)
+| project TgtTime, ReplTime, DelaySec = datetime_diff(&#x27;second&#x27;, ReplTime, TgtTime), principal, TgtSrcIP, ReplComputer
+| order by TgtTime desc</code></pre></div>
     <div class="tab-content" id="art-03-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4768 @TargetUserName:*$</code></pre></div>
-    <div class="tab-content" id="art-03-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>`wineventlog_security` EventCode=4768 (Pre_Authentication_Type=16 OR (Certificate_Thumbprint!=&quot;-&quot; AND Certificate_Thumbprint!=&quot;&quot;)) Account_Name=&quot;*$&quot;
-| stats count values(Certificate_Thumbprint) as cert_thumbprint values(Client_Address) as src_ip min(_time) as firstTime max(_time) as lastTime by Account_Name, host
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div>
+    <div class="tab-content" id="art-03-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>index=* (source=WinEventLog:Security OR sourcetype=XmlWinEventLog) EventCode=4768 TargetUserName=&quot;*$&quot; | rename TargetUserName as principal, IpAddress as tgt_src | eval tgt_time=_time | join type=inner principal [ search index=* EventCode=4662 Access_Mask=&quot;0x100&quot; Properties=&quot;*1131f6a*&quot; | rename SubjectUserName as principal | eval repl_time=_time ] | where repl_time&gt;=tgt_time AND repl_time&lt;=tgt_time+600 | table _time principal tgt_src repl_time</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="3358f0e5ab" data-platforms="sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="71368d60b4" data-platforms="datadog,def,sent,sigma,spl" data-targets="identity,windows">
   <summary>
-    <span class="uc-title">DCSync (directory replication) requested by a non-DC principal — krbtgt secret theft</span>
+    <span class="uc-title">Directory replication (DCSync) requested by a non-domain-controller principal</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3358f0e5ab" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="71368d60b4" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the terminal Certighost objective: DCSync via DRSUAPI GetNCChanges using the impersonated DC&#x27;s Kerberos credential to pull the krbtgt (and other) secrets. Flags Directory Service Access (4662) requesting the replication extended right by a principal that is not a domain controller.
+    <div class="uc-desc">Hunts the Certighost payoff — DCSync. Flags DS-Replication-Get-Changes access (4662 replication GUIDs / MDI replication) requested by any principal that is not an established domain controller or sanctioned sync account, i.e. an attacker wielding a forged DC Kerberos credential to pull krbtgt.
 
-Rationale: Article: &#x27;With the resulting Kerberos credential, the attacker can request account secrets, including the krbtgt secret&#x27; via Impacket secretsdump (DCSync). Anchored on the DS-Replication-Get-Changes-All GUID {1131f6ad-...} + domainDNS ObjectType, filtered to non-machine callers. Defender/Falcon omitted: DRSUAPI replication is not surfaced in Defender XDR device tables nor Falcon FDR; the authoritative source is DC Security 4662 (Splunk raw / Sentinel SecurityEvent). CIM has no replication data model, hence raw SPL.
+Rationale: Directly targets &#x27;the attacker can request account secrets, including the krbtgt secret&#x27; via the two canonical DS-Replication-Get-Changes GUIDs plus a non-machine-account requester; Defender uses MDI&#x27;s &#x27;Directory Services replication&#x27; ActionType which is the vendor-native DCSync signal. Excluding $ and MSOL_/svc accounts removes legitimate replication.
 
 Cross-checked against:
   • https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
   • https://www.helpnetsecurity.com/2026/07/27/certighost-cve-2026-54121-poc-exploit-released/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping: DCSync">T1003.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Azure AD Connect / Entra Connect sync account (MSOL_*) performing legitimate directory replication</li><li>A newly promoted or additional domain controller replicating (appears with a machine account, already filtered)</li><li>Third-party backup/PKI tools granted replication rights running under a named service account</li><li>Password-sync or identity-governance products with delegated Get-Changes rights</li><li>Security tooling (e.g. BloodHound collectors) legitimately enumerating with a service account</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SubjectUserName !startswith &quot;MSOL_&quot; and SubjectUserName !in~ (&quot;svc-aadconnect&quot;,&quot;svc-adsync&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the SubjectUserName; if it is not a DC machine account or a sanctioned sync account (MSOL_/AAD Connect), treat as active DCSync. Check whether the caller recently obtained a DC-impersonation cert (UC5) or PKINIT TGT (UC3). 2) Contain: isolate the requesting host/session, disable the principal, and initiate the emergency krbtgt double-reset plus reset of any secrets pulled. 3) Hunt: enumerate every object the caller replicated, review golden-ticket indicators, and audit AD CS for other DC-account certificate requests.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Azure AD Connect / MSOL_ synchronization account performing directory reads</li><li>Legitimate DC-to-DC replication (machine accounts, excluded by the $ filter)</li><li>Backup or DR tooling using DRS replication under a service account not matching the svc filter</li><li>Security products (e.g. some PAM/identity scanners) legitimately calling replication APIs</li><li>Password-audit tooling run by IT under an admin account</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SubjectUserName !startswith &quot;MSOL_&quot; and SubjectUserName !contains &quot;svc&quot; and not(SubjectUserName endswith &quot;$&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the requesting principal (SubjectUserName) is not a DC or sanctioned sync/backup account and check the source IP; a DC computer account replicating from a non-DC host = Certighost. 2) Contain: isolate the source host, disable the abused credential, and initiate a double krbtgt password reset if krbtgt was among replicated objects. 3) Hunt: back-trace to the 4768 TGT and AD CS 4886/4887 enrollment for that DC account, plus any machine account created and any CA→non-DC SMB/LDAP connection in the prior 24h.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-03-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-03-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-03-uc3-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-03-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-03-uc3-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-03-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-03-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content active" id="art-03-uc3-kql"><pre><button class="copy-btn">COPY</button><code>IdentityDirectoryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;Directory Services replication&quot;
+| where not(AccountName endswith &quot;$&quot;)
+| where AccountName !startswith &quot;MSOL_&quot; and AccountName !contains &quot;svc&quot;
+| summarize Count = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountName, DeviceName, IPAddress
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4662
-| where AccessMask == &quot;0x100&quot;   // Control Access (extended right invoked)
-| where ObjectType has &quot;19195a5b-6da0-11d0-afd3-00c04fd930c9&quot;   // domainDNS object class
-| where SubjectUserName !endswith &quot;$&quot;   // DCSync from a non-machine principal is anomalous
-| where SubjectUserName !in~ (&quot;ANONYMOUS LOGON&quot;)
-| summarize Count = count(), Objects = make_set(ObjectName, 20), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SubjectUserName, SubjectDomainName, Computer
+| where AccessMask == &quot;0x100&quot;
+| where ObjectServer == &quot;DS&quot;
+| where not(SubjectUserName endswith &quot;$&quot;)
+| where SubjectUserName !startswith &quot;MSOL_&quot; and SubjectUserName !contains &quot;svc&quot;
+| summarize Count = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SubjectUserName, Computer, ObjectName
 | order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: DCSync Replication Right Requested by Non-DC Principal (Certighost krbtgt Theft)
-id: 9a4e2c18-7b6f-4d3a-a2c9-6f1b8e0d5c47
-description: Detects a 4662 Directory Service Access invoking DS-Replication-Get-Changes(-All) extended rights, i.e. DCSync, the krbtgt extraction step of CVE-2026-54121 Certighost.
+    <div class="tab-content" id="art-03-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: DCSync Replication Requested by Non-DC Principal (Certighost payoff)
+id: 9a7d1c02-4e88-4b3a-8f21-6c0b9d4e5a17
+description: Detects DS-Replication-Get-Changes (DCSync) access by a principal that is not a domain controller or sanctioned sync account, the Certighost krbtgt-theft step.
 references:
   - https://www.bleepingcomputer.com/news/security/new-certighost-poc-exploit-lets-attackers-hijack-windows-domains/
 author: SOC Detection Engineering
 date: 2026/07/28
 tags:
   - attack.t1003.006
+  - attack.credential_access
 logsource:
   product: windows
   service: security
 detection:
   selection:
     EventID: 4662
+    AccessMask: &#x27;0x100&#x27;
     Properties|contains:
       - &#x27;1131f6aa-9c07-11d1-f79f-00c04fc2dcd2&#x27;
       - &#x27;1131f6ad-9c07-11d1-f79f-00c04fc2dcd2&#x27;
-      - &#x27;89e95b76-444d-4c62-991a-0facbeda640c&#x27;
-  filter_machine:
+  filter_dc:
     SubjectUserName|endswith: &#x27;$&#x27;
-  condition: selection and not filter_machine
+  filter_sync:
+    SubjectUserName|startswith: &#x27;MSOL_&#x27;
+  condition: selection and not filter_dc and not filter_sync
 level: high</code></pre></div>
-    <div class="tab-content" id="art-03-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><pre><button class="copy-btn">COPY</button><code>`wineventlog_security` EventCode=4662 Object_Type=&quot;%{19195a5b-6da0-11d0-afd3-00c04fd930c9}&quot; (Properties=&quot;*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*&quot; OR Properties=&quot;*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*&quot; OR Properties=&quot;*89e95b76-444d-4c62-991a-0facbeda640c*&quot;)
-| where NOT match(Account_Name,&quot;\$$&quot;) AND Account_Name!=&quot;ANONYMOUS LOGON&quot;
-| stats count values(Object_Name) as objects min(_time) as firstTime max(_time) as lastTime by Account_Name, host
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div>
+    <div class="tab-content" id="art-03-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4662 @AccessMask:0x100 -@SubjectUserName:(*$ OR MSOL_* OR *svc*)</code></pre></div>
+    <div class="tab-content" id="art-03-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>index=* (source=WinEventLog:Security OR sourcetype=XmlWinEventLog) EventCode=4662 Access_Mask=&quot;0x100&quot; (Properties=&quot;*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*&quot; OR Properties=&quot;*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*&quot;) | search NOT SubjectUserName=&quot;*$&quot; NOT SubjectUserName IN (&quot;MSOL_*&quot;,&quot;*svc*&quot;) | stats count min(_time) as firstTime max(_time) as lastTime by SubjectUserName, ComputerName, ObjectName | sort - lastTime</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cd763b8108" data-platforms="datadog,sent,sigma,spl" data-targets="vcs,windows">
+<details class="uc" data-uc-slug="831b7fc864" data-platforms="datadog,sent,sigma,spl" data-targets="vcs,windows">
   <summary>
-    <span class="uc-title">AD CS certificate request carrying cdc/rmd chase attributes or targeting a DC account (Certighost enrollment)</span>
+    <span class="uc-title">AD CS certificate enrollment request/issuance targeting a Domain Controller account</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cd763b8108" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="831b7fc864" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Certighost enrollment request itself: a certificate request whose attributes include the attacker-controlled cdc (Client DC) and rmd (Remote Domain) chase values, and/or that targets a Domain Controller computer account. These request attributes are the direct fingerprint of the exploit and are otherwise never seen in normal enrollment.
+    <div class="uc-desc">Hunts the Certighost enrollment step: a certificate request that resolves to a Domain Controller computer account (name$) via the manipulated cdc/rmd chase, resulting in a CA-issued cert usable for PKINIT-as-DC. Surfaces AD CS audit events 4886 (request) / 4887 (issued) so analysts can spot DC-account subjects requested by non-admin principals.
 
-Rationale: Article names the two exact request values driving the exploit: &#x27;cdc, or Client DC ... rmd, or Remote Domain&#x27; and states the attacker &#x27;submits a certificate request that directs the CA to the rogue services and targets a domain controller account.&#x27; Presence of both cdc and rmd in a 4886/4887 Attributes string is a near-zero-FP signature. Sentinel uses the Event table (EventData) because SecurityEvent does not parse the CA Attributes field into a column; Defender/Falcon have no CA enrollment telemetry.
+Rationale: Anchors on the article&#x27;s &#x27;submit a certificate request that directs the CA to the rogue services and targets a domain controller account&#x27; plus the PoC&#x27;s spoofed sAMAccountName/dNSHostName; a cert subject of a DC computer account ($) requested by a non-machine principal is highly anomalous. Defender AH has no AD CS enrollment table, so that field is empty and detection lives on the CA audit log.
 
 Cross-checked against:
-  • https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
-  • https://thehackernews.com/2026/07/certighost-exploit-lets-low-privileged.html</div>
+  • https://github.com/aniqfakhrul/CVE-2026-54121
+  • https://www.helpnetsecurity.com/2026/07/27/certighost-cve-2026-54121-poc-exploit-released/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal or Forge Authentication Certificates">T1649</span> <span class="ind tech" title="Forced Authentication">T1187</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate certificate requests that coincidentally contain the substrings &#x27;cdc&#x27;/&#x27;rmd&#x27; in a template or SAN (rare; the |all cdc+rmd pairing makes this unlikely)</li><li>Security testing / red-team validation of the Certighost patch</li><li>CA request-attribute logging picking up custom enrollment tooling that uses cross-DC hints</li><li>Backup/restore of CA request rows re-emitting historical events</li><li>PKI administrators reproducing the PoC in a lab that shares the SIEM</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full Attributes/EventData to confirm cdc points to a non-DC host and rmd names a Domain Controller account; identify the Requester principal (correlate to the machine account creator in UC1). 2) Contain: revoke any certificate issued for that request, block the cdc host IP, and apply the July CVE-2026-54121 update or the EDITF_ENABLECHASECLIENTDC workaround on the CA. 3) Hunt: check for the follow-on PKINIT DC logon (UC3), certsrv outbound to the cdc host (UC2), and DCSync (UC4); if a cert was issued and used, treat the domain as compromised and reset krbtgt.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate DC certificate auto-enrollment (Kerberos Authentication / Domain Controller templates) where the requester is the DC machine account itself (excluded by the $ filter)</li><li>CA administrators manually re-issuing a DC certificate during troubleshooting</li><li>Certificate lifecycle/renewal automation running under a service context</li><li>New DC promotion enrolling its initial certificates</li><li>Monitoring tooling that enumerates issued certificates</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(Requester endswith &quot;$&quot;) and Requester !contains &quot;admin&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the request subject is a DC computer account and the requester is not that DC&#x27;s own machine account or a CA admin; inspect the request&#x27;s cdc/rmd attributes in CA logs if captured. 2) Contain: revoke the issued certificate, disable the requesting principal, and apply the July 2026 patch or the EDITF_ENABLECHASECLIENTDC chase-disable workaround. 3) Hunt: correlate the requester and DC subject to subsequent 4768 PKINIT TGTs and 4662 replication to confirm whether the cert was already used for DCSync.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-03-uc4-sigma">Sigma</button>
@@ -2214,17 +2170,20 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-03-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>Event
 | where TimeGenerated &gt; ago(7d)
-| where EventLog == &quot;Security&quot; or Source == &quot;Microsoft-Windows-Security-Auditing&quot;
-| where EventID in (4886, 4887)   // CA received / issued a certificate request
-| where EventData has &quot;cdc&quot; and EventData has &quot;rmd&quot;   // attacker chase attributes
-| project TimeGenerated, Computer, EventID, EventData, RenderedDescription
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: AD CS Certificate Request With cdc/rmd Chase Attributes (Certighost)
-id: c58b3e07-2d94-41af-9c6e-7a1f0b4d6e29
-description: Detects an AD CS certificate request (4886/4887) whose attributes contain the cdc and rmd chase values abused by CVE-2026-54121 Certighost to redirect the CA to an attacker-controlled endpoint.
+| where Source == &quot;Microsoft-Windows-Security-Auditing&quot; or EventLog == &quot;Security&quot;
+| where EventID in (4886, 4887)
+| extend Requester = tostring(extract(&quot;Requester:\\s+([^\\r\\n]+)&quot;, 1, RenderedDescription))
+| extend SubjectCN = tostring(extract(&quot;CN=([^,\\r\\n]+)&quot;, 1, RenderedDescription))
+| where SubjectCN endswith &quot;$&quot;
+| where not(Requester endswith &quot;$&quot;)
+| summarize Count = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by Requester, SubjectCN, EventID, Computer
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: AD CS Certificate Enrollment Targeting a Domain Controller Account (Certighost)
+id: c1b8e4d6-2f39-4a7c-b5e1-8d0a3c9f2b46
+description: Detects an AD CS certificate request/issuance whose subject is a Domain Controller computer account (name$) requested by a non-machine principal, per Certighost CVE-2026-54121.
 references:
   - https://www.bleepingcomputer.com/news/security/new-certighost-poc-exploit-lets-attackers-hijack-windows-domains/
-  - https://gist.github.com/H0j3n/a5ef2609b5f2944ac2390a191a534c26
+  - https://github.com/aniqfakhrul/CVE-2026-54121
 author: SOC Detection Engineering
 date: 2026/07/28
 tags:
@@ -2238,16 +2197,10 @@ detection:
     EventID:
       - 4886
       - 4887
-    Attributes|contains|all:
-      - &#x27;cdc&#x27;
-      - &#x27;rmd&#x27;
   condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-03-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security (@EventID:4886 OR @EventID:4887) cdc rmd</code></pre></div>
-    <div class="tab-content" id="art-03-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>`wineventlog_security` (EventCode=4886 OR EventCode=4887) Attributes=&quot;*cdc*&quot; Attributes=&quot;*rmd*&quot;
-| stats count values(Requester) as requester values(Attributes) as request_attributes min(_time) as firstTime max(_time) as lastTime by host, EventCode
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div>
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-03-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security (@EventID:4886 OR @EventID:4887)</code></pre></div>
+    <div class="tab-content" id="art-03-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>index=* (source=&quot;WinEventLog:Security&quot; OR sourcetype=XmlWinEventLog) (EventCode=4886 OR EventCode=4887) | rex field=_raw &quot;Requester:\s+(?&lt;Requester&gt;\S+)&quot; | rex field=_raw &quot;Subject:.*?CN=(?&lt;SubjectCN&gt;[^,\r\n]+)&quot; | search SubjectCN=&quot;*$&quot; NOT Requester=&quot;*$&quot; | stats count min(_time) as firstTime max(_time) as lastTime by Requester, SubjectCN, EventCode, ComputerName | sort - lastTime</code></pre></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
