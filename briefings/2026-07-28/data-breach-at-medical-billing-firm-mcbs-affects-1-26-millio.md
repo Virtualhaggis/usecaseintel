@@ -11,12 +11,8 @@ By Bill Toulas
 July 28, 2026
 05:10 AM
 0 
-
-
 Healthcare billing company Medical Computer Business Services (MCBS) has disclosed that a 2025 network breach exposed the sensitive information of more than 1.2 million people.
-
-
-The security incident was disclosed late last month without any details about the number of potentially affected individuals. In a disclosure to the U.S. Department of Health and Human Services, the comp…
+The security incident was disclosed late last month without any details about the number of potentially affected individuals. In a disclosure to the U.S. Department of Health and Human Services, the company repo…
 
 ## Indicators of Compromise (high-fidelity only)
 

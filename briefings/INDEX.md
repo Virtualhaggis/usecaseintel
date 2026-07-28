@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
 - [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
+- [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 
@@ -272,7 +273,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-01
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
-- [artoken inside an eviltokens affiliate panel targeting micro](./2026-07-01/artoken-inside-an-eviltokens-affiliate-panel-targeting-micro.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [ghsa critical cve 2026 41052 rancher has privilege escalatio](./2026-07-01/ghsa-critical-cve-2026-41052-rancher-has-privilege-escalatio.md)

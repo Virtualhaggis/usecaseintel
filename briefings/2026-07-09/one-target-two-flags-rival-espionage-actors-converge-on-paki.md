@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound C2 to PlugX/ShadowPad/Cobalt Strike/Remcos infrastructure targeting Pakistani law enforcement
 
-`UC_202_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_203_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Compromised web-application server beaconing to espionage C2 (portal-update implant)
 
-`UC_202_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_203_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — One Target, Two Flags | Rival Espionage Actors Converge On Pakistani Law Enforce
 
-`UC_202_2` · phase: **exploit** · confidence: **High**
+`UC_203_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### curl fetches fake Windows-update MSI to ProgramData from Chaos staging host
 
-`UC_79_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_80_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Headless Chrome/Edge launched with CDP remote-debugging flags by non-interactive parent
 
-`UC_79_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_80_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### msaRAT command execution via cmd.exe with /e:ON /v:OFF /d /c flag combination
 
-`UC_79_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_80_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### Browser process resolving/contacting msaRAT Cloudflare Worker C2 signaling host
 
-`UC_79_17` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_80_17` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceNetworkEvents
 
 ### msiexec installs staged fake-update MSI from ProgramData (msaRAT loader)
 
-`UC_79_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_80_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -556,7 +556,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chaos Ransomware Uses msaRAT to Route C2 Traffic Through Headless Chrome and Edg
 
-`UC_79_13` · phase: **exploit** · confidence: **High**
+`UC_80_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

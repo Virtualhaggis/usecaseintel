@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound malware campaign email from DKIM-signed sender 9i6pokerdepot.com
 
-`UC_74_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_75_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ EmailEvents
 
 ### Second-stage BAT dropper retrieval from ClickUp attachment subdomain t90141296286
 
-`UC_74_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_75_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### BAT-spawned hidden PowerShell pulling installer from pixeldrain.com
 
-`UC_74_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_75_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### LOLBin download of installer.exe from pixeldrain.com API to user Temp
 
-`UC_74_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_75_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -426,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Email threat landscape: Q2 2026 trends and insights
 
-`UC_74_9` · phase: **exploit** · confidence: **High**
+`UC_75_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

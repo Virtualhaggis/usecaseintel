@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### ChatGPT AgentForger CSRF link: Agent Builder URL with initial_assistant_prompt param
 
-`UC_62_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_63_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ UrlClickEvents
 
 ### AgentForger rogue-agent C2: inbound TASK-subject email followed by outbound reply to sender domain
 
-`UC_62_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_63_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

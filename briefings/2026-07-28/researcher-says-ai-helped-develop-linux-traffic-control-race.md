@@ -26,9 +26,10 @@ Researcher Lee Jia Jie said artificial intelligence (AI) helped him find the bug
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1620** — Reflective Code Loading
-- **T1548** — Abuse Elevation Control Mechanism
 - **T1068** — Exploitation for Privilege Escalation
+- **T1620** — Reflective Code Loading
+- **T1611** — Escape to Host
+- **T1548** — Abuse Elevation Control Mechanism
 
 ## Kill chain phases observed
 
@@ -36,41 +37,75 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Fileless memfd-backed binary executing as root (CVE-2026-53264 core-dump payload)
+### Root process executing from anonymous memfd (CVE-2026-53264 core_pattern LPE payload)
 
-`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="*memfd:*" OR Processes.process="*memfd:*") (Processes.user="root" OR Processes.user_id=0) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user="root" (Processes.process="*memfd:*" OR Processes.process_path="*memfd:*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FolderPath has "memfd:" or ProcessCommandLine has "memfd:"
+| where Timestamp > ago(14d)
+| where FolderPath has "memfd:" or FileName startswith "memfd:" or ProcessCommandLine has "memfd:"
 | where AccountName =~ "root"
-| where InitiatingProcessFileName !in~ ("runc","crun","containerd-shim","containerd-shim-runc-v2","podman","systemd","dockerd")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Unpatched kernels exposed to CVE-2026-53264 traffic-control UAF LPE
+### tc clsact qdisc + flower filter setup (CVE-2026-53264 UAF trigger path)
 
-`UC_2_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-53264" by Vulnerabilities.dest Vulnerabilities.severity Vulnerabilities.signature Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="tc" (Processes.process="*clsact*" OR Processes.process="*flower*") by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| where user!="root"
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "tc"
+| where ProcessCommandLine has "clsact" or (ProcessCommandLine has "flower" and ProcessCommandLine has "filter")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Unprivileged process spawns root child without sudo/su/pkexec (Linux LPE)
+
+`UC_3_7` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName =~ "root"
+| where isnotempty(InitiatingProcessAccountName) and InitiatingProcessAccountName !~ "root" and InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("sudo","su","pkexec","doas","sshd","login","systemd","crond","cron","gdm","gdm-session-worker","lightdm","dbus-daemon","polkitd","runc","containerd-shim","containerd-shim-runc-v2","dockerd","containerd")
+| where FileName !in~ ("sudo","su","passwd","chsh","chfn","newgrp","gpasswd","mount","umount","ping","ping6","pkexec","fusermount","fusermount3","crontab","at","ssh-agent","dbus-daemon-launch-helper","unix_chkpwd")
+| project Timestamp, DeviceName, ElevatedUser=AccountName, FileName, FolderPath, ProcessCommandLine, ParentUser=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Exposure: hosts running kernel vulnerable to CVE-2026-53264 (unpatched TC UAF)
+
+`UC_3_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-53264"
-| join kind=leftouter (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, OSDistribution, OSVersion) by DeviceId) on DeviceId
-| project DeviceName, OSPlatform, OSDistribution, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId =~ "CVE-2026-53264"
+| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc
 ```
 
@@ -260,4 +295,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

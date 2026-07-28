@@ -28,7 +28,10 @@ The vulnerability, assigned CVE-2026-63077 (CVSS score: 9.8), affects all TeamCi
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1572** — Protocol Tunneling
+- **T1105** — Ingress Tool Transfer
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
@@ -36,54 +39,97 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### TeamCity server (java) process spawning OS command shell — CVE-2026-63077 RCE execution
+### TeamCity On-Premises vulnerable to CVE-2026-63077 unauthenticated RCE (version exposure)
 
-`UC_1_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("java.exe","javaw.exe","java") AND (Processes.parent_process_path="*teamcity*" OR Processes.parent_process="*teamcity*" OR Processes.parent_process="*jetbrains.buildServer*" OR Processes.parent_process="*catalina*teamcity*") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","nltest.exe","ipconfig.exe","systeminfo.exe","certutil.exe","bitsadmin.exe","curl.exe","sh","bash","dash","whoami","id","curl","wget") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process Processes.process_name Processes.process_path
-| `drop_dm_object_name(Processes)`
-| where NOT process_name IN ("git.exe","svn.exe","hg.exe")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("java.exe","javaw.exe","java")
-| where InitiatingProcessCommandLine has_any ("teamcity","jetbrains.buildServer","TeamCity") or InitiatingProcessFolderPath has "TeamCity"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","net.exe","net1.exe","nltest.exe","ipconfig.exe","systeminfo.exe","certutil.exe","bitsadmin.exe","curl.exe","sh","bash","dash","whoami","id","curl","wget")
-| where FileName !in~ ("git.exe","svn.exe","hg.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Exposed / unpatched JetBrains TeamCity On-Premises vulnerable to CVE-2026-63077
-
-`UC_1_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_2_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-63077" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-63077" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - severity
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
 | where CveId == "CVE-2026-63077"
-| join kind=leftouter (
-    DeviceInfo
-    | where Timestamp > ago(1d)
-    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId
-  ) on DeviceId
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, IsInternetFacing, PublicIP, OSPlatform
-| order by IsInternetFacing desc
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| join kind=leftouter (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| order by IsInternetFacing desc, Timestamp desc
+```
+
+### TeamCity server process spawns OS command interpreter (CVE-2026-63077 RCE outcome)
+
+`UC_2_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*teamcity*" OR Processes.parent_process_name IN ("java.exe","TeamCityService.exe","teamcity-server.exe","jsvc")) AND NOT (Processes.parent_process="*buildAgent*" OR Processes.parent_process="*buildServer.agent*") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","whoami.exe","net.exe","net1.exe","bash.exe") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java.exe","java","jsvc","TeamCityService.exe","teamcity-server.exe")
+| where (InitiatingProcessCommandLine has "teamcity" or InitiatingProcessFolderPath has "TeamCity" or InitiatingProcessCommandLine has "jetbrains.buildServer.serverSide" or InitiatingProcessCommandLine has "BuildServerMain")
+| where not (InitiatingProcessCommandLine has "buildAgent" or InitiatingProcessCommandLine has "jetbrains.buildServer.agent")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","whoami.exe","net.exe","net1.exe","nltest.exe","bash.exe","sh","bash")
+| project Timestamp, DeviceName, AccountName, ParentProc = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, ChildProc = FileName, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Outbound callback from TeamCity-server-spawned interpreter (CVE-2026-63077 reverse shell/C2)
+
+`UC_2_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("cmd.exe","powershell.exe","pwsh.exe","nc.exe","ncat.exe","certutil.exe","bitsadmin.exe","curl.exe") All_Traffic.direction="outbound" NOT (All_Traffic.dest_ip IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","127.0.0.0/8")) by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessParentFileName in~ ("java.exe","jsvc","TeamCityService.exe","teamcity-server.exe")
+| where InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","bash.exe","sh","nc.exe","ncat.exe","certutil.exe","curl.exe","bitsadmin.exe")
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Executable or web-shell written by TeamCity server process (CVE-2026-63077 payload drop)
+
+`UC_2_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("java.exe","jsvc","TeamCityService.exe","teamcity-server.exe")) (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.ps1" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.jsp" OR Filesystem.file_name="*.php" OR Filesystem.file_name="*.aspx" OR Filesystem.file_name="*.sh") by Filesystem.dest, Filesystem.process_name, Filesystem.file_name, Filesystem.file_path
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java.exe","jsvc","TeamCityService.exe","teamcity-server.exe")
+| where (InitiatingProcessCommandLine has "teamcity" or InitiatingProcessFolderPath has "TeamCity" or InitiatingProcessCommandLine has "jetbrains.buildServer.serverSide")
+| where not (InitiatingProcessCommandLine has "buildAgent" or InitiatingProcessCommandLine has "jetbrains.buildServer.agent")
+| where FileName endswith ".exe" or FileName endswith ".ps1" or FileName endswith ".bat" or FileName endswith ".vbs" or FileName endswith ".jsp" or FileName endswith ".php" or FileName endswith ".aspx" or FileName endswith ".sh"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -272,4 +318,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

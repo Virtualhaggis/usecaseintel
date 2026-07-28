@@ -73,10 +73,12 @@ In a joint announcement on Monday, the Frankfurt public prosecutor's cybercrime 
 - **T1027** — Obfuscated Files or Information
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1557** — Adversary-in-the-Middle
+- **T1566.001** — Phishing: Spearphishing Attachment
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1583.001** — Acquire Infrastructure: Domains
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1550.004** — Use Alternate Authentication Material: Web Session Cookie
+- **T1111** — Multi-Factor Authentication Interception
 - **T1114.003** — Email Collection: Email Forwarding Rule
 - **T1564.008** — Hide Artifacts: Email Hiding Rules
 
@@ -86,104 +88,157 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Kratos/SneakyLog phishing page fingerprint: barr.svg + lg.svg assets with next.php/save.php POST
+### Kratos/SneakyLog phishing kit web tell: barr.svg + lg.svg asset load then POST to next.php/save.php
 
-`UC_101_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_102_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Web.url) as urls values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*barr.svg*" OR Web.url="*lg.svg*" OR Web.url="*next.php*" OR Web.url="*save.php*") by Web.src Web.dest Web.site Web.user | `drop_dm_object_name(Web)` | eval hasBarr=if(match(urls,"barr\.svg"),1,0), hasLg=if(match(urls,"lg\.svg"),1,0), hasPost=if(match(urls,"(next|save)\.php"),1,0) | where hasBarr=1 AND hasLg=1 | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.dest) as dest from datamodel=Web where (Web.url="*barr.svg*" OR Web.url="*lg.svg*" OR Web.url="*next.php*" OR Web.url="*save.php*") by Web.src Web.user
+| `drop_dm_object_name(Web)`
+| eval loads_asset=if(match(mvjoin(urls," "),"(?i)(barr\.svg|lg\.svg)"),1,0)
+| eval posts_creds=if(match(mvjoin(urls," "),"(?i)(next\.php|save\.php)"),1,0)
+| where loads_asset=1 AND posts_creds=1
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 14d;
 DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
+| where Timestamp > ago(30d)
 | where isnotempty(RemoteUrl)
 | where RemoteUrl has_any ("barr.svg","lg.svg","next.php","save.php")
-| extend Asset = case(RemoteUrl has "barr.svg","barr.svg", RemoteUrl has "lg.svg","lg.svg", RemoteUrl has "next.php","next.php","save.php")
-| extend Host = tostring(parse_url(RemoteUrl).Host)
-| summarize Assets=make_set(Asset,10), Urls=make_set(RemoteUrl,25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Users=make_set(InitiatingProcessAccountName,10) by DeviceId, DeviceName, Host
-| where set_has_element(Assets,"barr.svg") and set_has_element(Assets,"lg.svg")
+| summarize
+    LoadsKitAsset = countif(RemoteUrl has "barr.svg" or RemoteUrl has "lg.svg"),
+    PostsCreds   = countif(RemoteUrl has "next.php" or RemoteUrl has "save.php"),
+    SampleUrls   = make_set(RemoteUrl, 25),
+    RemoteIPs    = make_set(RemoteIP, 25),
+    FirstSeen    = min(Timestamp), LastSeen = max(Timestamp)
+    by DeviceName, InitiatingProcessAccountName
+| where LoadsKitAsset > 0 and PostsCreds > 0
 | order by LastSeen desc
 ```
 
-### Network/DNS callouts to disclosed Kratos (SneakyLog) takedown infrastructure
+### SneakyLog W-2 / tax-themed QR-code phishing email delivering fake M365 login
 
-`UC_101_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic where (All_Traffic.dest_ip="41.128.0.142" OR All_Traffic.dest_ip="101.99.92.124" OR All_Traffic.dest_ip="185.125.100.81") by All_Traffic.src All_Traffic.dest_ip All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let kitIPs = dynamic(["41.128.0.142","101.99.92.124","185.125.100.81"]);
-let kitDomains = dynamic(["abal.my","starwellmedia.com","aabiz.de","aspireglobal.ltd","buenne.de","dufllot.sbs","enerdizerandtron.de","espaciocf.de","ihrsupportcenter.de","ilersls.org","aaalen.de","rundwasser.de","smartcontrolengineer.com","sonnenbrillenspot.de","trisrnareprjdocz.com","razen.online","theoceanac.online","jumpast.es","klenpare.com","uvarnix.cfd"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (kitIPs) or RemoteUrl has_any (kitDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### AiTM stolen-session token replay: successful M365 sign-in from Kratos IPs / anomalous-token risk
-
-`UC_101_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as apps from datamodel=Authentication where Authentication.action="success" (Authentication.src="41.128.0.142" OR Authentication.src="101.99.92.124" OR Authentication.src="185.125.100.81") by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count values(All_Email.file_name) as files values(All_Email.subject) as subjects values(All_Email.url) as urls from datamodel=Email where All_Email.direction="inbound" (All_Email.subject="*W-2*" OR All_Email.subject="*W2*" OR All_Email.subject="*tax*" OR All_Email.subject="*payroll*" OR All_Email.subject="*IRS*" OR All_Email.subject="*1099*") by All_Email.src_user All_Email.recipient All_Email.message_id
+| `drop_dm_object_name(All_Email)`
+| eval has_img=if(match(mvjoin(files," "),"(?i)\.(png|jpg|jpeg|gif|pdf|svg)$"),1,0)
+| where has_img=1
 ```
 
 **Defender KQL:**
 ```kql
-let kitIPs = dynamic(["41.128.0.142","101.99.92.124","185.125.100.81"]);
-AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where ErrorCode == 0
-| where IPAddress in (kitIPs) or RiskLevelDuringSignIn in ("high","medium")
-| where IPAddress in (kitIPs) or RiskState in ("atRisk","confirmedCompromised")
-| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, IsInteractive, AuthenticationRequirement, ConditionalAccessStatus, RiskLevelDuringSignIn, RiskState, UserAgent
-| order by Timestamp desc
-```
-
-### Tax/W-2 themed QR-code phishing email (SneakyLog delivery)
-
-`UC_101_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let LookbackDays = 30d;
+let KratosDomains = dynamic(["abal.my","starwellmedia.com","aabiz.de","aspireglobal.ltd","buenne.de","dufllot.sbs","enerdizerandtron.de","espaciocf.de","ihrsupportcenter.de","ilersls.org","aaalen.de","rundwasser.de","smartcontrolengineer.com","sonnenbrillenspot.de","trisrnareprjdocz.com","razen.online","theoceanac.online","jumpast.es","klenpare.com","uvarnix.cfd"]);
 EmailEvents
-| where Timestamp > ago(LookbackDays)
-| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
-| where Subject has_any ("W-2","W2","tax","IRS","1099","payroll","tax form","tax statement","tax return")
-| where AttachmentCount >= 1 and (UrlCount == 0 or UrlCount <= 1)
-| join kind=inner (
-    EmailAttachmentInfo
-    | where FileType in~ ("png","jpg","jpeg","gif","pdf","svg","html","htm")
-  ) on NetworkMessageId
-| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, FileName, FileType, UrlCount, DeliveryAction
+| where Timestamp > ago(90d)
+| where EmailDirection == "Inbound" and DeliveryAction in ("Delivered","DeliveredAsSpam")
+| where Subject has_any ("W-2","W2","tax","IRS","payroll","1099")
+| join kind=leftouter (EmailAttachmentInfo | where Timestamp > ago(90d) | where FileType in~ ("png","jpg","jpeg","gif","pdf","svg") | project NetworkMessageId, AttachFileName=FileName, FileType, AttachSHA256=SHA256) on NetworkMessageId
+| join kind=leftouter (EmailUrlInfo | where Timestamp > ago(90d) | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| where isnotempty(AttachFileName) or UrlDomain in~ (KratosDomains)
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, AttachFileName, FileType, Url, UrlDomain
 | order by Timestamp desc
 ```
 
-### Post-compromise M365 inbox forwarding/rule creation from Kratos infrastructure (ATO→BEC)
+### Network / DNS callouts to Kratos takedown infrastructure (disclosed IPs & domains)
 
-`UC_101_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_ip="41.128.0.142" OR All_Traffic.dest_ip="101.99.92.124" OR All_Traffic.dest_ip="185.125.100.81") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+```
 
 **Defender KQL:**
 ```kql
-let kitIPs = dynamic(["41.128.0.142","101.99.92.124","185.125.100.81"]);
+let KratosDomains = dynamic(["abal.my","starwellmedia.com","aabiz.de","aspireglobal.ltd","buenne.de","dufllot.sbs","enerdizerandtron.de","espaciocf.de","ihrsupportcenter.de","ilersls.org","aaalen.de","rundwasser.de","smartcontrolengineer.com","sonnenbrillenspot.de","trisrnareprjdocz.com","razen.online","theoceanac.online","jumpast.es","klenpare.com","uvarnix.cfd"]);
+let KratosIPs = dynamic(["41.128.0.142","101.99.92.124","185.125.100.81"]);
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteIP in (KratosIPs) or (isnotempty(RemoteUrl) and tolower(RemoteUrl) has_any (KratosDomains))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Successful M365 sign-in sourced from Kratos AiTM proxy IPs
+
+`UC_102_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as app values(Authentication.action) as action from datamodel=Authentication where (Authentication.src_ip="41.128.0.142" OR Authentication.src_ip="101.99.92.124" OR Authentication.src_ip="185.125.100.81") Authentication.action="success" by Authentication.user Authentication.src_ip
+| `drop_dm_object_name(Authentication)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let KratosIPs = dynamic(["41.128.0.142","101.99.92.124","185.125.100.81"]);
+AADSignInEventsBeta
+| where Timestamp > ago(90d)
+| where IPAddress in (KratosIPs)
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, UserAgent, ConditionalAccessStatus, IsInteractive
+| order by Timestamp desc
+```
+
+### AiTM session-cookie replay: MFA 'previously satisfied' from a first-seen IP
+
+`UC_102_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` values(Authentication.src_ip) as baseline_ips from datamodel=Authentication where Authentication.action="success" earliest=-30d latest=-1d by Authentication.user
+| `drop_dm_object_name(Authentication)`
+| append [| tstats `summariesonly` count min(_time) as firstTime values(Authentication.app) as app values(Authentication.src_ip) as src_ip from datamodel=Authentication where Authentication.action="success" Authentication.signature="*Previously satisfied*" earliest=-1d by Authentication.user Authentication.src_ip | `drop_dm_object_name(Authentication)`]
+| stats values(baseline_ips) as baseline_ips values(app) as app min(firstTime) as firstTime by user src_ip
+| where isnotnull(src_ip) AND NOT src_ip IN (baseline_ips)
+| convert ctime(firstTime)
+```
+
+**Defender KQL:**
+```kql
+let Baseline = AADSignInEventsBeta
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where ErrorCode == 0
+    | summarize by AccountUpn, IPAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0
+| where AuthenticationRequirement == "multiFactorAuthentication"
+| where tostring(AuthenticationDetails) has "Previously satisfied"
+| where IsInteractive == false
+| join kind=leftanti Baseline on AccountUpn, IPAddress
+| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, UserAgent, AuthenticationRequirement
+| order by Timestamp desc
+```
+
+### Post-compromise M365 mailbox forwarding / inbox-rule creation (BEC prep)
+
+`UC_102_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as command from datamodel=Change where All_Changes.object_category="mailbox" (All_Changes.command="New-InboxRule" OR All_Changes.command="Set-InboxRule" OR All_Changes.command="Set-Mailbox" OR All_Changes.command="New-TransportRule") by All_Changes.user All_Changes.src All_Changes.object
+| `drop_dm_object_name(All_Changes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
 CloudAppEvents
 | where Timestamp > ago(30d)
-| where ActionType in~ ("New-InboxRule","Set-InboxRule","UpdateInboxRules","Set-Mailbox")
+| where ActionType in ("New-InboxRule","Set-InboxRule","Set-Mailbox","New-TransportRule","Set-TransportRule")
 | extend Raw = tostring(RawEventData)
-| where IPAddress in (kitIPs)
-   or Raw has_any ("ForwardTo","RedirectTo","ForwardAsAttachmentTo","DeleteMessage","MarkAsRead")
-| project Timestamp, AccountDisplayName, AccountId, IPAddress, ActionType, Application, Raw
+| where Raw has_any ("ForwardingSmtpAddress","ForwardAsAttachmentTo","ForwardTo","RedirectTo","DeleteMessage","ForwardingAddress","MoveToFolder")
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, IPAddress, UserAgent, ObjectName, Raw
 | order by Timestamp desc
 ```
 
@@ -526,7 +581,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Police Dismantle Kratos Phishing Kit Built to Steal Microsoft 365 Sessions and B
 
-`UC_101_12` · phase: **exploit** · confidence: **High**
+`UC_102_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -586,4 +641,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

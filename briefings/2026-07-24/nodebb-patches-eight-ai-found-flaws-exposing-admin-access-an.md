@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB privilege escalation: non-admin reaching /api/admin/* after homePageCustom bypass
 
-`UC_67_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_68_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB i18n translation-token XSS: [[topic:merged-message,...]] injected in request URI
 
-`UC_67_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_68_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB federation actor spoofing (CVE-2026-58593): external POST to ActivityPub inbox
 
-`UC_67_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_68_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB unauthenticated private-data enumeration via ActivityPub outbox / message endpoints
 
-`UC_67_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_68_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
