@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Cl0p hex-named JSP web shell dropped under /Windchill/login/ (CVE-2026-12569)
 
-`UC_44_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_46_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### PTC Windchill Java/Tomcat web tier spawning OS command shell (web shell RCE)
 
-`UC_44_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_46_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Network connections to Cl0p CVE-2026-12569 C2 / staging infrastructure
 
-`UC_44_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_46_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### Windchill filesystem-enumeration artifact flst.txt written by web tier (CVE-2026-12569 discovery)
 
-`UC_44_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_46_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

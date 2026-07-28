@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,9 +12,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
 - [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
+- [compromised npm packages joyfill components and joyfill layo](./2026-07-28/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
 - [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
+- [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
 - [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
@@ -299,7 +301,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 49257 mcp pinot unauthenticated tool ](./2026-06-26/ghsa-critical-cve-2026-49257-mcp-pinot-unauthenticated-tool-.md)
 - [ghsa critical cve 2026 49454 relyra saml signaturevalue not ](./2026-06-26/ghsa-critical-cve-2026-49454-relyra-saml-signaturevalue-not-.md)
 - [ghsa critical cve 2026 53519 nezha monitoring pre auth path ](./2026-06-26/ghsa-critical-cve-2026-53519-nezha-monitoring-pre-auth-path-.md)
-- [ghsa critical ghsa 98x5 vq43 vc5p semantic router exposed to](./2026-06-26/ghsa-critical-ghsa-98x5-vq43-vc5p-semantic-router-exposed-to.md)
 - [ghsa critical ghsa q6xx 5vr8 p898 nezha vulnerable to cross ](./2026-06-26/ghsa-critical-ghsa-q6xx-5vr8-p898-nezha-vulnerable-to-cross-.md)
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)

@@ -38,9 +38,9 @@ Of the 36,872 internet-exposed server-management interfaces running IPMI, 24,650
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1046** — Network Service Discovery
 - **T1110.002** — Brute Force: Password Cracking
-- **T1133** — External Remote Services
-- **T1595.001** — Active Scanning: Scanning IP Blocks
+- **T1589.001** — Gather Victim Identity Information: Credentials
 
 ## Kill chain phases observed
 
@@ -48,51 +48,77 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Mass IPMI RAKP hash harvesting — one host probing many BMCs on UDP/623 (CVE-2013-4786)
+### Internet-exposed BMC: inbound external traffic to IPMI UDP/623 (CVE-2013-4786 exposure)
 
-`UC_1_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_3_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(All_Traffic.dest) as dest dc(All_Traffic.dest) as dest_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp by All_Traffic.src _time span=1h
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime dc(All_Traffic.src) as ExternalSources values(All_Traffic.src) as src from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp All_Traffic.direction=inbound by All_Traffic.dest
 | `drop_dm_object_name(All_Traffic)`
-| where dest_count > 20
-| sort - dest_count
+| where ExternalSources>=1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemotePort == 623 and Protocol =~ "Udp"
-| where RemoteIPType == "Public"
-| summarize DistinctBMCs = dcount(RemoteIP), SampleTargets = make_set(RemoteIP, 50), TotalConns = count() by DeviceName, DeviceId, InitiatingProcessFileName, bin(Timestamp, 1h)
-| where DistinctBMCs > 20   // one host hitting 20+ distinct public IPMI endpoints/hr = RAKP hash sweep
-| order by DistinctBMCs desc
-```
-
-### Internet-sourced traffic reaching BMC IPMI interfaces on UDP/623 (exposure of CVE-2013-4786)
-
-`UC_1_11` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count values(All_Traffic.src) as src dc(All_Traffic.src) as src_count min(_time) as firstTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp by All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src))
-| convert ctime(firstTime)
-| sort - src_count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
+| where Timestamp > ago(7d)
+| where LocalPort == 623 and Protocol == "Udp"
 | where ActionType == "InboundConnectionAccepted"
-| where LocalPort == 623
 | where RemoteIPType == "Public"
-| summarize FirstSeen = min(Timestamp), Conns = count(), DistinctSources = dcount(RemoteIP), Sources = make_set(RemoteIP, 50) by DeviceName, DeviceId, LocalIP
-| order by FirstSeen desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Attempts=count(), ExternalSources=dcount(RemoteIP), SampleSrc=make_set(RemoteIP, 20) by DeviceName, LocalIP
+| order by Attempts desc
+```
+
+### Internal host fan-out to many BMCs on IPMI UDP/623 (RAKP hash-dump sweep)
+
+`UC_3_11` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true dc(All_Traffic.dest) as BMCsContacted values(All_Traffic.dest) as BMCs count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp by All_Traffic.src _time span=1h
+| `drop_dm_object_name(All_Traffic)`
+| where BMCsContacted>=20
+| sort - BMCsContacted
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 623 and Protocol == "Udp"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionRequest")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize BMCsContacted=dcount(RemoteIP), Targets=make_set(RemoteIP, 100), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleProc=any(InitiatingProcessFileName), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1h)
+| where BMCsContacted >= 20   // 20+ distinct BMCs on 623 in 1h = sweep, not routine OOB mgmt
+| order by BMCsContacted desc
+```
+
+### Non-management endpoint reaching IPMI UDP/623 (RAKP credential-retrieval tool e.g. ipmitool)
+
+`UC_3_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process_name IN ("ipmitool.exe","ipmiutil.exe") OR Processes.process="*ipmitool*" OR Processes.process="* lanplus*" OR Processes.process="* rakp*" OR Processes.process="*dumphashes*") by Processes.dest Processes.user Processes.process_name
+| `drop_dm_object_name(Processes)`
+| where user!="*$"
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 623 and Protocol == "Udp"
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName has_any ("ipmitool.exe","ipmiutil.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","ruby.exe","perl.exe","nmap.exe")
+     or InitiatingProcessCommandLine has_any ("lanplus","rakp","ipmitool","dumphashes")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -395,4 +421,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

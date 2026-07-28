@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Phishing email from npm-lookalike domain npmjs.help
 
-`UC_36_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_38_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -56,7 +56,7 @@ EmailEvents
 
 ### Endpoint DNS/HTTP connection to npm-phish portal npmjs.help
 
-`UC_36_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_38_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

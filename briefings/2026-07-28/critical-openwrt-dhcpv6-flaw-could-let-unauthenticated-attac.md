@@ -30,7 +30,10 @@ The critical issue, tracked as CVE-2026-53921 and rated 9.8 on CVSS 3.1 in OpenW
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1046** — Network Service Discovery
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1083** — File and Directory Discovery
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 
 ## Kill chain phases observed
 
@@ -38,41 +41,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Off-segment DHCPv6 REQUEST reaching odhcpd (UDP/547) — CVE-2026-53921 exploit reachability
+### Inbound DHCPv6 REQUEST/SOLICIT to UDP 547 from non-link-local source (CVE-2026-53921)
 
-`UC_6_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.transport=udp AND All_Traffic.dest_port=547 by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.transport
-| `drop_dm_object_name(All_Traffic)`
-| where NOT cidrmatch("fe80::/10", src_ip)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort == 547 and Protocol == "Udp"
-| where not(RemoteIP startswith "fe80" or RemoteIP startswith "ff02")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalIP, RemoteIP, RemotePort, Protocol
-| order by Timestamp desc
-```
-
-### Unauthenticated luci-app-commands injection via bare pipe in public+param command (OpenWrt RCE)
-
-`UC_6_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Web.http_method) as http_method, values(Web.status) as status, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.url="*luci*" AND Web.url="*command*" AND (Web.url="*%7C*" OR Web.url="*%7c*" OR Web.url="*|*") by Web.src, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - count
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as targets dc(All_Traffic.dest) as target_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_port=547 NOT (All_Traffic.src IN ("fe80::/10","fc00::/7","::1")) by All_Traffic.src All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where target_count >= 1 | sort - count
+```
+
+### Shell or network tool spawned as child of odhcpd (post-exploit code execution as root)
+
+`UC_8_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.parent_process_name=odhcpd Processes.process_name IN ("sh","ash","bash","dash","busybox","nc","netcat","wget","curl","telnetd","nc.traditional") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+### LuCI luci-app-commands unauthenticated command injection via bare pipe / public param
+
+`UC_8_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as uas values(Web.status) as statuses from datamodel=Web.Web where (Web.url="*/cgi-bin/luci/*command*" OR Web.uri_path="*/command/*") (Web.url="*%7C*" OR Web.url="*|*" OR Web.uri_query="*%7C*" OR Web.uri_query="*%3B*" OR Web.uri_query="*%24%28*" OR Web.uri_query="*%60*") by Web.src Web.dest Web.http_method Web.url | `drop_dm_object_name(Web)` | sort - lastTime
+```
+
+### LuCI cgi-io / ddns path-traversal arbitrary file read (CVE-2026-62947, service_name traversal)
+
+`UC_8_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses from datamodel=Web.Web where (Web.url="*cgi-io*" OR Web.url="*luci*ddns*" OR Web.uri_query="*service_name*") (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%252f*" OR Web.url="*%2e%2e%2f*" OR Web.uri_query="*../*" OR Web.uri_query="*..%2f*") by Web.src Web.dest Web.http_method Web.url | `drop_dm_object_name(Web)` | sort - lastTime
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -290,4 +292,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

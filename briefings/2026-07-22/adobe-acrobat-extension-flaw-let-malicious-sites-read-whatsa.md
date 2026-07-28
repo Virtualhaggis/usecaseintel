@@ -40,9 +40,9 @@ The shortcoming has been codenamed HermeticReader by Guardio Labs. It's official
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1176.001** — Browser Extensions
-- **T1203** — Exploitation for Client Execution
+- **T1189** — Drive-by Compromise
 - **T1185** — Browser Session Hijacking
-- **T1005** — Data from Local System
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
@@ -50,20 +50,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable Adobe Acrobat Chrome extension (HermeticReader / CVE-2026-48294) present on endpoints
+### Vulnerable Adobe Acrobat Chrome extension (<=26.5.2.2) present — HermeticReader/CVE-2026-48294
 
-`UC_101_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Extensions\\efaidnbmnnnibpcajpcglclefindmkaj\\*" by Filesystem.dest, Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| rex field=file_path "efaidnbmnnnibpcajpcglclefindmkaj\\\\(?<ext_version>\d+\.\d+\.\d+\.\d+)_"
-| where isnotnull(ext_version)
-| eval v=split(ext_version,"."), major=tonumber(mvindex(v,0)), minor=tonumber(mvindex(v,1)), build=tonumber(mvindex(v,2)), rev=tonumber(mvindex(v,3))
-| where major<26 OR (major==26 AND (minor<5 OR (minor==5 AND (build<2 OR (build==2 AND rev<=2)))))
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Extensions\\efaidnbmnnnibpcajpcglclefindmkaj\\*" by Filesystem.dest Filesystem.user Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rex field=file_path "(?i)\\\\Extensions\\\\efaidnbmnnnibpcajpcglclefindmkaj\\\\(?<ext_version>\d+\.\d+\.\d+\.\d+)_" | where isnotnull(ext_version) | eval v=split(ext_version,"."), patched=split("26.5.2.3",".") | eval vulnerable=if(tonumber(mvindex(v,0))<26 OR (tonumber(mvindex(v,0))==26 AND tonumber(mvindex(v,1))<5) OR (tonumber(mvindex(v,0))==26 AND tonumber(mvindex(v,1))==5 AND tonumber(mvindex(v,2))<2) OR (tonumber(mvindex(v,0))==26 AND tonumber(mvindex(v,1))==5 AND tonumber(mvindex(v,2))==2 AND tonumber(mvindex(v,3))<3),1,0) | where vulnerable==1 | convert ctime(firstTime) ctime(lastTime) | table dest user ext_version firstTime lastTime file_path count
 ```
 
 **Defender KQL:**
@@ -71,47 +64,20 @@ _(none detected from narrative keywords)_
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FolderPath has @"\Extensions\efaidnbmnnnibpcajpcglclefindmkaj\"
-| extend ExtVersion = extract(@"efaidnbmnnnibpcajpcglclefindmkaj\\([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)_", 1, FolderPath)
+| extend ExtVersion = extract(@"(?i)\\Extensions\\efaidnbmnnnibpcajpcglclefindmkaj\\([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)_", 1, FolderPath)
 | where isnotempty(ExtVersion)
-| extend v = split(ExtVersion, ".")
-| extend Major=toint(v[0]), Minor=toint(v[1]), Build=toint(v[2]), Rev=toint(v[3])
-// vulnerable = <= 26.5.2.2 ; fixed build is 26.5.2.3
-| where Major < 26 or (Major==26 and (Minor<5 or (Minor==5 and (Build<2 or (Build==2 and Rev<=2)))))
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SamplePath=any(FolderPath) by DeviceName, DeviceId, ExtVersion
+| where parse_version(ExtVersion) < parse_version("26.5.2.3")   // 26.5.2.3 = patched build; <= 26.5.2.2 is HermeticReader-vulnerable
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SamplePath=any(FolderPath) by DeviceName, InitiatingProcessAccountName, ExtVersion
 | order by LastSeen desc
 ```
 
-### First-ever WhatsApp Web contact from a browser on a HermeticReader-vulnerable host
+### WhatsApp Web DOM exfiltrated via cross-origin form POST (HermeticReader data theft)
 
-`UC_101_13` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_103_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="web.whatsapp.com" by DNS.src, DNS.query
-| `drop_dm_object_name(DNS)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - firstTime
-| head 500
-```
-
-**Defender KQL:**
-```kql
-let VulnHosts = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath has @"\Extensions\efaidnbmnnnibpcajpcglclefindmkaj\"
-    | distinct DeviceId;
-let Baseline = DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where RemoteUrl has "web.whatsapp.com"
-    | distinct DeviceId;
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe")
-| where RemoteUrl has "web.whatsapp.com"
-| where DeviceId in (VulnHosts)      // host carries the vulnerable Adobe Acrobat extension
-| where DeviceId !in (Baseline)      // first time this host has ever reached WhatsApp Web
-| summarize FirstSeen=min(Timestamp), Connections=count() by DeviceId, DeviceName, InitiatingProcessFileName, RemoteUrl
-| order by FirstSeen desc
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.http_referrer="*web.whatsapp.com*" NOT (Web.url="*whatsapp.com*" OR Web.url="*whatsapp.net*" OR Web.url="*facebook.com*" OR Web.url="*fbcdn.net*" OR Web.url="*meta.com*") by Web.src Web.user Web.dest Web.site Web.url Web.http_referrer | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | table src user dest site url http_referrer firstTime lastTime count
 ```
 
 ### Suspicious browser extension installation

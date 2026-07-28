@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Thymeleaf SpEL tab-character sandbox bypass payload in HTTP request (CVE-2026-40478)
 
-`UC_465_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_466_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Java/Tomcat process writes .jsp webshell file to disk (CVE-2026-40478 post-exploit drop)
 
-`UC_465_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_466_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### Java/Tomcat process spawns OS command interpreter (post-Thymeleaf SSTI RCE)
 
-`UC_465_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_466_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
