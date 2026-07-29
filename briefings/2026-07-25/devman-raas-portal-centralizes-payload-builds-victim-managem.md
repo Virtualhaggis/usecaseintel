@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### DevMan/Funky Mantis locker execution by known SHA256/MD5 hash
 
-`UC_60_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_64_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### DevMan ransomware encryption artifacts: .devman extension and deterministic ransom note
 
-`UC_60_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_64_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### DevMan pre-encryption recovery inhibition and event-log clearing
 
-`UC_60_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_64_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

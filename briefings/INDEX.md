@@ -9,8 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-29
+- [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
 - [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
+- [hackers target over 30 minnesota water utilities in coordina](./2026-07-29/hackers-target-over-30-minnesota-water-utilities-in-coordina.md)
 - [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
+- [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
 - [openai agent used exposed credentials across four services d](./2026-07-29/openai-agent-used-exposed-credentials-across-four-services-d.md)
 - [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
@@ -43,10 +46,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [arista patches velocloud orchestrator zero day exploited in ](./2026-07-27/arista-patches-velocloud-orchestrator-zero-day-exploited-in-.md)
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
-- [coca cola confirms data theft in fairlife ransomware attack](./2026-07-27/coca-cola-confirms-data-theft-in-fairlife-ransomware-attack.md)
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
-- [ernst young data breach claimed by shinyhunters extortion ga](./2026-07-27/ernst-young-data-breach-claimed-by-shinyhunters-extortion-ga.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [hackers target us firms in fastjson rce zero day attacks](./2026-07-27/hackers-target-us-firms-in-fastjson-rce-zero-day-attacks.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
@@ -95,7 +96,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-23
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [chaos ransomware uses msarat to route c2 traffic through hea](./2026-07-23/chaos-ransomware-uses-msarat-to-route-c2-traffic-through-hea.md)
-- [china nexus jadeprox uses new triback loader in government a](./2026-07-23/china-nexus-jadeprox-uses-new-triback-loader-in-government-a.md)
 - [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
@@ -4142,7 +4142,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
+- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09

@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Exfil to lookalike Injective gRPC-web subdomain (@injectivelabs stealer C2)
 
-`UC_207_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_209_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### Malicious @injectivelabs SDK build artifact by SHA-256 on disk
 
-`UC_207_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_209_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### Transitive install of poisoned @injectivelabs 1.20.21 build under node_modules
 
-`UC_207_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_209_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Compromised @injectivelabs/sdk-ts exfiltrates wallet keys through fake telemetry
 
-`UC_207_4` · phase: **exploit** · confidence: **High**
+`UC_209_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

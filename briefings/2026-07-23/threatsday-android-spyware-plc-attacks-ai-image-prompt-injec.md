@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### npm postinstall dropper spawns osascript (AMOS macOS stealer via @copilot-mcp/apex)
 
-`UC_94_19` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_98_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### AMOS stealer exfil staging /tmp/osalogging.zip + LaunchAgent C2 persistence (macOS)
 
-`UC_94_20` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_98_20` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### FakeAgent: ClaudeDesktop.exe execution + tampered libcef.dll side-load (SectopRAT)
 
-`UC_94_21` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_98_21` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ union ClaudeLure, LibcefSideload
 
 ### FakeAgent SectopRAT persistence: DockerDesktop.exe scheduled task + Defender exclusion
 
-`UC_94_22` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_98_22` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -673,7 +673,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Android Spyware, PLC Attacks, AI Image Prompt Injection + 12 More St
 
-`UC_94_18` · phase: **exploit** · confidence: **High**
+`UC_98_18` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,8 +30,9 @@ Tracked as CVE-2026-10702 , the bug provides arbitrary code execution inside the
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
-- **T1189** — Drive-by Compromise
 - **T1203** — Exploitation for Client Execution
+- **T1189** — Drive-by Compromise
+- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
@@ -39,21 +40,101 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable Firefox exposure to CVE-2026-10702 JIT drive-by RCE (147–151.0.2)
+### Vulnerable Firefox exposed to CVE-2026-10702 JIT RCE (147 through 151.0.2)
 
-`UC_1_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-10702" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name("Vulnerabilities")`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
 
 **Defender KQL:**
 ```kql
-// Managed endpoints running a Firefox stable build vulnerable to CVE-2026-10702
-// Affected stable range: 147.0 through 151.0.2 (fixed 151.0.3). ESR 140.x is NOT affected and is excluded by the version range.
-DeviceTvmSoftwareInventory
-| where SoftwareVendor =~ "mozilla"
-| where SoftwareName has "firefox"
-| extend Ver = parse_version(SoftwareVersion)
-| where Ver >= parse_version("147.0") and Ver <= parse_version("151.0.2")
-| project DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
-| sort by SoftwareVersion asc, DeviceName asc
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId == "CVE-2026-10702"
+| where SoftwareVendor has "mozilla" or SoftwareName has "firefox"
+| summarize arg_max(Timestamp, *) by DeviceId, SoftwareName, SoftwareVersion
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
+```
+
+### Outdated Tor Browser bundling vulnerable Firefox (CVE-2026-10702 exposure)
+
+`UC_7_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="firefox.exe" (Processes.process_path="*Tor Browser*" OR Processes.parent_process="*Tor Browser*" OR Processes.process_path="*\\Browser\\firefox.exe") by Processes.dest, Processes.user, Processes.process_path, Processes.process
+| `drop_dm_object_name("Processes")`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "firefox.exe"
+| where FolderPath has "Tor Browser" or InitiatingProcessCommandLine has "Tor Browser"
+| where AccountName !endswith "$"
+| extend Ver = ProcessVersionInfoProductVersion
+| extend P = split(Ver, ".")
+| extend Major = toint(P[0]), Minor = toint(P[1]), Build = toint(P[2])
+| where Major >= 147 and Major <= 151          // vulnerable Firefox range per article
+| where not (Major == 151 and Build >= 3)        // 151.0.3 is the patched build
+| summarize LastSeen=max(Timestamp), Version=any(Ver), FolderPath=any(FolderPath) by DeviceName, AccountName, Major, Minor, Build
+| order by LastSeen desc
+```
+
+### Firefox/Tor renderer (content) process spawning an unexpected child — sandbox escape / RCE
+
+`UC_7_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="firefox.exe" Processes.parent_process="*-contentproc*" NOT Processes.process_name IN ("firefox.exe","plugin-container.exe","updater.exe","crashreporter.exe","pingsender.exe","minidump-analyzer.exe") by Processes.dest, Processes.user, Processes.parent_process, Processes.process_name, Processes.process
+| `drop_dm_object_name("Processes")`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "firefox.exe"
+| where InitiatingProcessCommandLine has "-contentproc"   // the sandboxed renderer/content child
+| where FileName !in~ ("firefox.exe","plugin-container.exe","updater.exe","crashreporter.exe","pingsender.exe","minidump-analyzer.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, RendererCmd = InitiatingProcessCommandLine, ChildProcess = FileName, ChildPath = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Endpoint exposed to GhostLock kernel futex LPE (CVE-2026-43499, IonStack stage 2)
+
+`UC_7_9` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-43499" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name("Vulnerabilities")`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId == "CVE-2026-43499"
+| summarize arg_max(Timestamp, *) by DeviceId
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -245,4 +326,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
