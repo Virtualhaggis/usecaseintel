@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Adobe Acrobat browser extension (HermeticReader CVE-2026-48294, ver <= 26.5.2.2) on endpoint
 
-`UC_108_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_109_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

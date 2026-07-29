@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-29
+- [two compromised joyfill npm packages run rat when imported i](./2026-07-29/two-compromised-joyfill-npm-packages-run-rat-when-imported-i.md)
 
 ## 2026-07-28
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)

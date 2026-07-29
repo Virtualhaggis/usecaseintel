@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious udev .rules file dropped in /run/udev/rules.d/ (CVE-2026-8933 payload)
 
-`UC_104_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceFileEvents | where Timestamp > ago(14d) | where ActionType == "FileCreated
 
 ### systemd-udevd spawning a shell/command as root (snap-confine LPE payoff)
 
-`UC_104_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_105_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents | where Timestamp > ago(14d) | where InitiatingProcessFileNa
 
 ### snap-confine invoked directly by a user shell / rapid repeat (CVE-2026-8933 race trigger)
 
-`UC_104_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_105_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents | where Timestamp > ago(14d) | where FileName =~ "snap-confi
 
 ### FUSE filesystem mounted over a snap /tmp scratch directory (CVE-2026-8933 race primitive)
 
-`UC_104_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_105_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

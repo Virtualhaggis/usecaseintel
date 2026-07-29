@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound DHCPv6 to odhcpd (UDP 547) from non-link-local source — CVE-2026-53921 exploit reach
 
-`UC_16_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_17_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### LuCI luci-app-commands / ddns command injection with shell metacharacters — root RCE
 
-`UC_16_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_17_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### cgi-io path traversal reading root files — CVE-2026-62947
 
-`UC_16_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_17_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
