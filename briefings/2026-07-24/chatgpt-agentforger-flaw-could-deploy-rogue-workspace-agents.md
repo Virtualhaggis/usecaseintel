@@ -1,4 +1,4 @@
-# [CRIT] ChatGPT AgentForger Flaw Could Deploy Rogue Workspace Agents via a Phishing Link
+# [HIGH] ChatGPT AgentForger Flaw Could Deploy Rogue Workspace Agents via a Phishing Link
 
 **Source:** The Hacker News
 **Published:** 2026-07-24
@@ -13,17 +13,13 @@ The vulnerability has been codenamed AgentForger by Zenity Labs. The issu…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2024-6587`
-- **CVE:** `CVE-2026-40217`
-- **CVE:** `CVE-2026-35029`
-- **Domain (defanged):** `chatgpt.com`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -40,7 +36,6 @@ The vulnerability has been codenamed AgentForger by Zenity Labs. The issu…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1071.003** — Application Layer Protocol: Mail Protocols
 - **T1114.002** — Email Collection: Remote Email Collection
@@ -53,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### ChatGPT AgentForger CSRF link: Agent Builder URL with initial_assistant_prompt param
 
-`UC_75_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_75_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +70,7 @@ UrlClickEvents
 
 ### AgentForger rogue-agent C2: inbound TASK-subject email followed by outbound reply to sender domain
 
-`UC_75_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_75_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -470,17 +465,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2024-6587`, `CVE-2026-40217`, `CVE-2026-35029`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `chatgpt.com`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

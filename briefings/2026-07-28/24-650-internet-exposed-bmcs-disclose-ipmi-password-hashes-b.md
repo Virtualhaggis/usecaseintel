@@ -37,10 +37,10 @@ Of the 36,872 internet-exposed server-management interfaces running IPMI, 24,650
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
+- **T1589.001** — Gather Victim Identity Information: Credentials
+- **T1110.002** — Brute Force: Password Cracking
 - **T1046** — Network Service Discovery
 - **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1212** — Exploitation for Credential Access
-- **T1110.002** — Brute Force: Password Cracking
 - **T1078.001** — Valid Accounts: Default Accounts
 - **T1021** — Remote Services
 - **T1542.001** — Pre-OS Boot: System Firmware
@@ -52,31 +52,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### External source reaching IPMI/RMCP UDP 623 on internet-exposed BMC (CVE-2013-4786)
+### Internet-exposed BMC IPMI RAKP hash disclosure exposure (UDP/623)
 
-`UC_12_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count dc(All_Traffic.dest) as bmc_count values(All_Traffic.dest) as bmc_hosts min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 AND All_Traffic.transport=udp by All_Traffic.src
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src))
-| where bmc_count>=1
-| eventstats max(bmc_count) as maxfan
-| sort - bmc_count
-```
-
-### Internal host harvesting IPMI RAKP hashes: UDP/623 fan-out to many BMCs
-
-`UC_12_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_12_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count dc(All_Traffic.dest) as bmc_count values(All_Traffic.dest) as bmc_hosts values(All_Traffic.process) as process min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 AND All_Traffic.transport=udp by All_Traffic.src
-| `drop_dm_object_name(All_Traffic)`
-| where (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src))
-| where bmc_count>=5   // one internal src touching >=5 BMCs on IPMI/623 = RAKP hash-dump sweep
-| sort - bmc_count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 (All_Traffic.transport=udp OR All_Traffic.protocol=udp) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action | `drop_dm_object_name(All_Traffic)` | rename src as attacker_or_client dest as bmc_host | sort - count
 ```
 
 **Defender KQL:**
@@ -85,34 +67,45 @@ DeviceNetworkEvents
 | where Timestamp > ago(7d)
 | where RemotePort == 623
 | where Protocol =~ "Udp"
-| where InitiatingProcessAccountName !endswith "$"
-| summarize BMCTargets = dcount(RemoteIP), Targets = make_set(RemoteIP, 50), Conns = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| where BMCTargets >= 5   // sweep threshold: >=5 distinct BMCs probed on IPMI/623 (ipmitool / ipmi_dumphashes)
-| order by BMCTargets desc
+| project Timestamp, DeviceName, LocalIP, RemoteIP, RemoteIPType, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
-### Successful BMC/IPMI authentication with factory-default account (ADMIN/root/empty)
+### IPMI/BMC service discovery scan across many hosts (UDP/623)
 
-`UC_12_12` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_12_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Authentication.app) as app min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success AND (Authentication.user IN ("ADMIN","root","Administrator","administrator") OR Authentication.user="") by Authentication.src, Authentication.dest, Authentication.user
-| `drop_dm_object_name(Authentication)`
-| search app IN ("*ipmi*","*bmc*","*ilo*","*idrac*","*redfish*")
-| sort - lastTime
+| tstats `summariesonly` dc(All_Traffic.dest) as target_count count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 by All_Traffic.src _time span=10m | `drop_dm_object_name(All_Traffic)` | where target_count >= 20 | rename src as scanner | sort - target_count
 ```
 
-### BMC firmware update, factory reset, or rogue IPMI admin-account creation (iLOBleed-style persistence)
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(24h)
+| where RemotePort == 623
+| summarize TargetCount=dcount(RemoteIP), Targets=make_set(RemoteIP,100) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, bin(Timestamp, 10m)
+| where TargetCount >= 20   // 20+ distinct BMCs probed in 10m from one host = IPMI sweep
+| order by TargetCount desc
+```
+
+### Successful IPMI/BMC login from unexpected source using default ADMIN/root accounts
+
+`UC_12_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success Authentication.app=ipmi (Authentication.user=ADMIN OR Authentication.user=root OR Authentication.user=admin OR Authentication.user="") by Authentication.src Authentication.dest Authentication.user | `drop_dm_object_name(Authentication)` | sort - count
+```
+
+### BMC firmware flash / rogue admin account creation (iLOBleed-style persistence)
 
 `UC_12_13` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(All_Changes.command) as command values(All_Changes.object) as object min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object_category=firmware OR All_Changes.action IN ("created","modified")) by All_Changes.dest, All_Changes.user, All_Changes.action
-| `drop_dm_object_name(Change)`
-| search command IN ("*firmware*","*flash*","*Set User*","*factory reset*","*add user*","*privilege*") OR object IN ("*ipmi*","*ilo*","*idrac*","*bmc*")
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object_category=firmware OR All_Changes.object_category=user) All_Changes.dvc=*ipmi* OR All_Changes.dvc=*ilo* OR All_Changes.dvc=*bmc* by All_Changes.dvc All_Changes.action All_Changes.object All_Changes.user | `drop_dm_object_name(All_Changes)` | sort - firstTime
 ```
 
 ### Phishing-link click correlated to endpoint execution
