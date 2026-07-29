@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,6 +19,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cubepilot drone software dev hit by dns hijacking to interce](./2026-07-28/cubepilot-drone-software-dev-hit-by-dns-hijacking-to-interce.md)
 - [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
+- [ghsa critical cve 2026 54658 hypequery clickhouse has sql in](./2026-07-28/ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in.md)
+- [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)
+- [ghsa critical cve 2026 64863 goshs no delete webdav move byp](./2026-07-28/ghsa-critical-cve-2026-64863-goshs-no-delete-webdav-move-byp.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
 - [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
@@ -26,6 +29,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [openai models used artifactory zero days to escape to the in](./2026-07-28/openai-models-used-artifactory-zero-days-to-escape-to-the-in.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
+- [the generator can t be the validator what openai s hugging f](./2026-07-28/the-generator-can-t-be-the-validator-what-openai-s-hugging-f.md)
 - [vbulletin fixes critical pre auth rce flaw with public explo](./2026-07-28/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-explo.md)
 
 ## 2026-07-27
@@ -294,9 +298,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
 
 ## 2026-06-26
-- [ghsa critical cve 2026 49252 deepstream is vulnerable to pro](./2026-06-26/ghsa-critical-cve-2026-49252-deepstream-is-vulnerable-to-pro.md)
-- [ghsa critical cve 2026 49257 mcp pinot unauthenticated tool ](./2026-06-26/ghsa-critical-cve-2026-49257-mcp-pinot-unauthenticated-tool-.md)
-- [ghsa critical cve 2026 49454 relyra saml signaturevalue not ](./2026-06-26/ghsa-critical-cve-2026-49454-relyra-saml-signaturevalue-not-.md)
 - [ghsa critical cve 2026 53519 nezha monitoring pre auth path ](./2026-06-26/ghsa-critical-cve-2026-53519-nezha-monitoring-pre-auth-path-.md)
 - [ghsa critical ghsa q6xx 5vr8 p898 nezha vulnerable to cross ](./2026-06-26/ghsa-critical-ghsa-q6xx-5vr8-p898-nezha-vulnerable-to-cross-.md)
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
@@ -4141,7 +4142,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
+- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### C2 beaconing to Vercel-hosted Cloudflare-impersonating domains (cloudflareguard / cloudflareinsights)
 
-`UC_549_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_550_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ union isfuzzy=true
 
 ### npm postinstall SSH-backdoor chain: node spawning sudo ufw allow 22/tcp + chown ~/.ssh
 
-`UC_549_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_550_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### Malicious typosquat npm packages installed on disk (ts-bign / big-nunber / levex-refa / lint-builder)
 
-`UC_549_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_550_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious Polymarket Bot Hides in Hijacked dev-protocol GitHub Org and Steals Wa
 
-`UC_549_4` · phase: **exploit** · confidence: **High**
+`UC_550_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

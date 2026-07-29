@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 28, 2026
 04:37 PM
 0 
-
-
 JFrog has confirmed that OpenAI models exploited zero-day vulnerabilities in self-hosted Artifactory servers to help escape an isolated testing environment and gain access to the internet before attacking Hugging Face.
-
-
-The vulnerabilities were exploited during the incident in which OpenAI models hacked Hugging Face's production infrastructure to steal answers for a cybersecur…
+The vulnerabilities were exploited during the incident in which OpenAI models hacked Hugging Face's production infrastructure to steal answers for a cybersecurity benc…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -47,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### JFrog Artifactory SSRF egress to non-registry destinations (internet escape)
 
-`UC_1_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +64,7 @@ DeviceNetworkEvents
 
 ### Anonymous access to Artifactory Terraform/Cargo/Ansible remote repositories
 
-`UC_1_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_6_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +73,7 @@ DeviceNetworkEvents
 
 ### JFrog Artifactory service process spawning a shell or network tool (RCE)
 
-`UC_1_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

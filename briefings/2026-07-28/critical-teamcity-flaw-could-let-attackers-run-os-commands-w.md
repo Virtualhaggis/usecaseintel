@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable TeamCity On-Premises exposed to CVE-2026-63077 (unauth agent-polling RCE)
 
-`UC_17_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_20_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### TeamCity server (java) process spawning an OS command interpreter — CVE-2026-63077 RCE
 
-`UC_17_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_20_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Payload or JSP web shell written by the TeamCity server process — CVE-2026-63077
 
-`UC_17_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_20_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceFileEvents
 
 ### Outbound C2 / reverse shell from TeamCity server process — CVE-2026-63077
 
-`UC_17_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_20_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

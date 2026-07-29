@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Anubis ransomware execution via distinctive /WIPEMODE /PFAD= /KEY= command-line flags
 
-`UC_30_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_34_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### Anubis ransomware Volume Shadow Copy deletion via hardcoded /for=norealvolume artifact
 
-`UC_30_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_34_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Anubis ransomware mass file encryption — .anubis extension write burst
 
-`UC_30_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_34_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,12 +11,8 @@ By Bill Toulas
 July 28, 2026
 05:17 PM
 0 
-
-
 CubePilot, an Australian firm that designs flight controllers for drones (UAVs), announced a severe operational disruption caused by a DNS hijacking attack.
-
-
-Hijacking domain name system (DNS) records allows threat actors to redirect users to their infrastructure, diverting traffic intended for a legitimate service. This exposes users to dangerous scenarios such as sensitive d…
+Hijacking domain name system (DNS) records allows threat actors to redirect users to their infrastructure, diverting traffic intended for a legitimate service. This exposes users to dangerous scenarios such as sensitive data inte…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -44,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Endpoint traffic to cubepilot.org during 24 Jul 2026 DNS-hijack / AiTM window
 
-`UC_0_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +61,7 @@ DeviceNetworkEvents
 
 ### CubePilot firmware/file downloaded from cubepilot.org on 24-25 Jul 2026 (possible tampered supply chain)
 
-`UC_0_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

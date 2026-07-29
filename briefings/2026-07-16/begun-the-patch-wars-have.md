@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### Trojanized WebEx/Zoom/MobaXterm installer spawns Python or script host (UAT-11795 Starland RAT)
 
-`UC_138_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_142_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### ClickFix mshta.exe silently executing remote HTA then dropping batch (UAT-11795 initial access)
 
-`UC_138_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_142_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### PowerShell AMSI/ETW bypass reflection (UAT-11795 WLDR evasion)
 
-`UC_138_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_142_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### In-memory WLDR PowerShell C2 implant (fileless, no -File, unusual parent)
 
-`UC_138_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_142_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceProcessEvents
 
 ### Blockchain-anchored C2 fallback: non-browser process contacting polygon-rpc.com
 
-`UC_138_18` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_142_18` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +182,7 @@ DeviceNetworkEvents
 
 ### Connection to known UAT-11795 Starland RAT C2 / distribution domains
 
-`UC_138_19` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_142_19` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -201,7 +201,7 @@ DeviceNetworkEvents
 
 ### CastleStealer/Starland RAT accessing browser credential stores and crypto wallets
 
-`UC_138_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_142_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -567,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Begun, the Patch Wars have
 
-`UC_138_13` · phase: **exploit** · confidence: **High**
+`UC_142_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
