@@ -11,12 +11,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-29
 - [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
 - [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
-- [hackers target over 30 minnesota water utilities in coordina](./2026-07-29/hackers-target-over-30-minnesota-water-utilities-in-coordina.md)
+- [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
+- [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
+- [hackers disrupt over 30 minnesota water utilities in coordin](./2026-07-29/hackers-disrupt-over-30-minnesota-water-utilities-in-coordin.md)
 - [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
 - [openai agent used exposed credentials across four services d](./2026-07-29/openai-agent-used-exposed-credentials-across-four-services-d.md)
+- [openai agent used exposed credentials at 4 services in huggi](./2026-07-29/openai-agent-used-exposed-credentials-at-4-services-in-huggi.md)
 - [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
+- [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
+- [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
 - [two compromised joyfill npm packages run rat when imported i](./2026-07-29/two-compromised-joyfill-npm-packages-run-rat-when-imported-i.md)
 
 ## 2026-07-28
@@ -51,7 +56,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [hackers target us firms in fastjson rce zero day attacks](./2026-07-27/hackers-target-us-firms-in-fastjson-rce-zero-day-attacks.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
-- [new certighost poc exploit lets attackers hijack windows dom](./2026-07-27/new-certighost-poc-exploit-lets-attackers-hijack-windows-dom.md)
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
@@ -95,8 +99,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-23
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
-- [chaos ransomware uses msarat to route c2 traffic through hea](./2026-07-23/chaos-ransomware-uses-msarat-to-route-c2-traffic-through-hea.md)
-- [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
@@ -298,8 +300,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk vulnbench js 1 0 can llms find the same bugs twice](./2026-06-29/snyk-vulnbench-js-1-0-can-llms-find-the-same-bugs-twice.md)
 
 ## 2026-06-26
-- [ghsa critical cve 2026 53519 nezha monitoring pre auth path ](./2026-06-26/ghsa-critical-cve-2026-53519-nezha-monitoring-pre-auth-path-.md)
-- [ghsa critical ghsa q6xx 5vr8 p898 nezha vulnerable to cross ](./2026-06-26/ghsa-critical-ghsa-q6xx-5vr8-p898-nezha-vulnerable-to-cross-.md)
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-26/threat-brief-mitigating-large-scale-credential-attacks.md)

@@ -42,10 +42,11 @@ The latest disclosure shows that the security incident, which stemmed from an in
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1552** — Unsecured Credentials
 - **T1102.002** — Web Service: Bidirectional Communication
-- **T1567** — Exfiltration Over Web Service
+- **T1132.001** — Data Encoding: Standard Encoding
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1550** — Use Alternate Authentication Material
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
@@ -53,89 +54,62 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable self-hosted JFrog Artifactory (< 7.161.15) exploited in OpenAI agent sandbox escape
+### JFrog Artifactory zero-day cluster (CVE-2026-659xx) exposure — pre-7.161.15 with Anonymous Access
 
-`UC_12_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-65617","CVE-2026-65921","CVE-2026-65922","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-66018") by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - count
-```
+`UC_17_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where SoftwareVendor has "jfrog" or SoftwareName has "artifactory"
+| where Timestamp > ago(7d)
 | where CveId in ("CVE-2026-65617","CVE-2026-65921","CVE-2026-65922","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-66018")
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| sort by DeviceName asc
+| where SoftwareName has "artifactory"
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc, CveId asc
 ```
 
-### Workload contacting cloud instance-metadata service (169.254.169.254) for credential theft
+### Cloud instance-metadata (IMDS 169.254.169.254) credential theft by interpreter/shell in pipeline pod
 
-`UC_12_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, values(All_Traffic.app) as app, values(All_Traffic.process) as process from datamodel=Network_Traffic where All_Traffic.dest IN ("169.254.169.254","169.254.170.2") by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| sort - count
-```
+`UC_17_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteIP in ("169.254.169.254","169.254.170.2","fd00:ec2::254")
-| where InitiatingProcessFileName !in~ ("cloud-init","amazon-ssm-agent","amazon-cloudwatch-agent","aws","kubelet","aws-node","ecs-agent","cloud-agent")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort
+| where RemoteIP == "169.254.169.254"
+| where InitiatingProcessFileName in~ ("curl","wget","python","python3","node","ruby","perl","sh","bash","busybox","socat","ncat","nc")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### Server workload C2/staging over public request-capture, Pastebin and file-drop services
+### Improvised C2 over public request-capture / pastebin / file-drop services from server infra
 
-`UC_12_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, values(DNS.src) as src from datamodel=Network_Resolution where DNS.query IN ("*webhook.site","*requestbin.com","*requestbin.net","*beeceptor.com","*requestcatcher.com","*pipedream.net","*requestrepo.com","*pastebin.com","*ghostbin.com","*hastebin.com","*dpaste.org","*rentry.co","*0bin.net","*controlc.com","*paste.ee","*transfer.sh","*file.io","*gofile.io","*anonfiles.com","*catbox.moe","*pixeldrain.com","*tmpfiles.org") by DNS.query, DNS.dest
-| `drop_dm_object_name(DNS)`
-| sort - count
-```
+`UC_17_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let RelayDomains = dynamic(["webhook.site","requestbin.com","requestbin.net","pipedream.net","beeceptor.com","hookbin.com","requestcatcher.com","pastebin.com","ghostbin.com","hastebin.com","dpaste.com","rentry.co","paste.ee","controlc.com","file.io","transfer.sh","0x0.st","gofile.io","oshi.at","catbox.moe","tmpfiles.org","bashupload.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("webhook.site","requestbin.com","requestbin.net","beeceptor.com","requestcatcher.com","pipedream.net","hookbin.com","postb.in","requestrepo.com","pastebin.com","ghostbin.com","hastebin.com","dpaste.org","rentry.co","0bin.net","controlc.com","paste.ee","transfer.sh","file.io","gofile.io","anonfiles.com","oshi.at","temp.sh","tmpfiles.org","catbox.moe","pixeldrain.com")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","safari")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has_any (RelayDomains)
+| where InitiatingProcessFileName in~ ("curl","wget","python","python3","node","ruby","perl","sh","bash","busybox","powershell.exe","pwsh")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Single identity authenticating across 3+ distinct cloud services within one hour (exposed-credential reuse)
+### Exposed-credential reuse: one identity authenticating to 3+ distinct cloud services within 1 hour
 
-`UC_12_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Authentication where Authentication.action=success by Authentication.user, Authentication.app, Authentication.src, _time span=1h
-| `drop_dm_object_name(Authentication)`
-| stats dc(app) as distinct_services, values(app) as services, values(src) as src by user, _time
-| where distinct_services >= 3
-| sort - distinct_services
-```
+`UC_17_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
 | where Timestamp > ago(7d)
 | where ErrorCode == 0
-| summarize DistinctServices = dcount(ResourceDisplayName), Services = make_set(ResourceDisplayName, 20), IPs = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountObjectId, AccountUpn, bin(Timestamp, 1h)
-| where DistinctServices >= 3   // one identity touching 3+ distinct cloud services in 1h = cross-service credential reuse (article: creds used across four services)
-| order by DistinctServices desc
+| summarize Services = dcount(ResourceDisplayName), ServiceList = make_set(ResourceDisplayName, 20), IPs = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+    by AccountUpn, bin(Timestamp, 1h)
+| where Services >= 3   // 3+ distinct resources in 1h = credential fan-out from a single exposure
+| order by Services desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -438,4 +412,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

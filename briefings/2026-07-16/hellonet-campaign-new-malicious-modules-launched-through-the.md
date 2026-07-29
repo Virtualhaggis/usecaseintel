@@ -1,4 +1,4 @@
-# [CRIT] HelloNet campaign — new malicious modules launched through the ViPNet update system
+# [CRIT] HelloNet campaign: new malicious modules launched through the ViPNet update system
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-07-16
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### HelloInjector DLL side-load: wtsapi32.dll dropped into ViPNet Update System dir
 
-`UC_145_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_147_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### HelloNet renamed-PuTTY reverse SSH tunnel to 5.39.253.206
 
-`UC_145_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_147_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### HelloProxy C2-handler artifact: tesh4RPC.txt written to C:\Users\Public
 
-`UC_145_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_147_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceFileEvents
 
 ### HelloExecutor recon enumerating ViPNet Client/Administrator Export key stores
 
-`UC_145_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_147_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceProcessEvents
 
 ### HelloNet C2 egress to 5.39.253.206 / 176.32.34.135
 
-`UC_145_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_147_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceNetworkEvents
 
 ### HelloProxy listener: svchost.exe binding TCP 5003/5060
 
-`UC_145_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_147_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -235,13 +235,13 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### Article-specific behavioural hunt — HelloNet campaign — new malicious modules launched through the ViPNet update sys
+### Article-specific behavioural hunt — HelloNet campaign: new malicious modules launched through the ViPNet update syst
 
-`UC_145_4` · phase: **exploit** · confidence: **High**
+`UC_147_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — HelloNet campaign — new malicious modules launched through the ViPNet update sys ```
+``` Article-specific bespoke detection — HelloNet campaign: new malicious modules launched through the ViPNet update syst ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("wtsapi32.dll","itcsrvup64.exe","frontpage.exe","itcsrvup.exe","puh.exe","store.exe","amgmt.dll","selfname.dll","amgmt.bat","insru.cmd","7z.exe","autoit3.exe","pagent.exe") OR Processes.process_path="*C:\users\public\tesh4RPC.txt*" OR Processes.process_path="*\ProgramData\Infotecs\ViPNet*" OR Processes.process_path="*C:\Users\Public\music*" OR Processes.process_path="*C:\users\public\music\frontpage.exe*")
@@ -271,7 +271,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — HelloNet campaign — new malicious modules launched through the ViPNet update sys
+// Article-specific bespoke detection — HelloNet campaign: new malicious modules launched through the ViPNet update syst
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
