@@ -1,653 +1,3 @@
-<article class="card" id="art-232" data-art-slug="2026-07-06-ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="linux,vcs,windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-49445: Cilium vulnerable to sensitive information disclosure and cluster disruption via local Envoy admin socket access Cilium vulnerable to sensitive information disclosure and cluster disruption via local Envoy admin socket access CVE-2026-49445  [LLM] Cilium Envoy admin socket abuse: TLS secret / config disclosure via admin.sock (CVE-2026-49445) [LLM] Cilium Envoy admin socket abuse: destructive DoS via /quitquitquit /drain_listeners (CVE-2026-49445) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-3fcv-jvfp-m4q9" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-49445: Cilium vulnerable to sensitive information disclosure and cluster disruption via local Envoy admin socket access</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-06</span>
-    <span>3 use cases</span>
-    <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cilium vulnerable to sensitive information disclosure and cluster disruption via local Envoy admin socket access</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-49445</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-232-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-232"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-232-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Cilium Envoy admin socket abuse: TLS secret / config disclosure via admin.sock (CVE-2026-49445) · [LLM] Cilium Envoy admin socket abuse: destructive DoS via /quitquitquit /drain_listeners (CVE-2026-49445)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="f3bf798745" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Cilium Envoy admin socket abuse: TLS secret / config disclosure via admin.sock (CVE-2026-49445)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f3bf798745" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts a local process on a Kubernetes node reading sensitive Envoy admin endpoints (/certs, /config_dump, /clusters) over the world-accessible Cilium Envoy admin.sock. Only cilium-agent/cilium-envoy should ever touch this socket, so any curl/wget/socat/python/nc process referencing it plus a read endpoint is anomalous and indicates exploitation of the mode-0777 socket.
-
-Rationale: Anchored on the concrete artifacts corroboration surfaced: the world-accessible socket is admin.sock (mode fixed to 0660 in PR #44512) and the article&#x27;s &#x27;Exposing TLS secrets&#x27; maps precisely to Envoy&#x27;s /certs and /config_dump admin endpoints (Envoy admin docs). Excluding cilium-* binaries makes non-cilium access to this socket high-fidelity.
-
-Cross-checked against:
-  • https://github.com/cilium/cilium/pull/44512
-  • https://www.envoyproxy.io/docs/envoy/latest/operations/admin.html
-  • https://docs.cilium.io/en/stable/security/network/proxy/envoy/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="Container and Resource Discovery">T1613</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cilium/Isovalent support engineer running `cilium-sysdump` or manual curl against admin.sock during troubleshooting</li><li>Custom Prometheus exporter or monitoring wrapper script scraping /stats or /config_dump for observability</li><li>Platform team debugging L7 policy by dumping Envoy config on a node</li><li>CI/e2e test harness that exercises the admin interface</li><li>SRE gathering diagnostics via a non-cilium helper script that shells out to curl</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has_any (&quot;cilium-sysdump&quot;, &quot;cilium-dbg&quot;, &quot;cilium-health&quot;, &quot;cilium-bugtool&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the acting process, its parent, and the user/UID. Confirm it is NOT cilium-agent/cilium-envoy and not a sanctioned sysdump/monitoring job. Capture which endpoint was hit — /certs and /config_dump mean TLS material and full mesh config may be disclosed. 2) CONTAIN: Isolate the node, rotate any TLS secrets/SDS certs served by Envoy on that node, and confirm Cilium is upgraded to a patched build (v1.17.14 / v1.18.8 / v1.19.2) so admin.sock is mode 0660. 3) HUNT: Pivot on the same host/UID for other admin.sock access, for destructive endpoint hits (/quitquitquit, /drain_listeners), for lateral movement from the identity, and search other nodes for the same process ancestry.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-232-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-232-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-232-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has &quot;admin.sock&quot;
-| where ProcessCommandLine has_any (&quot;/certs&quot;, &quot;config_dump&quot;, &quot;/clusters&quot;, &quot;server_info&quot;, &quot;/stats&quot;, &quot;/listeners&quot;, &quot;/runtime&quot;)
-| where FileName !in~ (&quot;cilium-agent&quot;, &quot;cilium-envoy&quot;, &quot;cilium&quot;)
-| where not(ProcessCommandLine has_any (&quot;cilium-agent&quot;, &quot;cilium-envoy&quot;))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessCommandLine has &quot;admin.sock&quot;
-| where ActingProcessCommandLine has_any (&quot;/certs&quot;, &quot;config_dump&quot;, &quot;/clusters&quot;, &quot;server_info&quot;, &quot;/stats&quot;, &quot;/listeners&quot;, &quot;/runtime&quot;)
-| where ActingProcessName !has &quot;cilium&quot;
-| where ActingProcessCommandLine !has &quot;cilium-agent&quot; and ActingProcessCommandLine !has &quot;cilium-envoy&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cilium Envoy Admin Socket Sensitive Read (CVE-2026-49445)
-id: 2c4f8b1e-7a63-4d92-9f10-3b8e6c5a91d4
-description: Detects a non-cilium process reading sensitive Envoy admin endpoints over the world-accessible Cilium Envoy admin.sock, exposing TLS secrets and cluster config.
-references:
-  - https://github.com/advisories/GHSA-3fcv-jvfp-m4q9
-  - https://github.com/cilium/cilium/pull/44512
-  - https://www.envoyproxy.io/docs/envoy/latest/operations/admin.html
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1552.001
-  - attack.t1005
-  - attack.credential_access
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_socket:
-    CommandLine|contains: &#x27;admin.sock&#x27;
-  selection_endpoint:
-    CommandLine|contains:
-      - &#x27;/certs&#x27;
-      - &#x27;config_dump&#x27;
-      - &#x27;/clusters&#x27;
-      - &#x27;server_info&#x27;
-      - &#x27;/stats&#x27;
-      - &#x27;/listeners&#x27;
-  filter_cilium:
-    Image|contains: &#x27;cilium&#x27;
-  condition: selection_socket and selection_endpoint and not filter_cilium
-level: high</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*admin.sock* (@process.command_line:*\/certs* OR @process.command_line:*config_dump* OR @process.command_line:*\/clusters* OR @process.command_line:*server_info* OR @process.command_line:*\/stats* OR @process.command_line:*\/listeners*) -@process.name:cilium* -@process.command_line:*cilium-agent*</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/admin\.sock/i
-| CommandLine=/(\/certs|config_dump|\/clusters|server_info|\/stats|\/listeners)/i
-| NOT ImageFileName=/cilium/i
-| NOT CommandLine=/cilium-(agent|envoy)/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-232-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*admin.sock*&quot; (Processes.process=&quot;*/certs*&quot; OR Processes.process=&quot;*config_dump*&quot; OR Processes.process=&quot;*/clusters*&quot; OR Processes.process=&quot;*server_info*&quot; OR Processes.process=&quot;*/stats*&quot; OR Processes.process=&quot;*/listeners*&quot;) Processes.process_name!=cilium* by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)` 
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-232-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*admin.sock*&quot; (Processes.process=&quot;*/certs*&quot; OR Processes.process=&quot;*config_dump*&quot; OR Processes.process=&quot;*/clusters*&quot; OR Processes.process=&quot;*server_info*&quot; OR Processes.process=&quot;*/stats*&quot; OR Processes.process=&quot;*/listeners*&quot;) Processes.process_name!=cilium* by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)` 
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0183dc8a86" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Cilium Envoy admin socket abuse: destructive DoS via /quitquitquit /drain_listeners (CVE-2026-49445)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0183dc8a86" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts when a local process invokes disruptive Envoy admin operations over the world-accessible Cilium admin.sock — /quitquitquit (terminate Envoy), /drain_listeners, /healthcheck/fail, /reset_counters. These directly implement the article&#x27;s &#x27;disrupting traffic&#x27; and &#x27;terminating the Envoy process&#x27; impacts and have no legitimate manual use against the Cilium-managed Envoy.
-
-Rationale: The article explicitly lists &#x27;Disrupting traffic in the cluster&#x27; and &#x27;Terminating the Envoy process&#x27; as impacts; Envoy admin docs confirm /quitquitquit terminates the process and /drain_listeners + /healthcheck/fail disrupt serving. These are irreversible operational actions no legitimate operator issues against the Cilium-managed Envoy, making this alertable at high confidence.
-
-Cross-checked against:
-  • https://github.com/cilium/cilium/pull/44512
-  • https://www.envoyproxy.io/docs/envoy/latest/operations/admin.html
-  • https://docs.cilium.io/en/stable/security/network/proxy/envoy/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Service Stop">T1489</span> <span class="ind tech" title="Endpoint Denial of Service">T1499</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Operator manually draining a node for maintenance who scripts /drain_listeners against the Cilium Envoy instead of using the node-drain workflow</li><li>Chaos-engineering / resilience test intentionally failing Envoy healthchecks</li><li>Support engineer restarting a wedged Envoy via /quitquitquit during an incident</li><li>Custom automation that resets Envoy stat counters via /reset_counters before a benchmark</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has_any (&quot;cilium-sysdump&quot;, &quot;cilium-dbg&quot;, &quot;cilium-bugtool&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Correlate the process/user/UID with any approved change or maintenance window; check whether Envoy on the node restarted or dropped L7 traffic immediately after (cilium-agent logs, pod readiness flaps). 2) CONTAIN: Cordon/isolate the node, restore Envoy (cilium-agent will respawn it) and verify L7 policy enforcement resumed, then ensure the cluster is upgraded to a patched Cilium (v1.17.14 / v1.18.8 / v1.19.2). 3) HUNT: Look for prior read abuse of the same admin.sock (/certs, /config_dump) from the same identity, repeated destructive calls across multiple nodes (coordinated DoS), and the initial access vector that placed the attacker on the node.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-232-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-232-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-232-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where ProcessCommandLine has &quot;admin.sock&quot;
-| where ProcessCommandLine has_any (&quot;quitquitquit&quot;, &quot;drain_listeners&quot;, &quot;healthcheck/fail&quot;, &quot;reset_counters&quot;)
-| where FileName !in~ (&quot;cilium-agent&quot;, &quot;cilium-envoy&quot;, &quot;cilium&quot;)
-| where not(ProcessCommandLine has_any (&quot;cilium-agent&quot;, &quot;cilium-envoy&quot;))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessCommandLine has &quot;admin.sock&quot;
-| where ActingProcessCommandLine has_any (&quot;quitquitquit&quot;, &quot;drain_listeners&quot;, &quot;healthcheck/fail&quot;, &quot;reset_counters&quot;)
-| where ActingProcessName !has &quot;cilium&quot;
-| where ActingProcessCommandLine !has &quot;cilium-agent&quot; and ActingProcessCommandLine !has &quot;cilium-envoy&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cilium Envoy Admin Socket Destructive Operation (CVE-2026-49445)
-id: 9f61a2d4-0c8b-4e73-b5a1-6d2f7c93e810
-description: Detects a non-cilium process invoking disruptive Envoy admin endpoints (/quitquitquit, /drain_listeners, /healthcheck/fail) over the world-accessible Cilium admin.sock, causing traffic disruption or Envoy termination.
-references:
-  - https://github.com/advisories/GHSA-3fcv-jvfp-m4q9
-  - https://github.com/cilium/cilium/pull/44512
-  - https://www.envoyproxy.io/docs/envoy/latest/operations/admin.html
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.t1489
-  - attack.t1499
-  - attack.impact
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_socket:
-    CommandLine|contains: &#x27;admin.sock&#x27;
-  selection_endpoint:
-    CommandLine|contains:
-      - &#x27;quitquitquit&#x27;
-      - &#x27;drain_listeners&#x27;
-      - &#x27;healthcheck/fail&#x27;
-      - &#x27;reset_counters&#x27;
-  filter_cilium:
-    Image|contains: &#x27;cilium&#x27;
-  condition: selection_socket and selection_endpoint and not filter_cilium
-level: high</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*admin.sock* (@process.command_line:*quitquitquit* OR @process.command_line:*drain_listeners* OR @process.command_line:*healthcheck\/fail* OR @process.command_line:*reset_counters*) -@process.name:cilium* -@process.command_line:*cilium-agent*</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/admin\.sock/i
-| CommandLine=/(quitquitquit|drain_listeners|healthcheck\/fail|reset_counters)/i
-| NOT ImageFileName=/cilium/i
-| NOT CommandLine=/cilium-(agent|envoy)/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-232-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*admin.sock*&quot; (Processes.process=&quot;*quitquitquit*&quot; OR Processes.process=&quot;*drain_listeners*&quot; OR Processes.process=&quot;*healthcheck/fail*&quot; OR Processes.process=&quot;*reset_counters*&quot;) Processes.process_name!=cilium* by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)` 
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-232-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*admin.sock*&quot; (Processes.process=&quot;*quitquitquit*&quot; OR Processes.process=&quot;*drain_listeners*&quot; OR Processes.process=&quot;*healthcheck/fail*&quot; OR Processes.process=&quot;*reset_counters*&quot;) Processes.process_name!=cilium* by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)` 
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-232-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-232-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-232-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-232-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-49445&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-232-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-49445&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-232-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-232-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-232-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-232-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-49445&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-232-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-49445&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-233" data-art-slug="2026-07-06-predicting-mongodb-objectid-continuously-in-rocket-chat"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190,T1195.002"
-  data-sources="Aikido"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="Predicting MongoDB ObjectId continuously in Rocket.Chat Aikido&#x27;s AI pentester found this file-access flaw in Rocket.Chat. A closer look at MongoDB&#x27;s ObjectId showed the weak randomness that makes it exploitable. Category: Vulnerabilities &amp; Threats  T1190 T1195.002 [LLM] Rocket.Chat Livechat file-upload ID enumeration sweep (ObjectId harvest) [LLM] Rocket.Chat anonymous Livechat visitor bootstrap chained to file-upload access [LLM] Rocket.Chat file-upload request carrying Livechat auth params (IDOR signature) Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-07-06-predicting-mongodb-objectid-continuously-in-rocket-chat" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.aikido.dev/blog/predicting-mongodb-objectid-rocket-chat" target="_blank" rel="noopener">Predicting MongoDB ObjectId continuously in Rocket.Chat</a></h2>
-  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
-  <div class="pubmeta">
-    <span>2026-07-06</span>
-    <span>4 use cases</span>
-    <span>2 techniques</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Aikido&#x27;s AI pentester found this file-access flaw in Rocket.Chat. A closer look at MongoDB&#x27;s ObjectId showed the weak randomness that makes it exploitable. Category: Vulnerabilities &amp; Threats</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-233-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-233"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-233-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Rocket.Chat anonymous Livechat visitor bootstrap chained to file-upload access · [LLM] Rocket.Chat file-upload request carrying Livechat auth params (IDOR signature) · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Rocket.Chat Livechat file-upload ID enumeration sweep (ObjectId harvest)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="dad9be3b26" data-platforms="sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Rocket.Chat Livechat file-upload ID enumeration sweep (ObjectId harvest)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="dad9be3b26" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts an unauthenticated source pulling many distinct /file-upload/{fileId} objects while carrying the Livechat authorization params (rc_room_type=l + rc_token) — the continuous ObjectId-prediction harvest described in the Aikido disclosure. High volume of distinct fileIds from one IP via the Livechat auth path is the signature of the mass file-capture exploit.
-
-Rationale: Anchors on the exact exploit request shape from the article&#x27;s Python PoC — GET /file-upload/{fileId} with rc_room_type=l and rc_token query params — combined with a distinct-fileId volume threshold that captures the &#x27;retrieve all generated valid IDs continuously&#x27; harvest. Legit Livechat file access does not fan out across dozens of unrelated fileIds.
-
-Cross-checked against:
-  • https://www.aikido.dev/blog/predicting-mongodb-objectid-rocket-chat
-  • https://hackerone.com/reports/3687142
-  • https://docs.rocket.chat/docs/rocketchat-security-fixes-updates-and-advisories
-  • https://github.com/RocketChat/Rocket.Chat/releases/tag/8.5.0</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A genuinely busy Livechat helpdesk session where a visitor downloads many attachments the agent sent (all belonging to that room)</li><li>Load balancer / uptime monitor health-checking a file-upload URL repeatedly (usually one fixed path, not distinct fileIds)</li><li>Internal backup or migration tooling iterating over uploads with a service token</li><li>Authorized DAST/vulnerability scanner (Aikido, Burp) replaying the PoC against a staging instance</li><li>CDN origin prefetch pulling attachments</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgents !has_any (&quot;kube-probe&quot;,&quot;ELB-HealthChecker&quot;,&quot;UptimeRobot&quot;,&quot;Pingdom&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the source IP&#x27;s full request timeline; confirm the requests carry rc_room_type=l + rc_token and hit many DISTINCT fileIds, and check whether the Rocket.Chat build predates 8.5.1/8.4.4/8.3.6/8.2.6/8.1.6/8.0.7/7.13.9/7.10.13 (vulnerable). 2) Contain: block the source IP at the WAF/reverse proxy, and if patch is not yet deployed, disable Livechat (Admin &gt; Omnichannel) or upgrade immediately. 3) Hunt: enumerate which fileIds returned HTTP 200 to that IP to scope leaked files, and search for the same IP creating anonymous visitors (POST /api/v1/livechat/visitor) to identify the session token used.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(1h)
-| where Url has &quot;/file-upload/&quot; and (Url has &quot;rc_room_type=l&quot; or Url has &quot;rc_token=&quot;)
-| extend FileId = extract(@&quot;/file-upload/([^/?]+)&quot;, 1, Url)
-| where isnotempty(FileId)
-| summarize DistinctFiles = dcount(FileId), Requests = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(HttpRequestHeaderUserAgent, 5), Statuses = make_set(HttpStatusCode, 10) by SrcIpAddr, DstHostname
-| where DistinctFiles &gt;= 25   // &gt;=25 distinct file-upload IDs fetched via the Livechat auth path from one source in 1h = ObjectId harvest sweep
-| order by DistinctFiles desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as total_requests dc(Web.uri_path) as distinct_files min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;/file-upload/*&quot; (Web.uri_query=&quot;*rc_room_type=l*&quot; OR Web.uri_query=&quot;*rc_token=*&quot;) by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| where distinct_files &gt;= 25
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - distinct_files</code></pre><pre class="spl-mode-body" id="art-233-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as total_requests dc(Web.uri_path) as distinct_files min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.http_user_agent) as user_agent from datamodel=Web where Web.uri_path=&quot;/file-upload/*&quot; (Web.uri_query=&quot;*rc_room_type=l*&quot; OR Web.uri_query=&quot;*rc_token=*&quot;) by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| where distinct_files &gt;= 25
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - distinct_files</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f2dd722559" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Rocket.Chat anonymous Livechat visitor bootstrap chained to file-upload access</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f2dd722559" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the full unauthenticated exploit chain: a single source registering an anonymous Livechat visitor (POST /api/v1/livechat/visitor), requesting a room (GET /api/v1/livechat/room), then reading files via /file-upload/ within a short window. This is the session-bootstrap primitive the exploit uses to mint a valid rc_token/rc_rid before harvesting arbitrary files.
-
-Rationale: Chains the three exact endpoints from the PoC (POST /api/v1/livechat/visitor, GET /api/v1/livechat/room, GET /file-upload/) within a 10-minute window keyed on source IP — the minimum footprint of the unauthenticated access-control bypass. Individually noisy, together it is the exploit workflow.
-
-Cross-checked against:
-  • https://www.aikido.dev/blog/predicting-mongodb-objectid-rocket-chat
-  • https://hackerone.com/reports/3687142
-  • https://github.com/RocketChat/Rocket.Chat/releases/tag/8.5.0</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A real anonymous helpdesk visitor who opens Livechat and then downloads a file the agent shared (legitimate, same room)</li><li>Synthetic monitoring that scripts a Livechat conversation end-to-end</li><li>Support-widget embedded on a high-traffic page generating many short-lived visitor sessions</li><li>Rocket.Chat mobile/desktop client polling room + upload endpoints during normal use</li><li>Pen-test / bug-bounty researcher reproducing the chain on an authorized instance</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the visitor registration and file reads share one SrcIpAddr and that the /file-upload/ requests carry rc_room_type=l; verify the instance version against the patched list. 2) Contain: block the IP at the proxy/WAF and, if unpatched, disable Livechat or upgrade to the fixed build. 3) Hunt: pivot on the source IP to the enumeration-sweep detection to measure how many files were pulled, and review Content-Disposition/response sizes to identify sensitive filenames leaked.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(1h)
-| where Url has_any (&quot;/api/v1/livechat/visitor&quot;, &quot;/api/v1/livechat/room&quot;, &quot;/file-upload/&quot;)
-| extend isVisitor = Url has &quot;/api/v1/livechat/visitor&quot;, isRoom = Url has &quot;/api/v1/livechat/room&quot;, isFile = Url has &quot;/file-upload/&quot;
-| summarize VisitorReg = countif(isVisitor), RoomReq = countif(isRoom), FileReq = countif(isFile), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SrcIpAddr, DstHostname, bin(TimeGenerated, 10m)
-| where VisitorReg &gt;= 1 and RoomReq &gt;= 1 and FileReq &gt;= 1   // same source bootstraps an anon visitor+room then reads uploads within 10m
-| order by FileReq desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where (Web.uri_path=&quot;/api/v1/livechat/visitor&quot; OR Web.uri_path=&quot;/api/v1/livechat/room&quot; OR Web.uri_path=&quot;/file-upload/*&quot;) by Web.src Web.dest Web.uri_path _time span=10m
-| `drop_dm_object_name(Web)`
-| eval isVisitor=if(uri_path=&quot;/api/v1/livechat/visitor&quot;,1,0), isRoom=if(uri_path=&quot;/api/v1/livechat/room&quot;,1,0), isFile=if(like(uri_path,&quot;/file-upload/%&quot;),1,0)
-| stats sum(isVisitor) as visitorReg sum(isRoom) as roomReq sum(isFile) as fileReq dc(uri_path) as distinctPaths min(_time) as firstTime max(_time) as lastTime by src dest
-| where visitorReg&gt;=1 AND roomReq&gt;=1 AND fileReq&gt;=1
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - fileReq</code></pre><pre class="spl-mode-body" id="art-233-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where (Web.uri_path=&quot;/api/v1/livechat/visitor&quot; OR Web.uri_path=&quot;/api/v1/livechat/room&quot; OR Web.uri_path=&quot;/file-upload/*&quot;) by Web.src Web.dest Web.uri_path _time span=10m
-| `drop_dm_object_name(Web)`
-| eval isVisitor=if(uri_path=&quot;/api/v1/livechat/visitor&quot;,1,0), isRoom=if(uri_path=&quot;/api/v1/livechat/room&quot;,1,0), isFile=if(like(uri_path,&quot;/file-upload/%&quot;),1,0)
-| stats sum(isVisitor) as visitorReg sum(isRoom) as roomReq sum(isFile) as fileReq dc(uri_path) as distinctPaths min(_time) as firstTime max(_time) as lastTime by src dest
-| where visitorReg&gt;=1 AND roomReq&gt;=1 AND fileReq&gt;=1
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - fileReq</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d261519f12" data-platforms="sent,sigma,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Rocket.Chat file-upload request carrying Livechat auth params (IDOR signature)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d261519f12" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Single-event signature for the Rocket.Chat access-control bypass: a GET to /file-upload/ whose query string carries rc_room_type=l together with rc_token — the Livechat authorization path being used to read a file, exactly as in the disclosed exploit. Surfaces individual exploit attempts even below the harvest threshold.
-
-Rationale: Uses the verbatim exploit primitive from the PoC — /file-upload/ path plus rc_room_type=l and rc_token query params — as an atomic, Sigma-portable signature. It matches even a single probe, complementing the volume- and chain-based UCs.
-
-Cross-checked against:
-  • https://www.aikido.dev/blog/predicting-mongodb-objectid-rocket-chat
-  • https://hackerone.com/reports/3687142</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Livechat visitor downloading an attachment shared in their own helpdesk room (identical request shape)</li><li>Rocket.Chat client appending rc_room_type/rc_token to file URLs during normal Livechat file rendering</li><li>WAF or SSL-inspection proxy replaying the request as part of active response testing</li><li>Authorized researcher/DAST scan on a staging instance</li><li>URL-preview/link-unfurl bot following a Livechat file link</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check the response status — HTTP 200 means a file was served; note the SrcIpAddr, Content-Disposition filename, and whether the source ever authenticated. 2) Contain: if the instance is unpatched (pre 8.5.1/8.4.4/8.3.6/8.2.6/8.1.6/8.0.7/7.13.9/7.10.13), upgrade or disable Livechat and block the IP. 3) Hunt: aggregate this IP&#x27;s requests to see if it escalates into the distinct-fileId harvest sweep, and correlate with anonymous visitor registrations from the same address.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(24h)
-| where HttpMethod =~ &quot;GET&quot;
-| where Url has &quot;/file-upload/&quot; and Url has &quot;rc_room_type=l&quot; and Url has &quot;rc_token=&quot;
-| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-233-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Rocket.Chat Livechat file-upload IDOR request (rc_room_type=l on /file-upload)
-id: a1f3c9d2-4b7e-4c1a-9e8f-2d6b7a0c5e14
-status: experimental
-description: Detects an HTTP GET to Rocket.Chat&#x27;s /file-upload/ path carrying the Livechat authorization query parameters (rc_room_type=l and rc_token), the request shape of the unauthenticated file access-control bypass disclosed by Aikido (HackerOne #3687142).
-references:
-  - https://www.aikido.dev/blog/predicting-mongodb-objectid-rocket-chat
-  - https://hackerone.com/reports/3687142
-author: SOC Detection Engineering
-date: 2026/07/07
-tags:
-  - attack.initial_access
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection_path:
-    cs-method: &#x27;GET&#x27;
-    cs-uri-stem|startswith: &#x27;/file-upload/&#x27;
-  selection_roomtype:
-    cs-uri-query|contains: &#x27;rc_room_type=l&#x27;
-  selection_token:
-    cs-uri-query|contains: &#x27;rc_token=&#x27;
-  condition: selection_path and selection_roomtype and selection_token
-falsepositives:
-  - Legitimate anonymous Livechat visitor downloading a file shared within their own room
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-233-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.http_user_agent) as user_agent from datamodel=Web where Web.http_method=&quot;GET&quot; Web.uri_path=&quot;/file-upload/*&quot; Web.uri_query=&quot;*rc_room_type=l*&quot; Web.uri_query=&quot;*rc_token=*&quot; by Web.src Web.dest Web.uri_path
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - count</code></pre><pre class="spl-mode-body" id="art-233-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.http_user_agent) as user_agent from datamodel=Web where Web.http_method=&quot;GET&quot; Web.uri_path=&quot;/file-upload/*&quot; Web.uri_query=&quot;*rc_room_type=l*&quot; Web.uri_query=&quot;*rc_token=*&quot; by Web.src Web.dest Web.uri_path
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-233-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-233-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-233-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-233-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-233-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-233-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-233-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-233-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-233-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-233-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-234" data-art-slug="2026-07-06-ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu"
   data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -12975,6 +12325,635 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-260" data-art-slug="2026-07-01-ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1552"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="kubernetes,vcs"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-44935: Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer CVE-2026-44935 T1190 T1552 [LLM] Fleet valuesFrom cross-namespace secret/configmap reference (CVE-2026-44935) [LLM] Fleet agent service account reads secrets across multiple namespaces (CVE-2026-44935) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-01-ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-xr65-5cpm-g36x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44935: Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-01</span>
+    <span>3 use cases</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Rancher Fleet vulnerable to cross namespace secret disclosure via unvalidated `valuesFrom` references in Helm Deployer</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44935</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="T1552">T1552</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-260-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-260"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-260-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Fleet valuesFrom cross-namespace secret/configmap reference (CVE-2026-44935) · [LLM] Fleet agent service account reads secrets across multiple namespaces (CVE-2026-44935)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="5d5cbfdd9a" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
+  <summary>
+    <span class="uc-title">Fleet valuesFrom cross-namespace secret/configmap reference (CVE-2026-44935)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="5d5cbfdd9a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts Rancher Fleet GitRepo/HelmOp/Bundle custom resources whose spec contains a `valuesFrom` block with a secretKeyRef/configMapKeyRef, the exact mechanism CVE-2026-44935 abuses to read secrets in namespaces the tenant is not authorized for. Article-specific because it pivots on the Fleet CRD resource names plus the `valuesFrom` key-reference structure rather than generic secret access.
+
+Rationale: Uses the exact Fleet CRD resource names (gitrepos/helmops/bundles from go:github.com/rancher/fleet) and the `valuesFrom` + secretKeyRef/configMapKeyRef structure named in GHSA-xr65-5cpm-g36x as the exploitation vector; high-fidelity because legitimate fleet.yaml normally references secrets in the same namespace only.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xr65-5cpm-g36x
+  • https://attack.mitre.org/techniques/T1552/007/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Container API">T1552.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate multi-namespace GitOps deployment where an operator intentionally references a shared config namespace</li><li>Fleet platform team testing valuesFrom against a sanctioned central secrets namespace</li><li>CI pipelines that template Bundles with valuesFrom to a common values ConfigMap</li><li>Upgrade migrations that recreate existing GitRepo resources with unchanged valuesFrom blocks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Username has &quot;system:serviceaccount:cattle-fleet-system&quot; and ObjNamespace == extract(@&quot;namespace:\s*([a-z0-9-]+)&quot;, 1, ReqStr))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestObject; compare the namespace inside valuesFrom to ObjectRef.namespace and to the tenant that owns the requesting Username — a mismatch to a namespace the tenant has no RBAC in is the true positive. 2) Contain: delete/suspend the offending GitRepo/HelmOp/Bundle, and rotate any secret whose name/namespace/key appears in the valuesFrom reference (advisory explicitly recommends rotation). 3) Hunt: enumerate all Fleet CRs created by the same Username across the cluster and check whether the Fleet agent service account subsequently read those referenced secrets (see companion fan-out UC).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-260-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-260-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| extend ObjResource = tostring(ObjectRef.resource), ObjNamespace = tostring(ObjectRef.namespace)
+| where ObjResource in (&quot;gitrepos&quot;,&quot;helmops&quot;,&quot;bundles&quot;)
+| extend ReqStr = tostring(RequestObject)
+| where ReqStr has &quot;valuesFrom&quot; and (ReqStr has &quot;secretKeyRef&quot; or ReqStr has &quot;configMapKeyRef&quot;)
+| where ReqStr has &quot;namespace&quot;    // cross-namespace ref requires an explicit namespace inside valuesFrom
+| project TimeGenerated, Username, Verb, ObjResource, ObjNamespace, RequestUri, ReqStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Rancher Fleet valuesFrom Cross-Namespace Secret Reference (CVE-2026-44935)
+id: b3f1c8a2-7d4e-4a1b-9c2f-6e8a5d3b1f04
+description: Detects Fleet GitRepo/HelmOp/Bundle resources whose spec embeds a valuesFrom secretKeyRef/configMapKeyRef, the vector for CVE-2026-44935 cross-namespace secret disclosure.
+references:
+  - https://github.com/advisories/GHSA-xr65-5cpm-g36x
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.credential_access
+  - attack.t1552.007
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection_verb:
+    verb:
+      - create
+      - update
+      - patch
+  selection_resource:
+    objectRef.resource:
+      - gitrepos
+      - helmops
+      - bundles
+  selection_valuesfrom:
+    requestObject|contains: &#x27;valuesFrom&#x27;
+  selection_keyref:
+    requestObject|contains:
+      - &#x27;secretKeyRef&#x27;
+      - &#x27;configMapKeyRef&#x27;
+  condition: selection_verb and selection_resource and selection_valuesfrom and selection_keyref
+level: high</code></pre></div>
+    <div class="tab-content" id="art-260-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(gitrepos OR helmops OR bundles) valuesFrom (secretKeyRef OR configMapKeyRef)</code></pre></div>
+    <div class="tab-content" id="art-260-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=kube_audit (verb=create OR verb=update OR verb=patch) (&quot;objectRef.resource&quot;=gitrepos OR &quot;objectRef.resource&quot;=helmops OR &quot;objectRef.resource&quot;=bundles) requestObject=*valuesFrom* (requestObject=*secretKeyRef* OR requestObject=*configMapKeyRef*) | table _time, user.username, verb, objectRef.resource, objectRef.namespace, requestURI | sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="33259390da" data-platforms="datadog,sent,spl" data-targets="kubernetes">
+  <summary>
+    <span class="uc-title">Fleet agent service account reads secrets across multiple namespaces (CVE-2026-44935)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="33259390da" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the downstream-cluster fingerprint of CVE-2026-44935: the Fleet agent service account issuing get/list of secrets or configmaps across an abnormal number of distinct namespaces within a short window, indicating cross-tenant credential harvesting via unrestricted valuesFrom/HelmOp deployment. Article-specific because it keys on the Fleet agent SA identity and the cross-namespace fan-out the advisory tells defenders to review logs for.
+
+Rationale: Pivots on the Fleet agent service account identity (cattle-fleet-system fleet-agent) reading secrets/configmaps across namespaces — the exact post-exploit behaviour GHSA-xr65-5cpm-g36x tells operators to review cluster logs for and to drive credential rotation.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xr65-5cpm-g36x
+  • https://attack.mitre.org/techniques/T1552/007/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Container API">T1552.007</span> <span class="ind tech" title="Container and Resource Discovery">T1613</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate multi-tenant cluster where the Fleet agent SA is authorized to deploy into many namespaces by design</li><li>Initial Fleet onboarding/bootstrap that syncs bundles into a large set of namespaces at once</li><li>Backup/DR tooling running under a fleet-labelled SA enumerating secrets</li><li>Cluster-wide chart rollout (e.g. cert-manager, monitoring) driven through Fleet touching every namespace</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: list the distinct namespaces and secret names the Fleet agent SA touched; confirm against the tenant boundary — reads into namespaces owned by a different tenant are the true positive. 2) Contain: rotate the Fleet agent service account token and every secret it read cross-tenant, then apply the patched-version Policy resource pinning a least-privilege service account per GitRepo/HelmOp/Bundle namespace. 3) Hunt: correlate back to companion UC (valuesFrom cross-namespace references) to identify which GitRepo/HelmOp/Bundle CR triggered the reads and which tenant Username authored it; upgrade Fleet to v0.15.2/v0.14.6/0.13.11/v0.12.15.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-260-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(1d)
+| where Verb in (&quot;get&quot;,&quot;list&quot;,&quot;watch&quot;)
+| extend Resource = tostring(ObjectRef.resource), NS = tostring(ObjectRef.namespace)
+| where Resource in (&quot;secrets&quot;,&quot;configmaps&quot;)
+| where Username has &quot;serviceaccount&quot; and Username has &quot;fleet&quot;
+| summarize NamespaceCount = dcount(NS), Namespaces = make_set(NS, 50), Requests = count() by Username, bin(TimeGenerated, 1h)
+| where NamespaceCount &gt; 3    // 3 = a single Fleet agent normally serves a bounded tenant namespace set; fan-out beyond that is the CVE signal
+| order by NamespaceCount desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(get OR list OR watch) @objectRef.resource:(secrets OR configmaps) @user.username:*fleet*</code></pre></div>
+    <div class="tab-content" id="art-260-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=kube_audit (verb=get OR verb=list OR verb=watch) (&quot;objectRef.resource&quot;=secrets OR &quot;objectRef.resource&quot;=configmaps) &quot;user.username&quot;=*fleet* | stats dc(objectRef.namespace) AS NamespaceCount values(objectRef.namespace) AS Namespaces count AS Requests by user.username | where NamespaceCount &gt; 3 | sort - NamespaceCount</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-260-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44935&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44935&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44935&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-260-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44935&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-261" data-art-slug="2026-07-01-ghsa-critical-cve-2026-44939-rancher-vulnerable-to-command-i"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1610"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,web"
+  data-targets="kubernetes,linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection through unsanitized YAML parameter Rancher vulnerable to command injection through unsanitized YAML parameter CVE-2026-44939 T1190 T1610 [LLM] Rancher /v3/import authImage YAML injection via URL-encoded newlines (CVE-2026-44939) [LLM] kubectl apply of attacker-crafted Rancher import URL (authImage payload delivery) [LLM] Rancher /v3/import registration-token enumeration or cross-source reuse Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-01-ghsa-critical-cve-2026-44939-rancher-vulnerable-to-command-i" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-mhc6-2gfq-xx62" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection through unsanitized YAML parameter</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-01</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Rancher vulnerable to command injection through unsanitized YAML parameter</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44939</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="T1610">T1610</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-261-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-261"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-261-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Rancher /v3/import registration-token enumeration or cross-source reuse · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] kubectl apply of attacker-crafted Rancher import URL (authImage payload delivery)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Rancher /v3/import authImage YAML injection via URL-encoded newlines (CVE-2026-44939)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="18941b6b19" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Rancher /v3/import authImage YAML injection via URL-encoded newlines (CVE-2026-44939)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="18941b6b19" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound web requests to the Rancher cluster-import endpoint /v3/import/{token}_{clusterId}.yaml where the authImage query parameter carries URL-encoded newlines (%0A/%0D) or raw newlines — the exact YAML-breakout primitive used to inject arbitrary manifest keys. Article-specific because it keys on the concrete endpoint path plus the authImage parameter plus the newline breakout characters, not a generic web attack.
+
+Rationale: Uses the exact article strings: endpoint &#x27;/v3/import/&#x27;, parameter &#x27;authImage&#x27;, and the URL-encoded newline breakout (%0A/%0D) named as the patch target. Legitimate agent-image overrides never contain newline encodings, so FP rate is very low.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-44939
+  • https://advisories.gitlab.com/golang/github.com/rancher/rancher/CVE-2026-44939/
+  • https://www.tenable.com/cve/CVE-2026-44939</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Deploy Container">T1610</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners (Nessus/Nuclei) probing the /v3/import endpoint with crafted payloads during authorized pentests</li><li>Rancher agent troubleshooting where an operator manually URL-encodes an image tag containing a &#x27;+&#x27; or &#x27;:&#x27; (rare, and won&#x27;t include %0A/%0D)</li><li>WAF/proxy that double-decodes and re-logs the query string, producing a benign echoed value</li><li>Automated CI that templates import URLs and accidentally embeds a trailing whitespace character</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has_any (&quot;Nessus&quot;,&quot;nuclei&quot;,&quot;Nuclei&quot;,&quot;masscan&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestURL and URL-decode the authImage value; confirm it contains newline bytes followed by injected YAML keys (command:, hostPath, hostNetwork). Note SourceIP and whether the request returned 200. 2) Contain: block the SourceIP at the WAF, invalidate/rotate the affected cluster registration token, and confirm Rancher is on a patched build (&gt;= 2.14.2/2.13.6/2.12.10/2.11.14/2.10.12). 3) Hunt: pivot to Kubernetes audit logs for any DaemonSet create/update in cattle-system named kube-api-auth carrying command:/args:, and search endpoints for kubectl apply of the same import URL.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestURL has &quot;/v3/import/&quot;
+| where RequestURL has &quot;authImage&quot;
+| where RequestURL has_any (&quot;%0A&quot;,&quot;%0a&quot;,&quot;%0D&quot;,&quot;%0d&quot;,&quot;%0d%0a&quot;,&quot;\n&quot;,&quot;\r&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, ReceivedBytes
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Rancher authImage YAML Injection via Encoded Newline (CVE-2026-44939)
+id: 5f2b7e40-3c9a-4d21-9b6e-7a1c2f8e44d1
+description: Detects requests to the Rancher /v3/import cluster-import endpoint where the authImage query parameter contains URL-encoded or raw newlines used to break out of the YAML image field.
+references:
+  - https://github.com/advisories/GHSA-mhc6-2gfq-xx62
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-44939
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.t1190
+  - attack.t1610
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains|all:
+      - &#x27;authImage&#x27;
+    c-uri|contains: &#x27;/v3/import/&#x27;
+  newline:
+    cs-uri-query|contains:
+      - &#x27;%0A&#x27;
+      - &#x27;%0a&#x27;
+      - &#x27;%0D&#x27;
+      - &#x27;%0d&#x27;
+  condition: selection and newline
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/v3/import/*&quot; Web.url=&quot;*authImage*&quot; (Web.url=&quot;*%0A*&quot; OR Web.url=&quot;*%0a*&quot; OR Web.url=&quot;*%0D*&quot; OR Web.url=&quot;*%0d*&quot; OR Web.url=&quot;*%0d%0a*&quot;) by Web.src, Web.dest, Web.url, Web.http_method, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/v3/import/*&quot; Web.url=&quot;*authImage*&quot; (Web.url=&quot;*%0A*&quot; OR Web.url=&quot;*%0a*&quot; OR Web.url=&quot;*%0D*&quot; OR Web.url=&quot;*%0d*&quot; OR Web.url=&quot;*%0d%0a*&quot;) by Web.src, Web.dest, Web.url, Web.http_method, Web.http_user_agent, Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="510205c49a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="kubernetes,linux,vcs,windows">
+  <summary>
+    <span class="uc-title">kubectl apply of attacker-crafted Rancher import URL (authImage payload delivery)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="510205c49a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects a cluster operator fetching or applying the malicious Rancher import manifest — kubectl/oc apply or curl/wget against a URL containing /v3/import/ and the authImage parameter. This is the victim-side delivery step the advisory requires (&#x27;victim must execute kubectl apply against a maliciously crafted URL&#x27;).
+
+Rationale: Anchors on the article&#x27;s required victim action (kubectl apply of a crafted URL) plus the concrete &#x27;/v3/import/&#x27; path and &#x27;authImage&#x27; parameter, matched in the process command line — near-zero legitimate use of that exact combination.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-mhc6-2gfq-xx62
+  • https://www.tenable.com/cve/CVE-2026-44939</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Deploy Container">T1610</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security engineer reproducing/validating the CVE in a lab against a patched Rancher instance</li><li>Legitimate Rancher onboarding where an operator applies a genuine import URL (will NOT contain a newline-laden authImage, but the URL path matches) — inspect the decoded authImage value</li><li>Documentation or runbook automation that curls the import manifest for archival</li><li>Vulnerability scanners that shell out to curl against the import endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine has_any (&quot;%0A&quot;,&quot;%0a&quot;,&quot;%0D&quot;,&quot;%0d&quot;) or ProcessCommandLine matches regex @&quot;authImage=[^\s&amp;]*(command|hostPath|hostNetwork)&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: URL-decode the authImage value in the captured command line; benign onboarding has an OCI image reference, exploitation has embedded newlines + injected YAML keys. Identify the operator account and host. 2) Contain: isolate the host if the manifest was applied, revoke the cluster registration token used in the URL, and rotate the cattle service account and any cluster credentials per the advisory guidance. 3) Hunt: query Kubernetes audit logs for the resulting DaemonSet in cattle-system and check control-plane nodes for containers spawned from the injected command: field.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName in~ (&quot;kubectl&quot;,&quot;kubectl.exe&quot;,&quot;oc&quot;,&quot;oc.exe&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;wget.exe&quot;)
+| where ProcessCommandLine has &quot;/v3/import/&quot;
+| where ProcessCommandLine has &quot;authImage&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has_any (&quot;kubectl&quot;,&quot;oc&quot;,&quot;curl&quot;,&quot;wget&quot;)
+| where ActingProcessCommandLine has &quot;/v3/import/&quot;
+| where ActingProcessCommandLine has &quot;authImage&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: kubectl apply of Rancher authImage Injection URL (CVE-2026-44939)
+id: c81d6a92-4f37-4e0b-8a55-2d9b1e6c73aa
+description: Detects a process fetching or applying a Rancher /v3/import manifest URL that carries the authImage parameter, the victim-side delivery step of the CVE-2026-44939 command injection.
+references:
+  - https://github.com/advisories/GHSA-mhc6-2gfq-xx62
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.t1204.002
+  - attack.t1610
+logsource:
+  category: process_creation
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;\kubectl.exe&#x27;
+      - &#x27;/kubectl&#x27;
+      - &#x27;/oc&#x27;
+      - &#x27;\oc.exe&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;\wget.exe&#x27;
+    CommandLine|contains|all:
+      - &#x27;/v3/import/&#x27;
+      - &#x27;authImage&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*/v3/import/* @process.command_line:*authImage*</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ImageFileName=/(kubectl|oc|curl|wget)(\.exe)?$/i
+| CommandLine=/\/v3\/import\//i
+| CommandLine=/authImage/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;kubectl&quot;,&quot;kubectl.exe&quot;,&quot;oc&quot;,&quot;oc.exe&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;wget.exe&quot;)) Processes.process=&quot;*/v3/import/*&quot; Processes.process=&quot;*authImage*&quot; by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;kubectl&quot;,&quot;kubectl.exe&quot;,&quot;oc&quot;,&quot;oc.exe&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;wget.exe&quot;)) Processes.process=&quot;*/v3/import/*&quot; Processes.process=&quot;*authImage*&quot; by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="c9c19af227" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Rancher /v3/import registration-token enumeration or cross-source reuse</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="c9c19af227" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts abuse of the cluster-import endpoint: a single source IP requesting many distinct registration tokens (enumeration) — the /v3/import/{token}_{clusterId}.yaml format is token-gated and the advisory notes tokens leak via docs/screenshots. Surfaces reconnaissance and leaked-token reuse ahead of the actual injection.
+
+Rationale: Derives the token position directly from the article&#x27;s endpoint format /v3/import/{token}_{clusterId}.yaml and the advisory&#x27;s note that these tokens leak; counting distinct tokens per source IP is the cleanest enumeration signal available in web logs.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-mhc6-2gfq-xx62
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-44939</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Identity Information">T1589</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A Rancher management/monitoring host polling many downstream cluster import URLs legitimately (allowlist its IP)</li><li>Load balancer or NAT egress IP aggregating many legitimate operators behind one source address</li><li>CI/CD automation that bulk-registers clusters during a fleet rollout</li><li>Backup/inventory tooling walking the Rancher API</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;10.0.0.0/8 rancher-mgmt-nat&quot;)  // replace with your Rancher management egress IPs after baseline</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review the SourceIP&#x27;s request pattern — is it a known Rancher management node/NAT, or an unfamiliar external IP hitting many tokens in seconds? Check whether any request also carried an authImage newline payload. 2) Contain: if unrecognized, block the SourceIP and invalidate all registration tokens it touched; rotate tokens that may have leaked via docs/screenshots. 3) Hunt: for each token the source successfully retrieved, look for a follow-on kubectl apply on operator endpoints and for new DaemonSets in cattle-system on the corresponding downstream clusters.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(24h)
+| where RequestURL has &quot;/v3/import/&quot;
+| extend Token = extract(@&quot;/v3/import/([A-Za-z0-9]+)_&quot;, 1, RequestURL)
+| where isnotempty(Token)
+| summarize DistinctTokens = dcount(Token), SampleTokens = make_set(Token, 15), Requests = count(), DestHosts = make_set(DestinationHostName, 5) by SourceIP
+| where DistinctTokens &gt;= 5   // 5+ distinct registration tokens from one source in 24h = token enumeration
+| order by DistinctTokens desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where Web.url=&quot;*/v3/import/*&quot; by Web.src, Web.url
+| `drop_dm_object_name(Web)`
+| rex field=url &quot;/v3/import/(?&lt;token&gt;[A-Za-z0-9]+)_&quot;
+| where isnotnull(token)
+| stats dc(token) as distinct_tokens values(token) as tokens sum(count) as requests by src
+| where distinct_tokens &gt;= 5
+| sort - distinct_tokens</code></pre><pre class="spl-mode-body" id="art-261-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.url=&quot;*/v3/import/*&quot; by Web.src, Web.url
+| `drop_dm_object_name(Web)`
+| rex field=url &quot;/v3/import/(?&lt;token&gt;[A-Za-z0-9]+)_&quot;
+| where isnotnull(token)
+| stats dc(token) as distinct_tokens values(token) as tokens sum(count) as requests by src
+| where distinct_tokens &gt;= 5
+| sort - distinct_tokens</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44939&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44939&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44939&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-261-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44939&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8f3ddfd3a9" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8f3ddfd3a9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/kubernetes&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/kubernetes&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/kubernetes*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-261-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44939: Rancher vulnerable to command injection throug ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/kubernetes*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

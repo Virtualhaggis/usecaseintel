@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -53,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
-- [shadow ai agents are multiplying here s how to find and secu](./2026-07-27/shadow-ai-agents-are-multiplying-here-s-how-to-find-and-secu.md)
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 - [what is ai pentesting and how does it works](./2026-07-27/what-is-ai-pentesting-and-how-does-it-works.md)
 
@@ -96,7 +95,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [attackers weaponize github actions runners to target cpanel ](./2026-07-23/attackers-weaponize-github-actions-runners-to-target-cpanel-.md)
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [chaos ransomware uses msarat to route c2 traffic through hea](./2026-07-23/chaos-ransomware-uses-msarat-to-route-c2-traffic-through-hea.md)
-- [check point patches exploited smartconsole flaw allowing ful](./2026-07-23/check-point-patches-exploited-smartconsole-flaw-allowing-ful.md)
 - [china nexus jadeprox uses new triback loader in government a](./2026-07-23/china-nexus-jadeprox-uses-new-triback-loader-in-government-a.md)
 - [claude cowork flaw could let ai agent escape its vm and acce](./2026-07-23/claude-cowork-flaw-could-let-ai-agent-escape-its-vm-and-acce.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)

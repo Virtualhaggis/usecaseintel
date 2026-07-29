@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### NightLedger DLL side-load: AppVShNotify.exe loading SspiCli.dll from non-System32
 
-`UC_21_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_23_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceImageLoadEvents
 
 ### BridgeHead SOCKS5 relay drop: unbcl.dll + libwinpthread-1.dll co-located outside System32
 
-`UC_21_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_23_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceFileEvents
 
 ### NightLedger recon: access to C:\Windows\debug\NetSetup.log by non-system process
 
-`UC_21_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_23_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceFileEvents
 
 ### HOLLOWGRAPH M365 calendar dead-drop: events dated 2050-05-13 via Graph API
 
-`UC_21_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_23_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -347,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nimbus Manticore Deploys NightLedger and Turns Victim Systems Into Covert Relays
 
-`UC_21_5` · phase: **exploit** · confidence: **High**
+`UC_23_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

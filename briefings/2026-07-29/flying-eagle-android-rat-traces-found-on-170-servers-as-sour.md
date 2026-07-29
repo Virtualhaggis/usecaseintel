@@ -251,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Flying Eagle Android RAT Traces Found on 170 Servers as Source Code Circulates
 
-`UC_3_7` · phase: **exploit** · confidence: **High**
+`UC_5_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -80,7 +80,7 @@ _(none detected from narrative keywords)_
 
 ### TriBack Loader DLL side-load: signed vendor EXE loading avk.dll/hostfxr.dll/MpClient.dll from user-writable path
 
-`UC_97_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_98_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceImageLoadEvents
 
 ### TriBack Loader Startup-folder persistence: signed EXE + encrypted .dat/.log + malicious DLL trio dropped by MSI
 
-`UC_97_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_98_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceFileEvents
 
 ### JadeProx / Beagle C2 to campaign domains and 43.106.71.28:8000 staging server
 
-`UC_97_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_98_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### Fake Claude malvertising: MSI/ZIP download originating from claude-pro.com
 
-`UC_97_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_98_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceFileEvents
 
 ### Internet-facing hosts exposed to the four CVEs JadeProx actively scanned/exploited
 
-`UC_97_20` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_98_20` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -584,7 +584,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — China-Nexus JadeProx Uses New TriBack Loader in Government and Healthcare Attack
 
-`UC_97_15` · phase: **exploit** · confidence: **High**
+`UC_98_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
