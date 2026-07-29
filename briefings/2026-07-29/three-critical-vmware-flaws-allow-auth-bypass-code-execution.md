@@ -33,7 +33,6 @@ The first of the three critical-rated flaws is CVE-2026-59309 (CVSS score: 9.8),
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1211** — Exploitation for Defense Evasion
-- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
@@ -41,24 +40,27 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Exposure hunt: unpatched VMware vCenter/ESX assets vulnerable to VMSA-2026-0006 critical flaws
+### VMware VMSA-2026-0006 exposure: hosts vulnerable to critical vCenter/ESX/Workstation CVEs
 
-`UC_4_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-59309","CVE-2026-59310","CVE-2026-47876","CVE-2026-41703","CVE-2026-41709") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name("Vulnerabilities")` | convert ctime(firstSeen) ctime(lastSeen) | sort - severity
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.signature IN ("CVE-2026-59309","CVE-2026-59310","CVE-2026-47876","CVE-2026-41703","CVE-2026-41709") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category
+| `drop_dm_object_name(Vulnerabilities)`
+| stats values(signature) as exposed_cves values(severity) as severities values(category) as product count by dest
+| eval vmsa="VMSA-2026-0006"
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
 | where CveId in ("CVE-2026-59309","CVE-2026-59310","CVE-2026-47876","CVE-2026-41703","CVE-2026-41709")
-| where SoftwareVendor has "vmware"
-| summarize LatestSeen = max(Timestamp), Cves = make_set(CveId) by DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
-| project LatestSeen, DeviceName, SoftwareName, SoftwareVersion, Cves, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
-| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc
+| summarize ExposedCves = make_set(CveId), Severities = make_set(VulnerabilitySeverityLevel), SoftwareNames = make_set(SoftwareName), SoftwareVersions = make_set(SoftwareVersion), RecommendedUpdate = make_set(RecommendedSecurityUpdate) by DeviceId, DeviceName, OSPlatform
+| extend Advisory = "VMSA-2026-0006"
+| order by DeviceName asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -247,4 +249,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,11 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-29
+- [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
 - [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
+- [critical rails flaw could let unauthenticated attackers read](./2026-07-29/critical-rails-flaw-could-let-unauthenticated-attackers-read.md)
 - [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
 - [hackers disrupt over 30 minnesota water utilities in coordin](./2026-07-29/hackers-disrupt-over-30-minnesota-water-utilities-in-coordin.md)
+- [health isac warns of rising shinyhunters data theft attacks ](./2026-07-29/health-isac-warns-of-rising-shinyhunters-data-theft-attacks-.md)
 - [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
 - [openai agent used exposed credentials across four services d](./2026-07-29/openai-agent-used-exposed-credentials-across-four-services-d.md)
@@ -107,7 +110,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
 - [russian espionage group exploited zimbra zero day to steal m](./2026-07-23/russian-espionage-group-exploited-zimbra-zero-day-to-steal-m.md)
 - [russian global webmail espionage](./2026-07-23/russian-global-webmail-espionage.md)
-- [threatsday android spyware plc attacks ai image prompt injec](./2026-07-23/threatsday-android-spyware-plc-attacks-ai-image-prompt-injec.md)
 
 ## 2026-07-22
 - [cisa kev cve 2026 16232 check point smartconsole improper au](./2026-07-22/cisa-kev-cve-2026-16232-check-point-smartconsole-improper-au.md)
@@ -191,7 +193,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-13
 - [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
-- [defending saas based applications against shinyhunters oauth](./2026-07-13/defending-saas-based-applications-against-shinyhunters-oauth.md)
 - [ghsa critical cve 2026 45579 dirac is vulnerable to rce in r](./2026-07-13/ghsa-critical-cve-2026-45579-dirac-is-vulnerable-to-rce-in-r.md)
 - [ghsa critical cve 2026 47677 facturascripts account takeover](./2026-07-13/ghsa-critical-cve-2026-47677-facturascripts-account-takeover.md)
 - [ghsa critical cve 2026 61667 dirac is vulnerable to rce in f](./2026-07-13/ghsa-critical-cve-2026-61667-dirac-is-vulnerable-to-rce-in-f.md)

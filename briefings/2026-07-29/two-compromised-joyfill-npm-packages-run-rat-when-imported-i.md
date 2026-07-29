@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Install/import of compromised @joyfill 2773 beta package versions
 
-`UC_20_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_24_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### RAT C2 egress to hardcoded joyfill IPs and /$/boot request paths
 
-`UC_20_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_24_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### Node.js resolving C2 via Tron + Binance Smart Chain dead-drop RPC
 
-`UC_20_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_24_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceNetworkEvents
 
 ### Node.js modifying developer-tool modules for RAT self-reload persistence
 
-`UC_20_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceFileEvents
 
 ### Node.js spawning shell/recon binaries or detached node -e loader
 
-`UC_20_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_24_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### Node.js spawning Python credential-stealer child
 
-`UC_20_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_24_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -309,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Two Compromised joyfill npm Packages Run RAT When Imported Into Node.js
 
-`UC_20_7` · phase: **exploit** · confidence: **High**
+`UC_24_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

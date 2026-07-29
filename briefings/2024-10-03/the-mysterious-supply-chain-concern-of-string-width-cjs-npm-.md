@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### npm/yarn/pnpm install of himanshutester002 suspicious aliased packages (string-width-cjs et al)
 
-`UC_1196_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1198_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### node_modules/ drop of himanshutester002 supply-chain credibility-laundering packages
 
-`UC_1196_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1198_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The mysterious supply chain concern of string-width-cjs npm package
 
-`UC_1196_1` · phase: **exploit** · confidence: **High**
+`UC_1198_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

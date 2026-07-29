@@ -45,9 +45,9 @@ Lately I've found myself thinking a lot about the Australian TV series Mr. Inbet
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1105** — Ingress Tool Transfer
 - **T1218.007** — System Binary Proxy Execution: Msiexec
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1105** — Ingress Tool Transfer
 - **T1205** — Traffic Signaling
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1572** — Protocol Tunneling
@@ -59,38 +59,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### curl.exe downloading MSI payload into ProgramData (msaRAT delivery)
+### msaRAT: MSI impersonating Windows update executed from ProgramData
 
-`UC_100_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl.exe Processes.process="*.msi*" Processes.process="*ProgramData*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "curl.exe"
-| where ProcessCommandLine has ".msi"
-| where ProcessCommandLine has "ProgramData"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### msiexec executing MSI masquerading as Windows update from ProgramData
-
-`UC_100_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=msiexec.exe Processes.process="*ProgramData*" Processes.process="*.msi*" (Processes.process="*update*" OR Processes.process="*patch*" OR Processes.process="*windows*" OR Processes.process="*KB*") by Processes.dest Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=msiexec.exe (Processes.process="*\\ProgramData\\*" AND Processes.process="*.msi*") (Processes.process="*update*" OR Processes.process="*Update*" OR Processes.process="*KB*" OR Processes.process="*patch*" OR Processes.process="*Windows*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -98,22 +73,42 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "msiexec.exe"
-| where ProcessCommandLine has "ProgramData"
+| where ProcessCommandLine has @"\ProgramData\"
 | where ProcessCommandLine has ".msi"
-| where ProcessCommandLine has_any ("update","patch","windows","KB")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where ProcessCommandLine has_any ("update","kb","patch","windows")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Chrome/Edge launched with --remote-debugging-port by non-browser parent (CDP abuse)
+### msaRAT: curl.exe downloading MSI payload into ProgramData
 
-`UC_100_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_105_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=chrome.exe OR Processes.process_name=msedge.exe) Processes.process="*--remote-debugging-port*" NOT (Processes.parent_process_name IN (explorer.exe,chrome.exe,msedge.exe,firefox.exe)) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (curl.exe,wget.exe) Processes.process="*.msi*" (Processes.process="*\\ProgramData\\*" OR Processes.process="*172.86.126.18*" OR Processes.process="*workers.dev*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("curl.exe","wget.exe")
+| where ProcessCommandLine has ".msi"
+| where ProcessCommandLine has @"\ProgramData\" or ProcessCommandLine has_any ("172.86.126.18","workers.dev")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### msaRAT: Headless Chrome/Edge launched with remote-debugging (CDP abuse)
+
+`UC_105_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (chrome.exe,msedge.exe) (Processes.process="*--remote-debugging-port*" OR Processes.process="*--remote-debugging-pipe*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search parent_process_name!=explorer.exe parent_process_name!=chrome.exe parent_process_name!=msedge.exe | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -121,57 +116,50 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName in~ ("chrome.exe","msedge.exe")
-| where ProcessCommandLine has "--remote-debugging-port"
-| where InitiatingProcessFileName !in~ ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","code.exe")
+| where ProcessCommandLine has_any ("--remote-debugging-port","--remote-debugging-pipe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| extend Headless = ProcessCommandLine has "--headless"
+| where Headless or InitiatingProcessFileName !in~ ("explorer.exe","chrome.exe","msedge.exe","userinit.exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, Headless, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Plain-HTTP over port 443 to msaRAT delivery IP 172.86.126.18
+### msaRAT: Connection to Chaos delivery IP / workers.dev signaling relay
 
-`UC_100_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="172.86.126.18" All_Traffic.dest_port=443 by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="172.86.126.18" OR All_Traffic.dest="is-01-ast.ols-img-12.workers.dev") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "172.86.126.18"
-| where RemotePort == 443 or ActionType == "HttpConnectionInspected"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType, Protocol
+| where RemoteIP == "172.86.126.18" or RemoteUrl =~ "is-01-ast.ols-img-12.workers.dev"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, Protocol
 | order by Timestamp desc
 ```
 
-### Browser contacting msaRAT WebRTC signaling relay (workers.dev Cloudflare Worker)
+### msaRAT: Headless browser initiating WebRTC STUN/TURN egress
 
-`UC_100_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_105_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="is-01-ast.ols-img-12.workers.dev" OR All_Traffic.url="*is-01-ast.ols-img-12.workers.dev*" by All_Traffic.src All_Traffic.dest All_Traffic.app All_Traffic.url
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (chrome.exe,msedge.exe) All_Traffic.dest_port IN (3478,5349) by All_Traffic.src All_Traffic.process_name All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-(DeviceNetworkEvents
- | where Timestamp > ago(30d)
- | where RemoteUrl has "is-01-ast.ols-img-12.workers.dev"
- | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort),
-(DeviceEvents
- | where Timestamp > ago(30d)
- | where ActionType == "DnsQueryResponse"
- | where RemoteUrl has "is-01-ast.ols-img-12.workers.dev"
- | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl)
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe")
+| where RemotePort in (3478, 5349)
+| where InitiatingProcessParentFileName !in~ ("explorer.exe","chrome.exe","msedge.exe","userinit.exe","svchost.exe")
+| where InitiatingProcessCommandLine has_any ("--headless","--remote-debugging-port","--remote-debugging-pipe")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol
 | order by Timestamp desc
 ```
 
@@ -320,7 +308,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Don’t swing at everything
 
-`UC_100_8` · phase: **exploit** · confidence: **High**
+`UC_105_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Package-manager supply-chain control bypass via pnpm minimumReleaseAge=0
 
-`UC_333_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_336_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
