@@ -38,7 +38,7 @@ Th…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1068** — Exploitation for Privilege Escalation
-- **T1548** — Abuse Elevation Control Mechanism
+- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
 
 ## Kill chain phases observed
 
@@ -46,56 +46,103 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Exposure hunt: unpatched CVE-2026-64600 (RefluXFS) on reflink-XFS RHEL/Fedora/Amazon Linux
+### Exposure: unpatched RefluXFS CVE-2026-64600 on reflink-XFS Linux hosts
 
-`UC_100_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_103_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-64600" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - severity
+```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
 | where CveId == "CVE-2026-64600"
-| where OSPlatform == "Linux"
-| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by Timestamp desc
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, OSPlatform, OSDistribution, OSVersion, IsInternetFacing, PublicIP) by DeviceId
+  ) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, OSDistribution, OSVersion, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, IsInternetFacing, PublicIP, CveId, VulnerabilitySeverityLevel
+| order by IsInternetFacing desc, DeviceName asc
 ```
 
-### RefluXFS precondition reset: unprivileged chsh execution enabling the reflink race
+### RefluXFS precondition: non-root chsh followed by root-context process on same host
 
-`UC_100_13` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_103_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=chsh Processes.user!=root Processes.user!=SYSTEM by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!=""
+| tstats `summariesonly` count min(_time) as chshTime from datamodel=Endpoint.Processes where Processes.process_name="chsh" AND Processes.user!="root" by Processes.dest Processes.user
+| `drop_dm_object_name(Processes)`
+| rename user as actor
+| join type=inner dest [
+    | tstats `summariesonly` count min(_time) as rootTime from datamodel=Endpoint.Processes where Processes.user="root" AND NOT Processes.parent_process_name IN ("sudo","su","pkexec","systemd","cron","crond","init") by Processes.dest Processes.process_name Processes.process Processes.parent_process_name
+    | `drop_dm_object_name(Processes)` ]
+| where rootTime>=chshTime AND rootTime<=chshTime+300
+| table dest actor chshTime rootTime process_name process parent_process_name
 ```
 
 **Defender KQL:**
 ```kql
+let Lookback = 14d;
+let Window = 5m;
+let ChshReset = DeviceProcessEvents
+    | where Timestamp > ago(Lookback)
+    | where FileName =~ "chsh"
+    | where AccountName != "root" and AccountName !endswith "$"
+    | project ChshTime = Timestamp, DeviceId, DeviceName, Actor = AccountName, ChshCmd = ProcessCommandLine;
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName == "chsh"
-| where AccountName !in~ ("root","system") and AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### RefluXFS post-exploit: passwordless root session shortly after unprivileged chsh
-
-`UC_100_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let Window = 10m;
-let Precondition = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName == "chsh"
-    | where AccountName !in~ ("root","system") and AccountName !endswith "$"
-    | project ChshTime = Timestamp, DeviceId, EscalatingUser = AccountName;
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("su","sudo") or (FileName in~ ("bash","sh","dash","zsh") and AccountName =~ "root")
-| join kind=inner Precondition on DeviceId
+| where Timestamp > ago(Lookback)
+| where AccountName =~ "root"
+| where InitiatingProcessAccountName != "root" and InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("sudo","su","pkexec","systemd","cron","crond")
+| join kind=inner ChshReset on DeviceId
 | where Timestamp between (ChshTime .. ChshTime + Window)
-| project Timestamp, DeviceName, DeviceId, EscalatingUser, RootProcess = FileName, ProcessCommandLine, InitiatingProcessCommandLine, ChshTime, DelaySec = datetime_diff('second', Timestamp, ChshTime)
+| where InitiatingProcessAccountName == Actor
+| project ChshTime, RootProcTime = Timestamp, DeviceName, Actor, ChshCmd,
+          EscalatedProcess = FileName, EscalatedCmd = ProcessCommandLine,
+          ParentUser = InitiatingProcessAccountName, ParentProcess = InitiatingProcessFileName
+| order by RootProcTime desc
+```
+
+### Unexpected root-context process from non-root parent outside sudo/pkexec (RefluXFS outcome)
+
+`UC_103_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user="root" AND NOT Processes.parent_process_name IN ("sudo","su","pkexec","systemd","cron","crond","init","login","sshd") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let Baseline = 30d;
+let Recent = 1d;
+let KnownRootActors = DeviceProcessEvents
+    | where Timestamp between (ago(Baseline) .. ago(Recent))
+    | where AccountName =~ "root"
+    | where InitiatingProcessAccountName != "root"
+    | summarize by DeviceId, InitiatingProcessAccountName;
+DeviceProcessEvents
+| where Timestamp > ago(Recent)
+| where AccountName =~ "root"
+| where InitiatingProcessAccountName != "root" and InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("sudo","su","pkexec","systemd","cron","crond","login","sshd","init")
+| join kind=leftanti KnownRootActors on DeviceId, InitiatingProcessAccountName
+| project Timestamp, DeviceName, ActorUser = InitiatingProcessAccountName,
+          RootProcess = FileName, RootCmd = ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -438,7 +485,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nine-Year-Old RefluXFS Linux Flaw Gives Local Users Root on Default RHEL Install
 
-`UC_100_11` · phase: **install** · confidence: **High**
+`UC_103_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

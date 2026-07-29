@@ -41,12 +41,12 @@ The latest disclosure shows that the security incident, which stemmed from an in
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1610** — Deploy Container
+- **T1211** — Exploitation for Defense Evasion
 - **T1552.005** — Cloud Instance Metadata API
-- **T1102.002** — Bidirectional Communication
-- **T1132.001** — Standard Encoding
-- **T1078.004** — Cloud Accounts
-- **T1134.001** — Token Impersonation/Theft
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1567.001** — Exfiltration to Code Repository / Web Service
+- **T1550.001** — Application Access Token
 
 ## Kill chain phases observed
 
@@ -54,74 +54,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable self-hosted JFrog Artifactory (<7.161.15) exposed to the OpenAI-agent sandbox-escape chain
+### Self-hosted JFrog Artifactory vulnerable to chained anonymous-access RCE (pre-7.161.15)
 
-`UC_0_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-65921","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-65617","CVE-2026-66018","CVE-2026-65618") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)
-```
+`UC_1_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp > ago(1d)
-| where SoftwareVendor has "jfrog" or SoftwareName has "artifactory"
+| where SoftwareVendor has "jfrog" and SoftwareName has "artifactory"
 | where CveId in ("CVE-2026-65921","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-65617","CVE-2026-66018","CVE-2026-65618")
-| summarize CveCount = dcount(CveId), Cves = make_set(CveId) by DeviceName, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveCount desc
+| summarize CVEs = make_set(CveId), MaxSeverity = max(VulnerabilitySeverityLevel), Fix = any(RecommendedSecurityUpdate) by DeviceName, DeviceId, SoftwareName, SoftwareVersion
+| order by DeviceName asc
 ```
 
-### Cloud instance-metadata (169.254.169.254) access by shell/scripting tools from pipeline hosts
+### Server process reaching cloud instance-metadata (IMDS) endpoint — pod credential theft / SSRF
 
-`UC_0_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest="169.254.169.254" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | search app IN ("curl","wget","python","python3","bash","sh","node","ruby","perl","busybox","nc","ncat") | convert ctime(firstTime) ctime(lastTime)
-```
+`UC_1_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteIP == "169.254.169.254"
-| where InitiatingProcessFileName in~ ("curl","wget","python","python3","bash","sh","dash","node","ruby","perl","busybox","nc","ncat")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize Hits = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
-| order by LastSeen desc
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| where RemoteIP in ("169.254.169.254","169.254.170.2") or RemoteUrl in~ ("metadata.google.internal")
+| where InitiatingProcessFileName !in~ ("cloud-init","amazon-ssm-agent","ecs-agent","kubelet","aws","cloud-agent","ssm-agent-worker")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
 ```
 
-### Improvised C2 polling to public paste / request-capture / file-drop services
+### Automated C2 to public request-capture / pastebin / file-drop services from non-browser process
 
-`UC_0_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime dc(_time) as distinctTimes from datamodel=Web where (Web.url="*webhook.site*" OR Web.url="*requestbin.*" OR Web.url="*pipedream.net*" OR Web.url="*requestcatcher.com*" OR Web.url="*beeceptor.com*" OR Web.url="*interact.sh*" OR Web.url="*oast.fun*" OR Web.url="*oastify.com*" OR Web.url="*pastebin.com*" OR Web.url="*ghostbin.com*" OR Web.url="*hastebin.com*" OR Web.url="*rentry.co*" OR Web.url="*0bin.net*" OR Web.url="*file.io*" OR Web.url="*transfer.sh*" OR Web.url="*gofile.io*" OR Web.url="*0x0.st*" OR Web.url="*tmpfiles.org*" OR Web.url="*catbox.moe*" OR Web.url="*bashupload.com*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | where count >= 5 | convert ctime(firstTime) ctime(lastTime)
-```
+`UC_1_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-let C2Domains = dynamic(["webhook.site","requestbin.com","requestbin.net","pipedream.net","requestcatcher.com","beeceptor.com","hookbin.com","interact.sh","oast.fun","oast.pro","oastify.com","pastebin.com","ghostbin.com","hastebin.com","dpaste.com","paste.ee","rentry.co","controlc.com","0bin.net","file.io","transfer.sh","gofile.io","0x0.st","tmpfiles.org","oshi.at","catbox.moe","bashupload.com","ufile.io","temp.sh"]);
+let c2svc = dynamic(["webhook.site","requestbin.com","pipedream.net","beeceptor.com","hookbin.com","pastebin.com","paste.ee","hastebin.com","dpaste.com","rentry.co","transfer.sh","file.io","0x0.st","gofile.io","anonfiles.com","oshi.at","temp.sh","controlc.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteIPType == "Public" and isnotempty(RemoteUrl)
-| where RemoteUrl has_any (C2Domains)
-| where InitiatingProcessFileName in~ ("curl","wget","python","python3","bash","sh","node","ruby","perl","busybox") or InitiatingProcessFolderPath has "artifactory"
-| summarize ConnCount = count(), DistinctMinutes = dcount(bin(Timestamp, 1m)), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(InitiatingProcessCommandLine) by DeviceName, RemoteUrl, InitiatingProcessFileName
-| where ConnCount >= 5 and DistinctMinutes >= 3
-| order by ConnCount desc
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (c2svc)
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
-### Kubernetes cluster-admin binding / privileged escalation from dataset-pipeline identity
+### Single identity authenticating to 3+ distinct cloud services within one hour (exposed-credential reuse)
 
-`UC_0_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
-**Splunk SPL (CIM):**
-```spl
-sourcetype="kube:apiserver:audit" verb IN ("create","update","patch") (objectRef.resource="clusterrolebindings" OR objectRef.resource="rolebindings") requestObject.roleRef.name="cluster-admin" stage="ResponseComplete" | stats min(_time) as firstTime max(_time) as lastTime count by user.username objectRef.name objectRef.resource requestObject.roleRef.name sourceIPs{} userAgent | convert ctime(firstTime) ctime(lastTime)
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0
+| summarize Resources = make_set(ResourceDisplayName, 25), ResourceCount = dcount(ResourceDisplayName), IPs = make_set(IPAddress, 15), Countries = make_set(Country, 10)
+    by AccountObjectId, AccountUpn, bin(Timestamp, 1h)
+| where ResourceCount >= 3   // one identity to 3+ distinct resource apps within 1h = fan-out
+| order by ResourceCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
