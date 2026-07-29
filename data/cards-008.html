@@ -1,280 +1,3 @@
-<article class="card" id="art-204" data-art-slug="2026-07-09-ghsa-critical-cve-2026-52766-yeswiki-vulnerable-to-unauthent"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,web"
-  data-targets="vcs"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-52766: YesWiki vulnerable to unauthenticated arbitrary page deletion via `{{erasespamedcomments}}` action YesWiki vulnerable to unauthenticated arbitrary page deletion via `{{erasespamedcomments}}` action CVE-2026-52766  [LLM] YesWiki unauthenticated erasespamedcomments page-deletion invocation (CVE-2026-52766) [LLM] YesWiki confirmed mass page deletion — bulk &#x27;Suppression de la page&#x27; / deletion-request burst (CVE-2026-52766) [LLM] YesWiki page-deletion aftermath — 404 spike on previously-valid wiki pages (CVE-2026-52766) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-09-ghsa-critical-cve-2026-52766-yeswiki-vulnerable-to-unauthent" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-6x7x-gcmf-7r8x" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-52766: YesWiki vulnerable to unauthenticated arbitrary page deletion via `{{erasespamedcomments}}` action</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-09</span>
-    <span>4 use cases</span>
-    <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">YesWiki vulnerable to unauthenticated arbitrary page deletion via `{{erasespamedcomments}}` action</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-52766</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-204-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-204"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-204-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] YesWiki unauthenticated erasespamedcomments page-deletion invocation (CVE-2026-52766)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] YesWiki confirmed mass page deletion — bulk &#x27;Suppression de la page&#x27; / deletion-request burst (CVE-2026-52766) · [LLM] YesWiki page-deletion aftermath — 404 spike on previously-valid wiki pages (CVE-2026-52766)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="ebafe7f0fb" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">YesWiki unauthenticated erasespamedcomments page-deletion invocation (CVE-2026-52766)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ebafe7f0fb" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts POST requests to a YesWiki instance that reference the `erasespamedcomments` action together with the `clean`/`suppr[]` deletion parameters, the exact request shape from the CVE-2026-52766 PoC. Because the action performs no authorization or CSRF check, any single such request from an unauthenticated source is a live exploitation attempt for arbitrary wiki page deletion (including PagePrincipale).
-
-Rationale: Uses the CVE-specific action name `erasespamedcomments` plus the `suppr[]`/`clean=yes` deletion parameters from the advisory PoC (POST /?wiki=SpamCleanup, clean=yes&amp;suppr[0]=...). The action name is unique to YesWiki and the parameter trio is otherwise never seen, giving a near-zero-FP signature; requires a log source that captures POST body/full query (WAF or app log) since IIS alone omits the body.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-6x7x-gcmf-7r8x
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52766</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authenticated wiki admin legitimately running spam-comment cleanup after a spam wave</li><li>Security scanner / DAST tool (Burp, Nuclei) firing a CVE-2026-52766 test request in an authorized pentest</li><li>Vulnerability-management team validating the patch on a staging YesWiki host</li><li>A WAF replay/allow-list health check that reissues a captured deletion request</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserName == &quot;&quot; or isempty(csUserName)   // keep only unauthenticated callers; authenticated admin cleanup is expected</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request for the matching cIP/src — confirm it is unauthenticated (empty csUserName) and enumerate the tags inside suppr[]; check whether PagePrincipale or admin pages are named. 2) Contain: if unauthenticated and unexpected, block the source IP at the WAF, put the YesWiki instance into hibernation (WIKI_IN_HIBERNATION) or take it offline, and confirm the app is upgraded to &gt;=4.6.6. 3) Hunt: search all access logs from the same src for the preceding trigger-page creation (POST to */edit carrying {{erasespamedcomments}}) and for a 404 spike on the deleted tags; restore affected pages from DB/page-history backup.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-204-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-204-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-204-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-204-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csMethod == &quot;POST&quot;
-| where csUriStem has &quot;erasespamedcomments&quot; or csUriQuery has_any (&quot;erasespamedcomments&quot;,&quot;suppr&quot;,&quot;clean=yes&quot;)
-| project TimeGenerated, cIP, csMethod, sSiteName, csUriStem, csUriQuery, scStatus, csUserName, csUserAgent, Computer
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-204-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki erasespamedcomments Unauthenticated Page Deletion (CVE-2026-52766)
-id: 8f2b7c14-6d3a-4e9f-9a21-3b5c8e7d1f04
-status: experimental
-description: Detects invocation of the YesWiki erasespamedcomments action with clean/suppr deletion parameters, which requires no authorization and permanently deletes arbitrary wiki pages (CVE-2026-52766, fixed in 4.6.6).
-references:
-  - https://github.com/advisories/GHSA-6x7x-gcmf-7r8x
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-52766
-author: SOC Detection Engineering
-date: 2026/07/17
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.impact
-  - attack.t1485
-logsource:
-  category: webserver
-detection:
-  selection_method:
-    cs-method: &#x27;POST&#x27;
-  selection_payload:
-    c-uri|contains:
-      - &#x27;erasespamedcomments&#x27;
-      - &#x27;suppr[&#x27;
-      - &#x27;suppr%5B&#x27;
-      - &#x27;clean=yes&#x27;
-  condition: selection_method and selection_payload
-falsepositives:
-  - Legitimate wiki administrator running the built-in spam-comment cleanup
-level: high</code></pre></div>
-    <div class="tab-content" id="art-204-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-204-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-204-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-204-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as uri_query values(Web.status) as status from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*erasespamedcomments*&quot; OR Web.uri_query=&quot;*erasespamedcomments*&quot; OR Web.url=&quot;*suppr*&quot; OR Web.uri_query=&quot;*suppr*&quot; OR Web.uri_query=&quot;*clean=yes*&quot;) by Web.src, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| where like(url,&quot;%erasespamedcomments%&quot;) OR like(uri_query,&quot;%erasespamedcomments%&quot;) OR (like(uri_query,&quot;%suppr%&quot;) AND like(uri_query,&quot;%clean%&quot;))
-| sort - count</code></pre><pre class="spl-mode-body" id="art-204-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as uri_query values(Web.status) as status from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*erasespamedcomments*&quot; OR Web.uri_query=&quot;*erasespamedcomments*&quot; OR Web.url=&quot;*suppr*&quot; OR Web.uri_query=&quot;*suppr*&quot; OR Web.uri_query=&quot;*clean=yes*&quot;) by Web.src, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| where like(url,&quot;%erasespamedcomments%&quot;) OR like(uri_query,&quot;%erasespamedcomments%&quot;) OR (like(uri_query,&quot;%suppr%&quot;) AND like(uri_query,&quot;%clean%&quot;))
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c3408ecabd" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">YesWiki confirmed mass page deletion — bulk &#x27;Suppression de la page&#x27; / deletion-request burst (CVE-2026-52766)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c3408ecabd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the impact stage of CVE-2026-52766: a burst of confirmed page deletions in a short window, either as YesWiki admin-log &#x27;Suppression de la page&#x27; entries (application log) or as a spike of erasespamedcomments/suppr deletion POSTs from one source. Legitimate admin cleanup touches 1-3 pages; mass abuse deletes many tags in one automated run.
-
-Rationale: Pivots on the exact admin-log string `Suppression de la page` written by PageController::delete()-&gt;LogAdministrativeAction (article code), and on a per-source burst of suppr/erasespamedcomments POSTs. Volume + the CVE-specific action string separates automated mass deletion from routine single-page maintenance; the app-log path also confirms deletions actually succeeded rather than merely being attempted.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-6x7x-gcmf-7r8x
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52766</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Wiki admin performing a large legitimate content purge/migration (decommissioning a namespace)</li><li>Scripted maintenance job that deletes stale pages in bulk on a schedule</li><li>Restore/reimport operation that deletes-then-recreates many pages</li><li>Spam wave genuinely being cleaned by an authorized moderator using the intended feature</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: expand the make_set of SamplePages / suppr tags to see which pages were deleted and whether PagePrincipale, admin, or other users&#x27; pages are included; correlate to the source IP and whether it was authenticated. 2) Contain: hibernate or isolate the YesWiki host, block the source IP, and confirm the upgrade to &gt;=4.6.6 (or apply an ACL gating erasespamedcomments to admins). 3) Hunt: pull page-history/DB backups and restore deleted tags; check for the initial trigger-page creation and for follow-on defacement or re-creation of the front page by the same source.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-204-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-204-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-204-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(1d)
-| where SyslogMessage has &quot;Suppression de la page&quot;
-| summarize DeletedPages = count(), SamplePages = make_set(SyslogMessage, 50), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by HostName, ProcessName, bin(TimeGenerated, 10m)
-| where DeletedPages &gt; 5   // &gt;5 confirmed page deletions in a 10-min window — far above manual admin cleanup (typ. 1-3)
-| order by DeletedPages desc</code></pre></div>
-    <div class="tab-content" id="art-204-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-204-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-204-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-204-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*erasespamedcomments*&quot; OR Web.uri_query=&quot;*erasespamedcomments*&quot; OR Web.uri_query=&quot;*suppr*&quot; OR Web.url=&quot;*suppr*&quot;) by Web.src, Web.dest, _time span=10m
-| `drop_dm_object_name(Web)`
-| where count &gt; 5
-| sort - count</code></pre><pre class="spl-mode-body" id="art-204-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*erasespamedcomments*&quot; OR Web.uri_query=&quot;*erasespamedcomments*&quot; OR Web.uri_query=&quot;*suppr*&quot; OR Web.url=&quot;*suppr*&quot;) by Web.src, Web.dest, _time span=10m
-| `drop_dm_object_name(Web)`
-| where count &gt; 5
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="41d81b97a9" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">YesWiki page-deletion aftermath — 404 spike on previously-valid wiki pages (CVE-2026-52766)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="41d81b97a9" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the downstream impact of CVE-2026-52766: pages deleted by the erasespamedcomments abuse now return HTTP 404 to normal visitors. A sudden spike of 404s across many distinct wiki page paths in a short window — especially minutes after an erasespamedcomments POST — indicates successful mass deletion.
-
-Rationale: Uses the YesWiki URL shape (`?wiki=&lt;PageTag&gt;`) plus a 404 status spike across many distinct page tags, which is the observable end state after PageManager::deleteOrphaned() wipes pages/links/acls/tags rows. Best deployed as a same-source time-window correlation with UC1&#x27;s erasespamedcomments POST to cut ambiguity from ordinary broken-link 404s.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-6x7x-gcmf-7r8x
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-52766</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Broken-link crawler / SEO bot hitting many stale URLs</li><li>Legitimate content restructure where pages were intentionally renamed or removed</li><li>A vulnerability scanner enumerating non-existent wiki page tags</li><li>Cache/CDN warm-up requesting pages that legitimately never existed</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUriStem has_any (&quot;wiki&quot;) | where DistinctPages &gt; 10 and NotFound &gt; 20   // require both breadth (distinct pages) and volume to suppress lone broken-link crawlers</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: list the distinct 404 page tags and check whether any were serving 200 in the hours before the spike (a genuine deletion signature) versus never-existed paths (scanner noise). 2) Contain: if prior-200 pages are now 404, treat as confirmed destruction — isolate the host, block the abusing source from UC1/UC2, and confirm patch &gt;=4.6.6. 3) Hunt: correlate the 404 tags to the suppr[] array values in the preceding erasespamedcomments POST from the same window/source, then restore the affected pages from backup and monitor for re-deletion.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-204-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-204-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-204-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(1d)
-| where csMethod == &quot;GET&quot;
-| where scStatus == 404
-| where csUriStem has &quot;wiki&quot; or csUriQuery has &quot;wiki&quot;
-| summarize NotFound = count(), DistinctPages = dcount(csUriQuery), Pages = make_set(csUriQuery, 50) by Computer, sSiteName, bin(TimeGenerated, 15m)
-| where DistinctPages &gt; 10   // &gt;10 distinct previously-served wiki pages now 404 in a 15-min window — deletion aftermath
-| order by NotFound desc</code></pre></div>
-    <div class="tab-content" id="art-204-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-204-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-204-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-204-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where Web.http_method=GET AND Web.status=404 AND (Web.url=&quot;*wiki=*&quot; OR Web.uri_query=&quot;*wiki=*&quot;) by Web.dest, Web.uri_query, _time span=15m
-| `drop_dm_object_name(Web)`
-| stats sum(count) as notFound dc(uri_query) as distinctPages values(uri_query) as pages by dest, _time
-| where distinctPages &gt; 10
-| sort - notFound</code></pre><pre class="spl-mode-body" id="art-204-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=GET AND Web.status=404 AND (Web.url=&quot;*wiki=*&quot; OR Web.uri_query=&quot;*wiki=*&quot;) by Web.dest, Web.uri_query, _time span=15m
-| `drop_dm_object_name(Web)`
-| stats sum(count) as notFound dc(uri_query) as distinctPages values(uri_query) as pages by dest, _time
-| where distinctPages &gt; 10
-| sort - notFound</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-204-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-204-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-204-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-204-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-52766&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-204-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-52766&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-204-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-204-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-204-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-204-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-52766&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-204-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-52766&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-206" data-art-slug="2026-07-09-winning-54-of-the-time"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1486,T1566"
@@ -12756,6 +12479,381 @@ level: medium
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-234" data-art-slug="2026-07-06-ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-52889: Formie Hidden field defaults vulnerable to Server-Side Template Injection Formie Hidden field defaults vulnerable to Server-Side Template Injection CVE-2026-52889 T1190 [LLM] Twig SSTI markers in request-controlled fields against Craft/Formie public forms [LLM] Active Twig RCE gadget strings in Craft/Formie HTTP request inputs [LLM] Craft/PHP/IIS web worker spawning a command shell (Formie SSTI RCE outcome) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-06-ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-565m-g33j-jq96" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-52889: Formie Hidden field defaults vulnerable to Server-Side Template Injection</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-06</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Formie Hidden field defaults vulnerable to Server-Side Template Injection</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-52889</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-234-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-234"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-234-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Twig SSTI markers in request-controlled fields against Craft/Formie public forms · [LLM] Active Twig RCE gadget strings in Craft/Formie HTTP request inputs · [LLM] Craft/PHP/IIS web worker spawning a command shell (Formie SSTI RCE outcome)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="37d5219e5d" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Twig SSTI markers in request-controlled fields against Craft/Formie public forms</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="37d5219e5d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts HTTP requests carrying Twig template syntax ({{ }}, {% %}) in the User-Agent, Referer, or query string reaching a Craft CMS site running Formie. CVE-2026-52889 copies these request-derived Hidden-field defaults straight into Craft&#x27;s Twig render layer, so Twig markers in these fields are the earliest observable of exploitation of a public form.
+
+Rationale: Uses the exact request-derived input surface named in the advisory (User Agent, Referer, Current URL, Query Parameter) and Twig delimiters {{ / {% (plus URL-encoded %7b%7b). Web-request telemetry only exists in Sentinel W3CIISLog / Splunk Web DM; Defender AH, Datadog standard sources, Falcon FDR and CloudWatch do not carry HTTP request headers, so those queries are intentionally empty. Cross-checked against the sibling Formie SSTI advisory CVE-2026-45697 and the Craft SSTI advisory GHSA-94rc-cqvm-m4pw.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-565m-g33j-jq96
+  • https://dailycve.com/craft-cms-formie-plugin-twig-injection-via-hidden-field-cve-2026-45697-critical/
+  • https://github.com/advisories/GHSA-94rc-cqvm-m4pw</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Template Injection">T1221</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Web vulnerability scanners (Burp, Nuclei, Acunetix) sending {{7*7}} SSTI probes</li><li>Client-side JS frameworks (AngularJS/Vue/Mustache) passing {{ }} template strings in query params</li><li>Marketing/analytics referrers containing mustache placeholders like {{campaign}}</li><li>Bug-bounty researchers testing the public form</li><li>URLs carrying JSON blobs with doubled braces</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where scStatus == 200 and csUriStem !contains &quot;/api/&quot; and csUserAgent !has_any (&quot;AngularJS&quot;,&quot;Vue&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all requests from the source IP in the window; confirm the target csUriStem is a page that renders a Formie form and whether scStatus==200 (server processed the payload vs 404/403). Decode the payload from UA/query/cookie. 2) Contain: if the payload contains RCE gadgets or scStatus 200 on a form page, block the source IP at the WAF and confirm Formie is on 3.1.27+; if not, apply the workaround (remove request-derived Hidden-field defaults) immediately. 3) Hunt: pivot to endpoint telemetry on the web host for php/w3wp spawning shells (UC3) and review the same source IP for gadget strings (UC2).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-234-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-234-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-234-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-234-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriStem !endswith &quot;.js&quot; and csUriStem !endswith &quot;.css&quot; and csUriStem !endswith &quot;.png&quot; and csUriStem !endswith &quot;.woff2&quot;
+| where csUriQuery contains &quot;%7b%7b&quot; or csUriQuery contains &quot;{{&quot; or csUriQuery contains &quot;%7b%25&quot; or csUriQuery contains &quot;{%&quot;
+     or csUserAgent contains &quot;{{&quot; or csUserAgent contains &quot;{%&quot; or csUserAgent contains &quot;_self.env&quot;
+     or csReferer contains &quot;{{&quot; or csReferer contains &quot;{%&quot;
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, csUserAgent, csReferer, scStatus
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-234-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Twig SSTI Markers in HTTP Request Fields Against Craft/Formie
+id: b2e4d7a1-3c9f-4e88-a1d2-9f7c6b5e0d31
+status: experimental
+description: Detects Twig template syntax in request-controlled fields (query string, User-Agent, Referer) that CVE-2026-52889 renders server-side via Formie Hidden-field request-derived defaults.
+references:
+  - https://github.com/advisories/GHSA-565m-g33j-jq96
+  - https://github.com/advisories/GHSA-94rc-cqvm-m4pw
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1221
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection_query:
+    cs-uri-query|contains:
+      - &#x27;{{&#x27;
+      - &#x27;{%&#x27;
+      - &#x27;%7b%7b&#x27;
+      - &#x27;%7b%25&#x27;
+  selection_ua:
+    c-useragent|contains:
+      - &#x27;{{&#x27;
+      - &#x27;{%&#x27;
+      - &#x27;_self.env&#x27;
+  selection_ref:
+    cs-referer|contains:
+      - &#x27;{{&#x27;
+      - &#x27;{%&#x27;
+  condition: selection_query or selection_ua or selection_ref
+falsepositives:
+  - Web vulnerability scanners sending SSTI probes
+  - Client-side templating strings passed through query/referer
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-234-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-234-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-234-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-234-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_user_agent=&quot;*{{*&quot; OR Web.http_user_agent=&quot;*{%*&quot; OR Web.uri_query=&quot;*%7b%7b*&quot; OR Web.uri_query=&quot;*{{*&quot; OR Web.uri_query=&quot;*%7b%25*&quot; OR Web.http_referrer=&quot;*{{*&quot;) by Web.src Web.url Web.http_user_agent Web.uri_query Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-234-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_user_agent=&quot;*{{*&quot; OR Web.http_user_agent=&quot;*{%*&quot; OR Web.uri_query=&quot;*%7b%7b*&quot; OR Web.uri_query=&quot;*{{*&quot; OR Web.uri_query=&quot;*%7b%25*&quot; OR Web.http_referrer=&quot;*{{*&quot;) by Web.src Web.url Web.http_user_agent Web.uri_query Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f8d8dda19c" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Active Twig RCE gadget strings in Craft/Formie HTTP request inputs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f8d8dda19c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">High-fidelity detection for Twig-to-PHP RCE gadgets (_self.env.registerUndefinedFilterCallback / getFilter / craft.app) delivered via the request-controlled Hidden-field defaults exploited by CVE-2026-52889. Unlike generic {{ }} probing, these tokens are unambiguous command-execution attempts.
+
+Rationale: Anchors on the documented Twig RCE gadget chain _self.env.registerUndefinedFilterCallback + getFilter and Craft&#x27;s exposed craft.app object — these strings virtually never appear in benign traffic, so this warrants alerting. Web-request headers/query are only available in Sentinel/Splunk web logs; Defender/Datadog/Falcon/CloudWatch do not carry them. Gadget syntax corroborated via PayloadsAllTheThings PHP SSTI and the Craft SSTI advisory.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-565m-g33j-jq96
+  • https://swisskyrepo.github.io/PayloadsAllTheThings/Server%20Side%20Template%20Injection/PHP/
+  • https://github.com/advisories/GHSA-94rc-cqvm-m4pw</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Template Injection">T1221</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized pentest/red-team validating CVE-2026-52889 post-patch</li><li>Vulnerability scanner with a Twig-specific SSTI plugin</li><li>WAF that replays blocked payloads into a downstream access log</li><li>Security-training or CTF traffic against a staging Craft instance</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP !in (&quot;&lt;authorized_scanner_ip_placeholder_removed&gt;&quot;) and csUserAgent !has_any (&quot;Nuclei&quot;,&quot;nuclei&quot;,&quot;Burp&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: decode the full payload from csUriQuery/csUserAgent/csReferer, identify the command inside getFilter()/filter(&#x27;system&#x27;), and check scStatus + the response size for signs the command executed. Confirm the source IP is not an authorized scanner. 2) Contain: block the source IP, take the affected web node out of the pool if RCE is likely, and force-upgrade Formie to 3.1.27+ (or remove request-derived Hidden-field defaults). 3) Hunt: on the web host, run UC3 for php/w3wp child shells, review new files in web roots (webshell drop) and outbound connections from the PHP worker, and search all web logs for the same source IP and gadget tokens over a wider window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-234-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-234-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-234-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-234-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriQuery has_any (&quot;registerUndefinedFilterCallback&quot;,&quot;registerUndefinedFunctionCallback&quot;,&quot;getFilter&quot;,&quot;_self.env&quot;,&quot;craft.app&quot;)
+     or csUserAgent has_any (&quot;registerUndefinedFilterCallback&quot;,&quot;registerUndefinedFunctionCallback&quot;,&quot;getFilter&quot;,&quot;_self.env&quot;,&quot;craft.app&quot;)
+     or csReferer has_any (&quot;registerUndefinedFilterCallback&quot;,&quot;getFilter&quot;,&quot;_self.env&quot;)
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, csUserAgent, csReferer, scStatus
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-234-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Twig RCE Gadget Strings in HTTP Request Fields (Craft/Formie CVE-2026-52889)
+id: a1c3e5d7-2b4f-46a8-9c0d-7e8f9a0b1c2d
+status: experimental
+description: Detects Twig-to-PHP RCE gadget tokens in request-controlled inputs that Formie renders via CVE-2026-52889, indicating active remote code execution attempts rather than benign SSTI probing.
+references:
+  - https://github.com/advisories/GHSA-565m-g33j-jq96
+  - https://swisskyrepo.github.io/PayloadsAllTheThings/Server%20Side%20Template%20Injection/PHP/
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1221
+  - attack.t1059
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection_query:
+    cs-uri-query|contains:
+      - &#x27;registerUndefinedFilterCallback&#x27;
+      - &#x27;registerUndefinedFunctionCallback&#x27;
+      - &#x27;getFilter&#x27;
+      - &#x27;_self.env&#x27;
+      - &#x27;craft.app&#x27;
+  selection_ua:
+    c-useragent|contains:
+      - &#x27;registerUndefinedFilterCallback&#x27;
+      - &#x27;_self.env&#x27;
+      - &#x27;getFilter&#x27;
+      - &#x27;craft.app&#x27;
+  condition: selection_query or selection_ua
+level: high</code></pre></div>
+    <div class="tab-content" id="art-234-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-234-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-234-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-234-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*registerUndefinedFilterCallback*&quot; OR Web.uri_query=&quot;*registerUndefinedFunctionCallback*&quot; OR Web.uri_query=&quot;*getFilter*&quot; OR Web.uri_query=&quot;*_self.env*&quot; OR Web.uri_query=&quot;*craft.app*&quot; OR Web.http_user_agent=&quot;*registerUndefinedFilterCallback*&quot; OR Web.http_user_agent=&quot;*_self.env*&quot; OR Web.http_referrer=&quot;*_self.env*&quot;) by Web.src Web.url Web.http_user_agent Web.uri_query Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-234-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*registerUndefinedFilterCallback*&quot; OR Web.uri_query=&quot;*registerUndefinedFunctionCallback*&quot; OR Web.uri_query=&quot;*getFilter*&quot; OR Web.uri_query=&quot;*_self.env*&quot; OR Web.uri_query=&quot;*craft.app*&quot; OR Web.http_user_agent=&quot;*registerUndefinedFilterCallback*&quot; OR Web.http_user_agent=&quot;*_self.env*&quot; OR Web.http_referrer=&quot;*_self.env*&quot;) by Web.src Web.url Web.http_user_agent Web.uri_query Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1c3199da2b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">Craft/PHP/IIS web worker spawning a command shell (Formie SSTI RCE outcome)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="1c3199da2b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the PHP FastCGI, php-fpm, or IIS worker process backing a Craft CMS site spawning a command interpreter or recon LOLBin — the post-exploitation footprint of a successful Twig SSTI RCE via CVE-2026-52889. A web worker launching cmd/powershell/sh is not normal Craft behaviour.
+
+Rationale: Anchors on the specific web-tier parents of a Craft/PHP deployment (php-cgi.exe, php-fpm, w3wp.exe backing IIS+FastCGI, nginx/httpd) spawning shells/recon LOLBins — the concrete execution outcome of the Twig system()/exec gadget the advisory warns can lead to RCE. Purely endpoint telemetry, so no web-log or CloudWatch query. Not covered by generic Office-spawn-script or encoded-PS rules.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-565m-g33j-jq96
+  • https://github.com/advisories/GHSA-94rc-cqvm-m4pw</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin running Craft console commands (php craft resave/queue/run) that legitimately shell out</li><li>Image-processing plugins (ImageMagick/GD) invoked by php calling system utilities</li><li>Deployment/build steps (composer, npm) executed under the web-service account</li><li>Monitoring/backup agents launched by the web worker</li><li>Scheduled Craft queue jobs spawning curl for outbound webhooks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has &quot;craft&quot; and InitiatingProcessCommandLine has_any (&quot;queue/run&quot;,&quot;resave&quot;,&quot;gc&quot;,&quot;migrate&quot;)) and AccountName !endswith &quot;$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine and the parent InitiatingProcessCommandLine — a shell running whoami/id/net/certutil under the web-service account with no interactive admin session is high-signal; correlate the timestamp with UC1/UC2 web-log hits from the same host. 2) Contain: isolate the web host, kill the child process, and revoke/rotate any credentials accessible to the web-service account; confirm Formie is patched to 3.1.27+. 3) Hunt: enumerate files written by the php/w3wp worker (webshells), outbound connections from the worker process, new local accounts or scheduled tasks, and repeat the process-tree hunt across all other Craft/Formie web nodes.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-234-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-234-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-234-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-234-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-234-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-234-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-234-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-234-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;)
+| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;)
+| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-234-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PHP or IIS Web Worker Spawning Command Shell (Formie SSTI RCE)
+id: c7f1a2b9-8d4e-4a3c-b6f0-1e2d3c4b5a69
+status: experimental
+description: Detects a Craft-backing PHP/IIS/nginx web worker launching a command interpreter or recon LOLBin, the post-exploitation signal of Twig SSTI RCE (CVE-2026-52889).
+references:
+  - https://github.com/advisories/GHSA-565m-g33j-jq96
+author: SOC Detection Engineering
+date: 2026/07/07
+tags:
+  - attack.t1190
+  - attack.t1059.003
+  - attack.execution
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;\php-cgi.exe&#x27;
+      - &#x27;\php.exe&#x27;
+      - &#x27;\w3wp.exe&#x27;
+      - &#x27;\httpd.exe&#x27;
+      - &#x27;\nginx.exe&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\whoami.exe&#x27;
+      - &#x27;\net.exe&#x27;
+      - &#x27;\net1.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+  condition: selection
+falsepositives:
+  - Craft console (php craft ...) tasks that shell out
+  - Deployment/build scripts under the web user
+level: high</code></pre></div>
+    <div class="tab-content" id="art-234-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\php-cgi.exe OR *\\PHP-CGI.EXE OR *\\php.exe OR *\\PHP.EXE OR *\\w3wp.exe OR *\\W3WP.EXE OR *\\httpd.exe OR *\\nginx.exe) @Image:(*\\cmd.exe OR *\\Cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\whoami.exe OR *\\net.exe OR *\\cscript.exe OR *\\wscript.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe)</code></pre></div>
+    <div class="tab-content" id="art-234-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(php-cgi|php|php-fpm|w3wp|httpd|nginx)(\.exe)?$/i
+| ImageFileName=/(\\(cmd|powershell|pwsh|whoami|net1?|cscript|wscript|certutil|bitsadmin|curl)\.exe$)|(\/(sh|bash|whoami|id|nc)$)/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-234-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-234-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-234-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-234-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;nginx&quot;,&quot;httpd&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-234-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;nginx&quot;,&quot;httpd&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-234-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-234-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-234-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-234-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-52889&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-234-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-52889&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-234-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-234-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-234-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-234-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-52889&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-234-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-52889&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

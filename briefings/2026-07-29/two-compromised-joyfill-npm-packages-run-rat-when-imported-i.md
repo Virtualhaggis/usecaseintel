@@ -35,12 +35,15 @@ Table of Contents Loading nav..…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — JavaScript
-- **T1059.006** — Python
-- **T1204** — User Execution
-- **T1573.001** — Symmetric Cryptography
-- **T1102.001** — Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1554** — Compromise Host Software Binary
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1568** — Dynamic Resolution
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -48,99 +51,59 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Compromised @joyfill 2773 prerelease install or trojanized dist bundle hash on disk
+### npm/Node.js host beaconing to hardcoded joyfill RAT C2 IPs
 
-`UC_6_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("26351aed0397158d3a3b8cc8fd3047d4c015d264c9895f10f20f1521b974ed18","36ff00b45e67baa7e3674b0c80f48e88737264c61e5c6b3b091200972de8157c") OR (Filesystem.file_path="*\\node_modules\\@joyfill\\*\\dist\\*" AND Filesystem.file_name IN ("index.js","index.esm.js","joyfill.min.js","index.cjs.js","index.es.js"))) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where ProcessCommandLine has "joyfill" and ProcessCommandLine has "2773"
-  | project Timestamp, DeviceName, User = AccountName, ActionType, FileName, Cmd = ProcessCommandLine, InitiatingProcessFileName, SHA256, Source = "ProcessCmdline"
-),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in~ ("26351aed0397158d3a3b8cc8fd3047d4c015d264c9895f10f20f1521b974ed18","36ff00b45e67baa7e3674b0c80f48e88737264c61e5c6b3b091200972de8157c")
-     or (FolderPath has @"\node_modules\@joyfill\" and FileName in~ ("index.es.js","index.cjs.js","joyfill.min.js","index.esm.js","index.js"))
-  | project Timestamp, DeviceName, User = InitiatingProcessAccountName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, Source = "FileWrite"
-)
-| order by Timestamp desc
-```
-
-### Node.js spawning detached 'node -e' child or Python stealer at import time
-
-`UC_6_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_9_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node") AND (Processes.process_name IN ("python.exe","python3.exe","pythonw.exe","python") OR (Processes.process_name IN ("node.exe","node") AND Processes.process="* -e *")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where (FileName in~ ("node.exe","node") and ProcessCommandLine has "-e")
-    or FileName in~ ("python.exe","python3.exe","pythonw.exe","python")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, FileName, ChildCmd = ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Node/Python beacon to joyfill RAT C2 IPs and distinctive /$/boot request paths
-
-`UC_6_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("166.88.134.62","23.27.13.43","198.105.127.210","23.27.202.27") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("166.88.134.62","23.27.13.43","198.105.127.210","23.27.202.27") by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","node","python.exe","python3.exe","pythonw.exe","python")
 | where RemoteIP in ("166.88.134.62","23.27.13.43","198.105.127.210","23.27.202.27")
-    or RemoteUrl has_any ("/$/boot","/0x/js","/verify-human/","/u/e","/u/f","/snv")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Node.js resolving C2 via Tron/Aptos/BSC blockchain dead-drop RPC endpoints
+### Compromised @joyfill npm bundle present via hash or path match
 
-`UC_6_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("26351aed0397158d3a3b8cc8fd3047d4c015d264c9895f10f20f1521b974ed18","36ff00b45e67baa7e3674b0c80f48e88737264c61e5c6b3b091200972de8157c")) OR (Filesystem.file_path="*joyfill*" AND Filesystem.file_name IN ("index.js","index.esm.js","joyfill.min.js","index.cjs.js","index.es.js")) by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where RemoteUrl has_any ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where SHA256 in~ ("26351aed0397158d3a3b8cc8fd3047d4c015d264c9895f10f20f1521b974ed18","36ff00b45e67baa7e3674b0c80f48e88737264c61e5c6b3b091200972de8157c")
+   or (FolderPath has "joyfill" and FileName in~ ("index.js","index.esm.js","joyfill.min.js","index.cjs.js","index.es.js"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, FolderPath, FileName, SHA256
 | order by Timestamp desc
 ```
 
-### Persistence: node.exe patching @vscode/deviceid, Discord core, GitHub Desktop main.js or global npm CLI
+### joyfill RAT persistence: rewrite of npm CLI and developer-tool modules by Node
 
-`UC_6_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("modified","created") AND Filesystem.process_name IN ("node.exe","node") AND (Filesystem.file_path="*\\node_modules\\@vscode\\deviceid*" OR Filesystem.file_path="*discord_desktop_core*" OR (Filesystem.file_path="*GitHub Desktop*" AND Filesystem.file_name="main.js") OR Filesystem.file_path="*\\npm\\node_modules\\npm\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*vscode*deviceid*" AND Filesystem.file_name="index.js") OR (Filesystem.file_path="*npm*lib*" AND Filesystem.file_name="cli.js") OR (Filesystem.file_path="*discord_desktop_core*" AND Filesystem.file_name="index.js") OR (Filesystem.file_path="*GitHub Desktop*" AND Filesystem.file_name="main.js") by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -148,13 +111,64 @@ DeviceNetworkEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileModified","FileCreated")
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where FolderPath has @"\node_modules\@vscode\deviceid"
-    or FolderPath has "discord_desktop_core"
-    or (FolderPath has "GitHub Desktop" and FileName =~ "main.js")
-    or FolderPath has @"\npm\node_modules\npm\"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
+| where (FolderPath has_all ("vscode","deviceid") and FileName =~ "index.js")
+   or (FolderPath has "npm" and FolderPath has "lib" and FileName =~ "cli.js")
+   or (FolderPath has "discord_desktop_core" and FileName =~ "index.js")
+   or (FolderPath has "GitHub Desktop" and FileName =~ "main.js")
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, InitiatingProcessAccountName
 | order by Timestamp desc
+```
+
+### Node.js spawning detached 'node -e' or interpreter/Python stealer child
+
+`UC_9_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name="node.exe" AND Endpoint.Processes.process_name IN ("node.exe","python.exe","pythonw.exe","cmd.exe","powershell.exe","pwsh.exe") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process, Endpoint.Processes.process_name, Endpoint.Processes.process
+| `drop_dm_object_name(Processes)`
+| where (process_name="node.exe" AND like(process,"%-e %")) OR process_name!="node.exe"
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where (FileName =~ "node.exe" and ProcessCommandLine has "-e")
+    or FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","python.exe","pythonw.exe","wscript.exe","cscript.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Node.js resolving C2 via blockchain dead-drop RPC endpoints
+
+`UC_9_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where Network_Resolution.DNS.query IN ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com") by Network_Resolution.DNS.src, Network_Resolution.DNS.query
+| `drop_dm_object_name(DNS)`
+| stats dc(query) as distinct_chains values(query) as chains min(firstTime) as firstTime max(lastTime) as lastTime sum(count) as count by src
+| where distinct_chains >= 2
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where RemoteUrl has_any ("api.trongrid.io","fullnode.mainnet.aptoslabs.com","bsc-dataseed.binance.org","bsc-rpc.publicnode.com")
+| summarize DistinctChains = dcount(RemoteUrl), Chains = make_set(RemoteUrl), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where DistinctChains >= 1
+| order by LastSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -301,7 +315,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Two Compromised joyfill npm Packages Run RAT When Imported Into Node.js
 
-`UC_6_7` · phase: **exploit** · confidence: **High**
+`UC_9_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -361,4 +375,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### JFrog Artifactory SSRF egress to non-registry destinations (internet escape)
 
-`UC_12_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_15_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Anonymous access to Artifactory Terraform/Cargo/Ansible remote repositories
 
-`UC_12_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_15_4` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### JFrog Artifactory service process spawning a shell or network tool (RCE)
 
-`UC_12_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_15_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

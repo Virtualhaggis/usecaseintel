@@ -37,65 +37,66 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Gitea diffpatch endpoint abuse — repeated POST to /diffpatch (CVE-2026-60004)
+### Gitea diffpatch add/add collision: same patch POSTed twice (CVE-2026-60004)
 
-`UC_4_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url="*/api/v1/repos/*/diffpatch*" by Web.src Web.dest Web.http_user_agent Web.url
+| tstats `summariesonly` count, values(Web.http_user_agent) as user_agent, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url="*/api/v1/repos/*/diffpatch*" by Web.src, Web.user, Web.url, _time span=10m
 | `drop_dm_object_name(Web)`
 | where count>=2
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
-### Git client-side hook planted in Gitea repo hooks directory (post-index-change)
+### Client-side git hook (post-index-change) planted under Gitea repo storage (CVE-2026-60004)
 
-`UC_4_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="*/hooks/*" (Endpoint.Filesystem.file_name="post-index-change" OR Endpoint.Filesystem.file_name="post-checkout" OR Endpoint.Filesystem.file_name="post-merge" OR Endpoint.Filesystem.file_name="post-applypatch" OR Endpoint.Filesystem.file_name="post-rewrite") by Endpoint.Filesystem.dest Endpoint.Filesystem.user Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.action
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="*/hooks/*" (Endpoint.Filesystem.file_name="post-index-change" OR Endpoint.Filesystem.file_name="post-checkout" OR Endpoint.Filesystem.file_name="post-merge" OR Endpoint.Filesystem.file_name="post-rewrite" OR Endpoint.Filesystem.file_name="post-applypatch" OR Endpoint.Filesystem.file_name="pre-applypatch" OR Endpoint.Filesystem.file_name="applypatch-msg") by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_id, Endpoint.Filesystem.user
 | `drop_dm_object_name(Endpoint.Filesystem)`
-| `security_content_ctime(firstTime)`
-| sort - firstTime
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(24h)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
 | where FolderPath has "/hooks/"
-| where FileName in~ ("post-index-change","post-checkout","post-merge","post-applypatch","post-rewrite","post-commit")
-| where InitiatingProcessFileName in~ ("git","gitea","sh","bash","dash")
+| where FileName in~ ("post-index-change","post-checkout","post-merge","post-rewrite","post-applypatch","pre-applypatch","applypatch-msg","pre-auto-gc")
+| where InitiatingProcessFileName in~ ("git","gitea")
 | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc
 ```
 
-### Gitea/git process spawning shell or network tooling (hook-fired RCE)
+### Gitea/git executing planted hook or spawning shell tooling as service account (CVE-2026-60004)
 
-`UC_4_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name="git" OR Endpoint.Processes.parent_process_name="gitea") (Endpoint.Processes.process_name="sh" OR Endpoint.Processes.process_name="bash" OR Endpoint.Processes.process_name="dash" OR Endpoint.Processes.process_name="zsh" OR Endpoint.Processes.process_name="curl" OR Endpoint.Processes.process_name="wget" OR Endpoint.Processes.process_name="nc" OR Endpoint.Processes.process_name="ncat" OR Endpoint.Processes.process_name="python3" OR Endpoint.Processes.process_name="perl" OR Endpoint.Processes.process_name="socat") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process
-| `drop_dm_object_name(Endpoint.Processes)`
-| search NOT process="*gitea hook*"
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count, values(Endpoint.Processes.process) as cmdlines, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name="git" OR Endpoint.Processes.parent_process_name="gitea") (Endpoint.Processes.process="*post-index-change*" OR Endpoint.Processes.process_name IN ("curl","wget","nc","ncat","socat","python","python3","perl","ruby","php")) by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(24h)
+| where Timestamp > ago(30d)
 | where InitiatingProcessFileName in~ ("git","gitea")
-| where FileName in~ ("sh","bash","dash","zsh","curl","wget","nc","ncat","python","python3","perl","ruby","socat")
-| where not(ProcessCommandLine has_any ("gitea hook","hook pre-receive","hook post-receive","hook proc-receive","hook update"))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where ProcessCommandLine has "post-index-change"
+    or FolderPath endswith "/hooks/post-index-change"
+    or FileName in~ ("curl","wget","nc","ncat","socat","python","python3","perl","ruby","php")
+| where FileName !startswith "git-"          // exclude git-lfs / git-remote-https / git-credential helpers
+| where not (ProcessCommandLine has "gitea hook")   // exclude the legitimate Gitea hook shim
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -304,7 +305,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Gitea RCE Lets Repository Writers Plant a Git Hook to Run Shell Commands
 
-`UC_4_6` · phase: **install** · confidence: **High**
+`UC_7_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
