@@ -1,265 +1,3 @@
-<article class="card" id="art-3571" data-art-slug="2019-01-31-severe-security-vulnerability-in-bower-s-zip-archive-extract"
-  data-phases="c2,exploit,install" data-sev="med"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="2" data-llm-uc-count="1"
-  data-search="Severe security vulnerability in Bower’s zip archive extraction Earlier this month it was found that Bower, a popular web package manager, is vulnerable to archive extractions and currently, we can associate two security incidents with it, for which follow-up releases to address them are available:  T1190 [LLM] Bower archive extraction arbitrary file write to sensitive paths (CVE-2019-5484 / Zip Slip) Article-specific behavioural hunt — Severe security vulnerability in Bower’s zip archive extraction">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2019-01-31-severe-security-vulnerability-in-bower-s-zip-archive-extract" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/severe-security-vulnerability-in-bowers-zip-archive-extraction/" target="_blank" rel="noopener">Severe security vulnerability in Bower’s zip archive extraction</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2019-01-31</span>
-    <span>2 use cases</span>
-    <span>1 technique</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">Earlier this month it was found that Bower, a popular web package manager, is vulnerable to archive extractions and currently, we can associate two security incidents with it, for which follow-up releases to address them are available:</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3571-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3571"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3571-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Bower archive extraction arbitrary file write to sensitive paths (CVE-2019-5484 / Zip Slip) · Article-specific behavioural hunt — Severe security vulnerability in Bower’s zip archive extraction</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="13546cf4a4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Bower archive extraction arbitrary file write to sensitive paths (CVE-2019-5484 / Zip Slip)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="13546cf4a4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts a `bower install` process (node) writing files into sensitive directories OUTSIDE its bower_components extraction root — the symptom of the tar/tar.gz symlink path-traversal flaw (CVE-2019-5484, pre-1.8.8) and the decompress-zip Zip Slip (pre-1.8.6). A malicious package symlinks a directory like /etc, ~/.ssh or /tmp and a following archive member lands a file on the symlink target, overwriting config or dropping payloads. Article-specific because it ties the write to the bower install context and the exact sensitive targets the advisory calls out.
-
-Rationale: Anchors on the article&#x27;s exact attack mechanic — bower install (node) extracting a crafted archive whose symlink redirects a write outside bower_components into a sensitive path (the advisory cites /etc/passwd). The bower-install command-line + write-to-/etc|~/.ssh|cron|/tmp pairing is far higher fidelity than a bare file-write rule. Cross-checked GitHub Advisory GHSA-p6mr-pxg4-68hx and Snyk DB confirming CVE-2019-5484 and the symlink-resolves-outside-root root cause.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-p6mr-pxg4-68hx
-  • https://www.resolvedsecurity.com/vulnerability-catalog/CVE-2019-5484
-  • https://snyk.io/blog/severe-security-vulnerability-in-bowers-zip-archive-extraction/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Hijack Execution Flow">T1574</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Bower packages that legitimately use postinstall scripts writing cache/config to /tmp during install</li><li>Developer running bower install in a project whose .bowerrc redirects the install directory under /tmp or a custom path</li><li>CI build agents that bower-install into an /etc-adjacent or shared path by design</li><li>Legitimate package writing a dotfile (e.g. .babelrc) into the project root that the path filter loosely matches</li><li>node-based tooling (not bower) reusing the same process tree on shared build hosts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FolderPath !has &quot;/bower_components/&quot; and InitiatingProcessCommandLine !has &quot;--config.directory&quot; and FolderPath !startswith &quot;/tmp/bower-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full archive/package name from the bower install command line and the exact TargetFilePath written. Confirm the write landed outside bower_components and whether the target is a real sensitive file (/etc/*, authorized_keys, cron, shell profile). Check installed Bower version — anything &lt; 1.8.8 (tar) or &lt; 1.8.6 (zip) is exploitable. 2) CONTAIN: Isolate the dev/CI host, remove the malicious package from the registry/cache, and restore any overwritten config (esp. authorized_keys, shell rc files, cron) from a known-good baseline; rotate keys/credentials that lived at the written path. 3) HUNT: Search all hosts for the same package hash/name being bower-installed, and for other node/bower writes to sensitive paths in the prior 30 days; inventory Bower versions org-wide and force upgrade to 1.8.8+.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3571-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3571-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3571-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3571-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3571-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3571-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3571-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where InitiatingProcessCommandLine has &quot;bower&quot; and InitiatingProcessCommandLine has &quot;install&quot;
-| where FolderPath startswith &quot;/etc/&quot; or FolderPath startswith &quot;/tmp/&quot; or FolderPath startswith &quot;/var/spool/cron&quot;
-     or FolderPath has &quot;/.ssh&quot;
-     or FileName in~ (&quot;.bashrc&quot;,&quot;.bash_profile&quot;,&quot;.profile&quot;,&quot;authorized_keys&quot;)
-| where FolderPath !has &quot;/bower_components/&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3571-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where ActingProcessCommandLine has &quot;bower&quot; and ActingProcessCommandLine has &quot;install&quot;
-| where TargetFilePath startswith &quot;/etc/&quot; or TargetFilePath startswith &quot;/tmp/&quot; or TargetFilePath startswith &quot;/var/spool/cron&quot;
-     or TargetFilePath has &quot;/.ssh/&quot;
-     or TargetFileName in~ (&quot;.bashrc&quot;,&quot;.bash_profile&quot;,&quot;.profile&quot;,&quot;authorized_keys&quot;)
-| where TargetFilePath !has &quot;/bower_components/&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3571-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Bower Install Writing to Sensitive Path Outside Extraction Root (CVE-2019-5484)
-id: 6f2c8a1e-3b7d-4c5a-9e2f-1a4b6c8d0e3f
-description: Detects a bower install process writing files into sensitive locations outside its bower_components extraction directory, indicating Zip Slip / tar symlink arbitrary file write (CVE-2019-5484, decompress-zip Zip Slip).
-references:
-  - https://snyk.io/blog/severe-security-vulnerability-in-bowers-zip-archive-extraction/
-  - https://github.com/advisories/GHSA-p6mr-pxg4-68hx
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1195.002
-  - attack.t1574
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection_proc:
-    Image|contains:
-      - &#x27;bower&#x27;
-      - &#x27;node&#x27;
-  selection_path:
-    TargetFilename|startswith:
-      - &#x27;/etc/&#x27;
-      - &#x27;/tmp/&#x27;
-      - &#x27;/var/spool/cron&#x27;
-  selection_sensitive_files:
-    TargetFilename|contains:
-      - &#x27;/.ssh/&#x27;
-      - &#x27;/.bashrc&#x27;
-      - &#x27;/.bash_profile&#x27;
-      - &#x27;/authorized_keys&#x27;
-  filter_legit:
-    TargetFilename|contains: &#x27;/bower_components/&#x27;
-  condition: selection_proc and (selection_path or selection_sensitive_files) and not filter_legit
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3571-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*bower*install* OR *Bower*install*)</code></pre></div>
-    <div class="tab-content" id="art-3571-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/(node|bower)/i
-| TargetFileName=/(\/etc\/|\/\.ssh\/|\/\.bashrc|\/\.bash_profile|\/\.profile|\/authorized_keys|\/var\/spool\/cron\/|^\/tmp\/)/i
-| TargetFileName!=/\/bower_components\//i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3571-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3571-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3571-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3571-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;/etc/*&quot; OR Filesystem.file_path=&quot;*/.ssh/*&quot; OR Filesystem.file_path=&quot;*/.bashrc&quot; OR Filesystem.file_path=&quot;*/.bash_profile&quot; OR Filesystem.file_path=&quot;*/.profile&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot; OR Filesystem.file_path=&quot;/tmp/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | join type=inner process_guid [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process=&quot;*bower*install*&quot; by Processes.process_guid Processes.process Processes.dest | `drop_dm_object_name(Processes)` ] | table firstTime lastTime dest process file_path file_name count</code></pre><pre class="spl-mode-body" id="art-3571-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;/etc/*&quot; OR Filesystem.file_path=&quot;*/.ssh/*&quot; OR Filesystem.file_path=&quot;*/.bashrc&quot; OR Filesystem.file_path=&quot;*/.bash_profile&quot; OR Filesystem.file_path=&quot;*/.profile&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot; OR Filesystem.file_path=&quot;/tmp/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | join type=inner process_guid [ | tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process=&quot;*bower*install*&quot; by Processes.process_guid Processes.process Processes.dest | `drop_dm_object_name(Processes)` ] | table firstTime lastTime dest process file_path file_name count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="cfeb039bd6" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Severe security vulnerability in Bower’s zip archive extraction</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cfeb039bd6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3571-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3571-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3571-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3571-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Severe security vulnerability in Bower’s zip archive extraction
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3571-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Severe security vulnerability in Bower’s zip archive extraction
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3571-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3571-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3571-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3571-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Severe security vulnerability in Bower’s zip archive extraction ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3571-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Severe security vulnerability in Bower’s zip archive extraction ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3573" data-art-slug="2019-01-24-snyk-cli-drops-support-for-node-js-4-argon"
   data-phases="c2,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -5777,6 +5515,176 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre><pre class="spl-mode-body" id="art-3637-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Open source vulnerabilities tripped Equifax, how can you defend yourself? ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3638" data-art-slug="2017-08-24-snyk-and-atlassian-sitting-in-a-tree"
+  data-phases="actions,c2,exploit,install" data-sev="med"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Snyk and Atlassian, Sitting in a Tree   T1190 Article-specific behavioural hunt — Snyk and Atlassian, Sitting in a Tree">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2017-08-24-snyk-and-atlassian-sitting-in-a-tree" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyk-and-atlassian/" target="_blank" rel="noopener">Snyk and Atlassian, Sitting in a Tree</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2017-08-24</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary"></p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3638-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3638"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3638-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Snyk and Atlassian, Sitting in a Tree</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="a2ccb5cf78" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Snyk and Atlassian, Sitting in a Tree</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a2ccb5cf78" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3638-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3638-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3638-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3638-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk and Atlassian, Sitting in a Tree
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3638-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Snyk and Atlassian, Sitting in a Tree
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3638-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3638-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3638-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3638-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk and Atlassian, Sitting in a Tree ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3638-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk and Atlassian, Sitting in a Tree ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))

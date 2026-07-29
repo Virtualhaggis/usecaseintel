@@ -1,135 +1,3 @@
-<article class="card" id="art-3418" data-art-slug="2020-02-12-security-breach-leaks-the-personal-data-of-all-6-5-million-i"
-  data-phases="c2,exploit,install" data-sev="med"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="sent,sigma,spl"
-  data-splunk-cats="cloud"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="1"
-  data-search="Security breach leaks the personal data of all 6.5 million Israeli voters On February 7th, 2020 I received an anonymous tip through the “leak inbox” of the Israeli CyberCyber ​​podcast.  T1190 [LLM] Access to exposed Elector &#x27;/get-admin-users&#x27; credential-leaking API endpoint">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2020-02-12-security-breach-leaks-the-personal-data-of-all-6-5-million-i" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/security-breach-leaks-the-personal-data-of-all-6-5-million-israeli-voters/" target="_blank" rel="noopener">Security breach leaks the personal data of all 6.5 million Israeli voters</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-02-12</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">On February 7th, 2020 I received an anonymous tip through the “leak inbox” of the Israeli CyberCyber ​​podcast.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3418-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3418"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3418-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Access to exposed Elector &#x27;/get-admin-users&#x27; credential-leaking API endpoint</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="74a5465eee" data-platforms="sent,sigma,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Access to exposed Elector &#x27;/get-admin-users&#x27; credential-leaking API endpoint</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="74a5465eee" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP requests to the &#x27;/get-admin-users&#x27; web API path abused in the Elector (Likud) breach, where an unauthenticated GET returned a JSON list of admin accounts with plaintext passwords. Any request to this endpoint is suspect because it should never be reachable without authentication and its response body discloses administrator credentials.
-
-Rationale: Anchored on the exact endpoint string &#x27;/get-admin-users&#x27; from the article code block and confirmed by bankinfosecurity.com — an unauthenticated GET that returned admin credentials in JSON. The path is article-specific and any hit is high-fidelity since the endpoint had no legitimate user-facing purpose.
-
-Cross-checked against:
-  • https://www.bankinfosecurity.com/coding-flaw-exposes-voter-details-for-65-million-israelis-a-13708
-  • https://snyk.io/blog/security-breach-leaks-the-personal-data-of-all-6-5-million-israeli-voters/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Unsecured Credentials">T1552</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal QA/dev hitting the admin API during testing from a known corporate IP</li><li>Authorized penetration test or DAST/vulnerability scanner (Nessus, Burp, Acunetix) crawling the path</li><li>Uptime/synthetic monitoring configured to probe API routes</li><li>Legitimate authenticated admin console calls if the same path is reused post-fix behind auth</li><li>Search-engine or archive crawlers replaying an old indexed URL</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_private(cIP))   // breach access came from external/foreign IPs; drop internal monitoring &amp; QA probes</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the matching rows and check the source IP geo/ASN, csMethod, scStatus and response size (scBytes) — a 200 with a non-trivial body means admin credentials were actually disclosed; note the user-agent (scanner vs browser). 2) Contain: take the /get-admin-users route offline or place it behind authentication immediately, force-rotate ALL admin passwords surfaced by the endpoint, and block the offending source IP(s) at the WAF. 3) Hunt: from the same cIP/ASN, search web and identity logs for follow-on successful admin sign-ins, bulk record/voter-data reads, and any data-export endpoints accessed in the same session window.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3418-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3418-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3418-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3418-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem has &quot;/get-admin-users&quot;
-| project TimeGenerated, Computer, sSiteName, cIP, csMethod, csUriStem, csUriQuery, scStatus, scBytes, csUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3418-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Access to Exposed Elector get-admin-users Credential API Endpoint
-id: 8b3f1d2c-6a4e-4c9b-9d11-3f7a2e8c5b40
-status: experimental
-description: Detects HTTP requests to the /get-admin-users endpoint abused in the 2020 Elector (Likud) Israeli voter breach, which returned admin usernames and plaintext passwords with no authentication.
-references:
-  - https://snyk.io/blog/security-breach-leaks-the-personal-data-of-all-6-5-million-israeli-voters/
-  - https://www.bankinfosecurity.com/coding-flaw-exposes-voter-details-for-65-million-israelis-a-13708
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1190
-  - attack.t1552
-  - attack.credential_access
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-stem|contains: &#x27;/get-admin-users&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3418-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3418-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3418-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3418-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/get-admin-users*&quot; OR Web.uri_path=&quot;*/get-admin-users*&quot;) by Web.src, Web.dest, Web.site, Web.http_method, Web.status, Web.uri_path, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3418-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/get-admin-users*&quot; OR Web.uri_path=&quot;*/get-admin-users*&quot;) by Web.src, Web.dest, Web.site, Web.http_method, Web.status, Web.uri_path, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3421" data-art-slug="2020-02-06-node-js-release-fixes-a-critical-http-security-vulnerability"
   data-phases="c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -6166,6 +6034,328 @@ level: medium
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3507" data-art-slug="2019-07-05-snyk-research-team-discovers-severe-prototype-pollution-secu"
+  data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="Snyk research team discovers severe prototype pollution security vulnerabilities affecting all versions of lodash On July 2nd, 2019, Snyk published a high severity prototype pollution security vulnerability (CVE-2019-10744) affecting all versions of lodash, as the result of an on-going analysis lead by the Snyk security research team. CVE-2019-10744 T1190 [LLM] Vulnerable lodash (CVE-2019-10744 prototype pollution) present in software inventory [LLM] Prototype pollution payload (__proto__ / constructor.prototype) in inbound web requests Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Snyk research team discovers severe prototype pollution security vulnerabilities">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2019-07-05-snyk-research-team-discovers-severe-prototype-pollution-secu" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyk-research-team-discovers-severe-prototype-pollution-security-vulnerabilities-affecting-all-versions-of-lodash/" target="_blank" rel="noopener">Snyk research team discovers severe prototype pollution security vulnerabilities affecting all versions of lodash</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-07-05</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">On July 2nd, 2019, Snyk published a high severity prototype pollution security vulnerability (CVE-2019-10744) affecting all versions of lodash, as the result of an on-going analysis lead by the Snyk security research team.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2019-10744</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3507-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3507"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3507-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable lodash (CVE-2019-10744 prototype pollution) present in software inventory</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Prototype pollution payload (__proto__ / constructor.prototype) in inbound web requests · Article-specific behavioural hunt — Snyk research team discovers severe prototype pollution security vulnerabilities</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="5373ebd88a" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Vulnerable lodash (CVE-2019-10744 prototype pollution) present in software inventory</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5373ebd88a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts/projects where a pre-4.17.12 lodash is installed, exposing the defaultsDeep constructor.prototype pollution (CVE-2019-10744). This is a posture hunt to prioritise patching the specific package the Snyk advisory flags, not a generic CVE sweep.
+
+Rationale: Anchors on the exact CVE-2019-10744 and the lodash package named in the Snyk advisory, and on the fix line that 4.17.12 remediates the issue; CVE-presence is inherently low-FP. Cross-checked NVD and the GitHub advisory for the fixed-version boundary.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2019-10744
+  • https://github.com/advisories/GHSA-jf85-cpcp-j695
+  • https://github.com/lodash/lodash/pull/4336/files</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>lodash 4.17.12+ already patched but inventory not yet rescanned, showing a stale finding</li><li>Bundled/transitive lodash inside a vendor product the org cannot directly upgrade</li><li>Dev-only / node_modules copies in non-production build artifacts flagged the same as runtime deps</li><li>Multiple lodash copies on one host where only one path is on a reachable code path</li><li>TVM mapping a renamed fork (lodash-es) to the same CVE</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion !startswith &quot;4.17.12&quot; and SoftwareVersion !startswith &quot;4.17.13&quot; and SoftwareVersion !startswith &quot;4.17.14&quot; and SoftwareVersion !startswith &quot;4.17.15&quot; and SoftwareVersion !startswith &quot;4.17.2&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the reported SoftwareVersion is genuinely below 4.17.12 and that the host/app is reachable (internet-facing or processes untrusted JSON). Step 2 (contain): Prioritise the fix — apply the Snyk patch PR or upgrade lodash to &gt;=4.17.12; for transitive pulls, pin/override the resolved version. Step 3 (hunt): Pivot to UC2 to see whether any prototype-pollution payloads (__proto__/constructor.prototype) have actually been sent to apps on this host, indicating active exploitation rather than just exposure.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3507-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3507-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(7d)
+| where CveId =~ &quot;CVE-2019-10744&quot; or (SoftwareName has &quot;lodash&quot; and SoftwareVersion startswith &quot;4.&quot;)
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3507-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId =~ &quot;CVE-2019-10744&quot; or (SoftwareName has &quot;lodash&quot; and SoftwareVersion startswith &quot;4.&quot;)
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3507-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3507-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3507-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3507-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2019-10744&quot; OR (Vulnerabilities.signature=&quot;*lodash*&quot; AND Vulnerabilities.signature=&quot;*prototype pollution*&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3507-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2019-10744&quot; OR (Vulnerabilities.signature=&quot;*lodash*&quot; AND Vulnerabilities.signature=&quot;*prototype pollution*&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fa9d8dfcea" data-platforms="sent,sigma,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Prototype pollution payload (__proto__ / constructor.prototype) in inbound web requests</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="fa9d8dfcea" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound HTTP requests carrying the prototype-pollution payload shape used against lodash defaultsDeep (CVE-2019-10744) — __proto__ or a paired constructor+prototype key structure in the URI/query. Targets active exploitation attempts against Node.js/JS apps that merge untrusted JSON.
+
+Rationale: Uses the article&#x27;s verbatim exploit primitives — the constructor/prototype payload string and the defaultsDeep pollution mechanism — translated into the on-wire URL-encoded forms (__proto__, constructor+prototype pairing). Cross-checked NVD/GHSA confirming __proto__ and constructor.prototype as the canonical vectors.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2019-10744
+  • https://github.com/advisories/GHSA-jf85-cpcp-j695</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate APIs with a query parameter literally named &#x27;prototype&#x27; or &#x27;constructor&#x27; (e.g. CAD/3D or template apps)</li><li>Security scanners (Burp, Nessus, Acunetix) probing the app and generating __proto__ payloads</li><li>GraphQL or JSON-RPC endpoints whose schema field names include &#x27;constructor&#x27;</li><li>Frameworks that serialise object metadata into query strings</li><li>Developers testing the patched build with deliberate pollution payloads</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (UA has_any (&quot;Nessus&quot;,&quot;Acunetix&quot;,&quot;Nuclei&quot;,&quot;Burp&quot;,&quot;sqlmap&quot;)) and Status != 404</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Inspect the full request — source IP, target path, status code, and whether the app stack is Node.js/JS using lodash. A 200/500 on an app endpoint (not a 404) raises confidence the payload reached merge logic. Step 2 (contain): Block the source IP at the WAF and add a WAF rule rejecting __proto__/constructor.prototype in request bodies and query; confirm the app&#x27;s lodash is &gt;=4.17.12. Step 3 (hunt): Correlate the source IP across other apps, pull the same host from UC1 to confirm vulnerable lodash, and review app logs for unexpected admin/property behaviour post-request indicating successful pollution.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3507-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3507-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3507-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+  (W3CIISLog | where TimeGenerated &gt; ago(7d) | extend ReqUri = strcat(csUriStem, &quot;?&quot;, csUriQuery), SrcIP = cIP, UA = csUserAgent, Method = csMethod, Status = scStatus),
+  (AppServiceHTTPLogs | where TimeGenerated &gt; ago(7d) | extend ReqUri = strcat(CsUriStem, &quot;?&quot;, CsUriQuery), SrcIP = CIp, UA = UserAgent, Method = CsMethod, Status = ScStatus)
+| where ReqUri has &quot;__proto__&quot; or ReqUri has &quot;%5f%5fproto%5f%5f&quot; or (ReqUri has &quot;constructor&quot; and ReqUri has &quot;prototype&quot;)
+| project TimeGenerated, Computer, SrcIP, Method, ReqUri, UA, Status
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3507-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Prototype Pollution Payload in Web Request (lodash CVE-2019-10744)
+id: 6f2a8d41-7c3e-4b9a-9e21-1c4f5a8b2d77
+description: Detects __proto__ or constructor.prototype key structures in inbound HTTP URI/query indicating a prototype pollution exploitation attempt against JS/Node apps using vulnerable lodash defaultsDeep.
+references:
+  - https://snyk.io/blog/snyk-research-team-discovers-severe-prototype-pollution-security-vulnerabilities-affecting-all-versions-of-lodash/
+  - https://nvd.nist.gov/vuln/detail/CVE-2019-10744
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection_proto:
+    cs-uri-query|contains:
+      - &#x27;__proto__&#x27;
+      - &#x27;%5f%5fproto%5f%5f&#x27;
+  selection_ctor:
+    cs-uri-query|contains:
+      - &#x27;constructor&#x27;
+    cs-uri-query|contains|all:
+      - &#x27;constructor&#x27;
+      - &#x27;prototype&#x27;
+  condition: selection_proto or selection_ctor
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3507-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3507-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3507-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3507-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*%5f%5fproto%5f%5f*&quot; OR (Web.uri_query=&quot;*constructor*&quot; AND Web.uri_query=&quot;*prototype*&quot;) OR Web.uri_path=&quot;*__proto__*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3507-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*%5f%5fproto%5f%5f*&quot; OR (Web.uri_query=&quot;*constructor*&quot; AND Web.uri_query=&quot;*prototype*&quot;) OR Web.uri_path=&quot;*__proto__*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3507-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3507-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2019-10744&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3507-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2019-10744&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3507-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3507-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3507-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3507-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2019-10744&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3507-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2019-10744&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="021c0dbd2e" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Snyk research team discovers severe prototype pollution security vulnerabilities</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="021c0dbd2e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3507-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3507-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3507-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk research team discovers severe prototype pollution security vulnerabilities
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3507-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Snyk research team discovers severe prototype pollution security vulnerabilities
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3507-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3507-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3507-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3507-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk research team discovers severe prototype pollution security vulnerabilities ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3507-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk research team discovers severe prototype pollution security vulnerabilities ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>

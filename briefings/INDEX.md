@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -51,7 +51,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vbulletin fixes critical pre auth rce flaw with public explo](./2026-07-28/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-explo.md)
 
 ## 2026-07-27
-- [arista patches velocloud orchestrator zero day exploited in ](./2026-07-27/arista-patches-velocloud-orchestrator-zero-day-exploited-in-.md)
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)

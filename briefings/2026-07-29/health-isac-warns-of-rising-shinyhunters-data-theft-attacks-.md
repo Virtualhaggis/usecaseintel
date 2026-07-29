@@ -11,15 +11,9 @@ By Lawrence Abrams
 July 29, 2026
 01:54 PM
 0 
-
-
 Health-ISAC, a cybersecurity information-sharing organization for the health sector, is warning healthcare and medical technology organizations of an observed increase in successful attacks by ShinyHunters.
-
-
 ShinyHunters is an extortion gang that primarily conducts supply chain and identity attacks to breach cloud SaaS and storage platforms in data theft attacks,
-
-
-Ov…
+Over the past …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -58,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Entra helpdesk password reset immediately followed by new MFA method registration (ShinyHunters ATO)
 
-`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### New attacker device registered/joined to Microsoft Entra ID
 
-`UC_1_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +79,7 @@ CloudAppEvents
 
 ### Suspicious OAuth application consent granting broad scopes (ShinyHunters DataLoader-style persistence)
 
-`UC_1_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +99,7 @@ CloudAppEvents
 
 ### Bulk M365 / SharePoint / OneDrive file download by a single identity (cloud data theft)
 
-`UC_1_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +125,7 @@ CloudAppEvents
 
 ### SSO application-access burst — one identity authenticating to many distinct SaaS apps in a short window
 
-`UC_1_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

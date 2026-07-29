@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### VMware VMSA-2026-0006 exposure: hosts vulnerable to critical vCenter/ESX/Workstation CVEs
 
-`UC_7_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_8_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

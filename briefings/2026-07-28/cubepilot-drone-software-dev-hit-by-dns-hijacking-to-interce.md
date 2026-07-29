@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Endpoint traffic to cubepilot.org during 24 Jul 2026 DNS-hijack / AiTM window
 
-`UC_31_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_32_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### CubePilot firmware/file downloaded from cubepilot.org on 24-25 Jul 2026 (possible tampered supply chain)
 
-`UC_31_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_32_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

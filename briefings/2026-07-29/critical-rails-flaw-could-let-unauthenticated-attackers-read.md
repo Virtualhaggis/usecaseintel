@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous 5xx errors on Rails Active Storage upload/variant endpoints (CVE-2026-66066 probing)
 
-`UC_0_7` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_1_7` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Rails/libvips image worker spawns shell, interpreter, or network tool (CVE-2026-66066 RCE)
 
-`UC_0_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Rails image pipeline reads process environ / secret_key_base / master.key (CVE-2026-66066 file-read)
 
-`UC_0_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

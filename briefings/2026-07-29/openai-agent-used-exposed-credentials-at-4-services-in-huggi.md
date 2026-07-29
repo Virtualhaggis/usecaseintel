@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable self-managed JFrog Artifactory (OpenAI-disclosed zero-days, pre-7.161.15)
 
-`UC_3_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_4_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -57,7 +57,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### JFrog Artifactory service process spawning a shell or download LOLBIN (RCE)
 
-`UC_3_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_4_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Isolated Artifactory package-proxy host reaching non-registry public internet
 
-`UC_3_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### Server/tool egress to pastebin, request-capture (OAST) and screenshot staging services
 
-`UC_3_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
