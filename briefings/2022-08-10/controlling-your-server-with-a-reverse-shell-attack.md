@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Bash reverse shell via /dev/tcp file-descriptor redirection
 
-`UC_2074_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2073_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### Interactive shell process initiating outbound network connection (reverse-shell C2)
 
-`UC_2074_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2073_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### Server application runtime spawning shell with /dev/tcp redirection (RCE to reverse shell)
 
-`UC_2074_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2073_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Controlling your server with a reverse shell attack
 
-`UC_2074_1` · phase: **exploit** · confidence: **High**
+`UC_2073_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
