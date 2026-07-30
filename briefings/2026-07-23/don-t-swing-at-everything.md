@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### msaRAT: MSI impersonating Windows update executed from ProgramData
 
-`UC_106_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_107_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### msaRAT: curl.exe downloading MSI payload into ProgramData
 
-`UC_106_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_107_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### msaRAT: Headless Chrome/Edge launched with remote-debugging (CDP abuse)
 
-`UC_106_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_107_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### msaRAT: Connection to Chaos delivery IP / workers.dev signaling relay
 
-`UC_106_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_107_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceNetworkEvents
 
 ### msaRAT: Headless browser initiating WebRTC STUN/TURN egress
 
-`UC_106_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_107_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -308,7 +308,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Don’t swing at everything
 
-`UC_106_8` · phase: **exploit** · confidence: **High**
+`UC_107_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

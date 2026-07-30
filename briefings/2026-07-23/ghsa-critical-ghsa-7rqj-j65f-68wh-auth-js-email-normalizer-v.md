@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-7rqj-j65f-68wh: Auth.js: Email normalizer validates the a
 
-`UC_110_0` · phase: **exploit** · confidence: **High**
+`UC_111_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

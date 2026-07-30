@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Auth.js server-configuration error reaching production (fail-open precondition)
 
-`UC_109_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_110_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ index=* ("[auth][error]" OR "InvalidEndpoints" OR "MissingSecret" OR "There was 
 
 ### Auth.js fail-open exploited: protected routes served 200/302 during an active auth-error window
 
-`UC_109_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_110_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ index=* ("[auth][error]" OR "InvalidEndpoints" OR "MissingSecret" OR "There was 
 
 ### Auth.js config break on deploy: first-ever [auth][error] on a previously-healthy host
 
-`UC_109_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_110_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ index=* "[auth][error]" earliest=-1d
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
 
-`UC_109_0` · phase: **exploit** · confidence: **High**
+`UC_110_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

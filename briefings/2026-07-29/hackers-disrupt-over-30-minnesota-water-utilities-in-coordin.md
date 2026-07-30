@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound OT-segment connections from CyberAv3ngers infrastructure (185.82.73.160/28, 135.136.1.133)
 
-`UC_15_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_18_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### Internet-sourced access to OT/ICS PLCs on EtherNet/IP, Modbus & S7comm ports
 
-`UC_15_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_18_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Vulnerable Rockwell/Allen-Bradley MicroLogix PLCs exposed to campaign CVEs
 
-`UC_15_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_18_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -89,7 +89,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Coordinated fan-out from CyberAv3ngers infrastructure across multiple OT sites
 
-`UC_15_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_18_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
