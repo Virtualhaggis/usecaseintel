@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### InsureTrap malvertising: Google Ads referrer landing on free-hosting insurance phish
 
-`UC_77_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_82_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### InsureOTP kit exfiltration: browser connecting to api.telegram.org Bot API
 
-`UC_77_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_82_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

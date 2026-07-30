@@ -10,9 +10,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-30
 - [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
+- [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
 - [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
+- [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
+- [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
+- [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
 
 ## 2026-07-29
@@ -101,8 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa rjg6 39jm rgg4 better auth scim account t](./2026-07-24/ghsa-critical-ghsa-rjg6-39jm-rgg4-better-auth-scim-account-t.md)
 - [ghsa critical ghsa w28w gp39 m4p6 prompty server side templa](./2026-07-24/ghsa-critical-ghsa-w28w-gp39-m4p6-prompty-server-side-templa.md)
 - [ghsa critical ghsa w4hw qcx7 56pr shescape shell injection v](./2026-07-24/ghsa-critical-ghsa-w4hw-qcx7-56pr-shescape-shell-injection-v.md)
-- [golden chickens resurfaces with four new malware families an](./2026-07-24/golden-chickens-resurfaces-with-four-new-malware-families-an.md)
-- [hacker runs hermes ai agent unattended for post exploitation](./2026-07-24/hacker-runs-hermes-ai-agent-unattended-for-post-exploitation.md)
 
 ## 2026-07-23
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
@@ -261,7 +263,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
 
 ## 2026-07-03
-- [armored likho digging a snake pit inside the covert busysnak](./2026-07-03/armored-likho-digging-a-snake-pit-inside-the-covert-busysnak.md)
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
 - [cyber readiness for smbs getting the basics right](./2026-07-03/cyber-readiness-for-smbs-getting-the-basics-right.md)
 
@@ -357,7 +358,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
-- [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 
 ## 2026-06-14

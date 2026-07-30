@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### wp2shell SQLi via author__not_in REST parameter (CVE-2026-60137)
 
-`UC_119_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_122_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress web-server/PHP process spawning a shell (wp2shell RCE)
 
-`UC_119_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_122_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Malicious PHP plugin/webshell dropped in wp-content by web server (wp2shell)
 
-`UC_119_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_122_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
