@@ -1,23 +1,37 @@
-# [CRIT] Certighost Exploit Lets Low-Privileged Active Directory Users Impersonate a Domain Controller
+# [CRIT] ThreatsDay: AI-Powered Hacking, 370 Chrome Flaws, SonicWall Attacks, DNS Hijacking + 22 More Stories
 
 **Source:** The Hacker News
-**Published:** 2026-07-24
-**Article:** https://thehackernews.com/2026/07/certighost-exploit-lets-low-privileged.html
+**Published:** 2026-07-30
+**Article:** https://thehackernews.com/2026/07/threatsday-ai-powered-hacking-370.html
 
 ## Threat Profile
 
-Certighost Exploit Lets Low-Privileged Active Directory Users Impersonate a Domain Controller 
- Swati Khandelwal  Jul 24, 2026 Vulnerability / Enterprise Security 
-Researchers H0j3n and Aniq Fakhrul published a working exploit on July 24 that lets a low-privileged Active Directory user obtain a certificate for a Domain Controller and authenticate as that machine.
-They codenamed the flaw Certighost . Because Domain Controller accounts carry directory replication rights, the resulting Kerberos c…
+ThreatsDay: AI-Powered Hacking, 370 Chrome Flaws, SonicWall Attacks, DNS Hijacking + 22 More Stories 
+ Ravie Lakshmanan  Jul 30, 2026 Hacking News / Cybersecurity News 
+A lot of security still comes down to trusting the wrong screen.
+This week, that screen might be a login page, an install guide, a recruiter call, or a familiar service behaving slightly wrong. Behind it: reused credentials, exposed systems, quiet loaders, abused trust, and exploit paths that should have been harder.
+Some defen…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-54121`
-- **Domain (defanged):** `abc.local`
+- **CVE:** `CVE-2026-33017`
+- **CVE:** `CVE-2026-21858`
+- **CVE:** `CVE-2025-68613`
+- **CVE:** `CVE-2026-3055`
+- **CVE:** `CVE-2026-34486`
+- **CVE:** `CVE-2026-39987`
+- **CVE:** `CVE-2026-0300`
+- **CVE:** `CVE-2026-33824`
+- **CVE:** `CVE-2026-17650`
+- **CVE:** `CVE-2026-17656`
+- **CVE:** `CVE-2026-50522`
+- **Domain (defanged):** `cubepilot.org`
 
 ## MITRE ATT&CK Techniques
 
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -29,20 +43,14 @@ They codenamed the flaw Certighost . Because Domain Controller accounts carry di
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
+- **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
-- **T1136.002** — Create Account: Domain Account
-- **T1649** — Steal or Forge Authentication Certificates
-- **T1557** — Adversary-in-the-Middle
-- **T1550.003** — Use Alternate Authentication Material: Pass the Ticket
-- **T1003.006** — OS Credential Dumping: DCSync
 
 ## Kill chain phases observed
 
@@ -50,88 +58,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Certighost precursor: domain computer account created by low-privileged user (MAQ abuse)
+### Beaconing — periodic outbound to small set of destinations
 
-`UC_112_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.action=created AND All_Changes.user!="*$" AND All_Changes.user!="SYSTEM" by All_Changes.dest All_Changes.user All_Changes.object All_Changes.result
-| `drop_dm_object_name(All_Changes)`
-| where like(object,"%$")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-IdentityDirectoryEvents
-| where Timestamp > ago(7d)
-| where ActionType == "Computer account created" or ActionType == "Account created"
-| where AccountName !endswith "$"
-| where AccountName !in~ ("system","local service","network service")
-| project Timestamp, Creator = AccountName, CreatorDomain = AccountDomain, NewComputerAccount = TargetAccountUpn, DeviceName, AdditionalFields
-| order by Timestamp desc
-```
-
-### AD CS CA server initiates SMB(445)+LDAP(389) to a non-DC host (Certighost chase relay)
-
-`UC_112_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(All_Traffic.dest_port) as dest_ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (389,445) AND All_Traffic.dest_category!="domain_controller" by All_Traffic.src All_Traffic.dest
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
 | `drop_dm_object_name(All_Traffic)`
-| where mvcount(mvfilter(match(dest_ports,"^389$")))>0 AND mvcount(mvfilter(match(dest_ports,"^445$")))>0
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let lookback = 1d;
-let KnownLdapServers = DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where RemotePort == 389
-    | summarize by RemoteIP;   // established LDAP servers approximate real DCs
 DeviceNetworkEvents
-| where Timestamp > ago(lookback)
-| where RemotePort in (389, 445)
-| where RemoteIPType == "Private"
-| summarize Ports = make_set(RemotePort), FirstSeen = min(Timestamp), ConnCount = count(),
-            InitProc = make_set(InitiatingProcessFileName)
-        by DeviceName, RemoteIP
-| where set_has_element(Ports, 389) and set_has_element(Ports, 445)   // CA reached rogue host on LDAP + SMB
-| join kind=leftanti KnownLdapServers on RemoteIP                     // drop established DCs
-| order by FirstSeen desc
-```
-
-### Domain Controller machine account obtains TGT via PKINIT certificate (Certighost impersonation)
-
-`UC_112_15` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`wineventlog_security` EventCode=4768 Target_User_Name="*$" Certificate_Serial_Number=* Certificate_Serial_Number!="-"
-| stats min(_time) as firstTime max(_time) as lastTime count by dvc Target_User_Name Certificate_Issuer_Name Certificate_Serial_Number src_ip
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-### Directory replication / DCSync of secrets (krbtgt) via impersonated DC identity
-
-`UC_112_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`wineventlog_security` EventCode=4662 (Properties="*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*" OR Properties="*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*" OR Properties="*89e95b76-444d-4c62-991a-0facbeda640c*")
-| stats min(_time) as firstTime max(_time) as lastTime count by dvc Account_Name Object_Name
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-IdentityDirectoryEvents
-| where Timestamp > ago(7d)
-| where ActionType == "Directory Services replication"
-| project Timestamp, Requestor = AccountName, RequestorDomain = AccountDomain, TargetDC = DestinationDeviceName, SourceIp = IPAddress, DeviceName, AdditionalFields
-| order by Timestamp desc
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
 ```
 
 ### Suspicious browser extension installation
@@ -336,31 +295,57 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
+### Remote service execution — PsExec / SMB lateral movement
 
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -422,16 +407,17 @@ DeviceEvents
 | order by Timestamp desc
 ```
 
-### Remote service execution — PsExec / SMB lateral movement
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
@@ -441,10 +427,11 @@ DeviceEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -471,66 +458,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Certighost Exploit Lets Low-Privileged Active Directory Users Impersonate a Doma
-
-`UC_112_12` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — Certighost Exploit Lets Low-Privileged Active Directory Users Impersonate a Doma ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("certpdef.dll"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("certpdef.dll"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — Certighost Exploit Lets Low-Privileged Active Directory Users Impersonate a Doma
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("certpdef.dll"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("certpdef.dll"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-54121`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `abc.local`
+  - IP / domain IOC(s): `cubepilot.org`
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-34486`, `CVE-2026-39987`, `CVE-2026-0300`, `CVE-2026-33824` _(+3 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

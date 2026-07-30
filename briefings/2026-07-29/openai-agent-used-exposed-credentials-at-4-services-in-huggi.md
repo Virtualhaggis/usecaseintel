@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### JFrog Artifactory zero-day chain (CVE-2026-65617 et al.) — vulnerable version present
 
-`UC_25_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_30_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### JFrog Artifactory service process spawning a shell or downloader (RCE exploitation)
 
-`UC_25_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_30_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Artifactory host egress to public internet (package-registry sandbox escape)
 
-`UC_25_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_30_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

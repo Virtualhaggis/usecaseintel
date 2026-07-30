@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2611 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2610 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -20,12 +20,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
 - [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
+- [microsoft teams vishing attacks lead to chaos ransomware att](./2026-07-30/microsoft-teams-vishing-attacks-lead-to-chaos-ransomware-att.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
+- [shinyhunters claims brinks home breach threatens to leak sto](./2026-07-30/shinyhunters-claims-brinks-home-breach-threatens-to-leak-sto.md)
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [the network has become the control plane for ai security](./2026-07-30/the-network-has-become-the-control-plane-for-ai-security.md)
+- [threatsday ai powered hacking 370 chrome flaws sonicwall att](./2026-07-30/threatsday-ai-powered-hacking-370-chrome-flaws-sonicwall-att.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
+- [what s new in microsoft security july 2026](./2026-07-30/what-s-new-in-microsoft-security-july-2026.md)
 
 ## 2026-07-29
 - [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
@@ -53,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
 - [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
-- [cisa shares advice on isolating vital systems during cyberat](./2026-07-28/cisa-shares-advice-on-isolating-vital-systems-during-cyberat.md)
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
 - [cubepilot drone software dev hit by dns hijacking to interce](./2026-07-28/cubepilot-drone-software-dev-hit-by-dns-hijacking-to-interce.md)
@@ -65,11 +68,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
-- [openai models used artifactory zero days to escape to the in](./2026-07-28/openai-models-used-artifactory-zero-days-to-escape-to-the-in.md)
 - [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
 - [the generator can t be the validator what openai s hugging f](./2026-07-28/the-generator-can-t-be-the-validator-what-openai-s-hugging-f.md)
-- [vbulletin fixes critical pre auth rce flaw with public explo](./2026-07-28/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-explo.md)
 
 ## 2026-07-27
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
@@ -95,7 +96,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-24
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
-- [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
 - [ghsa critical cve 2026 59865 microsoft kiota command injecti](./2026-07-24/ghsa-critical-cve-2026-59865-microsoft-kiota-command-injecti.md)
 - [ghsa critical cve 2026 59940 seroval seroval fromjson promis](./2026-07-24/ghsa-critical-cve-2026-59940-seroval-seroval-fromjson-promis.md)
@@ -183,7 +183,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
 - [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
-- [turning threat intelligence into decisive action with defend](./2026-07-15/turning-threat-intelligence-into-decisive-action-with-defend.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
 
 ## 2026-07-14

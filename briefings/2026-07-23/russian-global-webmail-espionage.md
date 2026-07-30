@@ -83,7 +83,7 @@ _(none detected from narrative keywords)_
 
 ### CL-STA-1114 (Void Blizzard) Zimbra espionage C2/exfil infrastructure contact
 
-`UC_119_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_120_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceNetworkEvents
 
 ### Inbound HTML-attachment lure exploiting Zimbra XSS (CVE-2025-66376)
 
-`UC_119_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_120_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -125,7 +125,7 @@ EmailAttachmentInfo
 
 ### Browser-initiated webmail data exfiltration to CL-STA-1114 C2
 
-`UC_119_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_120_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceNetworkEvents
 
 ### Unpatched Zimbra Collaboration exposed to CVE-2025-66376 (Void Blizzard target)
 
-`UC_119_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_120_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

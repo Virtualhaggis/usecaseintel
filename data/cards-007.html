@@ -1,309 +1,3 @@
-<article class="card" id="art-180" data-art-slug="2026-07-14-ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver"
-  data-phases="actions,c2,exploit,install" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="vcs,windows"
-  data-uc-count="3" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] GHSA-hgjx-r89m-m7v4: FacturaScripts: Path traversal in UploadedFile::move() via getClientOriginalName() — arbitrary file write outside MyFiles/ leading to   RCE FacturaScripts: Path traversal in UploadedFile::move() via getClientOriginalName() — arbitrary file write outside MyFiles/ leading to   RCE  T1190 [LLM] FacturaScripts upload endpoint: path-traversal sequence in multipart filename [LLM] FacturaScripts: PHP/.htaccess web-shell written into web-served Dinamic/Assets or node_modules [LLM] FacturaScripts RCE chain: .htaccess handler-remap override plus payload drop in same asset dir">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-14-ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-hgjx-r89m-m7v4" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-hgjx-r89m-m7v4: FacturaScripts: Path traversal in UploadedFile::move() via getClientOriginalName() — arbitrary file write outside MyFiles/ leading to   RCE</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-14</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">FacturaScripts: Path traversal in UploadedFile::move() via getClientOriginalName() — arbitrary file write outside MyFiles/ leading to   RCE</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-180-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-180"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-180-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FacturaScripts upload endpoint: path-traversal sequence in multipart filename · [LLM] FacturaScripts RCE chain: .htaccess handler-remap override plus payload drop in same asset dir</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] FacturaScripts: PHP/.htaccess web-shell written into web-served Dinamic/Assets or node_modules</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="650e145343" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">FacturaScripts upload endpoint: path-traversal sequence in multipart filename</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="650e145343" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts authenticated POSTs to FacturaScripts /api/3/uploadfiles or /api/3/attachedfiles where the request carries directory-traversal sequences (../, ..%2f, ..%5c) — the article&#x27;s exact primitive for escaping MyFiles/ via the unsanitized getClientOriginalName() filename. Article-specific because legitimate FacturaScripts uploads never contain traversal syntax in the client filename.
-
-Rationale: Uses the article&#x27;s named sinks (/api/3/uploadfiles, /api/3/attachedfiles) plus the ../ traversal signature that escapes MyFiles/. Note the traversal lives in the multipart Content-Disposition filename, not the URL — reliable only where a WAF/proxy inspects the body (CommonSecurityLog) or access logs capture request bodies; hence the companion file-write UCs. Defender XDR has no web-access-log table, so defender_kql is intentionally empty.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-hgjx-r89m-m7v4
-  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-27891/
-  • https://github.com/advisories/GHSA-vf3q-frmr-vrr9</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanner (Nessus/Burp/Acunetix) probing the FacturaScripts upload endpoints with traversal payloads</li><li>Authorized pentest engagement replaying this exact GHSA PoC</li><li>WAF false-positive matching literal &#x27;..&#x27; in a benign filename such as &#x27;report..final.pdf&#x27;</li><li>Backup/sync tooling posting archive paths containing relative segments</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where user!=&quot;&quot; and NOT match(coalesce(http_user_agent,&quot;&quot;),&quot;(?i)(nessus|acunetix|nuclei|burp|zgrab|nmap)&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request for the alerting SourceIP — confirm the multipart filename contains ../ and identify the authenticated user/API token; check the HTTP response code (2xx = write likely succeeded). 2) Contain: revoke the offending API token/session and block the SourceIP at the WAF; snapshot Dinamic/Assets/ and node_modules/ for forensics before cleanup. 3) Hunt: pivot to the file-write and .htaccess-chain UCs on the same host/time window; enumerate any .php/.phtml/.htaccess written under Dinamic/Assets or node_modules and any subsequent GET to those paths returning PHP-executed output.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-180-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-180-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-180-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-180-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestMethod == &quot;POST&quot;
-| where RequestURL has_any (&quot;uploadfiles&quot;,&quot;attachedfiles&quot;) or Message has_any (&quot;uploadfiles&quot;,&quot;attachedfiles&quot;)
-| where RequestURL has_any (&quot;../&quot;,&quot;..%2f&quot;,&quot;..%5c&quot;,&quot;..\\&quot;) or Message has_any (&quot;../&quot;,&quot;..%2f&quot;,&quot;..%5c&quot;,&quot;Path Traversal&quot;,&quot;directory traversal&quot;)
-| project TimeGenerated, SourceIP, DestinationIP, DestinationHostName, RequestURL, RequestMethod, RequestClientApplication, Message, DeviceVendor, DeviceProduct
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-180-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: FacturaScripts upload endpoint path-traversal filename
-id: 3f6b1c9e-2a44-4d7b-9f2a-6d1e8c0a7b21
-description: Detects POST to FacturaScripts uploadfiles/attachedfiles endpoints carrying directory-traversal sequences (GHSA-hgjx-r89m-m7v4).
-references:
-  - https://github.com/advisories/GHSA-hgjx-r89m-m7v4
-author: SOC Detection Engineering
-date: 2026/07/15
-tags:
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection_endpoint:
-    cs-method: POST
-    cs-uri-stem|contains:
-      - &#x27;/api/3/uploadfiles&#x27;
-      - &#x27;/api/3/attachedfiles&#x27;
-  selection_traversal:
-    c-uri|contains:
-      - &#x27;../&#x27;
-      - &#x27;..%2f&#x27;
-      - &#x27;..%5c&#x27;
-  condition: selection_endpoint and selection_traversal
-level: high</code></pre></div>
-    <div class="tab-content" id="art-180-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-180-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-180-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-180-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url=&quot;*uploadfiles*&quot; OR Web.url=&quot;*attachedfiles*&quot; OR Web.uri_path=&quot;*uploadfiles*&quot; OR Web.uri_path=&quot;*attachedfiles*&quot;) by Web.src Web.dest Web.url Web.uri_path Web.http_method Web.status Web.http_user_agent Web.user
-| `drop_dm_object_name(Web)`
-| where match(url,&quot;(?i)(\.\./|\.\.%2f|\.\.%5c|\.\.\\)&quot;) OR match(uri_path,&quot;(?i)(\.\./|\.\.%2f)&quot;)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-180-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url=&quot;*uploadfiles*&quot; OR Web.url=&quot;*attachedfiles*&quot; OR Web.uri_path=&quot;*uploadfiles*&quot; OR Web.uri_path=&quot;*attachedfiles*&quot;) by Web.src Web.dest Web.url Web.uri_path Web.http_method Web.status Web.http_user_agent Web.user
-| `drop_dm_object_name(Web)`
-| where match(url,&quot;(?i)(\.\./|\.\.%2f|\.\.%5c|\.\.\\)&quot;) OR match(uri_path,&quot;(?i)(\.\./|\.\.%2f)&quot;)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="dad1f98579" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">FacturaScripts: PHP/.htaccess web-shell written into web-served Dinamic/Assets or node_modules</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="dad1f98579" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the file-write outcome of the traversal: the web-server user creating a PHP-family file or an .htaccess override inside Dinamic/Assets/ or node_modules/ — the two directories the shipped htaccess-sample excludes from index.php rewriting, so Apache serves them directly. These paths should never receive attacker-controlled executable content in normal operation.
-
-Rationale: Anchors on the article&#x27;s exact web-served directories (Dinamic/Assets, node_modules) combined with the BLOCKED_EXTENSIONS-bypassing extensions (.htaccess plus php-family) and a web-server initiating process. A PHP or .htaccess file appearing in these asset dirs written by httpd/php/nginx is the traversal primitive landing on disk.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-hgjx-r89m-m7v4
-  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-27891/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate FacturaScripts plugin install/update writing bundled PHP assets into Dinamic/</li><li>npm install/build repopulating node_modules with vendored .php or .htaccess sample files</li><li>Deployment/CI pipeline syncing application code into the web root</li><li>Developer manually copying a debugging PHP file into an assets folder</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;git.exe&quot;,&quot;msiexec.exe&quot;) or InitiatingProcessCommandLine has_any (&quot;npm install&quot;,&quot;composer install&quot;,&quot;git checkout&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the written file&#x27;s content and hash (SHA256) — confirm it is PHP code or an AddType/AddHandler .htaccess rather than a benign asset; note the InitiatingProcess and account. 2) Contain: quarantine/delete the file, take the web app offline or drop a Deny-from-all rule over Dinamic/Assets, and rotate the web-server user&#x27;s credentials/API tokens. 3) Hunt: correlate with the upload-endpoint UC for the originating request, look for a second dropped payload plus subsequent inbound GETs to the file path, and scan the whole web root for other newly-created php/htaccess files by the same process.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-180-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-180-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-180-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-180-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-180-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-180-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-180-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (FolderPath has &quot;Dinamic&quot; and FolderPath has &quot;Assets&quot;) or FolderPath has &quot;node_modules&quot;
-| extend Ext = tolower(tostring(split(FileName, &quot;.&quot;)[-1]))
-| where Ext in (&quot;php&quot;,&quot;php3&quot;,&quot;php4&quot;,&quot;php5&quot;,&quot;php7&quot;,&quot;php8&quot;,&quot;pht&quot;,&quot;phtml&quot;,&quot;phps&quot;,&quot;phar&quot;,&quot;htaccess&quot;)
-| where InitiatingProcessFileName in~ (&quot;httpd.exe&quot;,&quot;apache.exe&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;nginx.exe&quot;,&quot;caddy.exe&quot;)
-| project Timestamp, DeviceName, FolderPath, FileName, Ext, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-180-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (TargetFilePath has &quot;Dinamic&quot; and TargetFilePath has &quot;Assets&quot;) or TargetFilePath has &quot;node_modules&quot;
-| extend Ext = tolower(tostring(split(TargetFileName, &quot;.&quot;)[-1]))
-| where Ext in (&quot;php&quot;,&quot;php3&quot;,&quot;php4&quot;,&quot;php5&quot;,&quot;php7&quot;,&quot;php8&quot;,&quot;pht&quot;,&quot;phtml&quot;,&quot;phps&quot;,&quot;phar&quot;,&quot;htaccess&quot;)
-| where ActingProcessName has_any (&quot;httpd&quot;,&quot;apache&quot;,&quot;php&quot;,&quot;w3wp&quot;,&quot;nginx&quot;,&quot;caddy&quot;)
-| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, Ext, ActingProcessName, ActingProcessCommandLine, ActorUsername
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-180-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: FacturaScripts web-shell or htaccess override in web-served asset directory
-id: b1c72e40-8d0f-4a1e-9b6c-2f3a5d914e77
-description: Detects PHP-family or .htaccess file creation under Dinamic/Assets or node_modules, the directories Apache serves directly per FacturaScripts htaccess-sample (GHSA-hgjx-r89m-m7v4).
-references:
-  - https://github.com/advisories/GHSA-hgjx-r89m-m7v4
-author: SOC Detection Engineering
-date: 2026/07/15
-tags:
-  - attack.t1505.003
-  - attack.t1190
-logsource:
-  category: file_event
-detection:
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;Dinamic/Assets/&#x27;
-      - &#x27;Dinamic\Assets\&#x27;
-      - &#x27;node_modules/&#x27;
-      - &#x27;node_modules\&#x27;
-  selection_ext:
-    TargetFilename|endswith:
-      - &#x27;.php&#x27;
-      - &#x27;.php3&#x27;
-      - &#x27;.php5&#x27;
-      - &#x27;.php7&#x27;
-      - &#x27;.php8&#x27;
-      - &#x27;.pht&#x27;
-      - &#x27;.phtml&#x27;
-      - &#x27;.phps&#x27;
-      - &#x27;.phar&#x27;
-      - &#x27;.htaccess&#x27;
-  condition: selection_path and selection_ext
-level: high</code></pre></div>
-    <div class="tab-content" id="art-180-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*Dinamic*Assets* OR *dinamic*assets* OR *DINAMIC*ASSETS*) OR @TargetFilename:(*node_modules* OR *NODE_MODULES*)) @TargetFilename:(*.php OR *.PHP OR *.php5 OR *.php7 OR *.phtml OR *.PHTML OR *.phar OR *.pht OR *.phps OR *.htaccess OR *.HTACCESS)</code></pre></div>
-    <div class="tab-content" id="art-180-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| TargetFileName=/(Dinamic[\/\\]Assets|node_modules)/i
-| TargetFileName=/\.(php[345678]?|pht|phtml|phps|phar|htaccess)$/i
-| ContextImageFileName=/(httpd|apache2?|php(-cgi|-fpm)?|nginx|caddy|w3wp)(\.exe)?$/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-180-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-180-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-180-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-180-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*Dinamic*Assets*&quot; OR Filesystem.file_path=&quot;*node_modules*&quot;) (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.php3&quot; OR Filesystem.file_name=&quot;*.php5&quot; OR Filesystem.file_name=&quot;*.php7&quot; OR Filesystem.file_name=&quot;*.php8&quot; OR Filesystem.file_name=&quot;*.pht&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.phps&quot; OR Filesystem.file_name=&quot;*.phar&quot; OR Filesystem.file_name=&quot;*.htaccess&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-180-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*Dinamic*Assets*&quot; OR Filesystem.file_path=&quot;*node_modules*&quot;) (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.php3&quot; OR Filesystem.file_name=&quot;*.php5&quot; OR Filesystem.file_name=&quot;*.php7&quot; OR Filesystem.file_name=&quot;*.php8&quot; OR Filesystem.file_name=&quot;*.pht&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.phps&quot; OR Filesystem.file_name=&quot;*.phar&quot; OR Filesystem.file_name=&quot;*.htaccess&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="acf982e594" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">FacturaScripts RCE chain: .htaccess handler-remap override plus payload drop in same asset dir</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="acf982e594" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the article&#x27;s Step-3 code-execution chain on the endpoint: an attacker-written .htaccess (remapping a benign extension to the PHP handler) landing in Dinamic/Assets or node_modules, immediately followed by a second file (the payload) in the same web-served directory. The .htaccess override in these Apache-direct-served folders is essentially never legitimate and is the linchpin that turns arbitrary write into RCE.
-
-Rationale: Chains the two writes the advisory&#x27;s Step 3 spells out (upload .htaccess with AddType application/x-httpd-php, then upload x.png payload) into a single temporal correlation within a web-served asset dir — far higher fidelity than either write alone. The Falcon variant isolates the .htaccess override linchpin that uniquely enables the extension remap.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-hgjx-r89m-m7v4
-  • https://github.com/advisories/GHSA-vf3q-frmr-vrr9</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Application deployment that ships both an .htaccess and bundled assets into node_modules within the same window</li><li>FacturaScripts/plugin installer laying down a directory-level .htaccess alongside static files</li><li>CI artifact extraction writing an .htaccess and multiple assets together</li><li>Admin manually hardening an asset directory by dropping a Deny .htaccess next to existing files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (HtProc in~ (&quot;node.exe&quot;,&quot;npm.exe&quot;,&quot;git.exe&quot;) or PayloadFile endswith &quot;.map&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the .htaccess contents (look for AddType/AddHandler/SetHandler mapping a non-PHP extension to php) and inspect the paired payload file for PHP code; capture the initiating web-server account. 2) Contain: delete both files, take the site offline or override the directory with Deny-from-all, and rotate the web-server user credentials and any upload-capable API tokens. 3) Hunt: review web logs for inbound GETs to the payload path (successful RCE trigger), check for outbound C2 from the web-server process, and sweep the entire document root for other .htaccess overrides written by the same process.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-180-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-180-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-180-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-180-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-180-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let win = 2m;
-let webdirs = DeviceFileEvents
-    | where Timestamp &gt; ago(7d)
-    | where (FolderPath has &quot;Dinamic&quot; and FolderPath has &quot;Assets&quot;) or FolderPath has &quot;node_modules&quot;
-    | where InitiatingProcessFileName in~ (&quot;httpd.exe&quot;,&quot;apache.exe&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;nginx.exe&quot;,&quot;caddy.exe&quot;);
-let htaccess = webdirs
-    | where FileName =~ &quot;.htaccess&quot;
-    | project DeviceName, HtTime = Timestamp, HtFolder = FolderPath, HtProc = InitiatingProcessFileName;
-webdirs
-| where FileName !~ &quot;.htaccess&quot;
-| join kind=inner htaccess on DeviceName
-| where Timestamp between (HtTime - win .. HtTime + win)
-| project DeviceName, HtTime, HtFolder, HtProc, PayloadTime = Timestamp, PayloadFile = FileName, PayloadFolder = FolderPath, InitiatingProcessFileName, InitiatingProcessAccountName
-| order by HtTime desc</code></pre></div>
-    <div class="tab-content" id="art-180-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 2m;
-let webdirs = ImFileEvent
-    | where TimeGenerated &gt; ago(7d)
-    | where (TargetFilePath has &quot;Dinamic&quot; and TargetFilePath has &quot;Assets&quot;) or TargetFilePath has &quot;node_modules&quot;
-    | where ActingProcessName has_any (&quot;httpd&quot;,&quot;apache&quot;,&quot;php&quot;,&quot;w3wp&quot;,&quot;nginx&quot;,&quot;caddy&quot;);
-let htaccess = webdirs
-    | where TargetFileName =~ &quot;.htaccess&quot;
-    | project DvcHostname, HtTime = TimeGenerated, HtFolder = TargetFilePath;
-webdirs
-| where TargetFileName !~ &quot;.htaccess&quot;
-| join kind=inner htaccess on DvcHostname
-| where TimeGenerated between (HtTime - win .. HtTime + win)
-| project DvcHostname, HtTime, HtFolder, PayloadTime = TimeGenerated, PayloadFile = TargetFileName, PayloadFolder = TargetFilePath, ActingProcessName, ActorUsername
-| sort by HtTime desc</code></pre></div>
-    <div class="tab-content" id="art-180-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| TargetFileName=/(Dinamic[\/\\]Assets|node_modules)[\/\\]\.htaccess$/i
-| ContextImageFileName=/(httpd|apache2?|php(-cgi|-fpm)?|nginx|caddy|w3wp)(\.exe)?$/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-180-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-180-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-180-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-180-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*Dinamic*Assets*&quot; OR Filesystem.file_path=&quot;*node_modules*&quot;) by _time span=1s Filesystem.dest Filesystem.file_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| eval is_htaccess=if(match(file_name,&quot;(?i)\.htaccess$&quot;),1,0)
-| eval is_payload=if(match(file_name,&quot;(?i)\.(php[345678]?|pht|phtml|phps|phar|png|jpe?g|gif|txt)$&quot;),1,0)
-| bin _time span=2m
-| stats sum(is_htaccess) as htaccess_writes sum(is_payload) as payload_writes values(file_name) as files min(_time) as firstTime max(_time) as lastTime by dest _time
-| where htaccess_writes&gt;=1 AND payload_writes&gt;=1
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-180-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*Dinamic*Assets*&quot; OR Filesystem.file_path=&quot;*node_modules*&quot;) by _time span=1s Filesystem.dest Filesystem.file_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| eval is_htaccess=if(match(file_name,&quot;(?i)\.htaccess$&quot;),1,0)
-| eval is_payload=if(match(file_name,&quot;(?i)\.(php[345678]?|pht|phtml|phps|phar|png|jpe?g|gif|txt)$&quot;),1,0)
-| bin _time span=2m
-| stats sum(is_htaccess) as htaccess_writes sum(is_payload) as payload_writes values(file_name) as files min(_time) as firstTime max(_time) as lastTime by dest _time
-| where htaccess_writes&gt;=1 AND payload_writes&gt;=1
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-181" data-art-slug="2026-07-14-microsoft-patch-tuesday-for-july-2026-snort-rules-and-promin"
   data-phases="c2,exploit,install,recon" data-sev="high"
   data-techs="T1021.002,T1190"
@@ -12983,6 +12677,238 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-207" data-art-slug="2026-07-10-ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au"
+  data-phases="actions,c2,exploit,install" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] GHSA-g936-7jqj-mwv8: TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation   [LLM] TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests [LLM] TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process [LLM] TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-g936-7jqj-mwv8" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-g936-7jqj-mwv8: TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-10</span>
+    <span>3 use cases</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation</p>
+  
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-207-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-207"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-207-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests · [LLM] TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="2b6e743c24" data-platforms="datadog,sent,spl" data-targets="linux" open>
+  <summary>
+    <span class="uc-title">TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="2b6e743c24" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for TSDProxy&#x27;s internal management secret (x-tsdproxy-auth-token) appearing in HTTP requests reaching proxied backend services. When identityHeaders is enabled (the default in vulnerable builds &lt; 1.4.4-0.20260603142855-434819b4421e), the token is forwarded unconditionally to every upstream, exposing it to any compromised or malicious backend for later replay. Presence of this header at a backend IS the exposure indicator; after patching/sanitisation it should never appear.
+
+Rationale: Keys on the exact secret-bearing header string &#x27;x-tsdproxy-auth-token&#x27; named in the advisory; its arrival at any backend means the deployment is running the vulnerable unconditional-forwarding path. Defender/Falcon/CloudWatch left empty because HTTP request headers are not captured in EDR process/network telemetry — this must come from proxy/web/app logs. Cross-checked GitLab Advisory Database and CVEReports for GHSA-g936-7jqj-mwv8.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
+  • https://cvereports.com/reports/GHSA-G936-7JQJ-MWV8
+  • https://almeidapaulopt.github.io/tsdproxy/docs/advanced/tailscale/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Any vulnerable-but-unattacked TSDProxy deployment with identityHeaders=true will emit this header on ALL upstream requests — expected until patched or identityHeaders:false is set</li><li>Backends that intentionally log full request headers for debugging (e.g. a /debug/headers reflection endpoint) surface the value in benign traffic</li><li>Load-test or synthetic-monitoring traffic replaying captured requests that still contain the header</li><li>Log-forwarders duplicating the same request across multiple sourcetypes inflating counts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SyslogMessage !has &quot;/debug/headers&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the TSDProxy version and whether identityHeaders is enabled; if version &lt; 1.4.4-0.20260603142855-434819b4421e the header exposure is inherent, not necessarily active abuse. Identify which backend(s) received the token. Step 2 (contain): Set identityHeaders:false or upgrade to the patched pseudo-version that strips HeaderAuthToken; rotate the TSDProxy management token/process. Step 3 (hunt): Pivot to loopback connections to 127.0.0.1:8080 and any /api/v1/ management calls carrying a forged x-tsdproxy-id from the exposed backend to confirm whether the token was actually replayed.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-207-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-207-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-207-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-207-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where SyslogMessage has &quot;x-tsdproxy-auth-token&quot;
+| project TimeGenerated, Computer, ProcessName, HostIP, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-207-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;x-tsdproxy-auth-token&quot;</code></pre></div>
+    <div class="tab-content" id="art-207-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sourcetype=*tsdproxy* OR sourcetype=*syslog*) (&quot;x-tsdproxy-auth-token&quot; OR &quot;X-Tsdproxy-Auth-Token&quot;)
+| stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(dest) as backends values(src) as sources by host, sourcetype
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="40278f4e1b" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="40278f4e1b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects a backend/host process opening a connection to the TSDProxy management port (127.0.0.1:8080) when that process is not tsdproxy itself. This is the replay step of GHSA-g936-7jqj-mwv8: a compromised backend that captured x-tsdproxy-auth-token connects from localhost to the management API to impersonate an arbitrary Tailscale identity. Legitimate management traffic arrives over the tailnet, not loopback from a non-proxy binary.
+
+Rationale: Uses the exact management endpoint from the advisory&#x27;s repro (127.0.0.1:8080) plus exclusion of the legitimate tsdproxy binary — a loopback connection to that port from any other process is the concrete replay behaviour. Sentinel/Datadog/CloudWatch left empty: process-attributed loopback connections live in EDR (DeviceNetworkEvents/FDR/Sysmon), not in Sentinel&#x27;s ASIM network appliance tables or AWS CloudTrail. Corroborated via GitLab Advisory Database.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
+  • https://cvereports.com/reports/GHSA-G936-7JQJ-MWV8</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Local monitoring/health-check agents (curl, wget, blackbox_exporter) probing the management port on 127.0.0.1:8080 for liveness</li><li>An administrator using curl/httpie locally to query the management API for legitimate operations</li><li>Another service coincidentally bound to or reaching 8080 on loopback on a shared host</li><li>Container orchestrator readiness probes hitting the port over loopback in host-network mode</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;blackbox_exporter&quot;,&quot;kubelet&quot;) or InitiatingProcessCommandLine has &quot;x-tsdproxy-id&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the initiating process/binary and account; determine whether it is a known monitoring agent or an unexpected backend/shell process. Inspect the command line for /api/v1/ and x-tsdproxy-id references. Step 2 (contain): If the process is not sanctioned, isolate the host/container, kill the process, rotate the TSDProxy management token, and set identityHeaders:false or upgrade to the patched build. Step 3 (hunt): Correlate to web/access logs for /api/v1/ requests carrying a forged x-tsdproxy-id, and review the backend for the initial code-execution vector that enabled token capture.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-207-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-207-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-207-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-207-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-207-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-207-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;) and RemotePort == 8080
+| where isnotempty(InitiatingProcessFileName) and InitiatingProcessFileName !contains &quot;tsdproxy&quot;
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, LocalIP, RemoteIP, RemotePort
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-207-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;) and RemotePort == 8080
+| where isnotempty(InitiatingProcessFileName) and InitiatingProcessFileName !contains &quot;tsdproxy&quot;
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, LocalIP, RemoteIP, RemotePort
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-207-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: TSDProxy Management Port Loopback Connection From Non-Proxy Process
+id: b3f1a2c4-9d0e-4f21-8a6b-2c7e5d1f0a93
+status: experimental
+description: Detects a connection to the TSDProxy management port 127.0.0.1:8080 from a process other than tsdproxy, indicating replay of the forwarded x-tsdproxy-auth-token (GHSA-g936-7jqj-mwv8).
+references:
+  - https://github.com/advisories/GHSA-g936-7jqj-mwv8
+  - https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.privilege_escalation
+  - attack.t1550.001
+  - attack.t1068
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    DestinationIp:
+      - &#x27;127.0.0.1&#x27;
+      - &#x27;::1&#x27;
+    DestinationPort: 8080
+  filter_proxy:
+    Image|endswith: &#x27;/tsdproxy&#x27;
+  condition: selection and not filter_proxy
+level: high</code></pre></div>
+    <div class="tab-content" id="art-207-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^127\.0\.0\.1$/ RemotePort=8080
+| NOT ContextImageFileName=/tsdproxy/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-207-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-207-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-207-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-207-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;127.0.0.1&quot; All_Traffic.dest_port=8080 by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name, host
+| `drop_dm_object_name(All_Traffic)`
+| search NOT process_name IN (&quot;tsdproxy&quot;,&quot;tsdproxyd&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-207-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;127.0.0.1&quot; All_Traffic.dest_port=8080 by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name, host
+| `drop_dm_object_name(All_Traffic)`
+| search NOT process_name IN (&quot;tsdproxy&quot;,&quot;tsdproxyd&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="36d18e9f97" data-platforms="datadog,sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="36d18e9f97" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the privilege-escalation payload of GHSA-g936-7jqj-mwv8: an HTTP request to a TSDProxy management path (/api/v1/, e.g. /api/v1/proxies) that carries both the replayed x-tsdproxy-auth-token and an attacker-chosen x-tsdproxy-id. Because ResolveWhois trusts the x-tsdproxy-id header for any localhost caller presenting a valid token, this grants full management control (enumerate proxies, pause/restart services, trigger webhook SSRF).
+
+Rationale: Combines two article-specific strings — the forged identity header x-tsdproxy-id and the management path prefix /api/v1/ (advisory repro hits /api/v1/proxies) — so it fires on the actual escalation request rather than generic proxy traffic. Defender/Falcon/CloudWatch empty: request paths and custom headers are not in EDR or CloudTrail telemetry; only proxy/app HTTP logs carry them. Cross-checked GitLab Advisory Database and CVEReports.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
+  • https://cvereports.com/reports/GHSA-G936-7JQJ-MWV8</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate TSDProxy dashboard/admin operations that internally reference x-tsdproxy-id headers in verbose logs</li><li>Automation or IaC tooling calling /api/v1/ management endpoints during deployment with valid Tailscale identity</li><li>Security scanners/pentest tooling exercising the /api/v1/ surface during an authorised assessment</li><li>Debug logging that echoes request headers for all traffic, surfacing x-tsdproxy-id on benign requests</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Determine the source of the /api/v1/ call — was it a loopback caller (matching the replay pattern) and does the x-tsdproxy-id value differ from a real tailnet identity? Note which management operations were invoked (enumerate/pause/restart/webhook). Step 2 (contain): Rotate the management token, upgrade to the patched pseudo-version 1.4.4-0.20260603142855-434819b4421e or set identityHeaders:false, and review configured webhook URLs for SSRF abuse. Step 3 (hunt): Tie back to UC2 (loopback 127.0.0.1:8080) and UC1 (token leak at a backend) to reconstruct the full chain, and audit proxy config/webhook delivery logs for attacker-triggered actions.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-207-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-207-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-207-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-207-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where SyslogMessage has &quot;x-tsdproxy-id&quot; and SyslogMessage has &quot;/api/v1/&quot;
+| project TimeGenerated, Computer, ProcessName, HostIP, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-207-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;x-tsdproxy-id&quot; AND &quot;/api/v1/&quot;</code></pre></div>
+    <div class="tab-content" id="art-207-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sourcetype=*tsdproxy* OR sourcetype=*syslog*) &quot;x-tsdproxy-id&quot; (&quot;/api/v1/&quot; OR &quot;/api/v2/&quot;)
+| stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(src) as sources by host, sourcetype
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div>
   </div>
 </details></div>
 </article>

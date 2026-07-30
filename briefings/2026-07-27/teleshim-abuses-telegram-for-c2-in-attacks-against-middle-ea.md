@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### ISO-delivered signed RegSchdTask.exe executed from non-standard/removable path
 
-`UC_81_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_83_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### TELESHIM DLL side-load: RegSchdTask.exe loads rogue AsTaskSched.dll
 
-`UC_81_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_83_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceImageLoadEvents
 
 ### Telegram Bot API used for C2 by non-browser/non-messaging process
 
-`UC_81_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_83_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceNetworkEvents
 
 ### TELESHIM/MIXEDKEY sideload host binary beacons to Telegram (C2 + exfil)
 
-`UC_81_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_83_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### MIXEDKEY encrypted payload: .PCPKEY file dropped on disk
 
-`UC_81_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_83_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceFileEvents
 
 ### BINDCLOAK C2 beacon to cert.hypersnet.com / ssl.blsouqs.com
 
-`UC_81_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_83_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +178,7 @@ DeviceNetworkEvents
 
 ### TELESHIM/MIXEDKEY/BINDCLOAK known-bad file hash execution
 
-`UC_81_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_83_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -438,7 +438,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TELESHIM Abuses Telegram for C2 in Attacks Against Middle East Governments
 
-`UC_81_8` · phase: **exploit** · confidence: **High**
+`UC_83_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,15 +11,9 @@ By Bill Toulas
 July 30, 2026
 11:12 AM
 0 
-
-
 American semiconductor company Analog Devices announced that an unauthorized party accessed some of its systems and exfiltrated certain files.
-
-
 The company detected the incident on June 23 and reacted by activating its incident response protocols to limit the breach. External cybersecurity experts have been contracted to assist with the containment and investigation activities.
-
-
-…
+Currently, t…
 
 ## Indicators of Compromise (high-fidelity only)
 

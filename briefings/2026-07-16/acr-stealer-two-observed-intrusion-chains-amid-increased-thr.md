@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### ClickFix RunMRU entry launching rundll32 against WebDAV GUID share (ACR Stealer)
 
-`UC_154_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_155_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceRegistryEvents
 
 ### rundll32 loading DLL from remote WebDAV @ssl GUID share with ordinal export (ACR Stealer)
 
-`UC_154_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_155_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### MSHTA remote HTA launched by explorer→powershell chain (ACR Stealer fileless campaign)
 
-`UC_154_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_155_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### Masqueraded 'Autoupdate' scheduled task run by PowerShell loader (ACR Stealer persistence)
 
-`UC_154_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_155_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### pythonw.exe loader executing from deceptive %LocalAppData%\Temp dir (ACR Stealer)
 
-`UC_154_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_155_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ DeviceProcessEvents
 
 ### Endpoint traffic to ACR Stealer C2 / dead-drop domains
 
-`UC_154_17` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_155_17` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -537,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ACR Stealer: Two observed intrusion chains amid increased threat activity
 
-`UC_154_11` · phase: **exploit** · confidence: **High**
+`UC_155_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

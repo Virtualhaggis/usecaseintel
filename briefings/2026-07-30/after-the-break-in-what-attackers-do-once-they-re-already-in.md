@@ -11,12 +11,8 @@ Sponsored by Huntress Labs
 July 30, 2026
 10:01 AM
 0 
-
-
 Most of us in IT spend our energy trying to keep attackers out. But a recent incident investigated by Huntress tells us a lot about what happens after an attacker gets in (and why it matters just as much).
-
-
-Once an attacker has gained initial access, they don't rush straight to the smash-and-grab, doing things like stealing data, encrypting files, or dropping ransomware…
+Once an attacker has gained initial access, they don't rush straight to the smash-and-grab, doing things like stealing data, encrypting files, or dropping ransomware. Instea…
 
 ## Indicators of Compromise (high-fidelity only)
 

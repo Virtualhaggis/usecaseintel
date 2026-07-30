@@ -1,235 +1,3 @@
-<article class="card" id="art-207" data-art-slug="2026-07-10-ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au"
-  data-phases="actions,c2,exploit,install" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud"
-  data-targets="linux,vcs,windows"
-  data-uc-count="3" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] GHSA-g936-7jqj-mwv8: TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation   [LLM] TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests [LLM] TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process [LLM] TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-g936-7jqj-mwv8" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-g936-7jqj-mwv8: TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-10</span>
-    <span>3 use cases</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">TSDProxy: Internal proxy auth token forwarded to backend services enables management API escalation</p>
-  
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-207-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-207"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-207-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests · [LLM] TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="2b6e743c24" data-platforms="datadog,sent,spl" data-targets="linux" open>
-  <summary>
-    <span class="uc-title">TSDProxy x-tsdproxy-auth-token leaked to backend in upstream HTTP requests</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2b6e743c24" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for TSDProxy&#x27;s internal management secret (x-tsdproxy-auth-token) appearing in HTTP requests reaching proxied backend services. When identityHeaders is enabled (the default in vulnerable builds &lt; 1.4.4-0.20260603142855-434819b4421e), the token is forwarded unconditionally to every upstream, exposing it to any compromised or malicious backend for later replay. Presence of this header at a backend IS the exposure indicator; after patching/sanitisation it should never appear.
-
-Rationale: Keys on the exact secret-bearing header string &#x27;x-tsdproxy-auth-token&#x27; named in the advisory; its arrival at any backend means the deployment is running the vulnerable unconditional-forwarding path. Defender/Falcon/CloudWatch left empty because HTTP request headers are not captured in EDR process/network telemetry — this must come from proxy/web/app logs. Cross-checked GitLab Advisory Database and CVEReports for GHSA-g936-7jqj-mwv8.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
-  • https://cvereports.com/reports/GHSA-G936-7JQJ-MWV8
-  • https://almeidapaulopt.github.io/tsdproxy/docs/advanced/tailscale/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Any vulnerable-but-unattacked TSDProxy deployment with identityHeaders=true will emit this header on ALL upstream requests — expected until patched or identityHeaders:false is set</li><li>Backends that intentionally log full request headers for debugging (e.g. a /debug/headers reflection endpoint) surface the value in benign traffic</li><li>Load-test or synthetic-monitoring traffic replaying captured requests that still contain the header</li><li>Log-forwarders duplicating the same request across multiple sourcetypes inflating counts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SyslogMessage !has &quot;/debug/headers&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the TSDProxy version and whether identityHeaders is enabled; if version &lt; 1.4.4-0.20260603142855-434819b4421e the header exposure is inherent, not necessarily active abuse. Identify which backend(s) received the token. Step 2 (contain): Set identityHeaders:false or upgrade to the patched pseudo-version that strips HeaderAuthToken; rotate the TSDProxy management token/process. Step 3 (hunt): Pivot to loopback connections to 127.0.0.1:8080 and any /api/v1/ management calls carrying a forged x-tsdproxy-id from the exposed backend to confirm whether the token was actually replayed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-207-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-207-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-207-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-207-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;x-tsdproxy-auth-token&quot;
-| project TimeGenerated, Computer, ProcessName, HostIP, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-207-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;x-tsdproxy-auth-token&quot;</code></pre></div>
-    <div class="tab-content" id="art-207-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sourcetype=*tsdproxy* OR sourcetype=*syslog*) (&quot;x-tsdproxy-auth-token&quot; OR &quot;X-Tsdproxy-Auth-Token&quot;)
-| stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(dest) as backends values(src) as sources by host, sourcetype
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="40278f4e1b" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">TSDProxy management-port replay: loopback connection to 127.0.0.1:8080 by non-proxy process</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="40278f4e1b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects a backend/host process opening a connection to the TSDProxy management port (127.0.0.1:8080) when that process is not tsdproxy itself. This is the replay step of GHSA-g936-7jqj-mwv8: a compromised backend that captured x-tsdproxy-auth-token connects from localhost to the management API to impersonate an arbitrary Tailscale identity. Legitimate management traffic arrives over the tailnet, not loopback from a non-proxy binary.
-
-Rationale: Uses the exact management endpoint from the advisory&#x27;s repro (127.0.0.1:8080) plus exclusion of the legitimate tsdproxy binary — a loopback connection to that port from any other process is the concrete replay behaviour. Sentinel/Datadog/CloudWatch left empty: process-attributed loopback connections live in EDR (DeviceNetworkEvents/FDR/Sysmon), not in Sentinel&#x27;s ASIM network appliance tables or AWS CloudTrail. Corroborated via GitLab Advisory Database.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
-  • https://cvereports.com/reports/GHSA-G936-7JQJ-MWV8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Local monitoring/health-check agents (curl, wget, blackbox_exporter) probing the management port on 127.0.0.1:8080 for liveness</li><li>An administrator using curl/httpie locally to query the management API for legitimate operations</li><li>Another service coincidentally bound to or reaching 8080 on loopback on a shared host</li><li>Container orchestrator readiness probes hitting the port over loopback in host-network mode</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;blackbox_exporter&quot;,&quot;kubelet&quot;) or InitiatingProcessCommandLine has &quot;x-tsdproxy-id&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the initiating process/binary and account; determine whether it is a known monitoring agent or an unexpected backend/shell process. Inspect the command line for /api/v1/ and x-tsdproxy-id references. Step 2 (contain): If the process is not sanctioned, isolate the host/container, kill the process, rotate the TSDProxy management token, and set identityHeaders:false or upgrade to the patched build. Step 3 (hunt): Correlate to web/access logs for /api/v1/ requests carrying a forged x-tsdproxy-id, and review the backend for the initial code-execution vector that enabled token capture.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-207-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-207-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-207-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-207-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-207-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-207-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;) and RemotePort == 8080
-| where isnotempty(InitiatingProcessFileName) and InitiatingProcessFileName !contains &quot;tsdproxy&quot;
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, LocalIP, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-207-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where RemoteIP in (&quot;127.0.0.1&quot;, &quot;::1&quot;) and RemotePort == 8080
-| where isnotempty(InitiatingProcessFileName) and InitiatingProcessFileName !contains &quot;tsdproxy&quot;
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, LocalIP, RemoteIP, RemotePort
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-207-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: TSDProxy Management Port Loopback Connection From Non-Proxy Process
-id: b3f1a2c4-9d0e-4f21-8a6b-2c7e5d1f0a93
-status: experimental
-description: Detects a connection to the TSDProxy management port 127.0.0.1:8080 from a process other than tsdproxy, indicating replay of the forwarded x-tsdproxy-auth-token (GHSA-g936-7jqj-mwv8).
-references:
-  - https://github.com/advisories/GHSA-g936-7jqj-mwv8
-  - https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.privilege_escalation
-  - attack.t1550.001
-  - attack.t1068
-logsource:
-  category: network_connection
-  product: linux
-detection:
-  selection:
-    DestinationIp:
-      - &#x27;127.0.0.1&#x27;
-      - &#x27;::1&#x27;
-    DestinationPort: 8080
-  filter_proxy:
-    Image|endswith: &#x27;/tsdproxy&#x27;
-  condition: selection and not filter_proxy
-level: high</code></pre></div>
-    <div class="tab-content" id="art-207-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^127\.0\.0\.1$/ RemotePort=8080
-| NOT ContextImageFileName=/tsdproxy/i
-| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-207-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-207-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-207-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-207-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;127.0.0.1&quot; All_Traffic.dest_port=8080 by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name, host
-| `drop_dm_object_name(All_Traffic)`
-| search NOT process_name IN (&quot;tsdproxy&quot;,&quot;tsdproxyd&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-207-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;127.0.0.1&quot; All_Traffic.dest_port=8080 by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name, host
-| `drop_dm_object_name(All_Traffic)`
-| search NOT process_name IN (&quot;tsdproxy&quot;,&quot;tsdproxyd&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="36d18e9f97" data-platforms="datadog,sent,spl" data-targets="linux">
-  <summary>
-    <span class="uc-title">TSDProxy management API abuse: /api/v1 request with forged x-tsdproxy-id and auth token</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="36d18e9f97" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the privilege-escalation payload of GHSA-g936-7jqj-mwv8: an HTTP request to a TSDProxy management path (/api/v1/, e.g. /api/v1/proxies) that carries both the replayed x-tsdproxy-auth-token and an attacker-chosen x-tsdproxy-id. Because ResolveWhois trusts the x-tsdproxy-id header for any localhost caller presenting a valid token, this grants full management control (enumerate proxies, pause/restart services, trigger webhook SSRF).
-
-Rationale: Combines two article-specific strings — the forged identity header x-tsdproxy-id and the management path prefix /api/v1/ (advisory repro hits /api/v1/proxies) — so it fires on the actual escalation request rather than generic proxy traffic. Defender/Falcon/CloudWatch empty: request paths and custom headers are not in EDR or CloudTrail telemetry; only proxy/app HTTP logs carry them. Cross-checked GitLab Advisory Database and CVEReports.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/github.com/almeidapaulopt/tsdproxy/GHSA-g936-7jqj-mwv8/
-  • https://cvereports.com/reports/GHSA-G936-7JQJ-MWV8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate TSDProxy dashboard/admin operations that internally reference x-tsdproxy-id headers in verbose logs</li><li>Automation or IaC tooling calling /api/v1/ management endpoints during deployment with valid Tailscale identity</li><li>Security scanners/pentest tooling exercising the /api/v1/ surface during an authorised assessment</li><li>Debug logging that echoes request headers for all traffic, surfacing x-tsdproxy-id on benign requests</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Determine the source of the /api/v1/ call — was it a loopback caller (matching the replay pattern) and does the x-tsdproxy-id value differ from a real tailnet identity? Note which management operations were invoked (enumerate/pause/restart/webhook). Step 2 (contain): Rotate the management token, upgrade to the patched pseudo-version 1.4.4-0.20260603142855-434819b4421e or set identityHeaders:false, and review configured webhook URLs for SSRF abuse. Step 3 (hunt): Tie back to UC2 (loopback 127.0.0.1:8080) and UC1 (token leak at a backend) to reconstruct the full chain, and audit proxy config/webhook delivery logs for attacker-triggered actions.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-207-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-207-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-207-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-207-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;x-tsdproxy-id&quot; and SyslogMessage has &quot;/api/v1/&quot;
-| project TimeGenerated, Computer, ProcessName, HostIP, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-207-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;x-tsdproxy-id&quot; AND &quot;/api/v1/&quot;</code></pre></div>
-    <div class="tab-content" id="art-207-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=*proxy* OR sourcetype=*access* OR sourcetype=*nginx* OR sourcetype=*tsdproxy* OR sourcetype=*syslog*) &quot;x-tsdproxy-id&quot; (&quot;/api/v1/&quot; OR &quot;/api/v2/&quot;)
-| stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(src) as sources by host, sourcetype
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-208" data-art-slug="2026-07-10-ghsa-critical-cve-2026-50551-siyuan-stored-xss-to-rce-via-un"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -13233,6 +13001,228 @@ level: critical
         where Processes.process_hash IN (&quot;c2ab9adaba93ff094b8f3fc37d906014d870582039d276b7bd03e6fd583d8a15&quot;, &quot;1b5649b479fd625de5c8120873644b5eb669cc89cd504582c18e0ae350fd8823&quot;, &quot;755fcee1337a252203002ecfdf673a08cfadeda8d738bef2d518a08e0626aa4f&quot;, &quot;e799d72929d7ccc7f6b6109742b8cc482838303207efc989543b6e1ca6d16e9c&quot;, &quot;3b89d183eb014e29d9d0d4e45fc2b784a7fcfcf31dd48fd3bde30f8d956383d1&quot;, &quot;324d95024fc8da5c92b5a1f4825aed5a2a91c9ca8fb6aa52abb332a4c9cf4257&quot;, &quot;bafba443170e54ef7fd431ce7f1b5e202719f3fd022e4ef70788904f574d2cdf&quot;, &quot;604b53f87d6c070bf387e80c70a6df8d272fa3fc143148d41f13e59d52ab1f13&quot;, &quot;c92541f273eeb576d39235d0a5c6f18f2574b132a1022598edfa38065783ab98&quot;, &quot;29c7fccc6ef8cbfe4da9a169c7c74bacaea1fb515a1fddef91ab1b1522f76e4c&quot;, &quot;425bf771c8c9f740b1ae9803dcb4fd45af4d6a6f171fcc72fc7d511095ca82ce&quot;, &quot;ac8eae94d27122f4751bc96d9ea52d30000b7ca37569a2291b2710824ca3396f&quot;, &quot;dc4f25b2247cfdd6fc96848db30a178baa4419a4c854e86e315b465836102d14&quot;, &quot;3878dd5c8eba1e5b53ab2e07e7b5482e95a3fd3e98268bcd7861318bc9902376&quot;, &quot;9b9e0e5a1eb469b8d20dc23351e08ff5d5731e1cedce0ddee9bbd00a76217f13&quot;, &quot;57bdab2ba4b05ec0338c06632599393d5b14227f31a43fe950ea8fdd47428715&quot;, &quot;b8d247fd1fb85d24a17afeec3815906dfbcdc5359647910b4a153900ec999a0f&quot;, &quot;5e225ea2648a8cba0fd94ec7fd8ce5315f5d0cc2922bafc9db3c8c41280e917c&quot;, &quot;d5cf7315186a78ab6a7475c338bdf101bc6461930aaa7a012a02cf93f347c207&quot;, &quot;dd0fc1a88180fde8367bec7086f99294f36b8332f12994293139ed532d2ebbac&quot;, &quot;5c3f190571645c4641dcff2c07a4c3ab9acad06aa9607350a385729d8d6139f1&quot;, &quot;323c3a91be60ebc3e06e942bad04899a15911cea23269e43d07829164b2ce5d4&quot;, &quot;880425fee707e9f42e0b8d60119ed639b1ad506ea29877d126bdebce379cd229&quot;, &quot;e5d2de8ae98579bfb940290f60e59a502b3065345aaf765456387989c0488b20&quot;, &quot;2e0e43776e2e1a37d882a1b2ebb7d337ee88950177e43831dae645a367824feb&quot;, &quot;b5969636eec376ad6c3ece2202b1722219955638e09b6f96d4cfc0598d3b1890&quot;, &quot;1660536f448b8b9f086ce9ea3ce4e9deefc59a76711ea53ee6d8f08fc8c1bb99&quot;, &quot;65feba2c971c214e71303ad2e0fbf62b45ebcaa784cbf3d0dab62786cb4c0469&quot;, &quot;53ac2b231c23d41234e55b1f7ed89f86234f785adbbe820959655d7b019d7df9&quot;, &quot;33c10b77e1da9f0679023d55fb3057879d15609db9c1d46ee5c3ff1240a3d052&quot;, &quot;5faea1650cac0f3ffd2dc1fb220182095a46e34158967d37c2a942e85e2ca97b&quot;, &quot;62d4ec87ed21f0d15cb769b0b2a5577cab41fc2cdb1e7e796c5bdff09264dd9a&quot;, &quot;534a4a5bff2609a2d6e088cb87465c08c2d69c6aaa7d2ffcbcd491274b8505f1&quot;, &quot;5eab4c61baa67ae2838a36c2e6ff0476a8f2117b96a7027b830c8cb46ce78efc&quot;, &quot;0af4c52a1d13e4132a1843ce7727abcf0ddd4d1ca6a4b17cdf599ec3f355c241&quot;, &quot;d4861088161fc72b9922abf933b4ea664a807105ec1eab4a173253aa60bfe6d7&quot;, &quot;3d296af7f29c0425655bd1cc0be48fe4aba52ee6760a89e805ca2589f4ef4d77&quot;, &quot;f235d2e044c2f7814e6bbcd835b9fd9f10f227dacfb9396185ec2013e7df4db4&quot;, &quot;4130f49fa81a699a667cafdbd6d1f6e781edd686c947eb8ae27134f6dc2c43d7&quot;, &quot;0a8555a71868749be8c905ed53296ce335af50a9262772b5e154ad3f9c35c2e4&quot;, &quot;5dbfa033676b5caacfae902734ce462cd871181eefbe299250ca8ac7e139719e&quot;, &quot;20fcba222f74dd68aaeb1f0ad30cdf702a828ee164a182b30d05d600c35b72d9&quot;, &quot;912adea5339c73cb4a777a3e9f98bf3cb08da6622c9dd3b4cc9b083cb03d10a2&quot;, &quot;03926e3da998f32ad898b640bd15cf145768f9e849e6f18d81350234254c424e&quot;, &quot;16971f9706d70ac4925651c7c8719b9d77aff63e4c0a618129efc32c2c46b989&quot;, &quot;6917c0f9eafefe42e33e791b75a7e503ff8b081bc10a98449e4076787dfc6c16&quot;, &quot;c7c9bfa9ffcd8fb6a2afe656f510c406ddc58ebff48ce1d0fd3fad951b46a36e&quot;, &quot;b9fe48bda9a6c8787981a24f8bbc723a6f6aa80cab5fa53481937382f3c6ce85&quot;, &quot;f3fbf4481f30fd840f35568746f54be49eb92b2c9ac95597a7760abb171cb54b&quot;, &quot;6366d59b573d50fd23ff650923c4a8c1c918518a02d0a56f12c23533c45f439d&quot;, &quot;3fcaa3038e365b6ab0b121e2cd319c56b74e37381943a0da0e8dce407087cdb8&quot;, &quot;bf70c6f3a8e913f526ec57eeec50e1306f7b34b037915b7a1cf2968cc46acc58&quot;, &quot;0352f3e338261d98895df4c7b7a76b296485b2290c72bce56603351d167d0601&quot;, &quot;52b871429833e1dee348263844efb531f6a3fcd321f88dc8a876caaee912cedd&quot;, &quot;5db2ce9acd50f96d566e8d139f6490abf2bbf7a9293b876eeb4598fd2c37c515&quot;, &quot;3169a6dbcce684e2c5a2f166996b58ffa673df6e58b8edf2bdf3e66271c8c69e&quot;, &quot;d871d76171504597bbda387689e12e7a5e354c360ff135f4df231cec68c761af&quot;, &quot;d1f963b88672f3676a7da1580262ba0d4f367cc57a94b551754c20f77a670c43&quot;, &quot;76d9e2a2ff313f5b91cc67aab1127122baee1c3efbae1087e58a25bc5f1eb065&quot;, &quot;8c104da0e66ef6384663309aaf8fb49f549f2785d835eec620b265f8aa11d9f0&quot;, &quot;c494c878e28284539419612616d964ab9224cbe27e57f42293d91d02d684e3db&quot;, &quot;08701ed7975bf4f5688c2724d27ab497764200ad6f4dc53d3cc03b170378ced0&quot;, &quot;0a8cae96e25e85c612b0736fe886f9b124ad70ec425bc2ec1a8a4135b25436ba&quot;, &quot;8459ff264a2c81c68a34c4ee6bc109d141ad28b96037d34ff112322a4c853739&quot;, &quot;68445a37a9943a267a8b2100fba2678353d6ec88844505ccbba659e586c7a105&quot;, &quot;29686c933cec1e274467e2dae264625ae6f754824bb7f550bc9c3131f625562c&quot;, &quot;d973ad5a80c3d7468a9c392db4166857ed32b5d61cd6755766ba8922156dada3&quot;, &quot;f5a57dfae488d9dfe260b32460a1d947fb5af58ceaf2fb0139bc08b4bb79a966&quot;, &quot;2ebc1b6cf543e2cb3f22d9a5b54b6676bb71dde98df7532f8791297734e44fdd&quot;, &quot;6dbd507ca7cecea861f9cf704b3c5c37f5bd5392886a8c2562088892b7703fa5&quot;, &quot;89f0a67bc595ab8bce02c2f95f9292ad06e1868207e809c76bd16f0cab800c06&quot;, &quot;d81201d0fc19977e51104438a5b9cba861f4da20cea3ae9183edf16ab11d98f8&quot;, &quot;9d52cb4febf3342c34dcc8198dcaf453458be3699ab47dc08616aa7f18daa7fa&quot;, &quot;9a927c37a31b80975c5c5467f112b61478c9493c046281046443525358a5acb0&quot;, &quot;6cda1e81667f869940401f05a55c8dea94dbdf3ceffb93b5f320a6462cfea44d&quot;, &quot;745538dea8ed9aec4466e67a9d0aecf9e7026ff16a792d1d6f306e8b67d3f34c&quot;, &quot;13acadb3541e75af50e02d5be56c2238b93d8f154ce5514be1558e6ee59a1432&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-238" data-art-slug="2026-07-07-cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,network"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2026-48908 — JoomShaper SP Page Builder Unrestricted Upload of File with Dangerous Type Vulnerability JoomShaper SP Page Builder contains an unrestricted upload of file with dangerous type vulnerability that allows unauthenticated users to upload arbitrary files, ultimately resulting in the upload and execution of PHP code. Vendor: JoomShaper, Product: SP Page Builder. Federal patch due: 2026-07-10. CVE-2026-48908  Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-07-cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-48908 — JoomShaper SP Page Builder Unrestricted Upload of File with Dangerous Type Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-07-07</span>
+    <span>2 use cases</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">JoomShaper SP Page Builder contains an unrestricted upload of file with dangerous type vulnerability that allows unauthenticated users to upload arbitrary files, ultimately resulting in the upload and execution of PHP code. Vendor: JoomShaper, Product: SP Page Builder. Federal patch due: 2026-07-10.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48908</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">secure.local</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-238-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-238"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-238-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-238-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48908&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-48908&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48908&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-238-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-48908&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-238-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-238-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-238-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-238-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-238-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;secure.local&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-238-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+let BadDomains = dynamic([&quot;secure.local&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-238-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-238-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-238-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-238-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;secure.local&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;secure.local&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-238-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;secure.local&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;secure.local&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

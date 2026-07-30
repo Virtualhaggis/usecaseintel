@@ -1,130 +1,3 @@
-<article class="card" id="art-1447" data-art-slug="2024-01-02-cisa-kev-cve-2023-7024-google-chromium-webrtc-heap-buffer-ov"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2023-7024 — Google Chromium WebRTC Heap Buffer Overflow Vulnerability Google Chromium WebRTC, an open-source project providing web browsers with real-time communication, contains a heap buffer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could impact web browsers using WebRTC, including but not limited to Google Chrome. Vendor: Google, Product: Chromium WebRTC. Federal patch due: 2024-01-23. CVE-2023-7024 T1190 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2024-01-02-cisa-kev-cve-2023-7024-google-chromium-webrtc-heap-buffer-ov" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2023-7024 — Google Chromium WebRTC Heap Buffer Overflow Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2024-01-02</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Google Chromium WebRTC, an open-source project providing web browsers with real-time communication, contains a heap buffer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could impact web browsers using WebRTC, including but not limited to Google Chrome. Vendor: Google, Product: Chromium WebRTC. Federal patch due: 2024-01-23.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2023-7024</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1447-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1447"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1447-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1447-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1447-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1447-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1447-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2023-7024&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1447-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2023-7024&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1447-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1447-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1447-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1447-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2023-7024&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-1447-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2023-7024&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-1450" data-art-slug="2023-12-21-command-injection-in-python-examples-and-prevention"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="med"
   data-techs="T1190,T1195.002"
@@ -5283,6 +5156,501 @@ level: medium
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1487" data-art-slug="2023-11-27-exploring-webextension-security-vulnerabilities-in-react-dev"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1176,T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="5" data-llm-uc-count="1"
+  data-search="Exploring WebExtension security vulnerabilities in React Developer Tools and Vue.js devtools Snyk&#x27;s security researchers have identified and disclosed some vulnerabilities within some popular browser extensions: React Developer Tools and Vue.js devtools. This post will explore the WebExtension technology and look into the vulnerabilities identified. CVE-2023-5654 CVE-2023-5718 T1176 T1190 [LLM] Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0 Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2023-11-27-exploring-webextension-security-vulnerabilities-in-react-dev" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/webextension-security-vulnerabilities-react-developer-tools-vue-js/" target="_blank" rel="noopener">Exploring WebExtension security vulnerabilities in React Developer Tools and Vue.js devtools</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2023-11-27</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Snyk&#x27;s security researchers have identified and disclosed some vulnerabilities within some popular browser extensions: React Developer Tools and Vue.js devtools. This post will explore the WebExtension technology and look into the vulnerabilities identified.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2023-5654</span> <span class="ind cve">CVE-2023-5718</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1487-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1487"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1487-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0 · Article-specific behavioural hunt — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Suspicious browser extension installation</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6ae528ce9e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6ae528ce9e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for file writes inside the React Developer Tools (CVE-2023-5654) or Vue.js devtools (CVE-2023-5718) extension folders on hosts where the affected versions may be installed. The two extensions have well-known Chrome/Firefox extension IDs and folder names, so a file-event pivot surfaces every endpoint that should be patched to a fixed build.
+
+Rationale: Anchored on the article&#x27;s two CVEs and the public Chrome Web Store extension IDs for React Developer Tools (fmkadmapgofadopljbjfkapdkoienihi) and Vue.js devtools (nhdogjmejiglipccpnnnanhbledajbpd) plus the Firefox addon folder names. File writes by a browser process to those extension paths reliably mark hosts that have the extension installed and warrant a version check against the fixed builds. Cross-checked against MITRE T1176 (Browser Extensions) and the public NVD entries for both CVEs.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2023-5654
+  • https://nvd.nist.gov/vuln/detail/CVE-2023-5718
+  • https://attack.mitre.org/techniques/T1176/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Routine extension auto-update from Chrome Web Store / Firefox AMO writing a new manifest.json + bundled JS files</li><li>Developer freshly installing React DevTools or Vue.js devtools on a workstation (the build may already be patched - confirm version in manifest.json)</li><li>Profile sync pulling extensions onto a new device the user just signed into</li><li>Endpoint backup / EDR self-scan engines re-reading the extension folder and triggering write-shadow events</li><li>Enterprise-managed extension deployment via GPO or browser policy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessParentFileName !in~ (&quot;GoogleUpdate.exe&quot;,&quot;MicrosoftEdgeUpdate.exe&quot;,&quot;updater.exe&quot;) // suppress browser auto-update writes
+| where not (FolderPath has &quot;\Extensions\&quot; and FileName =~ &quot;manifest.json&quot; and Writes == 1) // single-file install touches are usually CWS update transactions</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): pull the manifest.json from the matched FolderPath and read the &quot;version&quot; string; compare to React Developer Tools &gt;= 4.28.0 and Vue.js devtools &gt;= 6.5.1 (the fixed builds). Note user, device, and whether the install is enterprise-managed. Step 2 (contain): if the version is vulnerable, push a managed-extension update via the browser ADMX policy (ExtensionInstallForcelist with the patched version pin) or have the user disable the extension until updated; for known sensitive roles (devs handling internal apps in iframes), consider temporary removal. Step 3 (hunt): pivot to DeviceNetworkEvents / NetworkConnectIP4 for browser-initiated fetches to unexpected external URLs from the same host (CVE-2023-5654 SSRF-as-DDoS) and to any postMessage-style traffic in proxy logs; also enumerate the org&#x27;s exposure via DeviceTvmSoftwareInventory or a Reference Table of extension IDs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1487-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1487-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1487-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1487-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1487-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where FolderPath has_any (@&quot;\fmkadmapgofadopljbjfkapdkoienihi\&quot;, @&quot;\nhdogjmejiglipccpnnnanhbledajbpd\&quot;, @&quot;\react_devtools\&quot;, @&quot;\vue-js-devtools\&quot;)
+| where FileName =~ &quot;manifest.json&quot; or FileName endswith &quot;.js&quot;
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Writes=count(), SampleFile=any(FileName) by DeviceName, InitiatingProcessAccountName, FolderPath, InitiatingProcessFileName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-1487-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where TargetFilePath has_any (&quot;fmkadmapgofadopljbjfkapdkoienihi&quot;, &quot;nhdogjmejiglipccpnnnanhbledajbpd&quot;, @&quot;\react_devtools\&quot;, @&quot;\vue-js-devtools\&quot;)
+| where TargetFileName =~ &quot;manifest.json&quot; or TargetFileName endswith &quot;.js&quot;
+| where ActingProcessName has_any (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Writes=count(), SampleFile=any(TargetFileName) by DvcHostname, ActorUsername, TargetFilePath, ActingProcessName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-1487-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable React DevTools / Vue.js devtools Extension Folder File Write
+id: 4f3a86b1-2d4c-4f4f-93b8-9b1eaa5b8c91
+description: Detects file writes inside the React Developer Tools (CVE-2023-5654) or Vue.js devtools (CVE-2023-5718) browser extension folders, indicating the (potentially vulnerable) extension is installed and is being updated/loaded by a browser process.
+references:
+  - https://snyk.io/blog/webextension-security-vulnerabilities-react-developer-tools-vue-js/
+  - https://nvd.nist.gov/vuln/detail/CVE-2023-5654
+  - https://nvd.nist.gov/vuln/detail/CVE-2023-5718
+author: SOC Detection Engineering
+date: 2026/05/23
+tags:
+  - attack.t1176
+  - attack.t1190
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_ext_id:
+    TargetFilename|contains:
+      - &#x27;\fmkadmapgofadopljbjfkapdkoienihi\&#x27;
+      - &#x27;\nhdogjmejiglipccpnnnanhbledajbpd\&#x27;
+      - &#x27;\react_devtools\&#x27;
+      - &#x27;\vue-js-devtools\&#x27;
+  selection_file:
+    TargetFilename|endswith:
+      - &#x27;\manifest.json&#x27;
+      - &#x27;.js&#x27;
+  selection_browser:
+    Image|endswith:
+      - &#x27;\chrome.exe&#x27;
+      - &#x27;\msedge.exe&#x27;
+      - &#x27;\firefox.exe&#x27;
+      - &#x27;\brave.exe&#x27;
+  condition: selection_ext_id and selection_file and selection_browser
+level: low</code></pre></div>
+    <div class="tab-content" id="art-1487-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*fmkadmapgofadopljbjfkapdkoienihi* OR *nhdogjmejiglipccpnnnanhbledajbpd* OR *\\react_devtools\\* OR *\\vue-js-devtools\\*)) (@TargetFilename:*\\manifest.json OR @TargetFilename:*.js) @Image:(*\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\MsEdge.exe OR *\\firefox.exe OR *\\Firefox.exe OR *\\brave.exe OR *\\Brave.exe)</code></pre></div>
+    <div class="tab-content" id="art-1487-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/(fmkadmapgofadopljbjfkapdkoienihi|nhdogjmejiglipccpnnnanhbledajbpd|react_devtools|vue-js-devtools)/i
+| TargetFileName=/(manifest\.json|\.js)$/i
+| ContextImageFileName=/(chrome|msedge|firefox|brave)\.exe$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-1487-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1487-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1487-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1487-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*\\fmkadmapgofadopljbjfkapdkoienihi\\*&quot; OR Filesystem.file_path=&quot;*\\nhdogjmejiglipccpnnnanhbledajbpd\\*&quot; OR Filesystem.file_path=&quot;*\\react_devtools\\*&quot; OR Filesystem.file_path=&quot;*\\vue-js-devtools\\*&quot;) AND (Filesystem.file_name=&quot;manifest.json&quot; OR Filesystem.file_name=&quot;*.js&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen</code></pre><pre class="spl-mode-body" id="art-1487-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*\\fmkadmapgofadopljbjfkapdkoienihi\\*&quot; OR Filesystem.file_path=&quot;*\\nhdogjmejiglipccpnnnanhbledajbpd\\*&quot; OR Filesystem.file_path=&quot;*\\react_devtools\\*&quot; OR Filesystem.file_path=&quot;*\\vue-js-devtools\\*&quot;) AND (Filesystem.file_name=&quot;manifest.json&quot; OR Filesystem.file_name=&quot;*.js&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Suspicious browser extension installation</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bf48d37680" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1487-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1487-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1487-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
+    <div class="tab-content" id="art-1487-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
+                              @&quot;\Software\Microsoft\Edge\Extensions\&quot;,
+                              @&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,
+          RegistryValue, RegistryValueData, ActingProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
+status: experimental
+description: |
+    Registry writes under the browser extension policy keys —
+    administrative install of an extension. Often used by adware /
+    info-stealers to bypass user-level extension controls.
+references:
+    - https://attack.mitre.org/techniques/T1176/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1176
+    - attack.persistence
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - &#x27;\Software\Google\Chrome\Extensions\&#x27;
+            - &#x27;\Software\Microsoft\Edge\Extensions\&#x27;
+            - &#x27;\Software\Mozilla\Firefox\Extensions\&#x27;
+    condition: selection
+falsepositives:
+    - Group-policy-managed extension whitelists
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1487-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1487-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1487-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-1487-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
+        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1487-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1487-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1487-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                                  @&quot;\Microsoft\Edge\User Data\&quot;,
+                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1487-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1487-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1487-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-1487-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1487-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1487-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2023-5654&quot;, &quot;CVE-2023-5718&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2023-5654&quot;, &quot;CVE-2023-5718&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1487-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1487-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1487-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1487-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2023-5654&quot;, &quot;CVE-2023-5718&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1487-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2023-5654&quot;, &quot;CVE-2023-5718&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="43919035c6" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="43919035c6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1487-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1487-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1487-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;vue.js&quot;, &quot;development.js&quot;, &quot;dom.development.js&quot;, &quot;min.js&quot;, &quot;global.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;vue.js&quot;, &quot;development.js&quot;, &quot;dom.development.js&quot;, &quot;min.js&quot;, &quot;global.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1487-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;vue.js&quot;, &quot;development.js&quot;, &quot;dom.development.js&quot;, &quot;min.js&quot;, &quot;global.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;vue.js&quot;, &quot;development.js&quot;, &quot;dom.development.js&quot;, &quot;min.js&quot;, &quot;global.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1487-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1487-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1487-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1487-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;vue.js&quot;,&quot;development.js&quot;,&quot;dom.development.js&quot;,&quot;min.js&quot;,&quot;global.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;vue.js&quot;,&quot;development.js&quot;,&quot;dom.development.js&quot;,&quot;min.js&quot;,&quot;global.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-1487-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;vue.js&quot;,&quot;development.js&quot;,&quot;dom.development.js&quot;,&quot;min.js&quot;,&quot;global.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;vue.js&quot;,&quot;development.js&quot;,&quot;dom.development.js&quot;,&quot;min.js&quot;,&quot;global.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>

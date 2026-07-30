@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Exposed Rails apps vulnerable to Active Storage libvips file-read (CVE-2026-66066)
 
-`UC_22_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Unauthenticated image-upload burst to Rails Active Storage endpoints (CVE-2026-66066 delivery)
 
-`UC_22_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_27_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Rails/libvips worker reading process environment or system secrets (CVE-2026-66066 file-read)
 
-`UC_22_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_27_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
