@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2611 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -23,6 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
+- [jetbrains warns of critical teamcity remote code execution f](./2026-07-30/jetbrains-warns-of-critical-teamcity-remote-code-execution-f.md)
 - [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [microsoft teams vishing attacks lead to chaos ransomware att](./2026-07-30/microsoft-teams-vishing-attacks-lead-to-chaos-ransomware-att.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)

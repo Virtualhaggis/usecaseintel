@@ -1,3 +1,324 @@
+<article class="card" id="art-147" data-art-slug="2026-07-20-ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do"
+  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,falcon,sent,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimited input node-tar: Decompression/parse DoS via unlimited input CVE-2026-59873 T1190 [LLM] Vulnerable node-tar (&lt;=7.5.18) present on hosts — CVE-2026-59873 decompression-bomb DoS exposure [LLM] node.js process rapidly writing multi-GB file during archive extraction (CVE-2026-59873 gzip-bomb impact) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-20-ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-23hp-3jrh-7fpw" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimited input</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-20</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">node-tar: Decompression/parse DoS via unlimited input</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-59873</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-147-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-147"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-147-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable node-tar (&lt;=7.5.18) present on hosts — CVE-2026-59873 decompression-bomb DoS exposure</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] node.js process rapidly writing multi-GB file during archive extraction (CVE-2026-59873 gzip-bomb impact)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="a8fd071559" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Vulnerable node-tar (&lt;=7.5.18) present on hosts — CVE-2026-59873 decompression-bomb DoS exposure</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a8fd071559" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces every host where Defender/vuln-scanner telemetry reports the npm &#x27;tar&#x27; package at or below 7.5.18, the range vulnerable to CVE-2026-59873 (unbounded decompressed-data DoS / Gzip bomb). This is the attack-surface inventory pivot: any service extracting untrusted archives with this version can be forced to exhaust disk/CPU with a tiny crafted input. Fixed in 7.5.19.
+
+Rationale: Pivots on the exact CVE id and the concrete affected range from the advisory (npm &#x27;tar&#x27; &lt;= 7.5.18, fixed 7.5.19). CVE-id equality in TVM/scanner data is a high-fidelity exposure list with near-zero FP — the only &#x27;noise&#x27; is remediated-but-not-rescanned hosts.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-59874
+  • https://github.com/advisories/GHSA-23hp-3jrh-7fpw
+  • https://www.tenable.com/cve/CVE-2026-59874
+  • https://github.com/isaacs/node-tar/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Host patched to 7.5.19+ but not yet re-scanned, so TVM snapshot is stale</li><li>&#x27;tar&#x27; package pinned inside a container image layer that never extracts untrusted input (internal build tarballs only)</li><li>Nested/transitive copy of tar in node_modules of a dev-only dependency not reachable at runtime</li><li>Scanner fingerprints a vendored copy of tar sources without a functioning install</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the flagged host actually runs a service that extracts attacker-supplied archives (npm registry mirror, CI/CD artifact unpack, file-upload/import feature) — internal-only tarball handling is lower priority. 2) Contain: schedule `npm i tar@7.5.19` (or bump the transitive pin via overrides/resolutions) on internet-facing extractors first; add a temporary reverse-proxy body-size cap on upload endpoints. 3) Hunt: pull last 7d of file-write telemetry for the host&#x27;s node processes and run UC2 to check whether a decompression bomb was already attempted.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-147-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-147-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-147-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-147-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-59873&quot;
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-147-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-59873&quot;
+| project TimeGenerated, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-147-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-147-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-147-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-147-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-59873&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve, Vulnerabilities.first_found, Vulnerabilities.last_found
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - last_found</code></pre><pre class="spl-mode-body" id="art-147-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false summariesonly count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-59873&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve, Vulnerabilities.first_found, Vulnerabilities.last_found
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - last_found</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a60ba6b9c0" data-platforms="def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">node.js process rapidly writing multi-GB file during archive extraction (CVE-2026-59873 gzip-bomb impact)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="a60ba6b9c0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the runtime signature of the node-tar decompression bomb: a node process extracting an archive and writing an abnormally large single file (multi-GB) from a tiny compressed input, driving toward disk exhaustion. Article-specific because the vuln has no total-bytes/entry-count guard, so extraction writes far more data than the input warrants.
+
+Rationale: Targets the article&#x27;s core impact — node-tar writes gigabytes to disk from a negligible compressed stream because there is no cumulative-bytes limit. Pivots on node as the initiating process plus an anomalous single-file size / write-volume, the observable footprint of the Gzip bomb described in the PoC.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-23hp-3jrh-7fpw
+  • https://github.com/isaacs/node-tar/security</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate large-artifact extraction in CI (multi-GB container layers, ML model tarballs, dataset archives)</li><li>Node-based backup/restore or migration jobs that genuinely unpack large archives</li><li>Log-rotation or cache builds where a node service writes a large single file</li><li>Package-mirror sync (e.g. Verdaccio/nexus) unpacking large legitimate packages</li><li>Electron/build tooling emitting a large bundled asset</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;backup&quot;,&quot;restore&quot;,&quot;webpack&quot;,&quot;electron-builder&quot;,&quot;model&quot;,&quot;dataset&quot;) or FolderPath has_any (&quot;\\ci\\&quot;,&quot;\\build\\&quot;,&quot;\\artifacts\\&quot;,&quot;/ci/&quot;,&quot;/build/&quot;,&quot;/artifacts/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check the InitiatingProcessCommandLine and FolderPath — is this a known CI/build/backup job writing to an expected artifact path, or an internet-facing upload/import service writing to a temp/extraction dir? Correlate the host against UC1 (is tar&lt;=7.5.18 present?). 2) Contain: if unexplained, kill the node PID and quarantine the source archive; add disk-quota/ulimit on the extraction directory and a body-size limit on the upload endpoint. 3) Hunt: search the same host+window for the inbound tiny archive (small POST/upload immediately preceding the write burst) and for repeated attempts across other extractor hosts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-147-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-147-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-147-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-147-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-147-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(1d)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| summarize MaxFileSize = max(FileSize), Writes = count(), FirstWrite = min(Timestamp), LastWrite = max(Timestamp) by DeviceName, FolderPath, FileName, InitiatingProcessId, InitiatingProcessCommandLine
+| where MaxFileSize &gt; 2147483648   // &gt;2GB single file from a node extraction; gzip-bomb hallmark vs tiny input
+| extend WriteWindowSec = datetime_diff(&#x27;second&#x27;, LastWrite, FirstWrite)
+| order by MaxFileSize desc</code></pre></div>
+    <div class="tab-content" id="art-147-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(1d)
+| where ActingProcessName has &quot;node&quot;
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| summarize MaxFileSize = max(TargetFileSize), Writes = count(), FirstWrite = min(TimeGenerated), LastWrite = max(TimeGenerated) by DvcHostname, TargetFilePath, ActingProcessId, ActingProcessCommandLine
+| where MaxFileSize &gt; 2147483648   // &gt;2GB single file written by node during extraction
+| extend WriteWindowSec = datetime_diff(&#x27;second&#x27;, LastWrite, FirstWrite)
+| order by MaxFileSize desc</code></pre></div>
+    <div class="tab-content" id="art-147-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/node(\.exe)?$/i
+| groupBy([aid, ComputerName, TargetFileName], function=sum(WrittenBytes, as=TotalBytes))
+| TotalBytes &gt; 2147483648</code></pre></div>
+    <div class="tab-content" id="art-147-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-147-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-147-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-147-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly count from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.process_name IN (&quot;node.exe&quot;,&quot;node&quot;)) Endpoint.Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| where count &gt; 300
+| sort - count</code></pre><pre class="spl-mode-body" id="art-147-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false summariesonly count from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.process_name IN (&quot;node.exe&quot;,&quot;node&quot;)) Endpoint.Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| where count &gt; 300
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-147-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-147-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-147-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-147-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-59873&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-147-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-59873&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-147-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-147-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-147-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-147-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-59873&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-147-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-59873&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="81d6575b8d" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="81d6575b8d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-147-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-147-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-147-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-147-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;poc.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;poc.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-147-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;poc.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;poc.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-147-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-147-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-147-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-147-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;poc.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;poc.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-147-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59873: node-tar: Decompression/parse DoS via unlimite ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;poc.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;poc.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-148" data-art-slug="2026-07-20-ghsa-critical-cve-2026-61740-lightrag-is-vulnerable-to-authe"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -18883,1694 +19204,6 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-179" data-art-slug="2026-07-15-okobot-new-sophisticated-malware-framework-targets-cryptocur"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1021.001,T1027,T1053.005,T1059.001,T1176,T1190,T1204.002,T1204.004,T1539,T1555.003,T1566"
-  data-sources="Securelist (Kaspersky)"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="18" data-llm-uc-count="7"
-  data-search="OkoBot: new sophisticated malware framework targets cryptocurrency users Kaspersky GReAT experts dissect the new OkoBot campaign targeting cryptocurrency users. This complex framework employs TookPS, exfiltrates seed phrases, monitors Chromium-based browsers, and installs various malware strains, including the Rilide stealer.  T1021.001 T1027 T1053.005 T1059.001 T1176 T1190 T1204.002 T1204.004 T1539 T1555.003 T1566 [LLM] OkoBot &#x27;Apple Sync&#x27; scheduled task maintaining reverse SSH tunnel forwarding RDP [LLM] OkoBot termsrv.dll patch enabling concurrent RDP sessions [LLM] OkoBot HDUtil launcher execution (target/nouac) with HWID guardrail [LLM] OkoBot UAC bypass via auto-elevated msconfig.exe spawning payload [LLM] OkoBot browser-extension loader extl.exe deployed via HDUtil [LLM] OkoBot RDP back-connection: local RDP user creation + firewall opening [LLM] OkoBot disabling Windows Defender notifications via registry Beaconing — periodic outbound to small set of destinations Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Scheduled task created with suspicious image / encoded args Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Article-specific behavioural hunt — OkoBot: new sophisticated malware framework targets cryptocurrency users">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-15-okobot-new-sophisticated-malware-framework-targets-cryptocur" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/" target="_blank" rel="noopener">OkoBot: new sophisticated malware framework targets cryptocurrency users</a></h2>
-  <div class="source-badges"><span class="source-badge securelist">Securelist (Kaspersky)</span></div>
-  <div class="pubmeta">
-    <span>2026-07-15</span>
-    <span>18 use cases</span>
-    <span>11 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Kaspersky GReAT experts dissect the new OkoBot campaign targeting cryptocurrency users. This complex framework employs TookPS, exfiltrates seed phrases, monitors Chromium-based browsers, and installs various malware strains, including the Rilide stealer.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Scheduled Task">T1053.005</span> <span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Malicious File">T1204.002</span> <span class="ind tech" title="User Execution: Malicious Copy and Paste">T1204.004</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span> <span class="ind tech" title="Phishing">T1566</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-179-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-179"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-179-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OkoBot UAC bypass via auto-elevated msconfig.exe spawning payload · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Article-specific behavioural hunt — OkoBot: new sophisticated malware framework targets cryptocurrency users</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] OkoBot &#x27;Apple Sync&#x27; scheduled task maintaining reverse SSH tunnel forwarding RDP · [LLM] OkoBot termsrv.dll patch enabling concurrent RDP sessions · [LLM] OkoBot HDUtil launcher execution (target/nouac) with HWID guardrail · [LLM] OkoBot browser-extension loader extl.exe deployed via HDUtil · [LLM] OkoBot RDP back-connection: local RDP user creation + firewall opening · [LLM] OkoBot disabling Windows Defender notifications via registry · Suspicious browser extension installation · Scheduled task created with suspicious image / encoded args</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · Crypto-wallet file/keystore access by non-wallet process</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="1a8daa0373" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">OkoBot &#x27;Apple Sync&#x27; scheduled task maintaining reverse SSH tunnel forwarding RDP</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1a8daa0373" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the OkoBot SSH bot&#x27;s persistence: a scheduled task named &#x27;Apple Sync&#x27; that re-establishes a reverse SSH tunnel forwarding the local RDP (3389) port to the attacker every hour. Also catches the ssh.exe reverse-forward (-R ... 3389) invocation itself. Both are unique to this campaign&#x27;s back-connection stage.
-
-Rationale: Anchored on the verbatim task name &#x27;Apple Sync&#x27; (article code block) plus the ssh reverse-forward of RDP/3389 described in the back-connection stage — both are campaign-unique. Cross-checked against Kaspersky press release and The Hacker News write-up confirming the SSH-tunnel/RDP mechanism.
-
-Cross-checked against:
-  • https://www.kaspersky.com/about/press-releases/kaspersky-reveals-a-new-malicious-framework-targeting-cryptocurrency-users-with-the-use-of-okospyware
-  • https://thehackernews.com/2026/07/okobot-malware-framework-injects-seed.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task">T1053.005</span> <span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Remote Desktop Protocol">T1021.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate DevOps/SRE reverse SSH tunnels for jump-host access</li><li>IT tooling that schedules ssh port-forwards for remote support</li><li>A sysadmin genuinely naming a task &#x27;Apple Sync&#x27; for iCloud/Apple sync (rare on Windows servers)</li><li>Bastion/tunnel software (autossh) creating -R forwards to internal hosts</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;autossh.exe&quot;) or InitiatingProcessCommandLine has_any (&quot;bastion&quot;,&quot;jumphost&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full schtasks/ssh command line and the InitiatingProcess chain; confirm the -R forward target is an external/attacker IP and the local port is 3389. Check for %PROGRAMDATA%\hwid.dat and a newly-created RDP user. 2) Contain: delete the &#x27;Apple Sync&#x27; task, kill ssh.exe, block the remote tunnel IP at the firewall, and disable/network-isolate the host. 3) Hunt: sweep for termsrv.dll modification, HDUtil.exe, extl.exe, and additions to &#x27;Remote Desktop Users&#x27; across the fleet.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName =~ &quot;schtasks.exe&quot; and ProcessCommandLine has &quot;Apple Sync&quot;)
-     or (FileName =~ &quot;ssh.exe&quot; and ProcessCommandLine has &quot;-R&quot; and ProcessCommandLine has &quot;3389&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where (NewProcessName endswith &quot;\\schtasks.exe&quot; and CommandLine has &quot;Apple Sync&quot;)
-     or (NewProcessName endswith &quot;\\ssh.exe&quot; and CommandLine has &quot;-R&quot; and CommandLine has &quot;3389&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot Apple Sync Scheduled Task and Reverse SSH RDP Tunnel
-id: 5a1e0c2e-9d43-4b7a-8f11-2c0a7b6e9d11
-description: Detects the OkoBot SSH bot persistence task &#x27;Apple Sync&#x27; or an ssh.exe reverse-forward of the RDP port 3389
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1053.005
-  - attack.t1572
-  - attack.t1021.001
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_task:
-    Image|endswith: &#x27;\schtasks.exe&#x27;
-    CommandLine|contains: &#x27;Apple Sync&#x27;
-  selection_ssh:
-    Image|endswith: &#x27;\ssh.exe&#x27;
-    CommandLine|contains|all:
-      - &#x27;-R&#x27;
-      - &#x27;3389&#x27;
-  condition: selection_task or selection_ssh
-level: high</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 (@CommandLine:*Apple*Sync* OR (@Image:(*\\ssh.exe OR *\\SSH.EXE) AND @CommandLine:*-R* AND @CommandLine:*3389*))</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| (ImageFileName=/\\schtasks\.exe$/i AND CommandLine=/Apple Sync/i) OR (ImageFileName=/\\ssh\.exe$/i AND CommandLine=/-R/ AND CommandLine=/3389/)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe AND Processes.process=&quot;*Apple Sync*&quot;) OR (Processes.process_name=ssh.exe AND Processes.process=&quot;*-R*&quot; AND Processes.process=&quot;*3389*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe AND Processes.process=&quot;*Apple Sync*&quot;) OR (Processes.process_name=ssh.exe AND Processes.process=&quot;*-R*&quot; AND Processes.process=&quot;*3389*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c5caedcc2f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">OkoBot termsrv.dll patch enabling concurrent RDP sessions</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c5caedcc2f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts OkoBot&#x27;s replacement of the legitimate C:\Windows\System32\termsrv.dll with a patched copy that permits multiple concurrent RDP sessions. Flags any write/modify/delete of termsrv.dll by a process other than the Windows servicing stack (TrustedInstaller/TiWorker/msiexec).
-
-Rationale: Uses the verbatim termsrv.dll code block and the article&#x27;s explicit description of replacing the legitimate DLL with a patched one for multi-RDP. Excluding the servicing stack (TrustedInstaller/TiWorker/poqexec) removes the only legitimate writers, so any hit is high-fidelity.
-
-Cross-checked against:
-  • https://www.kaspersky.com/about/press-releases/kaspersky-reveals-a-new-malicious-framework-targeting-cryptocurrency-users-with-the-use-of-okospyware</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span> <span class="ind tech" title="Remote Desktop Protocol">T1021.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Windows cumulative/quality update replacing termsrv.dll via TrustedInstaller (excluded)</li><li>Legit RDP-wrapper / concurrent-session tools used intentionally by IT (RDPWrap)</li><li>Backup/restore or system-image tooling rewriting System32</li><li>Antivirus quarantine/restore touching the file</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessVersionInfoCompanyName has &quot;Microsoft&quot; and InitiatingProcessFolderPath has &quot;WinSxS&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: compare the new termsrv.dll hash/signature against the Microsoft-shipped version for the OS build; identify the writing process and its parent. 2) Contain: restore the clean termsrv.dll from WinSxS/backup, kill the writer, and isolate the host. 3) Hunt: check for the &#x27;Apple Sync&#x27; task, new local RDP users, firewall RDP allow rules, and inbound RDP logons (4624 type 10) around the modification time.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;termsrv.dll&quot;
-| where FolderPath has @&quot;\System32\&quot;
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where InitiatingProcessFileName !in~ (&quot;TrustedInstaller.exe&quot;,&quot;TiWorker.exe&quot;,&quot;msiexec.exe&quot;,&quot;poqexec.exe&quot;)
-| project Timestamp, DeviceName, FileName, FolderPath, ActionType, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where TargetFileName =~ &quot;termsrv.dll&quot;
-| where TargetFilePath has @&quot;\System32\&quot;
-| where not(ActingProcessName has_any (&quot;TrustedInstaller.exe&quot;,&quot;TiWorker.exe&quot;,&quot;msiexec.exe&quot;,&quot;poqexec.exe&quot;))
-| project TimeGenerated, DvcHostname, TargetFilePath, ActingProcessName, ActingProcessCommandLine, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot termsrv.dll Patch for Concurrent RDP Sessions
-id: 8b2f4d17-3ac6-49e0-9d2b-6f1a2c4e7b30
-description: Detects modification of System32 termsrv.dll by a process outside the Windows servicing stack, used by OkoBot to allow multiple concurrent RDP sessions
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1562.001
-  - attack.t1021.001
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection:
-    TargetFilename|endswith: &#x27;\System32\termsrv.dll&#x27;
-  filter_servicing:
-    Image|endswith:
-      - &#x27;\TrustedInstaller.exe&#x27;
-      - &#x27;\TiWorker.exe&#x27;
-      - &#x27;\msiexec.exe&#x27;
-      - &#x27;\poqexec.exe&#x27;
-  condition: selection and not filter_servicing
-level: high</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\System32\\termsrv.dll OR *\\System32\\Termsrv.dll) -@Image:(*\\TrustedInstaller.exe OR *\\TiWorker.exe OR *\\msiexec.exe OR *\\poqexec.exe)</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| TargetFileName=/\\System32\\termsrv\.dll$/i
-| NOT ContextImageFileName=/\\(TrustedInstaller|TiWorker|msiexec|poqexec)\.exe$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=termsrv.dll Filesystem.file_path=&quot;*\\System32\\*&quot; Filesystem.action IN (&quot;modified&quot;,&quot;created&quot;,&quot;deleted&quot;) by Filesystem.dest Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=termsrv.dll Filesystem.file_path=&quot;*\\System32\\*&quot; Filesystem.action IN (&quot;modified&quot;,&quot;created&quot;,&quot;deleted&quot;) by Filesystem.dest Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d7b8be3488" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">OkoBot HDUtil launcher execution (target/nouac) with HWID guardrail</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d7b8be3488" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the OkoBot HDUtil launcher, a VMProtect-obfuscated module the SSH bot uses to deploy payloads via its &#x27;target&#x27; command (with optional &#x27;nouac&#x27;/&#x27;noattach&#x27;/&#x27;user=&#x27; and enumeration commands &#x27;enumsessions&#x27;/&#x27;enumadapters&#x27;). HDUtil gates execution on %PROGRAMDATA%\hwid.dat, so hwid.dat file activity is a corroborating signal.
-
-Rationale: Anchored on the launcher binary name HDUtil.exe and its exact command verbs (target, nouac, noattach, enumsessions, enumadapters) from the article&#x27;s command table, plus the %PROGRAMDATA%\hwid.dat HWID guardrail. These strings are wholly campaign-specific and won&#x27;t collide with commodity tooling.
-
-Cross-checked against:
-  • https://www.kaspersky.com/about/press-releases/kaspersky-reveals-a-new-malicious-framework-targeting-cryptocurrency-users-with-the-use-of-okospyware</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Execution Guardrails">T1480</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An unrelated legitimate utility coincidentally named HDUtil.exe (verify signer/path)</li><li>Hard-drive vendor tooling with &#x27;HDUtil&#x27; branding running benign commands</li><li>Security researcher detonating the sample in a sanctioned sandbox</li><li>Backup/imaging software passing a &#x27;target&#x27; argument (verify the binary is HDUtil.exe specifically)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessVersionInfoCompanyName has_any (&quot;Seagate&quot;,&quot;Western Digital&quot;,&quot;Microsoft&quot;) and FolderPath has &quot;Program Files&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the HDUtil.exe signer/path is not a known vendor tool, capture the SHA256, and check for %PROGRAMDATA%\hwid.dat and the payload named after &#x27;target&#x27; (e.g. extl.exe). 2) Contain: kill HDUtil.exe and its children, quarantine the binary, and isolate the host. 3) Hunt: pivot on the parent (SSH bot / TeviRAT), search the fleet for HDUtil.exe and hwid.dat, and review recent SFTP/SSH tunnel connections.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;HDUtil.exe&quot; or InitiatingProcessFileName =~ &quot;HDUtil.exe&quot;
-| where ProcessCommandLine has_any (&quot;target&quot;,&quot;nouac&quot;,&quot;noattach&quot;,&quot;enumsessions&quot;,&quot;enumadapters&quot;) or InitiatingProcessCommandLine has_any (&quot;target&quot;,&quot;nouac&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessIntegrityLevel
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where NewProcessName endswith &quot;\\HDUtil.exe&quot; or ParentProcessName endswith &quot;\\HDUtil.exe&quot;
-| where CommandLine has_any (&quot;target&quot;,&quot;nouac&quot;,&quot;noattach&quot;,&quot;enumsessions&quot;,&quot;enumadapters&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName, TokenElevationType
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot HDUtil Launcher Execution with target/nouac Commands
-id: c3d9a71f-6e28-4b0c-a1f7-9b4e2d8c05a2
-description: Detects the OkoBot HDUtil launcher invoked with its target/nouac/noattach or enumsessions/enumadapters commands
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1480
-  - attack.t1027
-  - attack.t1059
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_img:
-    Image|endswith: &#x27;\HDUtil.exe&#x27;
-  selection_cmd:
-    CommandLine|contains:
-      - &#x27;target&#x27;
-      - &#x27;nouac&#x27;
-      - &#x27;noattach&#x27;
-      - &#x27;enumsessions&#x27;
-      - &#x27;enumadapters&#x27;
-  condition: selection_img and selection_cmd
-level: high</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\HDUtil.exe OR *\\hdutil.exe) @CommandLine:(*target* OR *nouac* OR *noattach* OR *enumsessions* OR *enumadapters*)</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\\HDUtil\.exe$/i
-| CommandLine=/(target|nouac|noattach|enumsessions|enumadapters)/i
-| groupBy([aid, ComputerName, CommandLine, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=HDUtil.exe (Processes.process=&quot;*target*&quot; OR Processes.process=&quot;*nouac*&quot; OR Processes.process=&quot;*noattach*&quot; OR Processes.process=&quot;*enumsessions*&quot; OR Processes.process=&quot;*enumadapters*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=HDUtil.exe (Processes.process=&quot;*target*&quot; OR Processes.process=&quot;*nouac*&quot; OR Processes.process=&quot;*noattach*&quot; OR Processes.process=&quot;*enumsessions*&quot; OR Processes.process=&quot;*enumadapters*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="cdc94d11cd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">OkoBot UAC bypass via auto-elevated msconfig.exe spawning payload</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="cdc94d11cd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts OkoBot&#x27;s HDUtil &#x27;nouac&#x27; UAC bypass, which abuses Windows RPC and the auto-elevating msconfig.exe (Project Zero 2019 technique) to run a payload at High integrity without a UAC prompt. Flags msconfig.exe spawning a non-standard, elevated child process.
-
-Rationale: Grounded in the article&#x27;s explicit statement that HDUtil&#x27;s &#x27;nouac&#x27; option bypasses UAC via Windows RPC and auto-elevated msconfig.exe. msconfig.exe rarely spawns arbitrary elevated children, so a High/System-integrity child of msconfig.exe is a strong (if noisier) escalation signal.
-
-Cross-checked against:
-  • https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism: Bypass User Account Control">T1548.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin launching a tool from the msconfig &#x27;Tools&#x27; tab (Event Viewer, Command Prompt, etc.)</li><li>Legitimate troubleshooting where msconfig is used to launch system utilities</li><li>Software installers that call msconfig for boot configuration</li><li>Endpoint management scripts interacting with System Configuration</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has_any (&quot;\\Windows\\System32\\&quot;,&quot;\\Windows\\SysWOW64\\&quot;) and ProcessVersionInfoCompanyName has &quot;Microsoft&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the msconfig grandparent chain — was msconfig itself launched by explorer/user, or by a script/SSH-bot context? Check whether the child is a signed system tool or an unknown binary in a temp/ProgramData path. 2) Contain: if the child is unsigned/untrusted, kill it, quarantine, and isolate the host. 3) Hunt: correlate with HDUtil.exe target/nouac executions and hwid.dat on the same host, and review for follow-on payloads (extl.exe, keylogger, stealer).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName =~ &quot;msconfig.exe&quot;
-| where ProcessIntegrityLevel in (&quot;High&quot;,&quot;System&quot;)
-| where FileName !in~ (&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;msconfig.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessIntegrityLevel, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessIntegrityLevel, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where ParentProcessName endswith &quot;\\msconfig.exe&quot;
-| where NewProcessName !endswith &quot;\\conhost.exe&quot; and NewProcessName !endswith &quot;\\WerFault.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, TokenElevationType
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot UAC Bypass via Auto-Elevated msconfig.exe
-id: f7a4c2b9-1d68-4e3a-b0c5-8e2f6a9d4c71
-description: Detects msconfig.exe (auto-elevated) spawning a non-standard child process, matching the OkoBot HDUtil nouac UAC bypass
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1548.002
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    ParentImage|endswith: &#x27;\msconfig.exe&#x27;
-  filter:
-    Image|endswith:
-      - &#x27;\conhost.exe&#x27;
-      - &#x27;\WerFault.exe&#x27;
-  condition: selection and not filter
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\msconfig.exe OR *\\MSConfig.exe) -@Image:(*\\conhost.exe OR *\\WerFault.exe)</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^msconfig\.exe$/i
-| NOT ImageFileName=/\\(conhost|WerFault|msconfig)\.exe$/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, IntegrityLevel], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=msconfig.exe NOT Processes.process_name IN (&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;msconfig.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=msconfig.exe NOT Processes.process_name IN (&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;msconfig.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d9cd42d187" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">OkoBot browser-extension loader extl.exe deployed via HDUtil</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d9cd42d187" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts OkoBot&#x27;s first SFTP-delivered module: extl.exe, the browser-extensions loader (the injector chain that sideloads Rilide-style crypto-theft extensions), executed via &#x27;.\HDUtil.exe target extl.exe&#x27;. Detects extl.exe execution and its HDUtil parentage.
-
-Rationale: Uses the verbatim invocation &#x27;.\HDUtil.exe target extl.exe&#x27; and the module name extl.exe from the Browser-extensions-loader section. The HDUtil→extl.exe parent-child pair is a distinctive, high-fidelity pivot unique to OkoBot. Ledger/Trezor extension-injection objective corroborated by The Hacker News.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/07/okobot-malware-framework-injects-seed.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span> <span class="ind tech" title="DLL Side-Loading">T1574.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Unrelated internal tool named extl.exe (verify path/signer/hash)</li><li>Developer build artifact abbreviated &#x27;extl&#x27; (check parentage — should NOT be HDUtil.exe)</li><li>Sandbox detonation of the sample</li><li>Browser enterprise-extension deployment tooling (parent is a management agent, not HDUtil.exe)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture extl.exe SHA256 and confirm the parent is HDUtil.exe or a script chain; inspect Chromium &#x27;User Data\*\Extensions&#x27; and Local State/Secure Preferences for newly-added unpacked/unsigned extensions. 2) Contain: kill extl.exe, remove the injected extension(s), reset affected browser profiles, and isolate the host. 3) Hunt: pivot to SeedHunter/keylogger/stealer modules and check crypto-wallet apps (Ledger Live, Trezor Suite) and browser wallet extensions for tampering.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;extl.exe&quot; or (InitiatingProcessFileName =~ &quot;HDUtil.exe&quot; and ProcessCommandLine has &quot;extl&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where NewProcessName endswith &quot;\\extl.exe&quot; or (ParentProcessName endswith &quot;\\HDUtil.exe&quot; and CommandLine has &quot;extl&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot Browser Extension Loader extl.exe via HDUtil
-id: 2e6b81d4-4c19-4a7f-9e03-1b7c5f8a2d63
-description: Detects execution of the OkoBot extl.exe browser-extension loader, typically launched by HDUtil.exe target extl.exe
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1176
-  - attack.t1574.002
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_img:
-    Image|endswith: &#x27;\extl.exe&#x27;
-  selection_parent:
-    ParentImage|endswith: &#x27;\HDUtil.exe&#x27;
-    CommandLine|contains: &#x27;extl&#x27;
-  condition: selection_img or selection_parent
-level: high</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@Image:(*\\extl.exe OR *\\Extl.exe) OR (@ParentImage:(*\\HDUtil.exe OR *\\hdutil.exe) AND @CommandLine:*extl*))</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\\extl\.exe$/i OR (ParentBaseFileName=/^HDUtil\.exe$/i AND CommandLine=/extl/i)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=extl.exe OR (Processes.parent_process_name=HDUtil.exe AND Processes.process=&quot;*extl*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=extl.exe OR (Processes.parent_process_name=HDUtil.exe AND Processes.process=&quot;*extl*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6608b9228e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">OkoBot RDP back-connection: local RDP user creation + firewall opening</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="6608b9228e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the OkoBot SSH bot enabling attacker RDP access: adding a user to the &#x27;Remote Desktop Users&#x27; group, opening firewall ports for inbound RDP, and flipping fDenyTSConnections to 0. Any one of these on an endpoint outside a change window is suspicious; together they map the back-connection sequence.
-
-Rationale: Directly encodes the article&#x27;s back-connection steps: create a user in the &#x27;Remote Desktop Users&#x27; group, open firewall ports for inbound RDP, and enable RDP (fDenyTSConnections). Bundling the three complementary commands raises fidelity while each remains article-grounded.
-
-Cross-checked against:
-  • https://www.kaspersky.com/about/press-releases/kaspersky-reveals-a-new-malicious-framework-targeting-cryptocurrency-users-with-the-use-of-okospyware</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create Account: Local Account">T1136.001</span> <span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Impair Defenses: Disable or Modify System Firewall">T1562.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IT helpdesk enabling RDP for legitimate remote support</li><li>GPO/Intune baselines toggling fDenyTSConnections or RDP firewall rules</li><li>New admin onboarding added to Remote Desktop Users</li><li>RMM tooling opening 3389 during provisioning</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;gpscript.exe&quot;,&quot;mmc.exe&quot;,&quot;msiexec.exe&quot;) and InitiatingProcessParentFileName !in~ (&quot;gpscript.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process/parent — legitimate config comes from GPO/Intune/admin sessions; OkoBot comes from an SSH-bot/script chain. Enumerate any newly-added RDP user and its creation time. 2) Contain: remove the rogue account, close the firewall rule, restore fDenyTSConnections=1, and isolate the host. 3) Hunt: correlate with the &#x27;Apple Sync&#x27; task, termsrv.dll modification, and inbound RDP logons (4624 type 10) from external IPs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc5-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc5-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-179-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;net.exe&quot;,&quot;net1.exe&quot;) and ProcessCommandLine has &quot;localgroup&quot; and ProcessCommandLine has &quot;Remote Desktop Users&quot; and ProcessCommandLine has &quot;/add&quot;)
-     or (FileName =~ &quot;netsh.exe&quot; and ProcessCommandLine has &quot;advfirewall&quot; and ProcessCommandLine has &quot;3389&quot;)
-     or (FileName =~ &quot;netsh.exe&quot; and ProcessCommandLine has &quot;advfirewall&quot; and ProcessCommandLine has &quot;Remote Desktop&quot;)
-     or (FileName =~ &quot;reg.exe&quot; and ProcessCommandLine has &quot;fDenyTSConnections&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventID == 4688
-| where (NewProcessName endswith &quot;\\net.exe&quot; or NewProcessName endswith &quot;\\net1.exe&quot;) and CommandLine has &quot;localgroup&quot; and CommandLine has &quot;Remote Desktop Users&quot; and CommandLine has &quot;/add&quot;
-     or (NewProcessName endswith &quot;\\netsh.exe&quot; and CommandLine has &quot;advfirewall&quot; and (CommandLine has &quot;3389&quot; or CommandLine has &quot;Remote Desktop&quot;))
-     or (NewProcessName endswith &quot;\\reg.exe&quot; and CommandLine has &quot;fDenyTSConnections&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot RDP Back-Connection Enablement
-id: 9d1c3e6a-2b74-4f80-a6d2-5c8b1e7f04a9
-description: Detects OkoBot enabling inbound RDP by adding a local user to Remote Desktop Users, opening the firewall for 3389, or clearing fDenyTSConnections
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1136.001
-  - attack.t1021.001
-  - attack.t1562.004
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  sel_rdpuser:
-    Image|endswith:
-      - &#x27;\net.exe&#x27;
-      - &#x27;\net1.exe&#x27;
-    CommandLine|contains|all:
-      - &#x27;localgroup&#x27;
-      - &#x27;Remote Desktop Users&#x27;
-      - &#x27;/add&#x27;
-  sel_fw:
-    Image|endswith: &#x27;\netsh.exe&#x27;
-    CommandLine|contains|all:
-      - &#x27;advfirewall&#x27;
-      - &#x27;3389&#x27;
-  sel_reg:
-    Image|endswith: &#x27;\reg.exe&#x27;
-    CommandLine|contains: &#x27;fDenyTSConnections&#x27;
-  condition: 1 of sel_*
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4688 ((@Image:(*\\net.exe OR *\\net1.exe) AND @CommandLine:*localgroup* AND @CommandLine:*Remote*Desktop*Users* AND @CommandLine:*/add*) OR (@Image:(*\\netsh.exe OR *\\NETSH.EXE) AND @CommandLine:*advfirewall* AND @CommandLine:*3389*) OR (@Image:(*\\reg.exe OR *\\REG.EXE) AND @CommandLine:*fDenyTSConnections*))</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| (ImageFileName=/\\net1?\.exe$/i AND CommandLine=/localgroup/i AND CommandLine=/Remote Desktop Users/i AND CommandLine=/\/add/i) OR (ImageFileName=/\\netsh\.exe$/i AND CommandLine=/advfirewall/i AND CommandLine=/3389/) OR (ImageFileName=/\\reg\.exe$/i AND CommandLine=/fDenyTSConnections/i)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-179-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;net.exe&quot;,&quot;net1.exe&quot;) AND Processes.process=&quot;*localgroup*&quot; AND Processes.process=&quot;*Remote Desktop Users*&quot; AND Processes.process=&quot;*/add*&quot;) OR (Processes.process_name=netsh.exe AND Processes.process=&quot;*advfirewall*&quot; AND Processes.process=&quot;*3389*&quot;) OR (Processes.process_name=reg.exe AND Processes.process=&quot;*fDenyTSConnections*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;net.exe&quot;,&quot;net1.exe&quot;) AND Processes.process=&quot;*localgroup*&quot; AND Processes.process=&quot;*Remote Desktop Users*&quot; AND Processes.process=&quot;*/add*&quot;) OR (Processes.process_name=netsh.exe AND Processes.process=&quot;*advfirewall*&quot; AND Processes.process=&quot;*3389*&quot;) OR (Processes.process_name=reg.exe AND Processes.process=&quot;*fDenyTSConnections*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c82ebdeceb" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">OkoBot disabling Windows Defender notifications via registry</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c82ebdeceb" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the OkoBot SSH bot suppressing Defender alerts to enable stealthy module delivery, done via a registry modification. Detects setting DisableNotifications/DisableEnhancedNotifications under Windows Defender Security Center by a non-installer process.
-
-Rationale: Grounded in the article&#x27;s statement that the SSH bot &#x27;disables Windows Defender notifications via a registry modification&#x27; before delivering modules. Scoping to the Defender Security Center Notifications keys with a value of 1 and excluding installer/GPO writers keeps this targeted. Falcon left empty — FDR&#x27;s registry telemetry (AsepValueUpdate) only covers autostart keys, not this notification value.
-
-Cross-checked against:
-  • https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Enterprise GPO/Intune policy disabling Defender toast notifications org-wide</li><li>MDM baseline hardening that suppresses Security Center pop-ups</li><li>Third-party AV installer taking over Defender and muting notifications</li><li>Admin manually reducing notification noise on a jump box</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;gpscript.exe&quot;,&quot;msiexec.exe&quot;) or InitiatingProcessCommandLine has_any (&quot;intune&quot;,&quot;CCM&quot;,&quot;SCCM&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the writing process — policy comes from gpscript/msiexec/MDM; OkoBot comes from an SSH-bot/script chain or an unsigned binary. Check timing against any legitimate policy push. 2) Contain: revert the value, re-enable Defender notifications, and isolate the host if the writer is untrusted. 3) Hunt: look for follow-on OkoBot activity on the same host — HDUtil.exe, extl.exe, &#x27;Apple Sync&#x27; task, termsrv.dll patch, and SFTP module delivery.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc6-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-179-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType == &quot;RegistryValueSet&quot;
-| where RegistryKey has @&quot;Windows Defender Security Center\Notifications&quot; or RegistryValueName in~ (&quot;DisableNotifications&quot;,&quot;DisableEnhancedNotifications&quot;)
-| where RegistryValueData in (&quot;1&quot;,&quot;0x1&quot;)
-| where InitiatingProcessFileName !in~ (&quot;msiexec.exe&quot;,&quot;gpscript.exe&quot;,&quot;MsMpEng.exe&quot;)
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
-| where TimeGenerated &gt; ago(30d)
-| where RegistryKey has @&quot;Windows Defender Security Center\Notifications&quot; or RegistryValue in~ (&quot;DisableNotifications&quot;,&quot;DisableEnhancedNotifications&quot;)
-| where RegistryValueData in (&quot;1&quot;,&quot;0x1&quot;)
-| where not(ActingProcessName has_any (&quot;msiexec.exe&quot;,&quot;gpscript.exe&quot;,&quot;MsMpEng.exe&quot;))
-| project TimeGenerated, DvcHostname, RegistryKey, RegistryValue, RegistryValueData, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: OkoBot Disables Windows Defender Notifications via Registry
-id: 4b8e0f21-7c3a-49d6-b1e5-0a9c2d6f83b7
-description: Detects setting DisableNotifications/DisableEnhancedNotifications under Windows Defender Security Center, used by OkoBot to suppress Defender alerts
-references:
-  - https://securelist.com/okobot-framework-targets-cryptocurrency-wallets/120660/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1562.001
-logsource:
-  category: registry_event
-  product: windows
-detection:
-  selection:
-    TargetObject|contains: &#x27;Windows Defender Security Center\Notifications&#x27;
-    Details:
-      - &#x27;DWORD (0x00000001)&#x27;
-      - &#x27;1&#x27;
-  selection_val:
-    TargetObject|endswith:
-      - &#x27;\DisableNotifications&#x27;
-      - &#x27;\DisableEnhancedNotifications&#x27;
-    Details:
-      - &#x27;DWORD (0x00000001)&#x27;
-      - &#x27;1&#x27;
-  condition: selection or selection_val
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-179-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:13 @TargetObject:(*Windows?Defender?Security?Center\\Notifications* OR *\\DisableNotifications OR *\\DisableEnhancedNotifications) @Details:(*0x00000001* OR *DWORD*1*)</code></pre></div>
-    <div class="tab-content" id="art-179-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path=&quot;*Windows Defender Security Center\\Notifications*&quot; OR Registry.registry_value_name IN (&quot;DisableNotifications&quot;,&quot;DisableEnhancedNotifications&quot;)) Registry.registry_value_data IN (&quot;1&quot;,&quot;0x1&quot;) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path=&quot;*Windows Defender Security Center\\Notifications*&quot; OR Registry.registry_value_name IN (&quot;DisableNotifications&quot;,&quot;DisableEnhancedNotifications&quot;)) Registry.registry_value_data IN (&quot;1&quot;,&quot;0x1&quot;) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
-| order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(2h)
-| where DvcAction != &quot;Block&quot;
-| where ipv4_is_private(DstIpAddr) == false
-| summarize ConnCount = count(),
-            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
-            by DvcHostname, DstIpAddr, DstPortNumber
-| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
-| order by ConnCount desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc7-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-179-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Suspicious browser extension installation</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="bf48d37680" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc8-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceRegistryEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where RegistryKey has_any (&quot;\Software\Google\Chrome\Extensions\&quot;,&quot;\Software\Microsoft\Edge\Extensions\&quot;,&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessAccountName</code></pre></div>
-    <div class="tab-content" id="art-179-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>ImRegistryEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
-                              @&quot;\Software\Microsoft\Edge\Extensions\&quot;,
-                              @&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,
-          RegistryValue, RegistryValueData, ActingProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Browser Extension Installation via Registry
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
-status: experimental
-description: |
-    Registry writes under the browser extension policy keys —
-    administrative install of an extension. Often used by adware /
-    info-stealers to bypass user-level extension controls.
-references:
-    - https://attack.mitre.org/techniques/T1176/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1176
-    - attack.persistence
-logsource:
-    category: registry_event
-    product: windows
-detection:
-    selection:
-        TargetObject|contains:
-            - &#x27;\Software\Google\Chrome\Extensions\&#x27;
-            - &#x27;\Software\Microsoft\Edge\Extensions\&#x27;
-            - &#x27;\Software\Mozilla\Firefox\Extensions\&#x27;
-    condition: selection
-falsepositives:
-    - Group-policy-managed extension whitelists
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre><pre class="spl-mode-body" id="art-179-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path=&quot;*\Software\Google\Chrome\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Microsoft\Edge\Extensions\*&quot;
-        OR Registry.registry_path=&quot;*\Software\Mozilla\Firefox\Extensions\*&quot;)
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc9-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-179-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Crypto-wallet file/keystore access by non-wallet process</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="673ab6c4b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc10-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
-| where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
-                                  @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;,
-                                  @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;,
-                                  @&quot;\Atomic\Local Storage\&quot;)
-| where ActingProcessName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,
-                                  &quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
-status: experimental
-description: |
-    Stealers / wallet drainers read keystore files from MetaMask,
-    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
-    Filtering out the legitimate wallet binaries leaves only attacker
-    activity.
-references:
-    - https://attack.mitre.org/techniques/T1005/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1005
-    - attack.collection
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Ethereum\keystore\&#x27;
-            - &#x27;\Bitcoin\&#x27;
-            - &#x27;\Exodus\&#x27;
-            - &#x27;\Electrum\wallets\&#x27;
-            - &#x27;\MetaMask\&#x27;
-            - &#x27;\Phantom\&#x27;
-            - &#x27;\Atomic\Local Storage\&#x27;
-    filter_legit:
-        Image|endswith:
-            - &#x27;\MetaMask.exe&#x27;
-            - &#x27;\Exodus.exe&#x27;
-            - &#x27;\Atomic.exe&#x27;
-            - &#x27;\electrum.exe&#x27;
-            - &#x27;\Bitcoin.exe&#x27;
-            - &#x27;\Phantom.exe&#x27;
-    condition: selection_path and not filter_legit
-falsepositives:
-    - Backup software
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-179-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
-  <summary>
-    <span class="uc-title">Phishing-link click correlated to endpoint execution</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="53a9c31d59" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">User received an external email containing a URL, clicked it, and within
-60 seconds the recipient&#x27;s endpoint spawned a scripting interpreter or
-network downloader (PowerShell / cmd / mshta / curl / certutil / bitsadmin).
-This is the high-fidelity shape — a raw &quot;user clicked an emailed URL&quot;
-query is too noisy to alert on because every Microsoft 365 tenant
-generates thousands of legitimate clicks per day. The exec-correlation
-step suppresses the noise to roughly the rate at which a click actually
-drives onto-host execution, which is the actionable signal.
-Pair with UC_PHISH_LINK_BYPASS (Safe Links override) and UC_PHISH_LINK_NEWDOMAIN
-for orthogonal high-fidelity variants.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc11-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
-// Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
-// never spawn a non-browser child process, so the join eliminates the
-// 99% of noise that makes a raw click query unactionable.
-let LookbackDays = 7d;
-let SuspectClicks = UrlClickEvents
-    | where Timestamp &gt; ago(LookbackDays)
-    | where AccountName !endswith &quot;$&quot;
-    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-    | join kind=inner (
-        EmailEvents
-        | where Timestamp &gt; ago(LookbackDays)
-        | where DeliveryAction == &quot;Delivered&quot;
-        | where EmailDirection == &quot;Inbound&quot;
-        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
-                  RecipientEmailAddress, EmailTimestamp = Timestamp
-      ) on NetworkMessageId
-    | join kind=leftouter (
-        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
-      ) on NetworkMessageId, Url
-    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
-              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
-              ActionType;
-// Correlate to a non-browser child process spawned within 60 seconds on
-// the recipient&#x27;s device.
-DeviceProcessEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                         &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
-                        &quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
-| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
-| where Timestamp between (ClickTime .. ClickTime + 60s)
-| project ClickTime, ProcessTime = Timestamp,
-          DelaySec = datetime_diff(&#x27;second&#x27;, Timestamp, ClickTime),
-          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
-          Subject, Url, UrlDomain, ActionType,
-          FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
-// pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
-// non-browser child process. Lower fidelity than the Defender version.
-let LookbackDays = 7d;
-let SuspectMailUsers = OfficeActivity
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where OfficeWorkload == &quot;Exchange&quot;
-    | where Operation =~ &quot;Receive&quot;
-    | summarize Subject = any(Subject), Sender = any(Sender)
-                by MailboxOwnerUPN, MessageId, EmailTime = bin(TimeGenerated, 1m);
-SecurityEvent
-| where TimeGenerated &gt; ago(LookbackDays)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;\chrome.exe&quot;,&quot;\msedge.exe&quot;,
-                                     &quot;\firefox.exe&quot;,&quot;\outlook.exe&quot;,&quot;\brave.exe&quot;)
-| where NewProcessName has_any (&quot;\powershell.exe&quot;,&quot;\pwsh.exe&quot;,&quot;\cmd.exe&quot;,
-                                  &quot;\mshta.exe&quot;,&quot;\rundll32.exe&quot;,&quot;\regsvr32.exe&quot;,
-                                  &quot;\wscript.exe&quot;,&quot;\cscript.exe&quot;,&quot;\bitsadmin.exe&quot;,
-                                  &quot;\certutil.exe&quot;,&quot;\curl.exe&quot;,&quot;\wget.exe&quot;)
-| join kind=inner SuspectMailUsers on $left.Account == $right.MailboxOwnerUPN
-| where TimeGenerated between (EmailTime .. EmailTime + 60s)
-| project TimeGenerated, EmailTime, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine, Sender, Subject
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc11-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc11-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
-| tstats `summariesonly` earliest(_time) AS click_time
-    from datamodel=Web
-    where Web.action=&quot;allowed&quot;
-    by Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
-| join type=inner recipient
-    [| tstats `summariesonly` count
-         from datamodel=Email.All_Email
-         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
-         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
-     | `drop_dm_object_name(All_Email)`
-     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
-     | rename recipient AS recipient]
-| join type=inner src
-    [| tstats `summariesonly` earliest(_time) AS exec_time
-         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
-         from datamodel=Endpoint.Processes
-         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
-                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
-                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
-         by Processes.dest, Processes.user
-     | `drop_dm_object_name(Processes)`
-     | rename dest AS src]
-| eval delta_sec = exec_time - click_time
-| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
-| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
-        clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-179-uc11-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
-| tstats summariesonly=false earliest(_time) AS click_time
-    from datamodel=Web
-    where Web.action=&quot;allowed&quot;
-    by Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
-| join type=inner recipient
-    [| tstats summariesonly=false count
-         from datamodel=Email.All_Email
-         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
-         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
-     | `drop_dm_object_name(All_Email)`
-     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
-     | rename recipient AS recipient]
-| join type=inner src
-    [| tstats summariesonly=false earliest(_time) AS exec_time
-         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
-         from datamodel=Endpoint.Processes
-         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
-                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
-                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
-         by Processes.dest, Processes.user
-     | `drop_dm_object_name(Processes)`
-     | rename dest AS src]
-| eval delta_sec = exec_time - click_time
-| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
-| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
-        clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="384c7f898c" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
-  <summary>
-    <span class="uc-title">Email attachment opened from external sender</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="384c7f898c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Attachment delivery + execution by recipient — most common malware initial access.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc12-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc12-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let MalAttachments = EmailAttachmentInfo
-    | where Timestamp &gt; ago(LookbackDays)
-    | where AccountName !endswith &quot;$&quot;
-    | project NetworkMessageId, RecipientEmailAddress,
-              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
-DeviceProcessEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessFileName in~ (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
-                      &quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
-| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-179-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
-// OfficeActivity Send/Receive activity + correlate to host process spawn.
-let LookbackDays = 7d;
-let MailWithAttach = OfficeActivity
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where OfficeWorkload == &quot;Exchange&quot;
-    | where Operation in~ (&quot;Send&quot;,&quot;Receive&quot;)
-    | where isnotempty(MessageId)
-    | project EmailTime = TimeGenerated, MailboxOwnerUPN, Sender,
-              Recipients, Subject, MessageId;
-SecurityEvent
-| where TimeGenerated &gt; ago(LookbackDays)
-| where EventID == 4688
-| where ParentProcessName endswith &quot;OUTLOOK.EXE&quot;
-| where NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
-    from datamodel=Email.All_Email
-    where All_Email.file_name!=&quot;-&quot;
-    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
-| rename All_Email.recipient as user
-| join type=inner user
-    [| tstats `summariesonly` count
-        from datamodel=Endpoint.Processes
-        where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
-          AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
-        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-179-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
-    from datamodel=Email.All_Email
-    where All_Email.file_name!=&quot;-&quot;
-    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
-| rename All_Email.recipient as user
-| join type=inner user
-    [| tstats summariesonly=false count
-        from datamodel=Endpoint.Processes
-        where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
-          AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
-        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3e2a4a3a7f" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Office app spawning script/LOLBin child process</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3e2a4a3a7f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Classic macro/exploit pattern — Office app launching cmd/powershell/wmic/regsvr32.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc13-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc13-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc13-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc13-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc13-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-179-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName endswith &quot;\winword.exe&quot;
-   or ParentProcessName endswith &quot;\excel.exe&quot;
-   or ParentProcessName endswith &quot;\powerpnt.exe&quot;
-   or ParentProcessName endswith &quot;\outlook.exe&quot;
-   or ParentProcessName endswith &quot;\onenote.exe&quot;
-   or ParentProcessName endswith &quot;\mspub.exe&quot;
-   or ParentProcessName endswith &quot;\visio.exe&quot;
-| where NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc13-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
-status: experimental
-description: |
-    Word/Excel/Outlook/OneNote spawning powershell, cmd, wscript,
-    cscript, mshta, rundll32, regsvr32 — classic macro / embedded-
-    object payload signature.
-references:
-    - https://attack.mitre.org/techniques/T1059/
-    - https://attack.mitre.org/techniques/T1566/001/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059
-    - attack.t1566.001
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_parent:
-        ParentImage|endswith:
-            - &#x27;\winword.exe&#x27;
-            - &#x27;\excel.exe&#x27;
-            - &#x27;\powerpnt.exe&#x27;
-            - &#x27;\outlook.exe&#x27;
-            - &#x27;\onenote.exe&#x27;
-            - &#x27;\mspub.exe&#x27;
-            - &#x27;\visio.exe&#x27;
-    selection_child:
-        Image|endswith:
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-    condition: selection_parent and selection_child
-falsepositives:
-    - Legitimate automation macros in trusted internal documents
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc13-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
-      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-179-uc13-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
-      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="32899168e0" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Scheduled task created with suspicious image / encoded args</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="32899168e0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task">T1053.005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc14-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc14-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc14-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc14-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc14-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName =~ &quot;schtasks.exe&quot;
-| where ProcessCommandLine has &quot;/create&quot;
-| where ProcessCommandLine has_any (&quot;powershell&quot;,&quot;cmd.exe&quot;,&quot;rundll32&quot;,&quot;-enc&quot;,&quot;FromBase64&quot;,&quot;\Users\Public&quot;,&quot;\AppData\&quot;)
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName</code></pre></div>
-    <div class="tab-content" id="art-179-uc14-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\schtasks.exe&quot;
-| where CommandLine has &quot;/create&quot;
-| where CommandLine has_any (&quot;powershell&quot;,&quot;cmd.exe&quot;,&quot;rundll32&quot;,&quot;-enc&quot;,&quot;FromBase64&quot;,
-                              &quot;\Users\Public&quot;, &quot;\AppData\&quot;)
-| project TimeGenerated, Computer, Account, CommandLine,
-          ParentProcessName, NewProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc14-sigma"><pre><button class="copy-btn">COPY</button><code>title: Scheduled Task Creation with Suspicious Image / Encoded Args
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0d
-status: experimental
-description: |
-    schtasks.exe /create with payload-shaped action — points at
-    powershell, cmd, rundll32, encoded-base64, or user-writable paths.
-references:
-    - https://attack.mitre.org/techniques/T1053/005/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1053.005
-    - attack.persistence
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_schtasks:
-        Image|endswith: &#x27;\schtasks.exe&#x27;
-        CommandLine|contains: &#x27;/create&#x27;
-    selection_payload:
-        CommandLine|contains:
-            - &#x27;powershell&#x27;
-            - &#x27;cmd.exe&#x27;
-            - &#x27;rundll32&#x27;
-            - &#x27;-enc&#x27;
-            - &#x27;FromBase64&#x27;
-            - &#x27;\Users\Public&#x27;
-            - &#x27;\AppData\&#x27;
-    condition: selection_schtasks and selection_payload
-falsepositives:
-    - GPO-driven scheduled tasks, MDT/SCCM imaging
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc14-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc14-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc14-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc14-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*/create*&quot;
-      AND (Processes.process=&quot;*powershell*&quot; OR Processes.process=&quot;*cmd.exe*&quot;
-        OR Processes.process=&quot;*rundll32*&quot; OR Processes.process=&quot;*-enc*&quot;
-        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*\Users\Public*&quot;
-        OR Processes.process=&quot;*\AppData\*&quot;)
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-179-uc14-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*/create*&quot;
-      AND (Processes.process=&quot;*powershell*&quot; OR Processes.process=&quot;*cmd.exe*&quot;
-        OR Processes.process=&quot;*rundll32*&quot; OR Processes.process=&quot;*-enc*&quot;
-        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*\Users\Public*&quot;
-        OR Processes.process=&quot;*\AppData\*&quot;)
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="aa8fbce36c" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="aa8fbce36c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Browser-pasted PowerShell launched from explorer/Run dialog — ClickFix social engineering.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious Copy and Paste">T1204.004</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc15-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc15-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc15-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc15-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc15-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-179-uc15-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName endswith &quot;\explorer.exe&quot;
-   or ParentProcessName endswith &quot;\RuntimeBroker.exe&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc15-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
-status: experimental
-description: |
-    &quot;FakeCaptcha&quot; / &quot;ClickFix&quot; social-engineering: malicious site asks
-    user to press Win+R and paste a payload. The result is
-    powershell/mshta launched directly from explorer.exe with iex /
-    base64 / downloadstring in the command line.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1204/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1204.002
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_parent:
-        ParentImage|endswith:
-            - &#x27;\explorer.exe&#x27;
-            - &#x27;\RuntimeBroker.exe&#x27;
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-    selection_cmd:
-        CommandLine|contains:
-            - &#x27;iex&#x27;
-            - &#x27;invoke-expression&#x27;
-            - &#x27;frombase64&#x27;
-            - &#x27;downloadstring&#x27;
-            - &#x27;hxxp&#x27;
-            - &#x27;curl &#x27;
-            - &#x27;wget &#x27;
-    condition: selection_parent and selection_child and selection_cmd
-falsepositives:
-    - IT-driven scripted automation that admins paste-launch
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc15-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc15-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc15-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc15-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
-      AND (Processes.process=&quot;*iex*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-179-uc15-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
-      AND (Processes.process=&quot;*iex*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc16-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc16-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc16-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-179-uc16-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc16-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-179-uc16-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc16-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-179-uc16-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc16-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc16-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc16-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-179-uc16-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="cdc0cd66fc" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — OkoBot: new sophisticated malware framework targets cryptocurrency users</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cdc0cd66fc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Persistence (article-specific)">T1053.005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-179-uc17-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-179-uc17-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-179-uc17-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-179-uc17-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — OkoBot: new sophisticated malware framework targets cryptocurrency users
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;termsrv.dll&quot;, &quot;msconfig.exe&quot;, &quot;hdutil.exe&quot;, &quot;extl.exe&quot;, &quot;msedge.dll&quot;, &quot;chrome.dll&quot;, &quot;volume2.exe&quot;, &quot;protobuf.dll&quot;, &quot;version.dll&quot;, &quot;ext_daemon.exe&quot;, &quot;seedhunter_x64.exe&quot;, &quot;keylog_x64.dll&quot;, &quot;oko.dll&quot;, &quot;go.bat&quot;) or FolderPath has_any (&quot;%USERPROFILE%\.ssh\go.bat&quot;, &quot;%PROGRAMDATA%\HDVideo\HDUtil.exe&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;%USERPROFILE%\.ssh\go.bat&quot;, &quot;%PROGRAMDATA%\HDVideo\HDUtil.exe&quot;) or FileName in~ (&quot;termsrv.dll&quot;, &quot;msconfig.exe&quot;, &quot;hdutil.exe&quot;, &quot;extl.exe&quot;, &quot;msedge.dll&quot;, &quot;chrome.dll&quot;, &quot;volume2.exe&quot;, &quot;protobuf.dll&quot;, &quot;version.dll&quot;, &quot;ext_daemon.exe&quot;, &quot;seedhunter_x64.exe&quot;, &quot;keylog_x64.dll&quot;, &quot;oko.dll&quot;, &quot;go.bat&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc17-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — OkoBot: new sophisticated malware framework targets cryptocurrency users
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;termsrv.dll&quot;, &quot;msconfig.exe&quot;, &quot;hdutil.exe&quot;, &quot;extl.exe&quot;, &quot;msedge.dll&quot;, &quot;chrome.dll&quot;, &quot;volume2.exe&quot;, &quot;protobuf.dll&quot;, &quot;version.dll&quot;, &quot;ext_daemon.exe&quot;, &quot;seedhunter_x64.exe&quot;, &quot;keylog_x64.dll&quot;, &quot;oko.dll&quot;, &quot;go.bat&quot;) or FolderPath has_any (&quot;%USERPROFILE%\.ssh\go.bat&quot;, &quot;%PROGRAMDATA%\HDVideo\HDUtil.exe&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;%USERPROFILE%\.ssh\go.bat&quot;, &quot;%PROGRAMDATA%\HDVideo\HDUtil.exe&quot;) or FileName in~ (&quot;termsrv.dll&quot;, &quot;msconfig.exe&quot;, &quot;hdutil.exe&quot;, &quot;extl.exe&quot;, &quot;msedge.dll&quot;, &quot;chrome.dll&quot;, &quot;volume2.exe&quot;, &quot;protobuf.dll&quot;, &quot;version.dll&quot;, &quot;ext_daemon.exe&quot;, &quot;seedhunter_x64.exe&quot;, &quot;keylog_x64.dll&quot;, &quot;oko.dll&quot;, &quot;go.bat&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-179-uc17-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-179-uc17-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-179-uc17-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-179-uc17-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — OkoBot: new sophisticated malware framework targets cryptocurrency users ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;termsrv.dll&quot;,&quot;msconfig.exe&quot;,&quot;hdutil.exe&quot;,&quot;extl.exe&quot;,&quot;msedge.dll&quot;,&quot;chrome.dll&quot;,&quot;volume2.exe&quot;,&quot;protobuf.dll&quot;,&quot;version.dll&quot;,&quot;ext_daemon.exe&quot;,&quot;seedhunter_x64.exe&quot;,&quot;keylog_x64.dll&quot;,&quot;oko.dll&quot;,&quot;go.bat&quot;) OR Processes.process_path=&quot;*%USERPROFILE%\.ssh\go.bat*&quot; OR Processes.process_path=&quot;*%PROGRAMDATA%\HDVideo\HDUtil.exe*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*%USERPROFILE%\.ssh\go.bat*&quot; OR Filesystem.file_path=&quot;*%PROGRAMDATA%\HDVideo\HDUtil.exe*&quot; OR Filesystem.file_name IN (&quot;termsrv.dll&quot;,&quot;msconfig.exe&quot;,&quot;hdutil.exe&quot;,&quot;extl.exe&quot;,&quot;msedge.dll&quot;,&quot;chrome.dll&quot;,&quot;volume2.exe&quot;,&quot;protobuf.dll&quot;,&quot;version.dll&quot;,&quot;ext_daemon.exe&quot;,&quot;seedhunter_x64.exe&quot;,&quot;keylog_x64.dll&quot;,&quot;oko.dll&quot;,&quot;go.bat&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-179-uc17-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — OkoBot: new sophisticated malware framework targets cryptocurrency users ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;termsrv.dll&quot;,&quot;msconfig.exe&quot;,&quot;hdutil.exe&quot;,&quot;extl.exe&quot;,&quot;msedge.dll&quot;,&quot;chrome.dll&quot;,&quot;volume2.exe&quot;,&quot;protobuf.dll&quot;,&quot;version.dll&quot;,&quot;ext_daemon.exe&quot;,&quot;seedhunter_x64.exe&quot;,&quot;keylog_x64.dll&quot;,&quot;oko.dll&quot;,&quot;go.bat&quot;) OR Processes.process_path=&quot;*%USERPROFILE%\.ssh\go.bat*&quot; OR Processes.process_path=&quot;*%PROGRAMDATA%\HDVideo\HDUtil.exe*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*%USERPROFILE%\.ssh\go.bat*&quot; OR Filesystem.file_path=&quot;*%PROGRAMDATA%\HDVideo\HDUtil.exe*&quot; OR Filesystem.file_name IN (&quot;termsrv.dll&quot;,&quot;msconfig.exe&quot;,&quot;hdutil.exe&quot;,&quot;extl.exe&quot;,&quot;msedge.dll&quot;,&quot;chrome.dll&quot;,&quot;volume2.exe&quot;,&quot;protobuf.dll&quot;,&quot;version.dll&quot;,&quot;ext_daemon.exe&quot;,&quot;seedhunter_x64.exe&quot;,&quot;keylog_x64.dll&quot;,&quot;oko.dll&quot;,&quot;go.bat&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

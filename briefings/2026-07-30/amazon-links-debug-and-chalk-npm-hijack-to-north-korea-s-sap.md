@@ -306,7 +306,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Amazon Links Debug and Chalk npm Hijack to North Korea’s Sapphire Sleet
 
-`UC_25_9` · phase: **exploit** · confidence: **High**
+`UC_27_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
