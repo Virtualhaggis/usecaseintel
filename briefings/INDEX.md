@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,9 +14,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
 - [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
+- [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
+- [the network has become the control plane for ai security](./2026-07-30/the-network-has-become-the-control-plane-for-ai-security.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
 
 ## 2026-07-29

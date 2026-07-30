@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-exposed BMC IPMI RAKP hash disclosure exposure (UDP/623)
 
-`UC_52_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_54_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### IPMI/BMC service discovery scan across many hosts (UDP/623)
 
-`UC_52_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_54_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Successful IPMI/BMC login from unexpected source using default ADMIN/root accounts
 
-`UC_52_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_54_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### BMC firmware flash / rogue admin account creation (iLOBleed-style persistence)
 
-`UC_52_13` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_54_13` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

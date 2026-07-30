@@ -1,3 +1,1049 @@
+<article class="card" id="art-152" data-art-slug="2026-07-16-ghsa-critical-cve-2026-55579-pheditor-hardcoded-default-pass"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
+  data-targets="vcs,windows"
+  data-uc-count="6" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; with no forced change enables full application compromise Pheditor: Hardcoded default password &#x27;admin&#x27; with no forced change enables full application compromise CVE-2026-55579 T1190 [LLM] Pheditor terminal RCE: web-server/PHP process spawns shell (CVE-2026-55579) [LLM] Pheditor file-upload abuse: web-server process writes new .php webshell [LLM] Pheditor source tampering: modification of pheditor.php (hash rewrite / backdoor persistence) [LLM] Pheditor default-credential exploitation traffic: POST to /pheditor.php from external source Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-16-ghsa-critical-cve-2026-55579-pheditor-hardcoded-default-pass" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-p4h7-p9rj-2pq2" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; with no forced change enables full application compromise</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-16</span>
+    <span>6 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Pheditor: Hardcoded default password &#x27;admin&#x27; with no forced change enables full application compromise</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55579</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-152-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-152"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-152-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Pheditor default-credential exploitation traffic: POST to /pheditor.php from external source</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Pheditor terminal RCE: web-server/PHP process spawns shell (CVE-2026-55579)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Pheditor file-upload abuse: web-server process writes new .php webshell · [LLM] Pheditor source tampering: modification of pheditor.php (hash rewrite / backdoor persistence) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="fb0e6e5816" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <summary>
+    <span class="uc-title">Pheditor terminal RCE: web-server/PHP process spawns shell (CVE-2026-55579)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="fb0e6e5816" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the PHP/web-server process behind pheditor.php spawning an interactive shell or recon binary, which is exactly what the app&#x27;s terminal feature does after an attacker logs in with the hardcoded default password &#x27;admin&#x27;. Web servers legitimately almost never spawn sh/bash/cmd, so this is the highest-fidelity signal of terminal-feature RCE.
+
+Rationale: Anchored on Pheditor&#x27;s terminal feature (PoC: action=terminal, command=`echo \`id\``) which makes the php/web-server user exec a shell; the web-server-parent + shell-child pair is inherently rare. Corroborated by CVE-2026-48030 which documents the same terminal command handler.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843
+  • https://github.com/pheditor/pheditor</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate PHP application shelling out via exec()/system() for image processing (ImageMagick, ffmpeg wrappers)</li><li>Deployment/health-check scripts where php-fpm runs a shell one-liner</li><li>Composer or CI hooks invoked under the web-server account during deploys</li><li>Monitoring agents that fork whoami/uname under the httpd service account</li><li>Legitimate admin actually using the Pheditor terminal for maintenance</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;convert&quot;,&quot;ffmpeg&quot;,&quot;composer&quot;,&quot;healthcheck&quot;,&quot;/opt/deploy/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: pull the child process command line and the parent php command line (which often contains the pheditor.php script path); confirm the shell executed attacker recon (id, whoami, uname, curl). 2. Contain: isolate the host, kill the php/web-server process tree, and rotate the Pheditor password off &#x27;admin&#x27; (or take the app offline) since default creds grant terminal access. 3. Hunt: review the web access log for the source IP&#x27;s prior POSTs to /pheditor.php, check for webshell .php drops in web root and any modification of pheditor.php itself.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-152-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-152-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-152-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-152-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-152-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-152-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-152-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python3&quot;,&quot;python&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where (ActingProcessName has_any (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;) or ParentProcessName has_any (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;))
+| where TargetProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;/id&quot;,&quot;/whoami&quot;,&quot;/uname&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/python3&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ParentProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Pheditor Terminal RCE - Web Server Process Spawns Shell (CVE-2026-55579)
+id: 8b1d2f6a-3c4e-4a91-9b77-2f0e1d6c9a51
+description: Detects a PHP or web-server process spawning a shell or recon binary, consistent with Pheditor&#x27;s terminal feature executing commands after default-credential login.
+references:
+  - https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+  - https://github.com/advisories/GHSA-jvc5-6g7q-c843
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/php&#x27;
+      - &#x27;/php-cgi&#x27;
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/nginx&#x27;
+      - &#x27;\w3wp.exe&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/uname&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-152-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\php.exe OR *\PHP.exe OR *\php-cgi.exe OR *\httpd.exe OR *\nginx.exe OR *\w3wp.exe) @Image:(*\cmd.exe OR *\CMD.exe OR *\powershell.exe OR *\PowerShell.exe OR *\whoami.exe)</code></pre></div>
+    <div class="tab-content" id="art-152-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(php|php-cgi|php-fpm|httpd|apache2|nginx|w3wp\.exe)$/i
+| ImageFileName=/(\/(sh|bash|dash|zsh|id|whoami|uname|curl|wget|nc|ncat|python3)|\\(cmd|powershell)\.exe)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-152-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-152-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-152-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-152-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-152-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cfb414bdad" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">Pheditor file-upload abuse: web-server process writes new .php webshell</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="cfb414bdad" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a PHP/web-server process creating or renaming a .php file (other than pheditor.php) in the web root, the expected outcome of abusing Pheditor&#x27;s authenticated file-upload/editor to drop a webshell after default-credential login. A running web server writing brand-new executable PHP is a classic webshell-install signal.
+
+Rationale: Article names &#x27;file upload&#x27; and &#x27;file editor&#x27; as compromise vectors enabling arbitrary file write/webshell; the discriminator is a web-server process creating a NEW .php (excluding the app&#x27;s own pheditor.php, covered separately). Path-agnostic so it works regardless of MAIN_DIR location.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+  • https://github.com/pheditor/pheditor</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Application caching that compiles/writes .php (Twig cache, Smarty templates_c) under the web-server user</li><li>Composer/CI deploy writing vendor .php files as the deploy runs under the web account</li><li>CMS auto-update (WordPress/Drupal) writing plugin .php via php-fpm</li><li>Legitimate Pheditor admin creating a new .php through the editor for maintenance</li><li>Opcache/preload warmers touching .php files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has_any (&quot;\\cache\\&quot;, &quot;/cache/&quot;, &quot;/templates_c/&quot;, &quot;/var/cache/&quot;, &quot;\\vendor\\&quot;, &quot;/vendor/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: open the newly written .php and grep for webshell markers (eval, system, passthru, base64_decode, $_REQUEST/$_POST exec); note file path relative to web root. 2. Contain: quarantine the file, isolate the host, and reset the Pheditor password off default &#x27;admin&#x27;. 3. Hunt: pivot on subsequent requests to the new .php filename in web logs, look for php spawning a shell (see terminal-RCE UC), and check whether pheditor.php source was also modified.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-152-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-152-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-152-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-152-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-152-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-152-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-152-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FileName endswith &quot;.php&quot;
+| where FileName !~ &quot;pheditor.php&quot;
+| where InitiatingProcessFileName in~ (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where TargetFileName endswith &quot;.php&quot;
+| where TargetFileName !endswith &quot;pheditor.php&quot;
+| where ActingProcessName has_any (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Pheditor File-Upload Abuse - Web Server Writes New PHP Webshell (CVE-2026-55579)
+id: c2a7f04b-6e19-4b8c-9d3a-1e5f7a2b8c40
+description: Detects a PHP or web-server process writing a new .php file (excluding pheditor.php), consistent with Pheditor file-upload/editor abuse dropping a webshell.
+references:
+  - https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1505.003
+  - attack.t1190
+logsource:
+  category: file_event
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;/php&#x27;
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/nginx&#x27;
+      - &#x27;\w3wp.exe&#x27;
+    TargetFilename|endswith: &#x27;.php&#x27;
+  filter_self:
+    TargetFilename|endswith: &#x27;pheditor.php&#x27;
+  condition: selection and not filter_self
+level: high</code></pre></div>
+    <div class="tab-content" id="art-152-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\php.exe OR *\PHP.exe OR *\php-cgi.exe OR *\httpd.exe OR *\w3wp.exe) @TargetFilename:(*.php OR *.PHP) -@TargetFilename:(*\pheditor.php OR *\Pheditor.php)</code></pre></div>
+    <div class="tab-content" id="art-152-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| ContextImageFileName=/(php|php-cgi|php-fpm|httpd|apache2|nginx|w3wp\.exe)$/i
+| TargetFileName=/\.php$/i
+| NOT (TargetFileName=/pheditor\.php$/i)
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-152-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-152-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-152-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-152-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*.php&quot; AND Filesystem.file_name!=&quot;pheditor.php&quot; AND Filesystem.process_name IN (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php.exe&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-152-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*.php&quot; AND Filesystem.file_name!=&quot;pheditor.php&quot; AND Filesystem.process_name IN (&quot;php&quot;,&quot;php-cgi&quot;,&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php.exe&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="59a2e09237" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">Pheditor source tampering: modification of pheditor.php (hash rewrite / backdoor persistence)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="59a2e09237" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts any create/modify/rename of pheditor.php. The app&#x27;s password-change routine writes the new SHA-512 hash directly into pheditor.php source, so an attacker with default-cred access can rewrite the hash to plant a persistent credential/backdoor. This surfaces both malicious source tampering and legitimate-but-risky in-source password changes for review.
+
+Rationale: Article pins the credential store at pheditor.php:11 (unsalted SHA-512) and states the password-change feature writes the new hash into the PHP source (lines 363-391); any write to pheditor.php is therefore high-value — either a backdoor hash-rewrite or a password change that must be validated.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+  • https://github.com/pheditor/pheditor</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Host Software Binary">T1554</span> <span class="ind tech" title="Account Manipulation">T1098</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin changing the Pheditor password (the app rewrites pheditor.php by design)</li><li>git pull / deploy updating pheditor.php to a new release</li><li>Editor/IDE atomic-save creating a temp then renaming to pheditor.php</li><li>Backup/restore tooling touching pheditor.php mtime</li><li>Config-management (Ansible/Puppet) redeploying the file</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;git&quot;,&quot;git.exe&quot;,&quot;ansible&quot;,&quot;puppet&quot;,&quot;ansible-playbook&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: diff the new pheditor.php against a known-good baseline for a changed PASSWORD hash (line 11) or injected eval/system/backdoor logic in lines 1-20; identify the writing process/user. 2. Contain: if the change is not an authorized password rotation, restore the file from a trusted baseline, isolate the host, and force a real password reset off default &#x27;admin&#x27;. 3. Hunt: correlate with the source IP that authenticated to /pheditor.php, look for terminal-RCE shell spawns and dropped webshell .php files on the same host.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-152-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-152-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-152-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-152-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-152-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-152-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-152-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;pheditor.php&quot;
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileName =~ &quot;pheditor.php&quot;
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, EventType, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Pheditor Source File Modified - Password Hash Rewrite / Backdoor (CVE-2026-55579)
+id: 5f9c1a2d-8b6e-4c07-a1f3-9d2e4b7c6a18
+description: Detects modification, creation, or rename of pheditor.php. The app rewrites its SHA-512 password hash into this source file, so tampering indicates a planted credential or backdoor.
+references:
+  - https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1554
+  - attack.t1098
+logsource:
+  category: file_event
+detection:
+  selection:
+    TargetFilename|endswith: &#x27;pheditor.php&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-152-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\pheditor.php OR *\Pheditor.php OR *\PHEDITOR.PHP)</code></pre></div>
+    <div class="tab-content" id="art-152-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/(\\|\/)pheditor\.php$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-152-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-152-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-152-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-152-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;pheditor.php&quot; AND Filesystem.action IN (&quot;modified&quot;,&quot;created&quot;,&quot;renamed&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-152-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;pheditor.php&quot; AND Filesystem.action IN (&quot;modified&quot;,&quot;created&quot;,&quot;renamed&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="08ac5bf558" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Pheditor default-credential exploitation traffic: POST to /pheditor.php from external source</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="08ac5bf558" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces HTTP POST requests to /pheditor.php (the single-file app&#x27;s auth + terminal + upload endpoint), plus any request whose query string carries action=terminal/upload/command/pheditor_password. For an internet-facing deployment still on the default &#x27;admin&#x27; password this is the initial-access footprint. Hunting-tier because standard access logs don&#x27;t capture the POST body that distinguishes the action.
+
+Rationale: Uses the article&#x27;s fixed endpoint (/pheditor.php) and PoC parameter names (pheditor_password, action=terminal, command=) as the pivot. Defender/Falcon/Datadog/CloudWatch left empty because HTTP access logs for a self-hosted PHP app don&#x27;t ship to those EDR/cloud sources; Sentinel W3CIISLog and Splunk Web cover IIS/App Service/proxy telemetry.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Default Accounts">T1078.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internal admin logging into and using Pheditor from a known workstation/VPN IP</li><li>Uptime/health monitors POSTing to the page</li><li>Vulnerability scanners (Nessus/Qualys) probing /pheditor.php</li><li>Search-engine or archival bots hitting the URL</li><li>Internal automation that legitimately edits files through the app</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP !in (&quot;127.0.0.1&quot;,&quot;::1&quot;) and csUserAgent !has &quot;Nessus&quot; and csUserAgent !has &quot;Qualys&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: rank source IPs by request volume and geolocation; flag external/unexpected IPs and any non-browser user-agents, and check scStatus for 200/302 (successful auth). 2. Contain: if the host is internet-facing on default creds, take it offline or firewall /pheditor.php to trusted IPs and change the password off &#x27;admin&#x27;. 3. Hunt: for the same source IP and host, pivot to endpoint telemetry for php spawning shells (terminal RCE), new .php webshell writes, and pheditor.php source modification.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-152-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-152-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-152-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-152-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriStem =~ &quot;/pheditor.php&quot;
+| where csMethod == &quot;POST&quot; or csUriQuery has_any (&quot;action=terminal&quot;,&quot;action=upload&quot;,&quot;command=&quot;,&quot;pheditor_password=&quot;)
+| summarize Requests=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Methods=make_set(csMethod), StatusCodes=make_set(scStatus), Queries=make_set(csUriQuery) by cIP, csUserAgent, sSiteName
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Pheditor Default-Cred Endpoint Access - POST /pheditor.php (CVE-2026-55579)
+id: 9d4b7e15-2c83-4a6f-b0d1-7e6a3f2c9b52
+description: Detects HTTP POST requests to the Pheditor single-file endpoint, the auth/terminal/upload surface abused via the hardcoded default password.
+references:
+  - https://github.com/advisories/GHSA-p4h7-p9rj-2pq2
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1078.001
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem|endswith: &#x27;/pheditor.php&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-152-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-152-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-152-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-152-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*pheditor.php*&quot; AND (Web.http_method=&quot;POST&quot; OR Web.uri_query=&quot;*action=terminal*&quot; OR Web.uri_query=&quot;*action=upload*&quot; OR Web.uri_query=&quot;*command=*&quot; OR Web.uri_query=&quot;*pheditor_password=*&quot;)) by Web.src Web.dest Web.http_user_agent Web.url Web.http_method Web.status | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre><pre class="spl-mode-body" id="art-152-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*pheditor.php*&quot; AND (Web.http_method=&quot;POST&quot; OR Web.uri_query=&quot;*action=terminal*&quot; OR Web.uri_query=&quot;*action=upload*&quot; OR Web.uri_query=&quot;*command=*&quot; OR Web.uri_query=&quot;*pheditor_password=*&quot;)) by Web.src Web.dest Web.http_user_agent Web.url Web.http_method Web.status | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-152-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-152-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-152-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-152-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-55579&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-152-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-55579&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-152-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-152-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-152-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-152-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-55579&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-152-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-55579&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e5aa35475e" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e5aa35475e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-152-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-152-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-152-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-152-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/tmp/pheditor-test&quot;, &quot;/tmp/cookies.txt&quot;, &quot;/dev/null&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/tmp/pheditor-test&quot;, &quot;/tmp/cookies.txt&quot;, &quot;/dev/null&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-152-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-152-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-152-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-152-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/pheditor-test*&quot; OR Filesystem.file_path=&quot;*/tmp/cookies.txt*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-152-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55579: Pheditor: Hardcoded default password &#x27;admin&#x27; w ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/pheditor-test*&quot; OR Filesystem.file_path=&quot;*/tmp/cookies.txt*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-153" data-art-slug="2026-07-16-ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="kubernetes,linux,vcs,windows"
+  data-uc-count="8" data-llm-uc-count="6"
+  data-search="[GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Improper Input Validation in EnvoyExtensionPolicy Lua Allows Secret Disclosure Envoy Gateway: Authentication Bypass via Improper Input Validation in EnvoyExtensionPolicy Lua Allows Secret Disclosure CVE-2026-53713  [LLM] EnvoyExtensionPolicy Lua with double-slash path traversal to secrets (CVE-2026-53713) [LLM] Leaked SA token / file contents in EnvoyExtensionPolicy status (CVE-2026-53713 disclosure) [LLM] EnvoyExtensionPolicy Lua invoking os/io/debug file primitives [LLM] Anomalous EnvoyExtensionPolicy submitter / suspicious policy name [LLM] Vulnerable Envoy Gateway version exposed to CVE-2026-53713 [LLM] Envoy Gateway ServiceAccount token reuse for anomalous K8s API actions Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-16-ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-wcrf-9vrr-854f" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Improper Input Validation in EnvoyExtensionPolicy Lua Allows Secret Disclosure</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-16</span>
+    <span>8 use cases</span>
+    <span>0 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Envoy Gateway: Authentication Bypass via Improper Input Validation in EnvoyExtensionPolicy Lua Allows Secret Disclosure</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-53713</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-153-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-153"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-153-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable Envoy Gateway version exposed to CVE-2026-53713 · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Anomalous EnvoyExtensionPolicy submitter / suspicious policy name</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] EnvoyExtensionPolicy Lua with double-slash path traversal to secrets (CVE-2026-53713) · [LLM] EnvoyExtensionPolicy Lua invoking os/io/debug file primitives</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Leaked SA token / file contents in EnvoyExtensionPolicy status (CVE-2026-53713 disclosure) · [LLM] Envoy Gateway ServiceAccount token reuse for anomalous K8s API actions</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="d1416337e2" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,linux,vcs" open>
+  <summary>
+    <span class="uc-title">EnvoyExtensionPolicy Lua with double-slash path traversal to secrets (CVE-2026-53713)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d1416337e2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts EnvoyExtensionPolicy create/update whose inline Lua contains the exact double-slash bypass paths (//etc/passwd, //var/run/secrets/kubernetes.io/serviceaccount/token, //proc/self/environ, //certs/) that defeat the is_critical_path check in security.lua. This is the concrete exploit signature for arbitrary file read from the Envoy Gateway controller pod during Strict validation.
+
+Rationale: Uses the exact double-slash payload paths named in the advisory (//etc/passwd, //var/run/secrets/kubernetes.io/serviceaccount/token, //proc/self/environ, //certs/) scoped to the envoyextensionpolicies resource — legitimate Lua policies never reference these. Cross-checked GHSA-wcrf-9vrr-854f and the related GHSA-xrwg-mqj6-6m22.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-wcrf-9vrr-854f
+  • https://github.com/envoyproxy/gateway/security/advisories/GHSA-xrwg-mqj6-6m22
+  • https://advisories.gitlab.com/golang/github.com/envoyproxy/gateway/CVE-2026-22771/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security team submitting a sanctioned validation/PoC policy to confirm patch status</li><li>Automated CVE-scanner or admission-controller test harness replaying the exploit manifest</li><li>A Lua policy that legitimately references /certs/ (single slash) mis-typed with a double slash by an operator</li><li>Backup/GitOps replay re-applying an old exploit manifest already stored in the repo</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SubmitUser !in (&quot;system:serviceaccount:security-tools:cve-scanner&quot;) and UserAgent !has &quot;validation-harness&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full requestObject for the flagged EnvoyExtensionPolicy and identify the submitting user/SA, source IP and userAgent; confirm the Lua references the double-slash sensitive paths. 2) Contain: delete the policy, rotate the envoy-gateway controller ServiceAccount token and any TLS keys reachable from the controller pod, and revoke the submitter&#x27;s RBAC to create EnvoyExtensionPolicy. 3) Hunt: check the resource status/response for leaked token or file contents (see companion UC), and review kube audit for the envoy-gateway SA being used from unexpected sources afterward.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| where RequestUri has &quot;envoyextensionpolicies&quot;
+| extend ReqStr = tostring(RequestObject)
+| where ReqStr has_any (&quot;//etc/passwd&quot;,&quot;//var/run/secrets&quot;,&quot;//proc/self/environ&quot;,&quot;//certs/&quot;)
+| extend SubmitUser = tostring(User.username), SrcIPs = tostring(User.extra)
+| project TimeGenerated, Computer, SubmitUser, Verb, RequestUri, UserAgent, ReqStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: EnvoyExtensionPolicy Lua Double-Slash Path Traversal (CVE-2026-53713)
+id: a3f1c2e4-5b6d-4e7f-8a90-1b2c3d4e5f60
+description: Detects EnvoyExtensionPolicy manifests whose inline Lua contains double-slash sensitive paths that bypass the is_critical_path check
+references:
+  - https://github.com/advisories/GHSA-wcrf-9vrr-854f
+  - https://github.com/envoyproxy/gateway/security/advisories/GHSA-xrwg-mqj6-6m22
+author: SOC Detection Engineering
+date: 2026/07/16
+tags:
+  - attack.t1190
+  - attack.t1212
+  - attack.t1083
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    objectRef.resource: &#x27;envoyextensionpolicies&#x27;
+    verb:
+      - &#x27;create&#x27;
+      - &#x27;update&#x27;
+      - &#x27;patch&#x27;
+  keywords:
+    - &#x27;//etc/passwd&#x27;
+    - &#x27;//var/run/secrets&#x27;
+    - &#x27;//proc/self/environ&#x27;
+    - &#x27;//certs/&#x27;
+  condition: selection and keywords
+level: high</code></pre></div>
+    <div class="tab-content" id="art-153-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.resource:envoyextensionpolicies @verb:(create OR update OR patch) (*//etc/passwd* OR *//var/run/secrets* OR *//proc/self/environ* OR *//certs/*)</code></pre></div>
+    <div class="tab-content" id="art-153-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; &quot;objectRef.resource&quot;=&quot;envoyextensionpolicies&quot; (verb=&quot;create&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
+| search requestObject=&quot;*//etc/passwd*&quot; OR requestObject=&quot;*//var/run/secrets*&quot; OR requestObject=&quot;*//proc/self/environ*&quot; OR requestObject=&quot;*//certs/*&quot;
+| table _time, user.username, verb, requestURI, sourceIPs{}, userAgent, objectRef.name, responseStatus.code
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e40b4d03b2" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,linux,vcs">
+  <summary>
+    <span class="uc-title">Leaked SA token / file contents in EnvoyExtensionPolicy status (CVE-2026-53713 disclosure)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e40b4d03b2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the actual secret disclosure: an envoyextensionpolicies audit record whose responseObject/status contains a JWT (service-account token), /etc/passwd content, or a PEM private key returned by the failed Strict validation. This confirms exploitation succeeded rather than just being attempted.
+
+Rationale: The related advisory confirms the SA token is &#x27;returned in an error which will be displayed in the resource status&#x27;; eyJhbGciOi is the constant base64 prefix of a JWT header and root:x:0:0 is the invariant first line of /etc/passwd — both are high-fidelity content markers requiring RequestResponse-level audit. Cross-checked GHSA-xrwg-mqj6-6m22.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-wcrf-9vrr-854f
+  • https://github.com/envoyproxy/gateway/security/advisories/GHSA-xrwg-mqj6-6m22</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A policy legitimately referencing a JWT sample string in a comment (rare)</li><li>Audit policy not set to RequestResponse level so responseObject is empty (false negative, not FP)</li><li>Security testing that intentionally reproduces the disclosure in a lab cluster</li><li>A PEM string embedded in an unrelated but co-located config field captured in the same response</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the leaked material from responseObject — decode the JWT to identify which ServiceAccount was disclosed and its namespace/audience. 2) Contain: immediately rotate/delete that ServiceAccount token (delete the SA&#x27;s token secret / bounce the pod to force projection refresh) and rotate any disclosed TLS private keys; treat the token as compromised. 3) Hunt: search kube audit for that SA&#x27;s token being replayed (new sourceIPs, verbs it does not normally perform) and pivot to the companion token-reuse UC.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where RequestUri has &quot;envoyextensionpolicies&quot;
+| extend RespStr = tostring(ResponseObject), StatusStr = tostring(ResponseStatus)
+| where RespStr has_any (&quot;eyJhbGciOi&quot;,&quot;root:x:0:0&quot;,&quot;BEGIN RSA PRIVATE KEY&quot;,&quot;BEGIN PRIVATE KEY&quot;,&quot;serviceaccount/token&quot;) or StatusStr has_any (&quot;eyJhbGciOi&quot;,&quot;root:x:0:0&quot;)
+| extend SubmitUser = tostring(User.username)
+| project TimeGenerated, Computer, SubmitUser, Verb, RequestUri, ResponseStatus, RespStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: EnvoyExtensionPolicy Status Leaks SA Token or File Contents (CVE-2026-53713)
+id: b4e2d3f5-6c7e-4f80-9b01-2c3d4e5f6071
+description: Detects an EnvoyExtensionPolicy audit record whose response/status carries a JWT, /etc/passwd contents, or a PEM private key
+references:
+  - https://github.com/advisories/GHSA-wcrf-9vrr-854f
+author: SOC Detection Engineering
+date: 2026/07/16
+tags:
+  - attack.t1528
+  - attack.t1552.001
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    objectRef.resource: &#x27;envoyextensionpolicies&#x27;
+  keywords:
+    - &#x27;eyJhbGciOi&#x27;
+    - &#x27;root:x:0:0&#x27;
+    - &#x27;BEGIN RSA PRIVATE KEY&#x27;
+    - &#x27;BEGIN PRIVATE KEY&#x27;
+    - &#x27;serviceaccount/token&#x27;
+  condition: selection and keywords
+level: high</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.resource:envoyextensionpolicies (&quot;eyJhbGciOi&quot; OR &quot;root:x:0:0&quot; OR &quot;BEGIN RSA PRIVATE KEY&quot; OR &quot;BEGIN PRIVATE KEY&quot; OR &quot;serviceaccount/token&quot;)</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; &quot;objectRef.resource&quot;=&quot;envoyextensionpolicies&quot;
+| search responseObject=&quot;*eyJhbGciOi*&quot; OR responseObject=&quot;*root:x:0:0*&quot; OR responseObject=&quot;*BEGIN RSA PRIVATE KEY*&quot; OR responseObject=&quot;*BEGIN PRIVATE KEY*&quot; OR responseObject=&quot;*serviceaccount/token*&quot;
+| table _time, user.username, verb, requestURI, objectRef.name, responseStatus.code
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="eb2dc2b160" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+  <summary>
+    <span class="uc-title">EnvoyExtensionPolicy Lua invoking os/io/debug file primitives</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="eb2dc2b160" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Broader hunt for EnvoyExtensionPolicy manifests whose inline Lua calls filesystem/OS primitives (io.open, io.popen, os.getenv, os.execute, os.remove, debug.getinfo) — the building blocks any variant of this exploit needs to read the controller pod&#x27;s files, catching payloads that use paths other than the four named in the advisory.
+
+Rationale: Reading a file from Lua requires io/os primitives; legitimate Envoy request-processing Lua manipulates headers/bodies and rarely touches io.open/os.execute, so their presence in a submitted policy is a strong pre-execution signal even when the payload uses a novel path.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-wcrf-9vrr-854f
+  • https://github.com/envoyproxy/gateway/security/advisories/GHSA-xrwg-mqj6-6m22</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate advanced Lua filter that reads a mounted config file via io.open</li><li>os.getenv used to read a benign env var for routing logic</li><li>Developer testing a Lua snippet copied from a tutorial that includes os.time/os.date near os.execute</li><li>Vendor-provided policy template that legitimately uses debug for logging</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full Lua body from requestObject and determine whether the io/os call targets sensitive paths or is benign routing logic. 2) Contain: if malicious, delete the policy and rotate controller credentials; if the cluster runs a vulnerable version, prioritise upgrade to &gt;=1.7.4 / &gt;=1.8.1. 3) Hunt: pivot to the double-slash and status-disclosure UCs for the same policy name and submitter.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| where RequestUri has &quot;envoyextensionpolicies&quot;
+| extend ReqStr = tostring(RequestObject)
+| where ReqStr has_any (&quot;io.open&quot;,&quot;io.popen&quot;,&quot;os.getenv&quot;,&quot;os.execute&quot;,&quot;os.remove&quot;,&quot;debug.getinfo&quot;)
+| extend SubmitUser = tostring(User.username)
+| project TimeGenerated, Computer, SubmitUser, Verb, RequestUri, UserAgent, ReqStr
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: EnvoyExtensionPolicy Lua Uses OS/IO/Debug Primitives
+id: c5f3e4a6-7d8f-4091-ac12-3d4e5f607182
+description: Detects EnvoyExtensionPolicy inline Lua that calls filesystem or OS primitives used to read controller pod files
+references:
+  - https://github.com/advisories/GHSA-wcrf-9vrr-854f
+author: SOC Detection Engineering
+date: 2026/07/16
+tags:
+  - attack.t1059
+  - attack.t1190
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    objectRef.resource: &#x27;envoyextensionpolicies&#x27;
+    verb:
+      - &#x27;create&#x27;
+      - &#x27;update&#x27;
+      - &#x27;patch&#x27;
+  keywords:
+    - &#x27;io.open&#x27;
+    - &#x27;io.popen&#x27;
+    - &#x27;os.getenv&#x27;
+    - &#x27;os.execute&#x27;
+    - &#x27;os.remove&#x27;
+    - &#x27;debug.getinfo&#x27;
+  condition: selection and keywords
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-153-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.resource:envoyextensionpolicies @verb:(create OR update OR patch) (*io.open* OR *io.popen* OR *os.getenv* OR *os.execute* OR *os.remove* OR *debug.getinfo*)</code></pre></div>
+    <div class="tab-content" id="art-153-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; &quot;objectRef.resource&quot;=&quot;envoyextensionpolicies&quot; (verb=&quot;create&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
+| search requestObject=&quot;*io.open*&quot; OR requestObject=&quot;*io.popen*&quot; OR requestObject=&quot;*os.getenv*&quot; OR requestObject=&quot;*os.execute*&quot; OR requestObject=&quot;*os.remove*&quot; OR requestObject=&quot;*debug.getinfo*&quot;
+| table _time, user.username, verb, objectRef.name, userAgent, sourceIPs{}
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="933baa3b51" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+  <summary>
+    <span class="uc-title">Anomalous EnvoyExtensionPolicy submitter / suspicious policy name</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="933baa3b51" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Profiles who creates EnvoyExtensionPolicy resources to surface rare submitters, and flags policy names containing exploit markers (poc, test, bypass, exploit, passwd). Because the exploit requires an attacker to create/patch the policy via the K8s API, unusual submitters are a leading indicator.
+
+Rationale: EnvoyExtensionPolicy objects are normally authored by a small, stable set of platform/GitOps identities; the summarize-by-submitter surfaces rare creators without a hard-coded allowlist, and the name markers catch dropped PoC manifests. Grouping/rarity is evaluated at rule level for Datadog.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-wcrf-9vrr-854f</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate GitOps controller (ArgoCD/Flux SA) creating policies — high count, benign</li><li>A developer genuinely naming a policy &#x27;canary-test&#x27; or &#x27;lua-test&#x27;</li><li>First-time onboarding of a new platform engineer who legitimately creates a policy</li><li>CI pipeline SA applying policies from a new namespace</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SubmitUser !startswith &quot;system:serviceaccount:argocd:&quot; and SubmitUser !startswith &quot;system:serviceaccount:flux-system:&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for any rare submitter or exploit-marker name, retrieve the policy body and check for Lua io/os calls or double-slash paths. 2) Contain: if the submitter is unexpected, revoke their create/patch RBAC on envoyextensionpolicies and delete the policy. 3) Hunt: correlate the submitter identity across other CRDs and namespaces for further unauthorized changes.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(30d)
+| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| where RequestUri has &quot;envoyextensionpolicies&quot;
+| extend SubmitUser = tostring(User.username), PolicyName = tostring(ObjectRef.name)
+| extend SuspiciousName = PolicyName has_any (&quot;poc&quot;,&quot;test&quot;,&quot;bypass&quot;,&quot;exploit&quot;,&quot;passwd&quot;)
+| summarize Count=count(), Policies=make_set(PolicyName, 25), AnySuspicious=max(tolong(SuspiciousName)), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SubmitUser, UserAgent
+| order by Count asc</code></pre></div>
+    <div class="tab-content" id="art-153-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: EnvoyExtensionPolicy With Exploit-Marker Name
+id: d6a4f5b7-8e90-41a2-bd23-4e5f60718293
+description: Detects EnvoyExtensionPolicy created/updated with a name containing common exploit/PoC markers
+references:
+  - https://github.com/advisories/GHSA-wcrf-9vrr-854f
+author: SOC Detection Engineering
+date: 2026/07/16
+tags:
+  - attack.t1190
+  - attack.t1078
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    objectRef.resource: &#x27;envoyextensionpolicies&#x27;
+    verb:
+      - &#x27;create&#x27;
+      - &#x27;update&#x27;
+      - &#x27;patch&#x27;
+  name_markers:
+    objectRef.name|contains:
+      - &#x27;poc&#x27;
+      - &#x27;bypass&#x27;
+      - &#x27;exploit&#x27;
+      - &#x27;passwd&#x27;
+  condition: selection and name_markers
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-153-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.resource:envoyextensionpolicies @verb:(create OR update OR patch) (@objectRef.name:*poc* OR @objectRef.name:*bypass* OR @objectRef.name:*exploit* OR @objectRef.name:*passwd* OR @objectRef.name:*test*)</code></pre></div>
+    <div class="tab-content" id="art-153-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; &quot;objectRef.resource&quot;=&quot;envoyextensionpolicies&quot; (verb=&quot;create&quot; OR verb=&quot;update&quot; OR verb=&quot;patch&quot;)
+| stats count AS Count, values(objectRef.name) AS Policies, min(_time) AS FirstSeen, max(_time) AS LastSeen BY user.username, userAgent
+| sort + Count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b9f144fbda" data-platforms="def,sent" data-targets="">
+  <summary>
+    <span class="uc-title">Vulnerable Envoy Gateway version exposed to CVE-2026-53713</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b9f144fbda" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Inventory hunt that flags hosts/images running an Envoy Gateway version affected by CVE-2026-53713 (&gt;=1.8.0-rc.0 &lt;1.8.1, or &lt;1.7.4) so the exploitable surface is remediated to &gt;=1.7.4 / &gt;=1.8.1 before an attacker submits a malicious EnvoyExtensionPolicy.
+
+Rationale: Uses the exact CVE id and the affected/fixed version ranges from the advisory (fixed &gt;=1.7.4 and &gt;=1.8.1). This is the only pivot expressible on Defender/Sentinel native telemetry since the attack itself lives in K8s audit logs; relies on container/software vuln assessment picking up the envoyproxy/gateway package.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-wcrf-9vrr-854f</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A patched version mis-fingerprinted by TVM as vulnerable (stale scan)</li><li>An image tag pinned to a fixed digest but labelled with an old version string</li><li>Non-production/lab Envoy Gateway flagged alongside prod</li><li>TVM not yet ingesting the CVE definition (false negative, not FP)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SoftwareVersion is genuinely &lt;1.7.4 or in 1.8.0-rc.0..1.8.1 and that the instance accepts EnvoyExtensionPolicy submissions. 2) Contain: restrict RBAC so only trusted identities can create/patch EnvoyExtensionPolicy, and apply the Lua-docs Warning-section workarounds until patched. 3) Hunt: upgrade to &gt;=1.7.4 / &gt;=1.8.1 and retro-scan kube audit for prior exploit attempts against the affected cluster.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc4-sentinel">Sentinel KQL</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId == &quot;CVE-2026-53713&quot;
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-53713&quot;
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="c5ee4c8125" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+  <summary>
+    <span class="uc-title">Envoy Gateway ServiceAccount token reuse for anomalous K8s API actions</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="c5ee4c8125" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Post-exploitation hunt: the envoy-gateway controller ServiceAccount (system:serviceaccount:envoy-gateway-system:envoy-gateway) performing actions it never legitimately performs — creating/deleting pods, exec/attach into pods, reading kube-system secrets, or touching cluster RBAC — which indicates the disclosed token is being replayed against the API server.
+
+Rationale: The advisory states the disclosed token can be used to &#x27;read sensitive information from the K8s API Server&#x27;; the envoy-gateway controller SA legitimately manages EnvoyProxy infra in its own namespace but never execs into pods, reads kube-system secrets, or edits cluster RBAC — so those verbs under that identity are strong reuse signals. SA name/namespace confirmed from Envoy Gateway deployment docs.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-wcrf-9vrr-854f
+  • https://gateway.envoyproxy.io/docs/tasks/operations/deployment-mode/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Envoy Gateway upgrade/migration job temporarily granting the SA broader RBAC</li><li>A future controller version that legitimately reads a secret in a shared namespace</li><li>Cluster admin impersonating the SA for troubleshooting (kubectl --as)</li><li>Backup tooling running under the same SA reading secrets broadly</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !startswith &quot;envoy-gateway/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit compare sourceIPs and userAgent against the controller pod&#x27;s normal client (in-cluster pod IP, controller userAgent); an external IP or kubectl/curl userAgent is high-confidence token theft. 2) Contain: rotate the envoy-gateway SA token immediately, cordon/quarantine any pods created by the SA, and review/revert RBAC changes. 3) Hunt: enumerate every action taken by the token since the disclosure event and check for new workloads, exfil connections, or additional credential reads.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-153-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-153-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| extend SubmitUser = tostring(User.username), Resource = tostring(ObjectRef.resource), NS = tostring(ObjectRef.namespace)
+| where SubmitUser == &quot;system:serviceaccount:envoy-gateway-system:envoy-gateway&quot;
+| where (Verb in (&quot;create&quot;,&quot;delete&quot;) and Resource in (&quot;pods&quot;,&quot;pods/exec&quot;,&quot;pods/attach&quot;))
+     or (Resource == &quot;secrets&quot; and NS == &quot;kube-system&quot;)
+     or (Resource in (&quot;clusterrolebindings&quot;,&quot;rolebindings&quot;,&quot;clusterroles&quot;))
+| project TimeGenerated, SubmitUser, Verb, Resource, NS, ObjName=tostring(ObjectRef.name), UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Envoy Gateway ServiceAccount Performs Anomalous K8s API Actions
+id: e7b5a6c8-9f01-42b3-ce34-5f60718293a4
+description: Detects the envoy-gateway controller ServiceAccount performing pod exec/create/delete, kube-system secret access, or RBAC changes indicative of stolen-token reuse
+references:
+  - https://github.com/advisories/GHSA-wcrf-9vrr-854f
+author: SOC Detection Engineering
+date: 2026/07/16
+tags:
+  - attack.t1550.001
+  - attack.t1552.001
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  actor:
+    user.username: &#x27;system:serviceaccount:envoy-gateway-system:envoy-gateway&#x27;
+  pod_actions:
+    verb:
+      - &#x27;create&#x27;
+      - &#x27;delete&#x27;
+    objectRef.resource:
+      - &#x27;pods&#x27;
+      - &#x27;pods/exec&#x27;
+      - &#x27;pods/attach&#x27;
+  rbac_actions:
+    objectRef.resource:
+      - &#x27;clusterrolebindings&#x27;
+      - &#x27;rolebindings&#x27;
+      - &#x27;clusterroles&#x27;
+  condition: actor and (pod_actions or rbac_actions)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-153-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @user.username:&quot;system:serviceaccount:envoy-gateway-system:envoy-gateway&quot; ((@verb:(create OR delete) AND @objectRef.resource:(pods OR &quot;pods/exec&quot; OR &quot;pods/attach&quot;)) OR (@objectRef.resource:secrets AND @objectRef.namespace:kube-system) OR @objectRef.resource:(clusterrolebindings OR rolebindings OR clusterroles))</code></pre></div>
+    <div class="tab-content" id="art-153-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype=&quot;kube:apiserver:audit&quot; &quot;user.username&quot;=&quot;system:serviceaccount:envoy-gateway-system:envoy-gateway&quot;
+| search ((verb=&quot;create&quot; OR verb=&quot;delete&quot;) AND (&quot;objectRef.resource&quot;=&quot;pods&quot; OR &quot;objectRef.resource&quot;=&quot;pods/exec&quot; OR &quot;objectRef.resource&quot;=&quot;pods/attach&quot;)) OR (&quot;objectRef.resource&quot;=&quot;secrets&quot; AND &quot;objectRef.namespace&quot;=&quot;kube-system&quot;) OR &quot;objectRef.resource&quot;=&quot;clusterrolebindings&quot; OR &quot;objectRef.resource&quot;=&quot;rolebindings&quot; OR &quot;objectRef.resource&quot;=&quot;clusterroles&quot;
+| table _time, verb, objectRef.resource, objectRef.namespace, objectRef.name, sourceIPs{}, userAgent
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53713&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-153-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-53713&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-153-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53713&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-153-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-53713&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9a4068a277" data-platforms="def,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9a4068a277" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-153-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-153-uc7-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-153-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/passwd&quot;, &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;/var/run/secrets/...&quot;, &quot;/etc/./passwd&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/passwd&quot;, &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;/var/run/secrets/...&quot;, &quot;/etc/./passwd&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-153-uc7-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/...*&quot; OR Filesystem.file_path=&quot;*/etc/./passwd*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-153-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-53713: Envoy Gateway: Authentication Bypass via Impro ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/...*&quot; OR Filesystem.file_path=&quot;*/etc/./passwd*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-154" data-art-slug="2026-07-16-begun-the-patch-wars-have"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1053.005,T1059.001,T1190,T1204.002,T1204.004,T1218.005,T1528,T1555.003,T1566"
@@ -16962,407 +18008,4 @@ DeviceFileEvents
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
-</article>
-<article class="card" id="art-181" data-art-slug="2026-07-14-ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="vcs,web-app,windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn` FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn` CVE-2026-45262 T1190 [LLM] FacturaScripts CVE-2026-45262 SQLi: parenthesis-bypass in REST API filter[] key [LLM] FacturaScripts filter[] SQLi column-count / schema enumeration (burst probing) [LLM] FacturaScripts account takeover: /AdminPlugins access following filter[] SQLi from same source Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-14-ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-5qmh-x653-g8qj" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn`</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-14</span>
-    <span>5 use cases</span>
-    <span>1 technique</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">FacturaScripts: Authenticated SQL injection in the FacturaScripts REST API filter parameter via parenthesis bypass in `Where::sqlColumn`</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45262</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-181-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-181"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-181-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FacturaScripts CVE-2026-45262 SQLi: parenthesis-bypass in REST API filter[] key · [LLM] FacturaScripts filter[] SQLi column-count / schema enumeration (burst probing)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] FacturaScripts account takeover: /AdminPlugins access following filter[] SQLi from same source</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="1fd6b1fdcd" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
-  <summary>
-    <span class="uc-title">FacturaScripts CVE-2026-45262 SQLi: parenthesis-bypass in REST API filter[] key</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1fd6b1fdcd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts exploitation of the Where::sqlColumn parenthesis bypass on the /api/3/&lt;resource&gt; and /api/3/attachedfiles routes, where a filter[] array key containing both parentheses is exempted from identifier escaping and concatenated into the WHERE clause. Keys on the article&#x27;s exact structural signature: a filter[ (or URL-encoded filter%5B) request key carrying &#x27;(&#x27; plus SQL keywords (UNION/SELECT/--/information_schema), which no legitimate column-name filter ever contains.
-
-Rationale: Uses the article&#x27;s exact PoC structure: the filter[ (URL-encoded filter%5B) array key plus &#x27;(&#x27; plus UNION/SELECT/IFNULL/-- from the payload &#x27;filter[(0)UNION SELECT IFNULL(password,2)...FROM users WHERE(nick=admin)-- ]&#x27;. Parentheses in a filter-key never occur in legitimate FacturaScripts column filters, so combining bracket+paren+SQL-keyword is high-fidelity.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-5qmh-x653-g8qj
-  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised DAST/pentest scans (Burp, sqlmap, OWASP ZAP) probing the same /api/3 endpoints</li><li>Vulnerability scanners (Nuclei/Nessus) firing the public CVE-2026-45262 template</li><li>A developer manually testing the filter parameter in a staging environment</li><li>Security researchers on a bug-bounty program hitting the production instance</li><li>WAF appliance replaying blocked payloads into a shadow/audit log that is also ingested</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;&lt;scanner_subnet_placeholder&gt;&quot;) // prefer: exclude known-good DAST/scanner source IPs by tag rather than hardcoding; keep production client ranges in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all requests from the source IP to /api/3/* over the last 24h; check response sizes/status — a 200 with a large body on a clientes/attachedfiles filter query indicates successful extraction. Identify the ApiKey/token used. 2) Contain: revoke the offending ApiKey and force-rotate all admin logkey session cookies (invalidate sessions), block the source IP at the WAF, and apply the vendor mitigation/WAF rule denying &#x27;(&#x27; in filter[] keys. 3) Hunt: search the same IP/UA for follow-on /AdminPlugins access and for the leaked admin bcrypt hash reuse; review DB slow/query logs for UNION SELECT against the users table.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-181-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-181-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-181-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-181-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where (Url contains &quot;filter[&quot; or Url contains &quot;filter%5b&quot; or UrlOriginal contains &quot;filter[&quot; or UrlOriginal contains &quot;filter%5b&quot;)
-| where (Url contains &quot;(&quot; or Url contains &quot;%28&quot; or UrlOriginal contains &quot;(&quot; or UrlOriginal contains &quot;%28&quot;)
-| where (Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;information_schema&quot;,&quot;ifnull&quot;,&quot;updatexml&quot;,&quot;extractvalue&quot;) or Url contains &quot;--&quot; or UrlOriginal contains &quot;--&quot;)
-| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, HttpStatusCode, Url, UserAgent = HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-181-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: FacturaScripts CVE-2026-45262 filter[] parenthesis-bypass SQL injection
-id: 6f3c1d2a-8b74-4e19-9a2e-1c9d2f6b45a1
-description: Detects the CVE-2026-45262 parenthesis-bypass SQLi against the FacturaScripts REST API filter[] parameter, where a filter key containing parentheses skips identifier escaping in Where::sqlColumn.
-references:
-  - https://github.com/advisories/GHSA-5qmh-x653-g8qj
-  - https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/
-author: SOC Detection Engineering
-date: 2026/07/22
-tags:
-  - attack.t1190
-  - attack.initial_access
-logsource:
-  category: webserver
-detection:
-  selection_filter:
-    - cs-uri-query|contains: &#x27;filter[&#x27;
-    - cs-uri-query|contains: &#x27;filter%5b&#x27;
-  selection_paren:
-    - cs-uri-query|contains: &#x27;(&#x27;
-    - cs-uri-query|contains: &#x27;%28&#x27;
-  selection_sqli:
-    - cs-uri-query|contains: &#x27;union&#x27;
-    - cs-uri-query|contains: &#x27;information_schema&#x27;
-    - cs-uri-query|contains: &#x27;--&#x27;
-    - cs-uri-query|contains: &#x27;ifnull&#x27;
-  condition: selection_filter and selection_paren and selection_sqli
-level: high</code></pre></div>
-    <div class="tab-content" id="art-181-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-181-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-181-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-181-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*(*&quot; OR Web.url=&quot;*%28*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot; OR Web.url=&quot;*ifnull*&quot;) by Web.src, Web.dest, Web.http_method, Web.status, Web.uri_path, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-181-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*(*&quot; OR Web.url=&quot;*%28*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot; OR Web.url=&quot;*ifnull*&quot;) by Web.src, Web.dest, Web.http_method, Web.status, Web.uri_path, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="82b089d9e1" data-platforms="sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">FacturaScripts filter[] SQLi column-count / schema enumeration (burst probing)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="82b089d9e1" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the reconnaissance phase of the CVE-2026-45262 UNION attack: an attacker must iterate column counts (SELECT 1,2 / 1,2,3 ...) and table/column names to match the clientes table&#x27;s 32-column layout before extraction succeeds. Flags a source IP issuing multiple filter[]+SQL-keyword requests to the same host in a short window — a burst that distinguishes active enumeration from a single copy-paste PoC shot.
-
-Rationale: Grounded in the article&#x27;s mechanics: the UNION must mirror the clientes table&#x27;s 32 columns and reference the users/nick columns, which requires iterative column-count and identifier probing. Bursting &gt;=5 filter[]+SQL-keyword requests per 10m from one src is the enumeration fingerprint that a single-shot PoC (UC1) would miss and that separates recon from a lucky one-liner.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-5qmh-x653-g8qj
-  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Active Scanning: Wordlist Scanning">T1595.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised sqlmap run (issues hundreds of enumeration requests by design)</li><li>Scheduled DAST/CI security scans against staging</li><li>A single browser retrying a broken filter request repeatedly on a 500 error</li><li>Load/soak testing that fuzzes the API parameter</li><li>Bug-bounty researcher iterating payloads on production</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;&lt;scanner_subnet_placeholder&gt;&quot;) and HttpRequestHeaderUserAgent !has &quot;sqlmap&quot; // scanner UAs are known enumeration; tag-exclude approved scanner source IPs, keep unknown UAs in scope</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: order the source IP&#x27;s filter[] requests by time and inspect payload evolution — incrementing comma counts (1,2 -&gt; 1,2,3) or ORDER BY N sequences confirm active schema enumeration; note which request first returned HTTP 200. 2) Contain: block the source IP at the WAF, revoke the ApiKey used, and enable the deny-&#x27;(&#x27; -in-filter-key rule. 3) Hunt: check whether enumeration converged to a successful extraction (large 200 response on a clientes/attachedfiles filter query) and pivot to UC3 for downstream /AdminPlugins takeover from the same IP.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-181-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-181-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-181-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(1d)
-| where (Url contains &quot;filter[&quot; or Url contains &quot;filter%5b&quot;)
-| where (Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;order by&quot;,&quot;information_schema&quot;) or Url contains &quot;--&quot;)
-| summarize AttemptCount = count(), DistinctPayloads = dcount(Url), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Statuses = make_set(HttpStatusCode, 10), SamplePayloads = make_set(Url, 5) by SrcIpAddr, DstHostname, bin(TimeGenerated, 10m)
-| where AttemptCount &gt;= 5   // &gt;=5 UNION/ORDER-BY probes to one host in 10m = column-count/schema enumeration, not a single PoC request
-| order by AttemptCount desc</code></pre></div>
-    <div class="tab-content" id="art-181-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-181-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-181-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-181-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count as reqCount dc(Web.url) as distinctPayloads min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*order by*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot;) by Web.src, Web.dest span=10m | `drop_dm_object_name(Web)` | where reqCount&gt;=5 | convert ctime(firstTime) ctime(lastTime) | sort - reqCount</code></pre><pre class="spl-mode-body" id="art-181-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as reqCount dc(Web.url) as distinctPayloads min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot;) AND (Web.url=&quot;*union*&quot; OR Web.url=&quot;*select*&quot; OR Web.url=&quot;*order by*&quot; OR Web.url=&quot;*information_schema*&quot; OR Web.url=&quot;*--*&quot;) by Web.src, Web.dest span=10m | `drop_dm_object_name(Web)` | where reqCount&gt;=5 | convert ctime(firstTime) ctime(lastTime) | sort - reqCount</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="524ef562e6" data-platforms="sent,spl" data-targets="web-app">
-  <summary>
-    <span class="uc-title">FacturaScripts account takeover: /AdminPlugins access following filter[] SQLi from same source</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="524ef562e6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates the CVE-2026-45262 end-to-end takeover: after leaking the admin bcrypt hash and logkey via the filter[] SQLi, the attacker injects the stolen logkey cookie and reaches the admin plugin-management UI (GET /AdminPlugins returns 200). Flags a source IP that issued a filter[]+SQL-keyword request and then obtained a 200 on /AdminPlugins within a short window — a read-only token escalating to full admin.
-
-Rationale: Encodes the article&#x27;s takeover chain literally: the SQLi leaks logkey, then &#x27;GET /AdminPlugins returned 200 with the admin plugin management UI.&#x27; Correlating a filter[] SQLi request and a subsequent 200 on /AdminPlugins from the same source IP within an hour captures the read-only-token-to-admin escalation that no single-event rule can.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-5qmh-x653-g8qj
-  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-45262/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Use Alternate Authentication Material: Web Session Cookie">T1550.004</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate administrator whose workstation NATs behind the same egress IP as a benign API client</li><li>A pentester chaining the full exploit under an authorised engagement</li><li>Shared corporate proxy IP where one user probes the API and an unrelated admin logs in</li><li>Automated smoke test that hits both /api/3 and /AdminPlugins from a CI runner IP</li><li>Vulnerability scanner with authenticated admin session validating the fix</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;sqlmap&quot; and DstHostname !contains &quot;staging&quot; // exclude known scanner UAs and staging hosts; real takeover uses the same client across both requests</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the /AdminPlugins 200 followed a successful data-returning filter[] SQLi from the same IP; pull the admin session/logkey cookie in play and check whether it matches a real admin login event or appeared out of nowhere (stolen-cookie reuse). 2) Contain: invalidate all admin logkey sessions and force admin password reset (the bcrypt hash was exfiltrated), revoke the source ApiKey, block the IP, and disable/lock the admin account until reset. 3) Hunt: enumerate every action taken under the admin session — plugin installs/uploads via /AdminPlugins (potential webshell), new ApiKey/user creation, config changes — and review /api/3/attachedfiles for follow-on file access.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-181-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-181-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-181-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let window = 1h;
-let sqli = ImWebSession
-    | where TimeGenerated &gt; ago(7d)
-    | where (Url contains &quot;filter[&quot; or Url contains &quot;filter%5b&quot;)
-    | where (Url has_any (&quot;union&quot;,&quot;select&quot;,&quot;information_schema&quot;) or Url contains &quot;--&quot;)
-    | project SqliTime = TimeGenerated, SrcIpAddr, DstHostname;
-ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url contains &quot;AdminPlugins&quot;
-| where tostring(HttpStatusCode) == &quot;200&quot;
-| join kind=inner sqli on SrcIpAddr, DstHostname
-| where TimeGenerated between (SqliTime .. SqliTime + window)
-| project SqliTime, AdminAccessTime = TimeGenerated, SrcIpAddr, DstHostname, Url, HttpStatusCode, UserAgent = HttpRequestHeaderUserAgent
-| order by AdminAccessTime desc</code></pre></div>
-    <div class="tab-content" id="art-181-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-181-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-181-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-181-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot; OR Web.uri_path=&quot;*AdminPlugins*&quot;) by Web.src, Web.dest, Web.url, Web.uri_path, Web.status, _time span=1m | `drop_dm_object_name(Web)` | eval isSqli=if(match(url,&quot;(?i)filter(\[|%5b)&quot;) AND (match(url,&quot;(?i)union|select|information_schema|--&quot;)),1,0) | eval isAdmin=if(match(uri_path,&quot;(?i)AdminPlugins&quot;) AND status=200,1,0) | stats min(_time) as firstTime max(_time) as lastTime sum(isSqli) as sqliHits sum(isAdmin) as adminHits values(url) as urls by src, dest | where sqliHits&gt;0 AND adminHits&gt;0 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-181-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where (Web.url=&quot;*filter[*&quot; OR Web.url=&quot;*filter%5b*&quot; OR Web.uri_path=&quot;*AdminPlugins*&quot;) by Web.src, Web.dest, Web.url, Web.uri_path, Web.status, _time span=1m | `drop_dm_object_name(Web)` | eval isSqli=if(match(url,&quot;(?i)filter(\[|%5b)&quot;) AND (match(url,&quot;(?i)union|select|information_schema|--&quot;)),1,0) | eval isAdmin=if(match(uri_path,&quot;(?i)AdminPlugins&quot;) AND status=200,1,0) | stats min(_time) as firstTime max(_time) as lastTime sum(isSqli) as sqliHits sum(isAdmin) as adminHits values(url) as urls by src, dest | where sqliHits&gt;0 AND adminHits&gt;0 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-181-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-181-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-181-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-181-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45262&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-181-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45262&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-181-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-181-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-181-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-181-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45262&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-181-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45262&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="291a674e7d" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="291a674e7d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-181-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-181-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-181-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-181-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/fs-hijack&quot;, &quot;/tmp/admin.html&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-181-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/fs-hijack&quot;, &quot;/tmp/admin.html&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-181-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-181-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-181-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-181-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/fs-hijack*&quot; OR Filesystem.file_path=&quot;*/tmp/admin.html*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-181-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45262: FacturaScripts: Authenticated SQL injection in ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/fs-hijack*&quot; OR Filesystem.file_path=&quot;*/tmp/admin.html*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-183" data-art-slug="2026-07-14-video-where-protection-starts-cisco-talos-intelligence-integ"
-  data-phases="c2,exploit,install" data-sev="low"
-  data-techs=""
-  data-sources="Cisco Talos"
-  data-platforms=""
-  data-splunk-cats=""
-  data-targets=""
-  data-uc-count="0" data-llm-uc-count="0"
-  data-search="[Video] Where protection starts: Cisco Talos Intelligence Integrations Every day, defenders make high-consequence decisions with incomplete information. Learn how Cisco Talos Intelligence Integrations help reduce uncertainty by turning the latest threat intelligence into proactive protections across Cisco technologies.   ">
-  <div class="sev-ribbon low">Low</div>
-  <button class="share-btn card-share" data-share-art="2026-07-14-video-where-protection-starts-cisco-talos-intelligence-integ" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://blog.talosintelligence.com/video-where-protection-starts-cisco-talos-intelligence-integrations/" target="_blank" rel="noopener">[Video] Where protection starts: Cisco Talos Intelligence Integrations</a></h2>
-  <div class="source-badges"><span class="source-badge talos">Cisco Talos</span></div>
-  <div class="pubmeta">
-    <span>2026-07-14</span>
-    <span>0 use cases</span>
-    <span>0 techniques</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">Every day, defenders make high-consequence decisions with incomplete information. Learn how Cisco Talos Intelligence Integrations help reduce uncertainty by turning the latest threat intelligence into proactive protections across Cisco technologies.</p>
-  
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-183-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-183"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-183-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"></div>
 </article>

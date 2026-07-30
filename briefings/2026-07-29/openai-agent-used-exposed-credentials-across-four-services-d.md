@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### JFrog Artifactory zero-day cluster (CVE-2026-659xx) exposure — pre-7.161.15 with Anonymous Access
 
-`UC_35_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_37_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -70,7 +70,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Cloud instance-metadata (IMDS 169.254.169.254) credential theft by interpreter/shell in pipeline pod
 
-`UC_35_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_37_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### Improvised C2 over public request-capture / pastebin / file-drop services from server infra
 
-`UC_35_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_37_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### Exposed-credential reuse: one identity authenticating to 3+ distinct cloud services within 1 hour
 
-`UC_35_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_37_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

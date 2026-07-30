@@ -280,7 +280,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SilverFox Targets Japanese Manufacturer with 3-Driver BYOVD Chain and ValleyRAT
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_4_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
