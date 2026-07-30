@@ -11,15 +11,9 @@ By Bill Toulas
 July 30, 2026
 02:13 PM
 0 
-
-
 Amazon linked multiple high-profile open-source software supply chain attacks targeting the Node Package Manager (npm) ecosystem to North Korean hackers.
-
-
 The cloud computing giant linked the compromises of the typo-crypto, debug, chalk, and axios libraries to the Sapphire Sleet threat actor, also known as BlueNoroff and Stardust Chollima.
-
-
-Initial activity started with…
+Initial activity started with trojanizing…
 
 ## Indicators of Compromise (high-fidelity only)
 

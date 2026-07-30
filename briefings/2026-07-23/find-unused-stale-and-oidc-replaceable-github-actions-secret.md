@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Network egress from CI/build host to GhostAction secret-exfil infrastructure
 
-`UC_124_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_125_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### Shai-Hulud / GhostAction malicious workflow artifact dropped on runner or repo checkout
 
-`UC_124_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_125_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### CI runner process POSTing secrets to GhostAction exfil host via curl/wget/node
 
-`UC_124_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_125_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

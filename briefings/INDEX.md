@@ -18,6 +18,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
 - [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
 - [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
+- [ghsa critical cve 2025 4318 aws amplify studio ui component ](./2026-07-30/ghsa-critical-cve-2025-4318-aws-amplify-studio-ui-component-.md)
 - [ghsa critical cve 2026 66066 active storage has possible arb](./2026-07-30/ghsa-critical-cve-2026-66066-active-storage-has-possible-arb.md)
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
@@ -301,9 +302,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
-
-## 2026-06-30
-- [ghsa critical cve 2026 50566 fission environment runtime con](./2026-06-30/ghsa-critical-cve-2026-50566-fission-environment-runtime-con.md)
 
 ## 2026-06-29
 - [cisa kev cve 2026 48558 simplehelp authentication bypass vul](./2026-06-29/cisa-kev-cve-2026-48558-simplehelp-authentication-bypass-vul.md)

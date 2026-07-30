@@ -320,7 +320,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — You were onto something with “It’s the Climb,” Miley
 
-`UC_4_8` · phase: **exploit** · confidence: **High**
+`UC_5_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

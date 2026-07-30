@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 30, 2026
 02:00 PM
 0 
-
-
 Broadcom has released security updates to fix five vulnerabilities in VMware vCenter, ESX, Workstation, and Fusion, including three critical flaws that allow attackers to bypass authentication, execute arbitrary code, or escape from a virtual machine to the host.
-
-
-The vulnerabilities also affect products containing vCenter or ESX, including VMware Cloud Foundation, VMware vSph…
+The vulnerabilities also affect products containing vCenter or ESX, including VMware Cloud Foundation, VMware vSphere Foun…
 
 ## Indicators of Compromise (high-fidelity only)
 
