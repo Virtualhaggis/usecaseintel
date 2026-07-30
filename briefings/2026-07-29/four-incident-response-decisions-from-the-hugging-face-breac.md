@@ -24,7 +24,10 @@ Written by Mike Wilkes Published on: Jul 29, 2026 Hugging Face was breached by a
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1552.001** — Credentials In Files
+- **T1613** — Container and Resource Discovery
+- **T1528** — Steal Application Access Token
+- **T1552.005** — Cloud Instance Metadata API
 
 ## Kill chain phases observed
 
@@ -32,29 +35,47 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Cloud instance metadata (IMDS 169.254.169.254) accessed by container workload process
+### Recon tool reading K8s service-account token or /proc/self/environ inside a container
 
-`UC_2_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2_5` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(All_Traffic.process) as processes, values(All_Traffic.src) as src from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="169.254.169.254" NOT All_Traffic.process IN ("kubelet","amazon-ssm-agent","ssm-agent-worker","cloud-init","waagent","WindowsAzureGuestAgent.exe") by All_Traffic.src, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("cat","head","tail","curl","wget","python","python3","sh","bash","busybox","base64","xxd","strings")) (Processes.process="*/var/run/secrets/kubernetes.io/serviceaccount*" OR Processes.process="*/proc/self/environ*" OR Processes.process="*/run/secrets/kubernetes.io/serviceaccount*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName in~ ("cat","head","tail","curl","wget","python","python3","sh","bash","dash","busybox","base64","xxd","strings")
+| where ProcessCommandLine has_any ("/var/run/secrets/kubernetes.io/serviceaccount","/run/secrets/kubernetes.io/serviceaccount","/proc/self/environ")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Cloud instance metadata (IMDS 169.254.169.254) queried by a recon tool inside a workload
+
+`UC_2_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("curl","wget","python","python3","sh","bash","busybox","perl","ruby","nc","ncat")) (Processes.process="*169.254.169.254*" OR Processes.process="*169.254.170.2*") by Processes.dest Processes.user Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP == "169.254.169.254"
-| where RemotePort in (80, 443)
-// exclude node/cloud infrastructure agents that routinely query IMDS
-| where InitiatingProcessFileName !in~ ("kubelet","waagent","WindowsAzureGuestAgent.exe","WaAppAgent.exe","cloud-init","amazon-ssm-agent","ssm-agent-worker","node-problem-detector")
-// workload / interpreter reaching IMDS from inside a container
-| where InitiatingProcessFileName in~ ("python","python3","curl","wget","node","ruby","perl","java","sh","bash","busybox","powershell","pwsh")
-    or InitiatingProcessFolderPath has_any ("/var/lib/kubelet/pods/","/var/lib/docker/","/run/containerd/")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| where Timestamp > ago(14d)
+| where RemoteIP in ("169.254.169.254","169.254.170.2")
+| where InitiatingProcessFileName in~ ("curl","wget","python","python3","sh","bash","busybox","perl","ruby","nc","ncat")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
@@ -261,4 +282,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

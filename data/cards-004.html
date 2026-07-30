@@ -7680,11 +7680,11 @@ level: critical
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1021.001,T1190,T1195.002,T1486,T1528,T1555.003,T1566"
   data-sources="The Hacker News"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
-  data-targets="azure,linux,m365,vcs,windows"
+  data-targets="azure,linux,m365,windows"
   data-uc-count="16" data-llm-uc-count="5"
-  data-search="Kimi K3 Agents Found Redis Zero-Days and Built RCE Exploit, Researchers Say Redis shipped seven security releases on July 23 after researchers published authenticated RCE PoCs for stock Redis 6.2.22, 7.4.9, 8.6.4, and 8.8.0. All four chains require RESTORE. The Streams chains also need EVAL and XGROUP; the 8.8.0 chain needs EVAL and the bundled RedisBloom module. Redis says the underlying memory flaws may lead to remote code execution. Redis 6.2.23, 7.2.15, and 7.4.10 CVE-2026-25589 CVE-2026-25243 T1021.001 T1190 T1195.002 T1486 T1528 T1555.003 T1566 [LLM] redis-server process spawning a shell or interpreter (RESTORE/EVAL RCE via system()) [LLM] Untrusted network access to exposed Redis port 6379/6380 [LLM] redis-server initiating outbound connections to public non-Redis ports (post-RCE egress/C2) [LLM] redis-server writing to persistence locations (cron, authorized_keys, web root, systemd) [LLM] Inventory of Redis hosts on PoC-target versions 6.2.22 / 7.4.9 / 8.6.4 / 8.8.0 Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children">
+  data-search="Kimi K3 Agents Found Redis Zero-Days and Built RCE Exploit, Researchers Say Redis shipped seven security releases on July 23 after researchers published authenticated RCE PoCs for stock Redis 6.2.22, 7.4.9, 8.6.4, and 8.8.0. All four chains require RESTORE. The Streams chains also need EVAL and XGROUP; the 8.8.0 chain needs EVAL and the bundled RedisBloom module. Redis says the underlying memory flaws may lead to remote code execution. Redis 6.2.23, 7.2.15, and 7.4.10 CVE-2026-25589 CVE-2026-25243 T1021.001 T1190 T1195.002 T1486 T1528 T1555.003 T1566 [LLM] redis-server spawning a shell/interpreter (RESTORE memory-corruption system() landing) [LLM] redis-server making outbound connections (post-RCE reverse shell / C2) [LLM] Redis exploit command sequence: RESTORE with EVAL/XGROUP/RedisBloom (TDigest/BF) in the same session [LLM] Vulnerable Redis branch version present (6.2.22 / 7.4.9 / 8.6.4 / 8.8.0) [LLM] External/public inbound connection to Redis port (untrusted network exposure) Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-24-kimi-k3-agents-found-redis-zero-days-and-built-rce-exploit-r" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -7741,35 +7741,35 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Inventory of Redis hosts on PoC-target versions 6.2.22 / 7.4.9 / 8.6.4 / 8.8.0 · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable Redis branch version present (6.2.22 / 7.4.9 / 8.6.4 / 8.8.0) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Untrusted network access to exposed Redis port 6379/6380 · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] redis-server process spawning a shell or interpreter (RESTORE/EVAL RCE via system()) · Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] redis-server writing to persistence locations (cron, authorized_keys, web root, systemd) · Suspicious browser extension installation</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] redis-server initiating outbound connections to public non-Redis ports (post-RCE egress/C2)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] External/public inbound connection to Redis port (untrusted network exposure) · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] redis-server spawning a shell/interpreter (RESTORE memory-corruption system() landing) · [LLM] Redis exploit command sequence: RESTORE with EVAL/XGROUP/RedisBloom (TDigest/BF) in the same session · Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Suspicious browser extension installation</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] redis-server making outbound connections (post-RCE reverse shell / C2)</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="395ff68bf1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="b3138ed11c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">redis-server process spawning a shell or interpreter (RESTORE/EVAL RCE via system())</span>
+    <span class="uc-title">redis-server spawning a shell/interpreter (RESTORE memory-corruption system() landing)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="395ff68bf1" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="b3138ed11c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the terminal stage of all four disclosed Redis RCE chains, where the poisoned hash function makes a crafted GET invoke system(), causing redis-server to fork /bin/sh and arbitrary commands. redis-server should essentially never spawn shell/interpreter children (only re-forks itself for BGSAVE), so this parent→child pair is high-fidelity.
+    <div class="uc-desc">Hunts the RCE endpoint of both disclosed Redis chains: after a corrupt RDB object (via RESTORE) is turned into arbitrary memory access, the exploit poisons a hash function so a crafted GET invokes system(). On a healthy host redis-server never forks a shell or LOLBIN, so redis-server as parent of sh/bash/nc/curl is a direct exploitation signal.
 
-Rationale: Anchored on the article&#x27;s core mechanism (&#x27;poison a database hash function so a crafted GET invokes system()&#x27;) and the redis-server binary; redis-server spawning a shell is the unambiguous RCE manifestation shared by all four chains. Cross-checked against berabuddies/redis-poc and zeroday.cloud CVE-2026-25243 deep dive.
+Rationale: Both PoC chains (Streams shared-NACK double-free and RedisBloom TDigest OOB write) converge on &#x27;poison a database hash function so a crafted GET calls system()&#x27; per the article body — redis-server as the direct parent of a shell/LOLBIN is the highest-fidelity observable of that outcome and requires no Redis command-auditing config.
 
 Cross-checked against:
+  • https://redis.io/blog/security-advisory-cve202623479-cve202625243-cve-2026-25588-cve202625589-cve-2026-23631/
   • https://github.com/berabuddies/redis-poc
-  • https://www.zeroday.cloud/blog/redis-cve-2026-25243-deep-dive
-  • https://cybersecuritynews.com/redis-server-0-day-exploit/</div>
+  • https://securityonline.info/redis-rce-vulnerabilities-memory-corruption-restore-command-patch/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Backup/maintenance wrappers where an operator launches redis-server FROM a shell (parent=shell, child=redis — opposite direction, not matched here)</li><li>Container entrypoint scripts where redis-server is PID 1 and a sidecar health-check exec&#x27;s into the container (may show shell under redis-server in some runtimes)</li><li>Redis modules that legitimately shell out (rare, custom builds)</li><li>redis-server BGSAVE/AOF-rewrite forks — these re-fork redis-server, not a shell, so excluded by the child-name filter</li><li>Admin using redis-cli --eval wrappers on the same host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;redis-check-rdb&quot;,&quot;redis-check-aof&quot;) or ProcessCommandLine has &quot;redis-cli&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree for the redis-server PID and inspect the child ProcessCommandLine — legitimate Redis never runs sh/curl/python; capture the exact command and any downloaded URL. 2) Contain: isolate the host, kill the redis-server-spawned child, and firewall the Redis port from untrusted networks; snapshot memory/disk before reboot. 3) Hunt: check for new cron/authorized_keys/web-shell writes by redis-server, outbound connections from redis-server to public IPs, and confirm the deployed Redis branch is a fixed release (6.2.23/7.2.15/7.4.10/8.2.8/8.4.5/8.6.5/8.8.1).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A Redis module (e.g. a custom C module or RedisGears) that legitimately shells out to a helper script</li><li>Container entrypoint wrappers that exec redis-server then a health-probe shell under the same process tree</li><li>Backup/monitoring tooling misattributed as a redis-server child on cgroup-shared hosts</li><li>Admin running redis-cli DEBUG/OBJECT scripts from a wrapper that inherits the redis-server name</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ChildCmd has_any (&quot;redisgears&quot;,&quot;/opt/redis-stack/&quot;) and AccountName in~ (&quot;redis&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree and ChildCmd — a reverse-shell one-liner (bash -i, nc -e, python pty), id/uname recon, or a curl-to-pipe payload confirms exploitation vs a benign module. Check the redis-server version against the fixed list. 2) Contain: isolate the host, kill the child process, and firewall the Redis port (6379/6380) from untrusted networks; revoke RESTORE from non-admin ACL users. 3) Hunt: pivot on the redis-server host for outbound connections to new IPs, new files under /tmp or the Redis working dir, and cron/systemd persistence created by the redis UID.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
@@ -7781,23 +7781,22 @@ Cross-checked against:
     <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessFileName =~ &quot;redis-server&quot;
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;socat&quot;)
+| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
 | where ParentProcessName has &quot;redis-server&quot;
-| where TargetProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/ash&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/netcat&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/python&quot;,&quot;/perl&quot;,&quot;/ruby&quot;,&quot;/socat&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Redis Server Spawning Shell or Interpreter (RESTORE/EVAL RCE)
-id: 5b1e0e2a-9c34-4c2b-8f2e-3a1f9b6c2d41
-description: redis-server spawning a shell or interpreter is the terminal stage of the July 2026 Redis RESTORE/EVAL RCE chains where a poisoned hash function invokes system().
+    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Redis-server Spawns Shell or LOLBIN (RESTORE RCE system() Landing)
+id: 6f3b2d1a-9c47-4e2a-bd11-7a2f5c9e0a31
+description: Detects redis-server spawning a Unix shell or download/exec LOLBIN, the system() endpoint of the July 2026 Redis RESTORE/Streams/RedisBloom RCE chains.
 references:
   - https://thehackernews.com/2026/07/kimi-k3-agents-found-redis-zero-days.html
-  - https://github.com/berabuddies/redis-poc
-author: SOC Detection Engineering
+  - https://redis.io/blog/security-advisory-cve202623479-cve202625243-cve-2026-25588-cve202625589-cve-2026-23631/
+author: THN Detection Engineering
 date: 2026/07/30
 tags:
   - attack.t1190
@@ -7813,119 +7812,60 @@ detection:
       - &#x27;/bash&#x27;
       - &#x27;/dash&#x27;
       - &#x27;/zsh&#x27;
-      - &#x27;/ksh&#x27;
+      - &#x27;/ash&#x27;
       - &#x27;/nc&#x27;
       - &#x27;/ncat&#x27;
+      - &#x27;/netcat&#x27;
       - &#x27;/curl&#x27;
       - &#x27;/wget&#x27;
       - &#x27;/python&#x27;
       - &#x27;/python3&#x27;
       - &#x27;/perl&#x27;
       - &#x27;/ruby&#x27;
+      - &#x27;/socat&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @user.name:redis @process.name:(sh OR bash OR dash OR zsh OR ksh OR nc OR ncat OR curl OR wget OR python OR python3 OR perl OR ruby)</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/redis-server$/i
-| ImageFileName=/\/(sh|bash|dash|zsh|ksh|nc|ncat|curl|wget|python3?|perl|ruby)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;redis-server&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;redis-server&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash OR zsh OR ash OR nc OR ncat OR netcat OR curl OR wget OR python OR python3 OR perl OR ruby OR socat) @process.parent.name:redis-server</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/redis-server/i | ImageFileName=/\/(sh|bash|dash|zsh|ash|nc|ncat|netcat|curl|wget|python3?|perl|ruby|socat)$/i | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;redis-server&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;socat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;redis-server&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;socat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="ecbd703ef6" data-platforms="cloudwatch,def,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="8ebc90ed23" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Untrusted network access to exposed Redis port 6379/6380</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">redis-server making outbound connections (post-RCE reverse shell / C2)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ecbd703ef6" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8ebc90ed23" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">All four disclosed chains are authenticated-but-network-reachable RESTORE attacks; Redis&#x27;s own mitigation is to &#x27;block untrusted network access.&#x27; Hunts external/public source IPs establishing connections to Redis listener ports, surfacing the exposure that makes the RCE reachable.
+    <div class="uc-desc">After system() executes on a compromised Redis host, an attacker typically stages a reverse shell or pulls a second stage. Legitimate redis-server outbound traffic is limited to replication/cluster peers on Redis ports; any other outbound connection attributed to the redis-server process is anomalous.
 
-Rationale: Directly operationalises Redis&#x27;s stated mitigation (&#x27;block untrusted network access&#x27;) and the fixed listener ports 6379/6380; external source IPs reaching Redis is the precondition for every RESTORE chain. Ports and mitigation confirmed by Redis July release notes and the search corroboration.
+Rationale: The article states both scripts culminate in system(); a redis-server process reaching a public IP on a non-Redis port is the network fingerprint of that shell, and excluding replication ports (6379/6380/16379/26379) plus RFC1918 keeps benign cluster traffic out.
 
 Cross-checked against:
-  • https://github.com/berabuddies/redis-poc
-  • https://www.zeroday.cloud/blog/redis-cve-2026-25243-deep-dive</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+  • https://redis.io/blog/security-advisory-cve202623479-cve202625243-cve-2026-25588-cve202625589-cve-2026-23631/
+  • https://github.com/berabuddies/redis-poc</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Intentionally internet-facing managed Redis behind strong AUTH/ACLs (still worth reviewing but expected)</li><li>Cloud load balancer / NAT gateway health-check IPs appearing as &#x27;public&#x27; source</li><li>Partner or SaaS integrations that legitimately reach Redis over the internet</li><li>Security scanners (Shodan/Censys/internal ASV) probing 6379/6380</li><li>Redis replication from a cloud replica whose IP is outside RFC1918 ranges</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;known-partner-ips-managed-in-watchlist&gt;&quot;) // maintain approved external Redis clients in a Sentinel watchlist to suppress</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the Redis instance is meant to be internet-facing and whether AUTH + RESTORE ACL restrictions are enforced; identify the source IP&#x27;s owner/geo. 2) Contain: apply a security-group/firewall rule restricting 6379/6380 to known application subnets and revoke RESTORE from accounts that don&#x27;t need it. 3) Hunt: on any host that accepted an external connection, look for redis-server spawning shells, persistence file writes, and outbound egress from redis-server; verify the branch version is patched.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Redis replica configured to a WAN/cloud master on a custom port</li><li>Redis modules (RedisGears/RediSearch) that fetch remote resources</li><li>Sentinel/monitoring exporters bound into the redis-server process namespace</li><li>Managed-Redis agents phoning home to a vendor telemetry endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;redis.io&quot;,&quot;redislabs.com&quot;) )</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the RemoteIP against threat intel and geo; confirm whether the redis host is a configured replica of that destination (CONFIG GET replicaof). 2) Contain: block the destination egress, isolate the host, and terminate any child shell of redis-server. 3) Hunt: correlate with UC1 (redis-server child shell) on the same host and timeframe, and inspect for dropped payloads and persistence created by the redis UID.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-103-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where LocalPort in (6379, 6380)
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| where RemoteIPType == &quot;Public&quot;
-| where InitiatingProcessFileName =~ &quot;redis-server&quot;
-| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, RemoteIP, LocalPort, InitiatingProcessFileName
-| order by Connections desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where DestinationPort in (6379, 6380)
-| where DeviceAction !in~ (&quot;deny&quot;,&quot;drop&quot;,&quot;blocked&quot;)
-| where ipv4_is_private(SourceIP) == false
-| summarize Connections=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by DeviceVendor, SourceIP, DestinationIP, DestinationPort
-| order by Connections desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
-| filter dstPort in [6379, 6380] and action = &quot;ACCEPT&quot;
-| filter not (srcAddr like /^10\./ or srcAddr like /^192\.168\./ or srcAddr like /^172\.(1[6-9]|2[0-9]|3[01])\./)
-| stats count(*) as flows, sum(bytes) as totalBytes, earliest(@timestamp) as firstSeen by srcAddr, dstAddr, dstPort
-| sort flows desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (6379,6380) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src))
-| sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (6379,6380) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src))
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ea109bb9f1" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">redis-server initiating outbound connections to public non-Redis ports (post-RCE egress/C2)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ea109bb9f1" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">After the system() call, a compromised Redis host commonly beacons or pulls a second stage. redis-server legitimately only connects outbound to replica/cluster/sentinel ports (6379/16379/26379); any other public-destination egress initiated by redis-server is anomalous.
-
-Rationale: Uses the redis-server binary as the initiator and excludes Redis&#x27;s only legitimate outbound ports (replication 6379, cluster bus 16379, sentinel 26379); the article&#x27;s &#x27;built RCE exploit&#x27; calling system() implies second-stage egress. Sentinel left blank — Sentinel lacks per-process Linux egress attribution without a custom Sysmon-for-Linux table.
-
-Cross-checked against:
-  • https://github.com/berabuddies/redis-poc
-  • https://cybersecuritynews.com/redis-server-0-day-exploit/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Redis modules that fetch remote data (rare custom builds)</li><li>Redis replication to a cloud master on a non-standard port</li><li>Monitoring agents mis-attributed to redis-server via shared cgroup/namespace</li><li>Package/telemetry callouts from a wrapper mistakenly parented to redis-server</li><li>Legitimate Redis Enterprise cluster nodes on custom ports (tune the port exclusion list)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemotePort !in (6380) // drop if TLS-Redis replication is used in-org</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the destination IP/domain reputation and inspect the redis-server command line; legitimate Redis does not curl/beacon to arbitrary hosts. 2) Contain: block the destination at egress, isolate the host, and capture volatile memory. 3) Hunt: pivot to process-tree (redis-server→shell), persistence writes (cron/.ssh/webroot), and other Redis hosts contacting the same destination; confirm patch level of the branch.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
 | where InitiatingProcessFileName =~ &quot;redis-server&quot;
 | where ActionType == &quot;ConnectionSuccess&quot;
 | where RemoteIPType == &quot;Public&quot;
-| where RemotePort !in (6379, 6380, 16379, 26379)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessCommandLine
+| where RemotePort !in (6379,6380,16379,26379)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 DeviceNetworkEvents
@@ -7933,145 +7873,184 @@ DeviceNetworkEvents
 | where InitiatingProcessFileName =~ &quot;redis-server&quot;
 | where ActionType == &quot;ConnectionSuccess&quot;
 | where RemoteIPType == &quot;Public&quot;
-| where RemotePort !in (6379, 6380, 16379, 26379)
-| project TimeGenerated, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessCommandLine
+| where RemotePort !in (6379,6380,16379,26379)
+| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/redis-server$/i
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| RemotePort!=6379 | RemotePort!=16379 | RemotePort!=26379
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=&quot;redis-server&quot; AND All_Traffic.direction=&quot;outbound&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,dest) OR cidrmatch(&quot;172.16.0.0/12&quot;,dest) OR cidrmatch(&quot;192.168.0.0/16&quot;,dest))
-| where NOT (dest_port IN (6379,16379,26379))
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=&quot;redis-server&quot; AND All_Traffic.direction=&quot;outbound&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch(&quot;10.0.0.0/8&quot;,dest) OR cidrmatch(&quot;172.16.0.0/12&quot;,dest) OR cidrmatch(&quot;192.168.0.0/16&quot;,dest))
-| where NOT (dest_port IN (6379,16379,26379))
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="82d8764487" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">redis-server writing to persistence locations (cron, authorized_keys, web root, systemd)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="82d8764487" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">A recurring post-RCE step for Redis compromise is dropping a crontab entry, SSH authorized_keys, a web shell, or a systemd unit for persistence. Hunts file creation/modification in these locations where the writing process is redis-server, which never legitimately touches them.
-
-Rationale: redis-server as the writing process for cron/authorized_keys/web-root/systemd paths is a well-established Redis-RCE persistence pattern and is the natural follow-on to the article&#x27;s system() primitive. High-fidelity because the Redis service never legitimately writes these files.
-
-Cross-checked against:
-  • https://github.com/berabuddies/redis-poc
-  • https://www.zeroday.cloud/blog/redis-cve-2026-25243-deep-dive</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Redis dump.rdb/appendonly.aof writes to /var/lib/redis or /etc/redis (excluded — those paths are not in the selection)</li><li>Config-management tooling (Ansible/Puppet) mis-attributed to redis-server via wrapper</li><li>Redis writing an RDB to a mounted /root path due to a misconfigured &#x27;dir&#x27; directive (still worth reviewing)</li><li>Backup jobs run as the redis user but launched by cron, not redis-server (parent differs)</li><li>Container images where redis-server runs as root and legitimately owns /root writes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has_any (&quot;/var/lib/redis&quot;, &quot;/etc/redis/&quot;) and FileName has_any (&quot;dump.rdb&quot;,&quot;appendonly.aof&quot;,&quot;redis.conf&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the written file — inspect cron entries, authorized_keys additions, or web-shell content for attacker commands/keys/callback hosts. 2) Contain: remove the malicious persistence artifact, rotate any exposed SSH keys, isolate the host, and revoke RESTORE ACLs. 3) Hunt: correlate with redis-server→shell process events and outbound egress, sweep other Redis hosts for the same file path/key, and confirm the branch is on a fixed release.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;redis-server&quot;
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where FolderPath has_any (&quot;/etc/cron&quot;, &quot;/var/spool/cron&quot;, &quot;/.ssh/&quot;, &quot;authorized_keys&quot;, &quot;/var/www/&quot;, &quot;/usr/share/nginx/&quot;, &quot;/etc/systemd/&quot;, &quot;/etc/init.d/&quot;, &quot;/root/&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has &quot;redis-server&quot;
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where TargetFilePath has_any (&quot;/etc/cron&quot;, &quot;/var/spool/cron&quot;, &quot;/.ssh/&quot;, &quot;authorized_keys&quot;, &quot;/var/www/&quot;, &quot;/usr/share/nginx/&quot;, &quot;/etc/systemd/&quot;, &quot;/etc/init.d/&quot;, &quot;/root/&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, DvcAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Redis Server Writing to Persistence Locations (Post-RCE)
-id: c8f3a1d2-6b47-4e19-9a2c-7d5e8f1b3c62
-description: redis-server creating or modifying cron, SSH authorized_keys, web root, or systemd files indicates post-exploitation persistence following the July 2026 Redis RESTORE/EVAL RCE.
+    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Redis-server Outbound Connection to Non-Replication Destination
+id: 2a8c5f74-1b3e-4d9a-8f21-0c6e4b7d2a55
+description: redis-server initiating outbound connections outside Redis replication/cluster ports, indicative of post-RCE reverse shell or second-stage pull.
 references:
   - https://thehackernews.com/2026/07/kimi-k3-agents-found-redis-zero-days.html
-  - https://github.com/berabuddies/redis-poc
-author: SOC Detection Engineering
+author: THN Detection Engineering
 date: 2026/07/30
 tags:
-  - attack.t1053.003
-  - attack.t1098.004
-  - attack.t1505.003
+  - attack.t1059.004
+  - attack.t1571
 logsource:
-  category: file_event
+  category: network_connection
   product: linux
 detection:
   selection:
     Image|endswith: &#x27;/redis-server&#x27;
-    TargetFilename|contains:
-      - &#x27;/etc/cron&#x27;
-      - &#x27;/var/spool/cron&#x27;
-      - &#x27;/.ssh/&#x27;
-      - &#x27;authorized_keys&#x27;
-      - &#x27;/var/www/&#x27;
-      - &#x27;/usr/share/nginx/&#x27;
-      - &#x27;/etc/systemd/&#x27;
-      - &#x27;/etc/init.d/&#x27;
-      - &#x27;/root/&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/redis-server$/i
-| TargetFileName=/(\/etc\/cron|\/var\/spool\/cron|\.ssh\/|authorized_keys|\/var\/www\/|\/usr\/share\/nginx\/|\/etc\/systemd\/|\/etc\/init\.d\/|\/root\/)/i
-| groupBy([aid, ComputerName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name=&quot;redis-server&quot; AND (Filesystem.file_path IN (&quot;/etc/cron*&quot;,&quot;/var/spool/cron*&quot;,&quot;*/.ssh/*&quot;,&quot;*authorized_keys*&quot;,&quot;/var/www/*&quot;,&quot;/usr/share/nginx/*&quot;,&quot;/etc/systemd/*&quot;,&quot;/root/*&quot;))) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name=&quot;redis-server&quot; AND (Filesystem.file_path IN (&quot;/etc/cron*&quot;,&quot;/var/spool/cron*&quot;,&quot;*/.ssh/*&quot;,&quot;*authorized_keys*&quot;,&quot;/var/www/*&quot;,&quot;/usr/share/nginx/*&quot;,&quot;/etc/systemd/*&quot;,&quot;/root/*&quot;))) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre></div></div>
+    Initiated: &#x27;true&#x27;
+  filter_ports:
+    DestinationPort:
+      - 6379
+      - 6380
+      - 16379
+      - 26379
+  condition: selection and not filter_ports
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/redis-server/i | ConnectionDirection=0 | RemotePort!=6379 RemotePort!=6380 RemotePort!=16379 RemotePort!=26379 | NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) | NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) | NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) | groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=&quot;redis-server&quot; AND All_Traffic.direction=&quot;outbound&quot; AND NOT All_Traffic.dest_port IN (6379,6380,16379,26379) AND NOT (All_Traffic.dest IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=&quot;redis-server&quot; AND All_Traffic.direction=&quot;outbound&quot; AND NOT All_Traffic.dest_port IN (6379,6380,16379,26379) AND NOT (All_Traffic.dest IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="fcbbcea2e1" data-platforms="def,sent" data-targets="">
+<details class="uc" data-uc-slug="6f98fc1cbf" data-platforms="datadog,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Inventory of Redis hosts on PoC-target versions 6.2.22 / 7.4.9 / 8.6.4 / 8.8.0</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="fcbbcea2e1" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Redis exploit command sequence: RESTORE with EVAL/XGROUP/RedisBloom (TDigest/BF) in the same session</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6f98fc1cbf" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">The article stresses checking the exact branch version, noting the May-patched 6.2.22 and 7.4.9 are STILL vulnerable and 8.6.4 lacks the duplicate-ownership guard despite its release notes. This surfaces every managed host running one of the four exploitable builds so they can be upgraded to the fixed release for their branch.
+    <div class="uc-desc">Hunts the authenticated command pattern common to all four disclosed chains. Every chain needs RESTORE to load a corrupt RDB object; the Streams chains additionally use EVAL and XGROUP, and the 8.8.0 chain uses EVAL plus RedisBloom/TDigest (BF.*/CMS.*/TDIGEST.*) operations. Requires Redis command logging shipped to the SIEM.
 
-Rationale: Uses the four exact PoC-target versions named in the article (6.2.22, 7.4.9, 8.6.4, 8.8.0) — including the two May &#x27;destination&#x27; builds the article explicitly warns remain vulnerable. Splunk left blank: software inventory has no CIM data model. Version list corroborated by the berabuddies/redis-poc repo title.
+Rationale: The article names the exact command primitives per chain: &#x27;All four chains require RESTORE. The Streams chains also need EVAL and XGROUP; the 8.8.0 chain needs EVAL and the bundled RedisBloom module&#x27; — combining RESTORE with these follow-on commands in one host&#x27;s command stream is the on-the-wire exploit signature. Queries match these as string literals only (no side-effectful command execution).
 
 Cross-checked against:
+  • https://thehackernews.com/2026/07/kimi-k3-agents-found-redis-zero-days.html
   • https://github.com/berabuddies/redis-poc
-  • https://www.stingrai.io/blog/redis-rce-2026-cves-ai-27-minute-discovery</div>
+  • https://redis.io/blog/security-advisory-cve202623479-cve202625243-cve-2026-25588-cve202625589-cve-2026-23631/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate cluster/backup workflows using RESTORE for key migration alongside application EVAL scripts</li><li>Data-pipeline jobs that bulk-import via RESTORE and run Lua post-processing</li><li>Applications using RedisBloom (BF./CMS./TDIGEST.) as intended near a RESTORE-based migration</li><li>MONITOR/replication logging duplicating benign command traffic</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: reconstruct the command sequence for the source client — a RESTORE payload immediately followed by EVAL and XGROUP/XREADGROUP (Streams) or TDIGEST./BF. operations (8.8.0) with no matching application logic is exploitation. Confirm the server branch version. 2) Contain: block the client IP, revoke RESTORE from that ACL user, and upgrade to the fixed branch release. 3) Hunt: pivot to UC1/UC2 on the same host for a redis-server child shell or anomalous egress in the same window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where ProcessName has &quot;redis&quot; or SyslogMessage has &quot;redis&quot;
+| where SyslogMessage has &quot;RESTORE&quot;
+| where SyslogMessage has_any (&quot;EVAL&quot;,&quot;EVALSHA&quot;,&quot;XGROUP&quot;,&quot;XREADGROUP&quot;,&quot;TDIGEST.&quot;,&quot;BF.LOADCHUNK&quot;,&quot;CMS.MERGE&quot;)
+| project TimeGenerated, Computer, ProcessName, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:redis (RESTORE) AND (EVAL OR EVALSHA OR XGROUP OR XREADGROUP OR &quot;TDIGEST.&quot; OR &quot;BF.LOADCHUNK&quot; OR &quot;CMS.MERGE&quot;)</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=redis OR sourcetype=&quot;redis:command&quot; OR source=&quot;*redis*&quot;) &quot;RESTORE&quot; (&quot;EVAL&quot; OR &quot;EVALSHA&quot; OR &quot;XGROUP&quot; OR &quot;XREADGROUP&quot; OR &quot;TDIGEST.ADD&quot; OR &quot;TDIGEST.MERGE&quot; OR &quot;BF.LOADCHUNK&quot; OR &quot;CMS.MERGE&quot;) | stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sample by host | where count &gt; 0 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0cce34ad5a" data-platforms="def,sent" data-targets="">
+  <summary>
+    <span class="uc-title">Vulnerable Redis branch version present (6.2.22 / 7.4.9 / 8.6.4 / 8.8.0)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0cce34ad5a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts still running the exact Redis builds the PoCs target. The article stresses checking the precise branch version — 6.2.22 and 7.4.9 were the May &#x27;fixed&#x27; destinations but still lack the shared-NACK guard, and tagged 8.6.4 lacks the PR #15081 duplicate-ownership check. Drives patching to 6.2.23/7.2.15/7.4.10/8.2.8/8.4.5/8.6.5/8.8.1.
+
+Rationale: The article gives the concrete vulnerable builds (6.2.22, 7.4.9, 8.6.4, 8.8.0) and fixed targets; matching SoftwareVersion exactly against those four builds is a zero-ambiguity exposure hunt directly supporting the article&#x27;s &#x27;check the exact branch version, not whether Redis was recently patched&#x27; guidance.
+
+Cross-checked against:
+  • https://redis.io/blog/security-advisory-cve202623479-cve202625243-cve-2026-25588-cve202625589-cve-2026-23631/
+  • https://github.com/berabuddies/redis-poc
+  • https://releases.sh/redis/redis</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Redis clients or libraries whose package version string coincidentally matches (filter on SoftwareName has &#x27;redis&#x27; server package)</li><li>Air-gapped/internal-only Redis instances that are lower risk but still listed</li><li>Version strings reported for the redis-tools package rather than redis-server</li><li>Containers reported by image scan vs running instance (verify the live binary version)</li><li>8.8.0 flagged for the TDigest chain only — hosts without the RedisBloom module loaded are not exploitable via that path</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareName !has &quot;redis-tools&quot; and SoftwareName !has &quot;client&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported build is the running redis-server (not a client lib) and whether the instance is network-reachable and exposes RESTORE. 2) Contain: upgrade to the fixed release for the branch (6.2.23/7.2.15/7.4.10, 8.2.8/8.4.5/8.6.5, or 8.8.1) and, until patched, revoke RESTORE and block untrusted network access. 3) Hunt: on each vulnerable host, retro-hunt for redis-server spawning shells, persistence file writes, and anomalous egress to confirm no prior exploitation.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/internal-only Redis instances with RESTORE already restricted (lower risk but still flagged)</li><li>TVM version string reported for a downstream repackage (e.g. redis-stack) that already backported the guard</li><li>Dev/test instances intentionally pinned to an old build</li><li>Version reported by inventory before an in-progress rolling upgrade completes</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each flagged host confirm network exposure of 6379/6380 and whether RESTORE is granted to non-admin ACL users (the article&#x27;s two mitigations). 2) Contain: upgrade to the fixed release for the branch (6.2.23/7.2.15/7.4.10/8.2.8/8.4.5/8.6.5/8.8.1); until then revoke RESTORE and block untrusted network access. 3) Hunt: run UC3 command-sequence and UC1 child-shell hunts against these hosts to check for prior exploitation.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where SoftwareVendor has &quot;redis&quot; or SoftwareName has &quot;redis&quot;
+| where SoftwareVersion in (&quot;6.2.22&quot;,&quot;7.4.9&quot;,&quot;8.6.4&quot;,&quot;8.8.0&quot;)
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where SoftwareName has &quot;redis&quot;
+| where SoftwareVersion in (&quot;6.2.22&quot;,&quot;7.4.9&quot;,&quot;8.6.4&quot;,&quot;8.8.0&quot;) or CveId in (&quot;CVE-2026-25589&quot;,&quot;CVE-2026-25243&quot;)
+| project TimeGenerated, DeviceName, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bd7f17f8b9" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">External/public inbound connection to Redis port (untrusted network exposure)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bd7f17f8b9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">The disclosed chains require authenticated network reach to the Redis port, and the article&#x27;s primary mitigation is to &#x27;block untrusted network access.&#x27; This surfaces inbound connections to 6379/6380 (and 16379/26379) from public/untrusted source IPs — the precondition for the RESTORE-based exploitation.
+
+Rationale: The article&#x27;s explicit mitigation (&#x27;block untrusted network access. Restricting RESTORE cuts off both disclosed paths&#x27;) makes public reachability of the Redis port the article-specific precondition; matching inbound to 6379/6380/16379/26379 from non-RFC1918 sources is a direct exposure hunt.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/07/kimi-k3-agents-found-redis-zero-days.html
+  • https://securityonline.info/redis-rce-vulnerabilities-memory-corruption-restore-command-patch/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cloud-hosted Redis reachable by app tiers whose egress NATs to a public IP</li><li>Managed Redis with a documented public allow-list of partner IPs</li><li>VPN/proxy source addresses that appear public but are trusted</li><li>Internet-facing Redis intentionally behind TLS+ACL for a SaaS product</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the destination host runs a vulnerable branch (UC4) and whether Redis AUTH/ACL is enforced; treat public reachability of an unauthenticated or vulnerable instance as high priority. 2) Contain: restrict the Redis port to trusted CIDRs at the firewall/security-group and revoke RESTORE from non-admin ACL users. 3) Hunt: for any external source that connected, pivot to UC3 command-sequence logs and UC1 redis-server child-shell activity to rule out completed exploitation.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-103-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where SoftwareName has &quot;redis&quot;
-| where SoftwareVersion in (&quot;6.2.22&quot;,&quot;7.4.9&quot;,&quot;8.6.4&quot;,&quot;8.8.0&quot;)
-| summarize arg_max(Timestamp, SoftwareVersion, OSPlatform, EndOfSupportStatus) by DeviceName, SoftwareVendor, SoftwareName
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
-| sort by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where LocalPort in (6379,6380,16379,26379)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(Timestamp), Attempts=count() by DeviceName, LocalPort, RemoteIP
+| order by Attempts desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
-| where SoftwareName has &quot;redis&quot;
-| where SoftwareVersion in (&quot;6.2.22&quot;,&quot;7.4.9&quot;,&quot;8.6.4&quot;,&quot;8.8.0&quot;)
-| summarize arg_max(TimeGenerated, SoftwareVersion, CveId) by DeviceName, SoftwareVendor, SoftwareName
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId
-| sort by DeviceName asc</code></pre></div>
+| where NetworkDirection == &quot;Inbound&quot;
+| where DstPortNumber in (6379,6380,16379,26379)
+| where not(ipv4_is_private(SrcIpAddr))
+| summarize FirstSeen=min(TimeGenerated), Attempts=count() by DstHostname, DstPortNumber, SrcIpAddr
+| order by Attempts desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Inbound Connection to Redis Port From Public Source
+id: 9d4e1c60-7a52-4b8f-9e03-2f1a6c8b4d77
+description: Detects inbound connections to Redis ports (6379/6380/16379/26379) from non-private source IPs, the untrusted-network exposure the July 2026 Redis RCE advisory warns against.
+references:
+  - https://thehackernews.com/2026/07/kimi-k3-agents-found-redis-zero-days.html
+author: THN Detection Engineering
+date: 2026/07/30
+tags:
+  - attack.t1190
+  - attack.t1133
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    DestinationPort:
+      - 6379
+      - 6380
+      - 16379
+      - 26379
+    Initiated: &#x27;false&#x27;
+  filter_private:
+    SourceIp|cidr:
+      - &#x27;10.0.0.0/8&#x27;
+      - &#x27;172.16.0.0/12&#x27;
+      - &#x27;192.168.0.0/16&#x27;
+  condition: selection and not filter_private
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ConnectionDirection=1 | RemotePort=6379 OR RemotePort=6380 OR RemotePort=16379 OR RemotePort=26379 | NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) | NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) | NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) | groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=&quot;inbound&quot; AND All_Traffic.dest_port IN (6379,6380,16379,26379) AND NOT (All_Traffic.src IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=&quot;inbound&quot; AND All_Traffic.dest_port IN (6379,6380,16379,26379) AND NOT (All_Traffic.src IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - count</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="bf48d37680" data-platforms="def,sent,sigma,spl" data-targets="windows">
