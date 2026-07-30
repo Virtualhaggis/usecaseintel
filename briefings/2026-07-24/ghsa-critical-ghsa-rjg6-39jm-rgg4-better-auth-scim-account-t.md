@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Better-Auth SCIM global user deletion via /scim/v2/Users from unsanctioned caller
 
-`UC_93_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_95_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Better-Auth SCIM profile/email rewrite fan-out across many /scim/v2/Users resources
 
-`UC_93_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_95_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

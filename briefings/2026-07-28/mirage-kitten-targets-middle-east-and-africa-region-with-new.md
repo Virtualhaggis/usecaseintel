@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### NightLedger C2 beacon to realhealthshop[.]com / tjconsultingservices[.]com with hardcoded URIs
 
-`UC_51_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_53_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### NightLedger DLL search-order hijack: SspiCli.dll side-loaded by AppVShNotify.exe
 
-`UC_51_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceImageLoadEvents
 
 ### AppVShNotify.exe spawning child processes (NightLedger command dispatcher execution)
 
-`UC_51_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_53_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### BridgeHead/ArcBridge tunneler deployment: unbcl.dll & libwinpthread-1.dll in anomalous paths
 
-`UC_51_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceImageLoadEvents
 
 ### BridgeHead WebSocket SOCKS5 tunnel to smartconnect.azurewebsites.net with hardcoded Edg/86 UA
 
-`UC_51_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_53_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### Mirage Kitten (UNC1549) infrastructure & payload IOC sweep
 
-`UC_51_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_53_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -390,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware
 
-`UC_51_7` · phase: **exploit** · confidence: **High**
+`UC_53_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

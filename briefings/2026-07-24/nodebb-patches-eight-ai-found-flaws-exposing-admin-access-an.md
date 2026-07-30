@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB admin-panel access via homepage-setting authorization bypass (first-seen admin API)
 
-`UC_102_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_104_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB translation-token template-injection XSS in web request URI
 
-`UC_102_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB ActivityPub private-message disclosure via unsigned GET enumeration
 
-`UC_102_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated NodeBB ActivityPub category-outbox private-content disclosure
 
-`UC_102_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB federation actor spoofing — new peer POSTing to ActivityPub inbox (CVE-2026-58593 / vote inflation)
 
-`UC_102_16` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_104_16` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
