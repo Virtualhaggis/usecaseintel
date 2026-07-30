@@ -1,41 +1,36 @@
-# [HIGH] Catan and Mouse
+# [HIGH] You were onto something with “It’s the Climb,” Miley
 
 **Source:** Cisco Talos
-**Published:** 2026-07-02
-**Article:** https://blog.talosintelligence.com/catan-and-mouse/
+**Published:** 2026-07-30
+**Article:** https://blog.talosintelligence.com/you-were-onto-something-with-its-the-climb-miley/
 
 ## Threat Profile
 
-Catan and Mouse 
+You were onto something with “It’s the Climb,” Miley 
 By 
-William Largent 
-Thursday, July 2, 2026 14:00
+Amy Ciminnisi 
+Thursday, July 30, 2026 14:00
 Threat Source newsletter
-Welcome to this week’s edition of the Threat Source newsletter.  
-“I do not know everything; still many things I understand.” 
-― Madeleine L'Engle, A Wrinkle in Time  “Don't try to comprehend with your mind. Your minds are very limited. Use your intuition.” 
-― Madeleine L'Engle, A Wind in the Door  The World Cup. The 4 th  of July as the US turns 250. Dungeon Crawler Carl. LeBron moving on. Wimbledon. AI.…
+Welcome to this week’s edition of the Threat Source newsletter. 
+For my fianceé’s 30 th birthday, I took her on a weekend trip to Shenandoah National Park – a favorite of ours since we went to a wedding there several years back. We’ve done several incredible hikes over the years, but one in particular had always loomed over my head: Old Rag, a 9.3 mile circuit hike that…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-48558`
-- **Domain (defanged):** `dashboard-bl.pamconj.com`
-- **Domain (defanged):** `spx.pamconj.com`
-- **Domain (defanged):** `clear90489058903-document.workers.dev`
 - **SHA256:** `9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507`
+- **SHA256:** `a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91`
 - **SHA256:** `9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f`
-- **SHA256:** `afc8a00883a4ea07df2dc1d4ed02f8a23b35c9456413b438a2d9ce3ae5076638`
-- **SHA256:** `c0ad494457dcd9e964378760fb6aca86a23622045bca851d8f3ab49ec33978fe`
-- **SHA256:** `853baab97b1f3b03c1ffa55797e87867f5fb7ce33457411f56afd270cb395453`
+- **SHA256:** `fc18d4060c6dad3057c0b5a70a2081473e066951720cafbd2aa159d3aaccf2e1`
+- **SHA256:** `90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59`
 - **MD5:** `2915b3f8b703eb744fc54c81f4a9c67f`
+- **MD5:** `7bdbd180c081fa63ca94f9c22c457376`
 - **MD5:** `38de5b216c33833af710e88f7f64fc98`
-- **MD5:** `cc4d231df34e57f59eb970353c7d9de2`
-- **MD5:** `bf9672ec85283fdf002d83662f0b08b7`
-- **MD5:** `41acb30b9d662d48b7b4fc0ac3d4b79f`
+- **MD5:** `ded73d04bb3e3525226de64c38a332e3`
+- **MD5:** `c2efb2dcacba6d3ccc175b6ce1b7ed0a`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -43,15 +38,12 @@ Welcome to this week’s edition of the Threat Source newsletter.  
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1071** — Application Layer Protocol
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1102** — Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1528** — Steal Application Access Token
-- **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1564.008** — Hide Artifacts: Email Hiding Rules
 
 ## Kill chain phases observed
 
@@ -59,51 +51,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ARToken/EvilTokens PhaaS infrastructure contact (pamconj.com panel + Cloudflare Worker lure)
+### Beaconing — periodic outbound to small set of destinations
 
-`UC_268_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev","*.pamconj.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let ARTokenDomains = dynamic(["dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev","pamconj.com"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (ARTokenDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessSHA256, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Entra ID device registration = ARToken PRT persistence after device-code token theft
-
-`UC_268_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("Add registered owner to device","Add registered users to device","Register device","Add device")
-| extend Ip = tostring(IPAddress)
-| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, Ip, CountryCode, City, ObjectName, ObjectType
-| order by Timestamp desc
-```
-
-### ARToken BEC toolkit: inbox forwarding/hiding rule creation on compromised M365 mailbox
-
-`UC_268_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules")
-| where RawEventData has_any ("ForwardTo","ForwardAsAttachmentTo","RedirectTo","DeleteMessage","MoveToFolder")
-| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ObjectName, RawEventData
-| order by Timestamp desc
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -254,16 +234,100 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Catan and Mouse
+### Ransomware-style mass file rename / extension change
 
-`UC_268_6` · phase: **exploit** · confidence: **High**
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Catan and Mouse ```
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### Article-specific behavioural hunt — You were onto something with “It’s the Climb,” Miley
+
+`UC_4_8` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — You were onto something with “It’s the Climb,” Miley ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("vid001.exe","sample.exe","autopico.exe","signinfoconsole.exe"))
+    where (Processes.process_name IN ("vid001.exe","d4aa3e7010220ad1b458fac17039c274_62_exe.exe","secoh-qad.exe","f_000177.exe","tmp00055df5.dll"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -272,7 +336,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("vid001.exe","sample.exe","autopico.exe","signinfoconsole.exe"))
+      AND (Filesystem.file_name IN ("vid001.exe","d4aa3e7010220ad1b458fac17039c274_62_exe.exe","secoh-qad.exe","f_000177.exe","tmp00055df5.dll"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -281,12 +345,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Catan and Mouse
+// Article-specific bespoke detection — You were onto something with “It’s the Climb,” Miley
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("vid001.exe", "sample.exe", "autopico.exe", "signinfoconsole.exe"))
+| where (FileName in~ ("vid001.exe", "d4aa3e7010220ad1b458fac17039c274_62_exe.exe", "secoh-qad.exe", "f_000177.exe", "tmp00055df5.dll"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -296,7 +360,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("vid001.exe", "sample.exe", "autopico.exe", "signinfoconsole.exe"))
+| where (FileName in~ ("vid001.exe", "d4aa3e7010220ad1b458fac17039c274_62_exe.exe", "secoh-qad.exe", "f_000177.exe", "tmp00055df5.dll"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -307,16 +371,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-48558`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `dashboard-bl.pamconj.com`, `spx.pamconj.com`, `clear90489058903-document.workers.dev`
-
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507`, `9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f`, `afc8a00883a4ea07df2dc1d4ed02f8a23b35c9456413b438a2d9ce3ae5076638`, `c0ad494457dcd9e964378760fb6aca86a23622045bca851d8f3ab49ec33978fe`, `853baab97b1f3b03c1ffa55797e87867f5fb7ce33457411f56afd270cb395453`, `2915b3f8b703eb744fc54c81f4a9c67f`, `38de5b216c33833af710e88f7f64fc98`, `cc4d231df34e57f59eb970353c7d9de2` _(+2 more)_
+  - file hash IOC(s): `9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507`, `a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91`, `9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f`, `fc18d4060c6dad3057c0b5a70a2081473e066951720cafbd2aa159d3aaccf2e1`, `90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59`, `2915b3f8b703eb744fc54c81f4a9c67f`, `7bdbd180c081fa63ca94f9c22c457376`, `38de5b216c33833af710e88f7f64fc98` _(+2 more)_
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

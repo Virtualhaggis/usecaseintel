@@ -11,15 +11,9 @@ By Lawrence Abrams
 July 30, 2026
 11:56 AM
 0 
-
-
 Threat actors are impersonating IT support staff in Microsoft Teams calls to gain remote access to corporate devices and deploy Chaos ransomware in attacks targeting North American organizations.
-
-
 Sophos tracks the campaign as STAC4749 and says it targeted dozens of organizations between February and June 2026.
-
-
-At least three of these intrusions led to the deployment of Chao…
+At least three of these intrusions led to the deployment of Chaos ransomware…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -1,8 +1,8 @@
-# [CRIT] ThreatsDay: AI-Powered Hacking, 370 Chrome Flaws, SonicWall Attacks, DNS Hijacking + 22 More Stories
+# [CRIT] DPRK-Linked macOS Malvertising Uses Fake Updates to Deliver Crypto-Stealing Malware
 
 **Source:** The Hacker News
 **Published:** 2026-07-30
-**Article:** https://thehackernews.com/2026/07/threatsday-ai-powered-hacking-370.html
+**Article:** https://thehackernews.com/2026/07/dprk-linked-macos-malvertising-uses.html
 
 ## Threat Profile
 

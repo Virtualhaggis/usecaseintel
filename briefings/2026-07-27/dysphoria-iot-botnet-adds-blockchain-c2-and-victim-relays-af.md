@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Dysphoria botnet blockchain C2 resolution via ENS/SNS (.eth/.sol) domains
 
-`UC_75_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_77_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### Egress to Dysphoria distribution-node / relay IPs (194.87.198.x, 194.58.38.x)
 
-`UC_75_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_77_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### Compromised device Telnet/SSH weak-password worm fan-out
 
-`UC_75_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_77_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### Dysphoria relay node: public-to-public traffic bridging (UPnP port-forwarding relay)
 
-`UC_75_10` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_77_10` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

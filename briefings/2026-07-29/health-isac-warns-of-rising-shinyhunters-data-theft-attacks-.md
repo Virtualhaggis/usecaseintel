@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Entra helpdesk password reset immediately followed by new MFA method registration (ShinyHunters ATO)
 
-`UC_28_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### New attacker device registered/joined to Microsoft Entra ID
 
-`UC_28_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ CloudAppEvents
 
 ### Suspicious OAuth application consent granting broad scopes (ShinyHunters DataLoader-style persistence)
 
-`UC_28_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_32_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ CloudAppEvents
 
 ### Bulk M365 / SharePoint / OneDrive file download by a single identity (cloud data theft)
 
-`UC_28_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ CloudAppEvents
 
 ### SSO application-access burst — one identity authenticating to many distinct SaaS apps in a short window
 
-`UC_28_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2610 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2611 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,11 +11,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-30
 - [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
 - [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
+- [amazon links debug chalk npm supply chain attacks to north k](./2026-07-30/amazon-links-debug-chalk-npm-supply-chain-attacks-to-north-k.md)
 - [analog devices discloses data breach says operations unaffec](./2026-07-30/analog-devices-discloses-data-breach-says-operations-unaffec.md)
 - [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
+- [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
 - [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
+- [ghsa critical cve 2026 66066 active storage has possible arb](./2026-07-30/ghsa-critical-cve-2026-66066-active-storage-has-possible-arb.md)
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
@@ -27,9 +30,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [shinyhunters claims brinks home breach threatens to leak sto](./2026-07-30/shinyhunters-claims-brinks-home-breach-threatens-to-leak-sto.md)
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [the network has become the control plane for ai security](./2026-07-30/the-network-has-become-the-control-plane-for-ai-security.md)
-- [threatsday ai powered hacking 370 chrome flaws sonicwall att](./2026-07-30/threatsday-ai-powered-hacking-370-chrome-flaws-sonicwall-att.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
+- [vmware fixes three critical flaws allowing auth bypass vm es](./2026-07-30/vmware-fixes-three-critical-flaws-allowing-auth-bypass-vm-es.md)
 - [what s new in microsoft security july 2026](./2026-07-30/what-s-new-in-microsoft-security-july-2026.md)
+- [you were onto something with it s the climb miley](./2026-07-30/you-were-onto-something-with-it-s-the-climb-miley.md)
 
 ## 2026-07-29
 - [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
@@ -59,7 +63,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [attackers exploit arista velocloud orchestrator command inje](./2026-07-28/attackers-exploit-arista-velocloud-orchestrator-command-inje.md)
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
-- [cubepilot drone software dev hit by dns hijacking to interce](./2026-07-28/cubepilot-drone-software-dev-hit-by-dns-hijacking-to-interce.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ghsa critical cve 2026 54658 hypequery clickhouse has sql in](./2026-07-28/ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in.md)
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)
@@ -95,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
 
 ## 2026-07-24
-- [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
 - [ghsa critical cve 2026 59865 microsoft kiota command injecti](./2026-07-24/ghsa-critical-cve-2026-59865-microsoft-kiota-command-injecti.md)
 - [ghsa critical cve 2026 59940 seroval seroval fromjson promis](./2026-07-24/ghsa-critical-cve-2026-59940-seroval-seroval-fromjson-promis.md)
@@ -274,7 +276,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-02
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
-- [catan and mouse](./2026-07-02/catan-and-mouse.md)
 - [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
 - [ghsa critical cve 2026 50027 mcp memory service missing auth](./2026-07-02/ghsa-critical-cve-2026-50027-mcp-memory-service-missing-auth.md)
 - [ghsa critical cve 2026 52735 zebrad has consensus divergence](./2026-07-02/ghsa-critical-cve-2026-52735-zebrad-has-consensus-divergence.md)

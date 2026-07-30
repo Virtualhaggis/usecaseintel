@@ -11,15 +11,9 @@ By Ionut Ilascu
 July 30, 2026
 12:46 PM
 0 
-
-
 Residential security company Brinks Home has disclosed that hackers breached some of its systems and are threatening to leak allegedly stolen data.
-
-
 ​The company identified the attack on July 20 and immediately activated its incident response procedure to contain the breach.
-
-
-William Niles, CEO at Brinks Home, said that the company’s team was working with “leading forensics…
+William Niles, CEO at Brinks Home, said that the company’s team was working with “leading forensics experts to …
 
 ## Indicators of Compromise (high-fidelity only)
 
