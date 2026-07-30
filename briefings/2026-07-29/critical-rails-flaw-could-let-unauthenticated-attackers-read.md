@@ -29,7 +29,6 @@ Tracked as CVE-2026-66066 (CVSS score: 9.5), the flaw can expose the Rails proce
 - **T1569.002** — Service Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1083** — File and Directory Discovery
 - **T1005** — Data from Local System
@@ -40,67 +39,55 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable Active Storage / libvips exposure — CVE-2026-66066
+### Exposed Rails apps vulnerable to Active Storage libvips file-read (CVE-2026-66066)
 
 `UC_4_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-66066" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity
-| `drop_dm_object_name("Vulnerabilities")`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-66066" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.category Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| `ctime(firstTime)` | `ctime(lastTime)`
+| sort - severity
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
 | where CveId == "CVE-2026-66066"
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, IsInternetFacing, PublicIP
-| sort by IsInternetFacing desc, DeviceName asc
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId
+  ) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, DeviceName asc
 ```
 
-### Rails/libvips worker spawning shell or network utility (CVE-2026-66066 RCE)
+### Unauthenticated image-upload burst to Rails Active Storage endpoints (CVE-2026-66066 delivery)
 
-`UC_4_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_4_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("ruby","puma","unicorn","sidekiq","bundle","rails","vips","vipsthumbnail")) AND (Processes.process_name IN ("sh","bash","dash","zsh","curl","wget","python","python3","perl","nc","ncat","socat","node")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name("Processes")`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Web where Web.http_method IN ("POST","PUT") AND (Web.uri_path="*/rails/active_storage/*" OR Web.uri_path="*/active_storage/direct_uploads*" OR Web.uri_path="*/active_storage/blobs*") by Web.src Web.dest Web.uri_path Web.status
+| `drop_dm_object_name(Web)`
+| stats sum(count) as upload_attempts values(uri_path) as paths values(status) as statuses dc(uri_path) as distinct_paths by src dest
+| where upload_attempts > 20
+| sort - upload_attempts
 ```
 
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("ruby","puma","unicorn","sidekiq","bundle","rails","ruby-vips","vips","vipsthumbnail")
-| where FileName in~ ("sh","bash","dash","zsh","curl","wget","python","python3","perl","nc","ncat","netcat","socat","php","node")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Rails worker reading process environment / credential files (CVE-2026-66066)
+### Rails/libvips worker reading process environment or system secrets (CVE-2026-66066 file-read)
 
 `UC_4_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/etc/passwd","/etc/shadow","*/config/master.key","*/config/credentials.yml.enc","*/config/credentials/*","*/config/database.yml","*/config/storage.yml","*/.env","/proc/*/environ","*/.aws/credentials","*/.ssh/id_rsa")) by Filesystem.dest Filesystem.file_path Filesystem.action
-| `drop_dm_object_name("Filesystem")`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("ruby","puma","unicorn","sidekiq","bundle","rails","ruby-vips","vips","vipsthumbnail")
-| where FileName in~ ("passwd","shadow","database.yml","storage.yml","credentials.yml.enc","master.key",".env","environ","credentials","id_rsa")
-    or FolderPath has_any ("/config/credentials/","/etc/passwd","/etc/shadow","/proc/","/.aws/","/.ssh/")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
-| order by Timestamp desc
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action=read AND (Endpoint.Filesystem.file_path="/proc/self/environ" OR Endpoint.Filesystem.file_path="*/proc/*/environ" OR Endpoint.Filesystem.file_path="/etc/passwd" OR Endpoint.Filesystem.file_path="/etc/shadow" OR Endpoint.Filesystem.file_path="*/.aws/credentials" OR Endpoint.Filesystem.file_path="*/.ssh/id_rsa") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.user Endpoint.Filesystem.process_guid
+| `drop_dm_object_name(Endpoint.Filesystem)`
+| `ctime(firstTime)` | `ctime(lastTime)`
+| sort - lastTime
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -341,4 +328,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

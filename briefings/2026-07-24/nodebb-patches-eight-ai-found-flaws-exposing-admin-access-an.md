@@ -40,9 +40,10 @@ The simp…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1068** — Exploitation for Privilege Escalation
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1213** — Data from Information Repositories
+- **T1565.001** — Data Manipulation: Stored Data Manipulation
 
 ## Kill chain phases observed
 
@@ -50,42 +51,62 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NodeBB translation-code (i18n) injection in request URL — stored/reflected XSS
+### NodeBB admin-panel access via homepage-setting authorization bypass (first-seen admin API)
 
-`UC_102_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*[[topic:*" OR Web.url="*[[error:*" OR Web.url="*[[global:*" OR Web.url="*[[user:*" OR Web.url="*[[modules:*" OR Web.url="*[[flags:*") by Web.src Web.dest Web.http_method Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-### First-time NodeBB /admin dashboard access — privilege escalation via homepage-setting bypass
-
-`UC_102_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_102_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as paths values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method IN ("GET","POST") (Web.uri_path="/admin" OR Web.uri_path="/admin/*" OR Web.url="*/admin/advanced/*" OR Web.url="*/admin/manage/*") NOT Web.url="*/admin/login*" by Web.src Web.dest
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as uri_paths values(Web.status) as statuses from datamodel=Web where (Web.uri_path="/admin*" OR Web.uri_path="/api/admin*") (Web.status=200 OR Web.status=304) by Web.src, Web.http_user_agent, Web.dest
 | `drop_dm_object_name(Web)`
-| search NOT [ search earliest=-30d@d latest=-1d@d `web` (url="*/admin*") | stats count by src | fields src ]
-| convert ctime(firstTime) ctime(lastTime)
+| where firstTime >= relative_time(now(), "-24h")
 | sort - firstTime
 ```
 
-### NodeBB ActivityPub object enumeration — private-message & private-category harvesting
+### NodeBB translation-token template-injection XSS in web request URI
+
+`UC_102_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query="*[[topic:*" OR Web.uri_query="*[[global:*" OR Web.uri_query="*[[user:*" OR Web.uri_query="*%5B%5B*" OR Web.uri_query="*%5b%5b*" OR Web.url="*[[topic:merged-message,*" OR Web.url="*[[modules:*") by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.uri_query, Web.status, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+### NodeBB ActivityPub private-message disclosure via unsigned GET enumeration
 
 `UC_102_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true dc(Web.url) as DistinctObjects count as Requests min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method="GET" (Web.uri_path="*/message/*" OR Web.uri_path="*/post/*" OR Web.uri_path="*/topic/*" OR Web.uri_path="*/outbox*" OR Web.uri_path="*/category/*") by Web.src Web.dest
+| tstats `summariesonly` count dc(Web.uri_path) as distinct_objects min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as sample_paths from datamodel=Web where (Web.uri_path="/message/*" OR Web.uri_path="/post/*" OR Web.uri_path="/topic/*") Web.http_method=GET by Web.src, Web.http_user_agent, Web.dest
 | `drop_dm_object_name(Web)`
-| where DistinctObjects > 50
-| convert ctime(firstTime) ctime(lastTime)
-| sort - DistinctObjects
+| where distinct_objects >= 30
+| sort - distinct_objects
+```
+
+### Unauthenticated NodeBB ActivityPub category-outbox private-content disclosure
+
+`UC_102_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as paths from datamodel=Web where Web.uri_path="/category/*/outbox" Web.http_method=GET Web.status=200 by Web.src, Web.http_user_agent, Web.dest
+| `drop_dm_object_name(Web)`
+| sort - lastTime
+```
+
+### NodeBB federation actor spoofing — new peer POSTing to ActivityPub inbox (CVE-2026-58593 / vote inflation)
+
+`UC_102_16` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as inbox_paths from datamodel=Web where (Web.uri_path="/inbox" OR Web.uri_path="/category/*/inbox" OR Web.uri_path="/user/*/inbox" OR Web.uri_path="*/inbox") Web.http_method=POST by Web.src, Web.http_user_agent, Web.dest
+| `drop_dm_object_name(Web)`
+| where firstTime >= relative_time(now(), "-24h")
+| sort - firstTime
 ```
 
 ### Suspicious browser extension installation
@@ -438,4 +459,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
