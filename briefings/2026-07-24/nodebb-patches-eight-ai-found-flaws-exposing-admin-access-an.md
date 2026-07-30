@@ -40,10 +40,9 @@ The simp…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1068** — Exploitation for Privilege Escalation
 - **T1213** — Data from Information Repositories
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1656** — Impersonation
 
 ## Kill chain phases observed
 
@@ -51,62 +50,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NodeBB admin authorization bypass via homePageCustom rewrite to /admin routes
+### NodeBB translation-code (i18n) injection in request URL — stored/reflected XSS
 
-`UC_101_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_102_12` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method IN ("GET","POST") (Web.url="*/api/admin/users/csv*" OR Web.url="*/api/admin/advanced/errors*" OR Web.url="*/api/admin/manage/categories*" OR Web.url="*/admin/advanced/*") (Web.status="200" OR Web.status="304") by Web.src Web.url Web.http_method Web.status
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*[[topic:*" OR Web.url="*[[error:*" OR Web.url="*[[global:*" OR Web.url="*[[user:*" OR Web.url="*[[modules:*" OR Web.url="*[[flags:*") by Web.src Web.dest Web.http_method Web.url Web.http_user_agent Web.status
 | `drop_dm_object_name(Web)`
-| join type=inner src [ tstats summariesonly=true count as settingsWrites from datamodel=Web where Web.http_method="PUT" Web.url="*/api/v3/users/*/settings*" by Web.src | `drop_dm_object_name(Web)` ]
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
-### NodeBB unauthenticated private-message enumeration via GET /message/:mid
+### First-time NodeBB /admin dashboard access — privilege escalation via homepage-setting bypass
 
-`UC_101_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_102_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count dc(Web.uri_path) as distinctMsgIds values(Web.status) as statuses min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method="GET" Web.uri_path="/message/*" by Web.src _time span=10m
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as paths values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method IN ("GET","POST") (Web.uri_path="/admin" OR Web.uri_path="/admin/*" OR Web.url="*/admin/advanced/*" OR Web.url="*/admin/manage/*") NOT Web.url="*/admin/login*" by Web.src Web.dest
 | `drop_dm_object_name(Web)`
-| where distinctMsgIds>=15
-| sort - distinctMsgIds
+| search NOT [ search earliest=-30d@d latest=-1d@d `web` (url="*/admin*") | stats count by src | fields src ]
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
 ```
 
-### NodeBB i18n translation template-injection XSS payload in HTTP request
+### NodeBB ActivityPub object enumeration — private-message & private-category harvesting
 
-`UC_101_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.status) as statuses from datamodel=Web where (Web.url="*[[*" OR Web.url="*%5B%5B*") (Web.url="*javascript:*" OR Web.url="*javascript%3a*") by Web.src Web.url Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| sort - lastTime
-```
-
-### NodeBB private category content disclosure via ActivityPub outbox scrape
-
-`UC_101_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(Web.status) as statuses min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method="GET" (Web.uri_path="*/outbox") (Web.http_user_agent="*Mozilla*" OR Web.http_user_agent="*curl*" OR Web.http_user_agent="*python*" OR Web.http_user_agent="*Go-http*" OR Web.http_user_agent="*okhttp*") by Web.src Web.uri_path Web.http_user_agent
+| tstats summariesonly=true dc(Web.url) as DistinctObjects count as Requests min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method="GET" (Web.uri_path="*/message/*" OR Web.uri_path="*/post/*" OR Web.uri_path="*/topic/*" OR Web.uri_path="*/outbox*" OR Web.uri_path="*/category/*") by Web.src Web.dest
 | `drop_dm_object_name(Web)`
-| sort - lastTime
-```
-
-### NodeBB malicious ActivityPub inbox delivery burst (author spoofing / vote inflation)
-
-`UC_101_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count dc(Web.uri_path) as distinctInboxes values(Web.uri_path) as inboxes values(Web.http_user_agent) as uas min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method="POST" (Web.uri_path="*/inbox" OR Web.uri_path="/inbox") by Web.src _time span=10m
-| `drop_dm_object_name(Web)`
-| where count>=20
-| sort - count
+| where DistinctObjects > 50
+| convert ctime(firstTime) ctime(lastTime)
+| sort - DistinctObjects
 ```
 
 ### Suspicious browser extension installation
@@ -459,4 +438,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

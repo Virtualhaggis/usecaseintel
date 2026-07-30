@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### BlueNoroff ClickFix Defender tamper: exclude C:\Users + disable realtime monitoring
 
-`UC_93_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_94_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### BlueNoroff typosquatted Zoom/Teams infrastructure network contact
 
-`UC_93_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_94_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### ClickFix PowerShell loader spawning wscript to run downloaded VBScript
 
-`UC_93_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_94_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### WScript enumerating browser profiles for Telegram session and wallet extensions
 
-`UC_93_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_94_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceFileEvents
 
 ### macOS BlueNoroff stealer exfiltrating to Telegram bot (Aurora channel)
 
-`UC_93_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_94_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

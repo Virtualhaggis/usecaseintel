@@ -26,11 +26,11 @@ The vulnerability, tracked as CVE-2026-59726 (CVSS score: 10.0), impacts all ver
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1609** — Container Administration Command
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1505.003** — Server Software Component: Web Shell
+- **T1105** — Ingress Tool Transfer
 - **T1565.001** — Data Manipulation: Stored Data Manipulation
-- **T1554** — Compromise Host Software Binary
+- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
@@ -38,27 +38,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unauthenticated POST to Ruflo MCP /mcp endpoint invoking terminal_execute (RufRoot CVE-2026-59726)
+### Unauthenticated POST to Ruflo MCP bridge (/mcp) on port 3001
 
-`UC_8_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST (Web.url="*/mcp" OR Web.url="*/mcp/*") Web.dest_port=3001 by Web.src Web.dest Web.dest_port Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| where match(url,"(?i)tools/call|ruflo__terminal_execute|terminal_execute") OR count>0
-| sort - count
-```
-
-### Public inbound access to exposed Ruflo MCP bridge (3001) and MongoDB (27017)
-
-`UC_8_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_10_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=3001 OR All_Traffic.dest_port=27017) All_Traffic.direction=inbound All_Traffic.action=allowed by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
-| `drop_dm_object_name(All_Traffic)`
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.status) as status from datamodel=Web.Web where Web.http_method=POST Web.url="*/mcp*" Web.dest_port=3001 by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | where NOT cidrmatch("10.0.0.0/8",src) AND NOT cidrmatch("172.16.0.0/12",src) AND NOT cidrmatch("192.168.0.0/16",src) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -66,21 +52,20 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
 | where ActionType == "InboundConnectionAccepted"
-| where LocalPort in (3001, 27017)
+| where LocalPort == 3001
 | where RemoteIPType == "Public"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Attempts=count(), Ports=make_set(LocalPort) by DeviceName, RemoteIP
-| order by FirstSeen desc
+| where InitiatingProcessFileName =~ "node"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
-### Ruflo MCP bridge (node) spawns interactive shell — terminal_execute RCE
+### Ruflo MCP bridge (node) spawning a shell — terminal_execute RCE
 
-`UC_8_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_10_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process_name=node Endpoint.Processes.process_name IN ("sh","bash","dash","id","hostname","whoami","nc","ncat","curl","wget","python","python3") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process Endpoint.Processes.process_name Endpoint.Processes.process
-| `drop_dm_object_name(Endpoint.Processes)`
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name=node (Processes.process_name=sh OR Processes.process_name=bash OR Processes.process_name=dash OR Processes.process_name=ash) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -88,32 +73,18 @@ DeviceNetworkEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName =~ "node"
-| where FileName in~ ("sh","bash","dash","id","hostname","whoami","nc","ncat","curl","wget","python","python3")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| where FileName in~ ("sh","bash","dash","ash")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### AgentDB learning-store poisoning via Ruflo MCP memory tool invocation
+### Backdoor payload written to /app inside Ruflo bridge container
 
-`UC_8_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.dest_port=3001 (Web.url="*agentdb_pattern-store*" OR Web.url="*memory_store*" OR Web.url="*memory_usage*" OR Web.url="*pattern-store*" OR Web.url="*/mcp*") by Web.src Web.dest Web.url Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| where match(url,"(?i)agentdb_pattern-store|memory_store|memory_usage|pattern-store")
-| sort - count
-```
-
-### Backdoor payload written to /app in Ruflo MCP bridge container
-
-`UC_8_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="/app/*" Endpoint.Filesystem.action IN ("created","modified") Endpoint.Filesystem.process_name IN ("sh","bash","dash","nc","ncat","curl","wget","python","python3") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.process_name Endpoint.Filesystem.action
-| `drop_dm_object_name(Endpoint.Filesystem)`
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.file_path="/app/*" (Filesystem.process_name=sh OR Filesystem.process_name=bash OR Filesystem.process_name=dash OR Filesystem.process_name=curl OR Filesystem.process_name=wget OR Filesystem.process_name=python OR Filesystem.process_name=python3) by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -121,9 +92,38 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(7d)
 | where FolderPath startswith "/app"
-| where ActionType in ("FileCreated","FileModified")
-| where InitiatingProcessFileName in~ ("sh","bash","dash","nc","ncat","curl","wget","python","python3")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessFileName in~ ("sh","bash","dash","ash","curl","wget","python","python3","perl")
+| project Timestamp, DeviceName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### AgentDB learning-store poisoning via MCP memory tool (agentdb_pattern-store)
+
+`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=* sourcetype=syslog ("tools/call" AND ("agentdb_pattern-store" OR "agentdb__pattern_store" OR "pattern-store")) | stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sample by host | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+### External connections to Ruflo MongoDB (port 27017) — conversation/AgentDB theft
+
+`UC_10_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=27017 All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where NOT cidrmatch("10.0.0.0/8",src) AND NOT cidrmatch("172.16.0.0/12",src) AND NOT cidrmatch("192.168.0.0/16",src) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort == 27017
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 

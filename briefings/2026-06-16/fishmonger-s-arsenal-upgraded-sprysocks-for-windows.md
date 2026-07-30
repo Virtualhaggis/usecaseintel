@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### SprySOCKS (FishMonger/I-SOON) C2 beacon to hardcoded Vultr IPs 207.148.78.36 / 207.148.75.122
 
-`UC_327_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_328_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### SprySOCKS WIN_DRV/WIN_PLUS backdoor binary by ESET SHA1 hash
 
-`UC_327_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_328_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ union DeviceProcessEvents, DeviceFileEvents, DeviceImageLoadEvents
 
 ### SprySOCKS WIN_DRV BlackLotus-style Secure Boot downgrade / EFI bootkit (CVE-2023-24932)
 
-`UC_327_5` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_328_5` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

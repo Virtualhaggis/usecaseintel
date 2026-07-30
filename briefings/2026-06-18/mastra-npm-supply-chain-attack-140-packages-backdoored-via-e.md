@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js Mastra dropper C2 callout to 23.254.164.92 / .123
 
-`UC_313_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_314_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Mastra easy-day-js postinstall dropper: node setup.cjs --no-warnings
 
-`UC_313_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_314_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### easy-day-js malicious setup.cjs written/deleted under node_modules
 
-`UC_313_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_314_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosqu
 
-`UC_313_4` · phase: **exploit** · confidence: **High**
+`UC_314_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

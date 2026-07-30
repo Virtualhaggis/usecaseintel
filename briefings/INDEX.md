@@ -14,6 +14,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
 - [critical rails flaw could let unauthenticated attackers read](./2026-07-29/critical-rails-flaw-could-let-unauthenticated-attackers-read.md)
 - [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
+- [four incident response decisions from the hugging face breac](./2026-07-29/four-incident-response-decisions-from-the-hugging-face-breac.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
 - [hackers disrupt over 30 minnesota water utilities in coordin](./2026-07-29/hackers-disrupt-over-30-minnesota-water-utilities-in-coordin.md)
@@ -25,6 +26,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
+- [russian hackers exploit exchange owa zero day for long term ](./2026-07-29/russian-hackers-exploit-exchange-owa-zero-day-for-long-term-.md)
 - [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
 - [two compromised joyfill npm packages run rat when imported i](./2026-07-29/two-compromised-joyfill-npm-packages-run-rat-when-imported-i.md)
 
@@ -36,7 +38,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
 - [cubepilot drone software dev hit by dns hijacking to interce](./2026-07-28/cubepilot-drone-software-dev-hit-by-dns-hijacking-to-interce.md)
-- [data breach at medical billing firm mcbs affects 1 26 millio](./2026-07-28/data-breach-at-medical-billing-firm-mcbs-affects-1-26-millio.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ghsa critical cve 2026 54658 hypequery clickhouse has sql in](./2026-07-28/ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in.md)
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)
@@ -682,7 +683,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 3910 google chromium v8 improper restricti](./2026-03-13/cisa-kev-cve-2026-3910-google-chromium-v8-improper-restricti.md)
 - [drillapp new backdoor targeting ukrainian entities with poss](./2026-03-13/drillapp-new-backdoor-targeting-ukrainian-entities-with-poss.md)
 - [face value what it takes to fool facial recognition](./2026-03-13/face-value-what-it-takes-to-fool-facial-recognition.md)
-- [glassworm is back a new wave of invisible unicode attacks hi](./2026-03-13/glassworm-is-back-a-new-wave-of-invisible-unicode-attacks-hi.md)
 
 ## 2026-03-12
 - [cyber fallout from the iran war what to have on your radar](./2026-03-12/cyber-fallout-from-the-iran-war-what-to-have-on-your-radar.md)

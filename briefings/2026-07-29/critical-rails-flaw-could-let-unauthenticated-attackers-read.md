@@ -29,9 +29,10 @@ Tracked as CVE-2026-66066 (CVSS score: 9.5), the flaw can expose the Rails proce
 - **T1569.002** — Service Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1552.001** — Credentials In Files
-- **T1005** — Data from Local System
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1083** — File and Directory Discovery
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -39,60 +40,67 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unauthenticated image-upload burst with variant-processing 5xx surge (CVE-2026-66066 Active Storage exploitation)
+### Vulnerable Active Storage / libvips exposure — CVE-2026-66066
 
-`UC_2_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count as server_errors, values(Web.url) as urls, values(Web.http_user_agent) as user_agents from datamodel=Web where Web.http_method IN ("POST","PUT") AND (Web.url="*upload*" OR Web.url="*active_storage*" OR Web.url="*/blobs*" OR Web.url="*attachment*" OR Web.url="*avatar*" OR Web.url="*/rails/*") AND Web.status>=500 AND Web.status<600 by Web.src, _time span=10m
-| `drop_dm_object_name("Web")`
-| where server_errors>=3
-| sort - server_errors
-```
-
-### Rails/libvips worker reading credential and system files (CVE-2026-66066 arbitrary file read)
-
-`UC_2_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.action="read" OR Endpoint.Filesystem.action="accessed") AND (Endpoint.Filesystem.file_path IN ("/etc/passwd","/etc/shadow") OR Endpoint.Filesystem.file_path="*/.ssh/id_rsa" OR Endpoint.Filesystem.file_path="*/.ssh/id_ed25519" OR Endpoint.Filesystem.file_path="*/.aws/credentials" OR Endpoint.Filesystem.file_path="*application_default_credentials.json" OR Endpoint.Filesystem.file_path="*/config/master.key" OR Endpoint.Filesystem.file_path="*/config/credentials.yml.enc" OR Endpoint.Filesystem.file_path="/proc/self/environ") by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.process_name, Endpoint.Filesystem.user
-| `drop_dm_object_name("Endpoint.Filesystem")`
-| sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-66066" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity
+| `drop_dm_object_name("Vulnerabilities")`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackHours = 24h;
-DeviceFileEvents
-| where Timestamp > ago(LookbackHours)
-| where InitiatingProcessFileName in~ ("ruby","puma","unicorn","passenger","sidekiq","ruby-vips","vips","rsvg-convert")
-| where FolderPath has_any ("/etc/passwd","/etc/shadow","/proc/self/environ","/.ssh/","/.aws/credentials")
-   or FileName in~ ("passwd","shadow","id_rsa","id_ed25519","credentials","master.key","credentials.yml.enc","application_default_credentials.json")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2026-66066"
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, IsInternetFacing, PublicIP
+| sort by IsInternetFacing desc, DeviceName asc
+```
+
+### Rails/libvips worker spawning shell or network utility (CVE-2026-66066 RCE)
+
+`UC_4_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("ruby","puma","unicorn","sidekiq","bundle","rails","vips","vipsthumbnail")) AND (Processes.process_name IN ("sh","bash","dash","zsh","curl","wget","python","python3","perl","nc","ncat","socat","node")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name("Processes")`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("ruby","puma","unicorn","sidekiq","bundle","rails","ruby-vips","vips","vipsthumbnail")
+| where FileName in~ ("sh","bash","dash","zsh","curl","wget","python","python3","perl","nc","ncat","netcat","socat","php","node")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Vulnerable Rails / libvips / ruby-vips exposure inventory for CVE-2026-66066
+### Rails worker reading process environment / credential files (CVE-2026-66066)
 
-`UC_2_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_4_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/etc/passwd","/etc/shadow","*/config/master.key","*/config/credentials.yml.enc","*/config/credentials/*","*/config/database.yml","*/config/storage.yml","*/.env","/proc/*/environ","*/.aws/credentials","*/.ssh/id_rsa")) by Filesystem.dest Filesystem.file_path Filesystem.action
+| `drop_dm_object_name("Filesystem")`
+| convert ctime(firstTime) ctime(lastTime)
+```
 
 **Defender KQL:**
 ```kql
-let Lookback = 1d;
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(Lookback)
-| where CveId == "CVE-2026-66066"
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| union (
-    DeviceTvmSoftwareInventory
-    | where Timestamp > ago(Lookback)
-    | where SoftwareName in~ ("libvips","vips","ruby-vips","activestorage")
-    | project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId="software-inventory", VulnerabilitySeverityLevel="Review", RecommendedSecurityUpdate="libvips>=8.13 / ruby-vips>=2.2.1 / activestorage>=7.2.3.2"
-  )
-| order by DeviceName asc
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("ruby","puma","unicorn","sidekiq","bundle","rails","ruby-vips","vips","vipsthumbnail")
+| where FileName in~ ("passwd","shadow","database.yml","storage.yml","credentials.yml.enc","master.key",".env","environ","credentials","id_rsa")
+    or FolderPath has_any ("/config/credentials/","/etc/passwd","/etc/shadow","/proc/","/.aws/","/.ssh/")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -333,4 +341,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
