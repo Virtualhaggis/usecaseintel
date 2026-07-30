@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### npm/node install hook exfiltrating /etc/passwd, kube config & krb5 ticket via wget --post-file
 
-`UC_3167_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3171_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### Outbound connection/DNS to npm exfil endpoint entfet95itcxpuu.m.pipedream.net
 
-`UC_3167_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3171_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### Installation of Snyk-flagged malicious npm packages (radar-cms, rcenodejs, paychex-*)
 
-`UC_3167_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3171_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### npm/node install lifecycle spawning interactive or reverse shell
 
-`UC_3167_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_3171_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk uncovers malicious code activities in open source supply chain security on
 
-`UC_3167_1` · phase: **exploit** · confidence: **High**
+`UC_3171_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

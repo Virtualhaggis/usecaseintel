@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Vitest Browser Mode node.exe writes/deletes PNG or trace archive outside project into system paths
 
-`UC_132_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_136_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Vitest Browser Mode / test API (node.exe) accepting inbound connections on 63315/51204 from non-loopback host
 
-`UC_132_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_136_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p63j-vcc4-9vmv: @vitest/browser: Browser Mode provider co
 
-`UC_132_0` · phase: **exploit** · confidence: **High**
+`UC_136_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

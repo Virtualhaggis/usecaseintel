@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo
 
-`UC_3242_0` · phase: **exploit** · confidence: **High**
+`UC_3246_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

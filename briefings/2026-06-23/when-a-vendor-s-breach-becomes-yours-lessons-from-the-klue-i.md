@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Klue/Icarus: bulk Salesforce CRM record retrieval via connected app (Case/Contact/Account/Opportunity)
 
-`UC_308_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_312_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ CloudAppEvents
 
 ### Salesforce API access bearing python-requests/aiohttp automation user-agent (Icarus OAuth abuse)
 
-`UC_308_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_312_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ CloudAppEvents
 
 ### Salesforce connected-app OAuth access from first-seen ISP / anonymizing proxy (stolen-token reuse)
 
-`UC_308_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_312_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

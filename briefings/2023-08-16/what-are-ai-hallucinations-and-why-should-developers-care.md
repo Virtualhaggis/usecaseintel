@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What are AI hallucinations and why should developers care?
 
-`UC_1606_1` · phase: **exploit** · confidence: **High**
+`UC_1610_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

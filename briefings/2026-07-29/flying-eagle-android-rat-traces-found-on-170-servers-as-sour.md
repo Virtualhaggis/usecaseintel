@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### Flying Eagle Android RAT C2 / panel infrastructure callback (confirmed IOCs)
 
-`UC_39_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_45_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### Flying Eagle / SpyNote malicious APK download by hash or distribution domain
 
-`UC_39_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_45_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceFileEvents
 
 ### Flying Eagle / SQLRCE / Night Dragon control-panel exposed on monitored web server
 
-`UC_39_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_45_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -324,7 +324,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Flying Eagle Android RAT Traces Found on 170 Servers as Source Code Circulates
 
-`UC_39_7` · phase: **exploit** · confidence: **High**
+`UC_45_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

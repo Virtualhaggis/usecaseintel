@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Finding and fixing exposed hardcoded secrets in your GitHub project with Snyk
 
-`UC_1300_0` · phase: **exploit** · confidence: **High**
+`UC_1304_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

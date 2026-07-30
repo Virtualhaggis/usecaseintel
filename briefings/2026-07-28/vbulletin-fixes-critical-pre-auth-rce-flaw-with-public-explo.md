@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### vBulletin CVE-2026-61511 pre-auth RCE via ajax/render/pagenav template request
 
-`UC_51_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_57_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### vBulletin web-server process (php-fpm/apache/nginx) spawning OS shell after CVE-2026-61511
 
-`UC_51_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_57_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

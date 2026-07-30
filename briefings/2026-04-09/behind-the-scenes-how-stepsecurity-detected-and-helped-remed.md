@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### TeamPCP Trivy/KICS C2 callback to scan.aquasecurtiy.org / 45.148.10.212
 
-`UC_522_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_526_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ union isfuzzy=true
 
 ### Read of /proc/<pid>/mem targeting GitHub Runner.Worker (TeamPCP credential dump)
 
-`UC_522_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_526_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceFileEvents
 
 ### TeamPCP sysmon.py systemd-user persistence on developer host
 
-`UC_522_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_526_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -241,7 +241,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Behind the Scenes: How StepSecurity Detected and Helped Remediate the Largest np
 
-`UC_522_4` · phase: **exploit** · confidence: **High**
+`UC_526_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

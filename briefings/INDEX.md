@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2611 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,14 +9,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-30
+- [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
 - [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
+- [analog devices discloses data breach says operations unaffec](./2026-07-30/analog-devices-discloses-data-breach-says-operations-unaffec.md)
+- [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
 - [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
+- [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
+- [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
 - [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
+- [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [the network has become the control plane for ai security](./2026-07-30/the-network-has-become-the-control-plane-for-ai-security.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
@@ -90,7 +96,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-24
 - [bluenoroff zoom phishing kit profiles crypto wallets before ](./2026-07-24/bluenoroff-zoom-phishing-kit-profiles-crypto-wallets-before-.md)
 - [certighost exploit lets low privileged active directory user](./2026-07-24/certighost-exploit-lets-low-privileged-active-directory-user.md)
-- [chatgpt agentforger flaw could deploy rogue workspace agents](./2026-07-24/chatgpt-agentforger-flaw-could-deploy-rogue-workspace-agents.md)
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
 - [ghsa critical cve 2026 59865 microsoft kiota command injecti](./2026-07-24/ghsa-critical-cve-2026-59865-microsoft-kiota-command-injecti.md)
 - [ghsa critical cve 2026 59940 seroval seroval fromjson promis](./2026-07-24/ghsa-critical-cve-2026-59940-seroval-seroval-fromjson-promis.md)
@@ -4146,7 +4151,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
+- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09
@@ -4277,6 +4282,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2018-11-27
 - [malicious code found in npm package event stream downloaded ](./2018-11-27/malicious-code-found-in-npm-package-event-stream-downloaded-.md)
+
+## 2018-10-17
+- [jvm ecosystem report 2018 about your platform and applicatio](./2018-10-17/jvm-ecosystem-report-2018-about-your-platform-and-applicatio.md)
 
 ## 2018-08-15
 - [behind the disclosure the zip slip vulnerability](./2018-08-15/behind-the-disclosure-the-zip-slip-vulnerability.md)

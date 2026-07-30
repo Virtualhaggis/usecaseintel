@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of unauthorized cline@2.3.0 npm package on developer endpoints
 
-`UC_628_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_632_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Secondary payload install: 'npm install -g openclaw' postinstall hook execution
 
-`UC_628_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_632_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ union ProcSig, FileSig
 
 ### Outbound traffic to *.oastify.com (BurpSuite Collaborator) from corporate endpoint
 
-`UC_628_4` · phase: **exfiltration** · confidence: **High** · AI-generated for this article
+`UC_632_4` · phase: **exfiltration** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### npm install referencing GitHub commit SHA (github:owner/repo#sha) — dangling-commit supply chain hunt
 
-`UC_628_5` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_632_5` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
