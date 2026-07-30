@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-29
 - [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
+- [cisco warns of fmc static credential flaw exploited in zero ](./2026-07-29/cisco-warns-of-fmc-static-credential-flaw-exploited-in-zero-.md)
 - [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
 - [critical rails flaw could let unauthenticated attackers read](./2026-07-29/critical-rails-flaw-could-let-unauthenticated-attackers-read.md)
 - [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
@@ -56,13 +57,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
 - [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
-- [hackers target us firms in fastjson rce zero day attacks](./2026-07-27/hackers-target-us-firms-in-fastjson-rce-zero-day-attacks.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
 - [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
-- [what is ai pentesting and how does it works](./2026-07-27/what-is-ai-pentesting-and-how-does-it-works.md)
+- [what is ai pentesting and how does it work](./2026-07-27/what-is-ai-pentesting-and-how-does-it-work.md)
 
 ## 2026-07-25
 - [cl0p affiliates target internet exposed ptc windchill and fl](./2026-07-25/cl0p-affiliates-target-internet-exposed-ptc-windchill-and-fl.md)

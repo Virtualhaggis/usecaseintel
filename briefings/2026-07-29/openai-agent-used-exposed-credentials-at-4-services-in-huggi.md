@@ -31,11 +31,14 @@ One account was used as an outbound relay and staging server during the attack, 
 - **T1071.004** — DNS
 - **T1190** — Exploit Public-Facing Application
 - **T1219** — Remote Access Software
-- **T1059** — Command and Scripting Interpreter
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090** — Proxy
+- **T1211** — Exploitation for Defense Evasion
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1102** — Web Service
+- **T1583.006** — Acquire Infrastructure: Web Services
 - **T1567** — Exfiltration Over Web Service
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
 
 ## Kill chain phases observed
 
@@ -43,75 +46,84 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable self-managed JFrog Artifactory (OpenAI-disclosed zero-days, pre-7.161.15)
+### Unpatched JFrog Artifactory exposed to OpenAI-disclosed RCE/SSRF zero-days (7.161.15)
 
-`UC_4_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-65617","CVE-2026-65921","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-66018") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort - severity
+```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-65617","CVE-2026-65921","CVE-2026-65922","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-66018")
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
+| where Timestamp > ago(1d)
+| where SoftwareVendor has "jfrog" or SoftwareName has "artifactory"
+| where CveId in ("CVE-2026-65617","CVE-2026-65921","CVE-2026-65923","CVE-2026-65924","CVE-2026-65925","CVE-2026-66014","CVE-2026-66015","CVE-2026-66018")
+| summarize CVEs = make_set(CveId), MaxSeverity = max(VulnerabilitySeverityLevel), arg_max(Timestamp, SoftwareVersion, RecommendedSecurityUpdate) by DeviceName, SoftwareVendor, SoftwareName
+| order by MaxSeverity desc
 ```
 
-### JFrog Artifactory service process spawning a shell or download LOLBIN (RCE)
+### Artifactory package-service RCE: java/artifactory process spawning shell or network tool
 
-`UC_4_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java","java.exe","javaw.exe")) AND (Processes.parent_process="*artifactory*" OR Processes.parent_process="*jfrog*") AND (Processes.process_name IN ("sh","bash","dash","cmd.exe","powershell.exe","pwsh","curl","curl.exe","wget","python","python3","perl","nc","ncat")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java","java.exe","artifactory") OR Processes.parent_process="*artifactory*") AND Processes.process_name IN ("sh","bash","dash","curl","wget","python","python3","nc","ncat","busybox","powershell.exe","cmd.exe","certutil.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("java","java.exe","javaw.exe")
-| where InitiatingProcessFolderPath has_any ("artifactory","jfrog")
-| where FileName in~ ("sh","bash","dash","cmd.exe","powershell.exe","pwsh","curl","curl.exe","wget","python","python3","perl","nc","ncat")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java","java.exe","artifactory") or InitiatingProcessCommandLine has "artifactory"
+| where FileName in~ ("sh","bash","dash","curl","wget","python","python3","nc","ncat","busybox","powershell.exe","cmd.exe","certutil.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Isolated Artifactory package-proxy host reaching non-registry public internet
+### Automated attack-infrastructure assembly via pastebin / request-capture / screenshot services
 
-`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process="*artifactory*" OR All_Traffic.process="*jfrog*") AND All_Traffic.direction="outbound" NOT (All_Traffic.dest="*npmjs.org" OR All_Traffic.dest="*pypi.org" OR All_Traffic.dest="*pythonhosted.org" OR All_Traffic.dest="*maven.org" OR All_Traffic.dest="*gradle.org" OR All_Traffic.dest="*nuget.org" OR All_Traffic.dest="*rubygems.org" OR All_Traffic.dest="*docker.io" OR All_Traffic.dest="*ghcr.io" OR All_Traffic.dest="*crates.io" OR All_Traffic.dest="*jfrog.io" OR All_Traffic.dest="*golang.org" OR All_Traffic.dest="*packagist.org") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process | `drop_dm_object_name(All_Traffic)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app!="chrome" All_Traffic.app!="msedge" All_Traffic.app!="firefox" (All_Traffic.dest="*pastebin.com" OR All_Traffic.dest="*hastebin.com" OR All_Traffic.dest="*rentry.co" OR All_Traffic.dest="*webhook.site" OR All_Traffic.dest="*requestbin.com" OR All_Traffic.dest="*pipedream.net" OR All_Traffic.dest="*requestcatcher.com" OR All_Traffic.dest="*oast.fun" OR All_Traffic.dest="*oast.pro" OR All_Traffic.dest="*oast.live" OR All_Traffic.dest="*oastify.com" OR All_Traffic.dest="*ngrok.io" OR All_Traffic.dest="*ngrok-free.app" OR All_Traffic.dest="*interact.sh" OR All_Traffic.dest="*thum.io" OR All_Traffic.dest="*urlbox.io" OR All_Traffic.dest="*screenshotone.com" OR All_Traffic.dest="*urlscan.io") by All_Traffic.src All_Traffic.dest All_Traffic.app All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let InfraDomains = dynamic(["pastebin.com","hastebin.com","rentry.co","dpaste.org","paste.ee","controlc.com","0bin.net","termbin.com","webhook.site","requestbin.com","pipedream.net","requestcatcher.com","beeceptor.com","oast.fun","oast.pro","oast.live","oast.site","oast.online","oastify.com","ngrok.io","ngrok-free.app","interact.sh","canarytokens.com","screenshotmachine.com","thum.io","urlbox.io","screenshotone.com","urlscan.io"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFolderPath has_any ("artifactory","jfrog") or InitiatingProcessFileName in~ ("java","java.exe","javaw.exe")
-| where RemoteIPType == "Public"
-| where isempty(RemoteUrl) or not(RemoteUrl has_any ("npmjs.org","pypi.org","pythonhosted.org","maven.org","maven.apache.org","gradle.org","nuget.org","rubygems.org","docker.io","ghcr.io","gcr.io","registry.k8s.io","crates.io","golang.org","conda.anaconda.org","packagist.org","jfrog.io","jcenter.bintray.com"))
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort, 20) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, RemoteUrl
+| where Timestamp > ago(7d)
+| where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+| where RemoteUrl has_any (InfraDomains)
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","iexplore.exe","brave.exe","opera.exe")
+| summarize FirstSeen = min(Timestamp), Conns = count(), Urls = make_set(RemoteUrl, 20) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by FirstSeen desc
 ```
 
-### Server/tool egress to pastebin, request-capture (OAST) and screenshot staging services
+### Automated sign-in with exposed credentials (non-interactive, scripting user-agent)
 
-`UC_4_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("*pastebin.com","*ghostbin.com","*rentry.co","*hastebin.com","*dpaste.com","*paste.ee","*controlc.com","*termbin.com","*webhook.site","*requestbin.com","*requestbin.net","*pipedream.net","*hookbin.com","*beeceptor.com","*oast.fun","*oast.pro","*oast.site","*oast.live","*oast.online","*interact.sh","*burpcollaborator.net","*canarytokens.com","*hcti.io","*urlbox.io","*microlink.io")) NOT (All_Traffic.process IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")) by All_Traffic.src All_Traffic.process All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action="success" (Authentication.user_agent="*python-requests*" OR Authentication.user_agent="*python-urllib*" OR Authentication.user_agent="*curl/*" OR Authentication.user_agent="*Go-http-client*" OR Authentication.user_agent="*aiohttp*" OR Authentication.user_agent="*okhttp*" OR Authentication.user_agent="*Boto3*" OR Authentication.user_agent="*node-fetch*") by Authentication.user Authentication.src Authentication.app Authentication.user_agent | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("pastebin.com","ghostbin.com","rentry.co","hastebin.com","dpaste.com","paste.ee","controlc.com","termbin.com","webhook.site","requestbin.com","requestbin.net","pipedream.net","hookbin.com","beeceptor.com","oast.fun","oast.pro","oast.site","oast.live","oast.online","interact.sh","burpcollaborator.net","canarytokens.com","hcti.io","urlbox.io","microlink.io")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0
+| where IsInteractive == false
+| where UserAgent has_any ("python-requests","python-urllib","curl/","Go-http-client","aiohttp","okhttp","libwww-perl","Boto3","node-fetch","axios")
+| summarize SignIns = count(), Apps = make_set(Application, 10), Countries = make_set(Country, 10), IPs = make_set(IPAddress, 10) by AccountUpn, UserAgent
+| order by SignIns desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -186,4 +198,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

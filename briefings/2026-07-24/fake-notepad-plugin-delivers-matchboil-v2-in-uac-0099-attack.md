@@ -45,11 +45,10 @@ The activity has been attributed by the agency to a threat cluster it tracks as 
 - **T1053.005** — Persistence (article-specific)
 - **T1059.005** — Command and Scripting Interpreter: Visual Basic
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1036** — Masquerading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 - **T1140** — Deobfuscate/Decode Files or Information
-- **T1560.001** — Archive Collected Data: Archive via Utility
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1499** — Endpoint Denial of Service
 - **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
@@ -58,34 +57,50 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UAC-0099 fake-PDF VBScript launching Notepad++ / WinRAR (LUNCHPOKE stage)
+### UAC-0099 VBScript-as-PDF drops second-stage Evernote.zip archive
 
 `UC_103_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("wscript.exe","cscript.exe")) AND (Processes.process_name IN ("notepad++.exe","winrar.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="Evernote.zip" (Filesystem.process_name="wscript.exe" OR Filesystem.process_name="cscript.exe") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName =~ "Evernote.zip"
 | where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-| where FileName in~ ("notepad++.exe","winrar.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Notepad++ side-loading NppExport.dll from a non-Program Files path (LUNCHPOKE)
+### Trojanized NppExport.dll (LUNCHPOKE) dropped outside Program Files
 
-`UC_103_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_103_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="notepad++.exe" AND NOT (Processes.process_path IN ("C:\\Program Files\\Notepad++\\*","C:\\Program Files (x86)\\Notepad++\\*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="NppExport.dll" NOT Filesystem.file_path="C:\\Program Files*" by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName =~ "NppExport.dll"
+| where FolderPath !startswith "C:\\Program Files"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Notepad++ side-loads NppExport.dll (LUNCHPOKE) from non-standard path
+
+`UC_103_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -94,57 +109,52 @@ DeviceImageLoadEvents
 | where InitiatingProcessFileName =~ "notepad++.exe"
 | where FileName =~ "NppExport.dll"
 | where FolderPath !startswith "C:\\Program Files"
-| project Timestamp, DeviceName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### WinRAR extracting password-protected updater.rar in UAC-0099 chain
-
-`UC_103_17` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("winrar.exe","rar.exe","unrar.exe")) AND Processes.process="*updater.rar*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("winrar.exe","rar.exe","unrar.exe")
-| where ProcessCommandLine has "updater.rar"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### Recurring scheduled task running RemoteLibUpdater.exe (BURNYBEAR persistence, 3-min cadence)
+### Notepad++ spawns WinRAR to unpack password-protected updater.rar
 
 `UC_103_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parents values(Processes.process) as cmds from datamodel=Endpoint.Processes where Processes.process_name="RemoteLibUpdater.exe" by Processes.dest Processes.user Processes.process_path | `drop_dm_object_name(Processes)` | where count>=3
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="notepad++.exe" (Processes.process_name="winrar.exe" OR Processes.process_name="rar.exe" OR Processes.process_name="unrar.exe") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "RemoteLibUpdater.exe"
-| summarize Executions=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Parents=make_set(InitiatingProcessFileName), SampleCmd=any(ProcessCommandLine), FolderPath=any(FolderPath) by DeviceName, AccountName, SHA256
-| where Executions >= 3  // task fires every 3 minutes -> many launches over the window
-| order by Executions desc
+| where InitiatingProcessFileName =~ "notepad++.exe"
+| where FileName in~ ("winrar.exe","rar.exe","unrar.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
-### BURNYBEAR (RemoteLibUpdater.exe) loading MATCHBOIL.V2 InitTest.dll
+### UAC-0099 scheduled-task persistence for RemoteLibUpdater.exe (BURNYBEAR)
 
-`UC_103_19` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_103_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="InitTest.dll" by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") Processes.process="*RemoteLibUpdater*" by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "RemoteLibUpdater")
+     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "RemoteLibUpdater")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### BURNYBEAR RemoteLibUpdater.exe loads InitTest.dll (MATCHBOIL.V2)
+
+`UC_103_20` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -152,7 +162,7 @@ DeviceImageLoadEvents
 | where Timestamp > ago(30d)
 | where InitiatingProcessFileName =~ "RemoteLibUpdater.exe"
 | where FileName =~ "InitTest.dll"
-| project Timestamp, DeviceName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| project Timestamp, DeviceName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -637,4 +647,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 20 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 21 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
