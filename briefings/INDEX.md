@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-07-31
+- [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
+- [anthropic says claude mistook the open internet for a ctf an](./2026-07-31/anthropic-says-claude-mistook-the-open-internet-for-a-ctf-an.md)
+- [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
@@ -96,10 +99,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what is ai pentesting and how does it work](./2026-07-27/what-is-ai-pentesting-and-how-does-it-work.md)
 
 ## 2026-07-25
-- [cl0p affiliates target internet exposed ptc windchill and fl](./2026-07-25/cl0p-affiliates-target-internet-exposed-ptc-windchill-and-fl.md)
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
-- [ctm360 research reveals how insurance phishing has evolved i](./2026-07-25/ctm360-research-reveals-how-insurance-phishing-has-evolved-i.md)
-- [devman raas portal centralizes payload builds victim managem](./2026-07-25/devman-raas-portal-centralizes-payload-builds-victim-managem.md)
 - [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
 - [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
 - [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)

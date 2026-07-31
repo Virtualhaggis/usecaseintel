@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Exposure hunt: vCenter auth-bypass + directory-traversal RCE (CVE-2026-59309 / CVE-2026-59310)
 
-`UC_47_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Exposure hunt: ESX/ESXi VM-escape + info-disclosure host flaws (CVE-2026-47876 / CVE-2026-41703 / CVE-2026-41709)
 
-`UC_47_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

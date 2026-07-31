@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised @joyfill npm bundle dropped in node_modules (2773 beta RAT)
 
-`UC_7_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_10_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### @joyfill RAT C2 callout to hardcoded IPs / Socket.IO boot paths
 
-`UC_7_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Node.js resolving C2 via blockchain dead-drop (Tron/BSC/Aptos RPC)
 
-`UC_7_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### Node.js spawning detached 'node -e' second-stage child (/$/boot loader)
 
-`UC_7_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### @joyfill RAT persistence: Node rewriting VS Code / Discord / GitHub Desktop / npm modules
 
-`UC_7_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -295,7 +295,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised npm Packages: @joyfill/components and @joyfill/layouts Ship an Obfus
 
-`UC_7_7` · phase: **exploit** · confidence: **High**
+`UC_10_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

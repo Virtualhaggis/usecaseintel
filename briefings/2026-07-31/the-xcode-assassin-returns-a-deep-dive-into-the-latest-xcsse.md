@@ -410,7 +410,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Xcode Assassin Returns: A Deep Dive Into the Latest XCSSET Version
 
-`UC_1_10` · phase: **install** · confidence: **High**
+`UC_3_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

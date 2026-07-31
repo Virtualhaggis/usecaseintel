@@ -1,26 +1,25 @@
-# [CRIT] CTM360 Research Reveals How Insurance Phishing Has Evolved Into Real-Time Account Hijacking
+# [CRIT] 6 Reasons Why Device Code Phishing is the Fastest-Growing Threat of 2026
 
 **Source:** The Hacker News
-**Published:** 2026-07-25
-**Article:** https://thehackernews.com/2026/07/ctm360-research-reveals-how-insurance.html
+**Published:** 2026-07-31
+**Article:** https://thehackernews.com/2026/07/6-reasons-why-device-code-phishing-is.html
 
 ## Threat Profile
 
-CTM360 Research Reveals How Insurance Phishing Has Evolved Into Real-Time Account Hijacking 
- The Hacker News  Jul 25, 2026 Phishing / Cybercrime 
-For years, phishing campaigns targeting financial institutions followed the same playbook. Victims were tricked into entering usernames and passwords, attackers collected the credentials, and accounts were compromised later when an opportunity arose.
-That model is changing.
-Recent investigations into insurance-focused phishing operations reveal a mo…
+6 Reasons Why Device Code Phishing is the Fastest-Growing Threat of 2026 
+ The Hacker News  Jul 31, 2026 Phishing / Browser Security 
+Device code phishing - the abuse of the OAuth 2.0 device authorization grant to steal access tokens - has evolved from a niche red-team technique to an industrial-scale threat in under six months.
+Designed for input-constrained devices like smart TVs, printers, and so on, the device authorization login flow has been adopted by a wide range of apps and use-cases …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-50522`
 
 ## MITRE ATT&CK Techniques
 
-- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -31,94 +30,12 @@ Recent investigations into insurance-focused phishing operations reveal a mo…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
-- **T1195.002** — Compromise Software Supply Chain
-- **T1583.008** — Acquire Infrastructure: Malvertising
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1567** — Exfiltration Over Web Service
-- **T1102** — Web Service
-- **T1111** — Multi-Factor Authentication Interception
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### InsureTrap malvertising: Google Ads referrer landing on free-hosting insurance phish
-
-`UC_98_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*github.io*" OR Web.url="*netlify.app*" OR Web.url="*netlify.com*" OR Web.url="*wixsite.com*" OR Web.url="*hostingersite.com*" OR Web.url="*lovable.app*" OR Web.url="*lovableproject.com*" OR Web.url="*lovable.dev*") (Web.http_referrer="*googleadservices.com*" OR Web.http_referrer="*doubleclick.net*" OR Web.http_referrer="*googleads*") by Web.src Web.user Web.dest Web.url Web.http_referrer | `drop_dm_object_name(Web)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let Window = 90s;
-let AdClicks = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where RemoteUrl has_any ("googleadservices.com","googleads.g.doubleclick.net","g.doubleclick.net")
-    | project DeviceId, AdTime = Timestamp;
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| where RemoteUrl has_any ("github.io","netlify.app","netlify.com","wixsite.com","hostingersite.com","lovable.app","lovableproject.com","lovable.dev")
-| join kind=inner AdClicks on DeviceId
-| where Timestamp between (AdTime .. AdTime + Window)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, LandingUrl = RemoteUrl, RemoteIP, AdTime, DelaySec = datetime_diff('second', Timestamp, AdTime)
-| order by Timestamp desc
-```
-
-### InsureOTP kit exfiltration: browser connecting to api.telegram.org Bot API
-
-`UC_98_12` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="api.telegram.org" OR DNS.query="*.api.telegram.org") by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has "api.telegram.org"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Conns = count(), any(RemoteIP) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
-| order by LastSeen desc
-```
-
-### Suspicious browser extension installation
-
-`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Registry
-    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
-        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
-        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
-    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-| `drop_dm_object_name(Registry)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessAccountName
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -352,115 +269,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### Ransomware-style mass file rename / extension change
+### IOC-driven hunts (use shared templates)
 
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-```
-
-### LSASS process access / dump (credential theft)
-
-`UC_LSASS` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc
-```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-50522`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
