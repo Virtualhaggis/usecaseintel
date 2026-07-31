@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2613 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-31
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
+- [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
+- [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
 ## 2026-07-30
 - [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
@@ -273,7 +275,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55615 langroid neo4jchatagent execute](./2026-07-06/ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute.md)
 - [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
-- [when checking the url isn t enough a device code phishing at](./2026-07-06/when-checking-the-url-isn-t-enough-a-device-code-phishing-at.md)
 
 ## 2026-07-03
 - [authentication bypass in the default configuration phpbb](./2026-07-03/authentication-bypass-in-the-default-configuration-phpbb.md)
@@ -361,7 +362,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
 - [fishmonger s arsenal upgraded sprysocks for windows](./2026-06-16/fishmonger-s-arsenal-upgraded-sprysocks-for-windows.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
-- [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 
 ## 2026-06-15
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
@@ -972,7 +972,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [eset apt activity report q2 2025 q3 2025](./2025-11-06/eset-apt-activity-report-q2-2025-q3-2025.md)
 
 ## 2025-11-05
-- [sharing is scaring the whatsapp scam you didn t see coming](./2025-11-05/sharing-is-scaring-the-whatsapp-scam-you-didn-t-see-coming.md)
 - [snyk studio brings security scanning and automated fixes to ](./2025-11-05/snyk-studio-brings-security-scanning-and-automated-fixes-to-.md)
 
 ## 2025-11-04

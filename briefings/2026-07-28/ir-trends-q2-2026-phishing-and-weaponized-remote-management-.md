@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### Trojanized MeshAgent covert backdoor: SYSTEM service beaconing over WSS (Sinobi)
 
-`UC_71_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_74_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### Compromised M365 mailbox fan-out of QR-code PDF phishing (UAT-11764)
 
-`UC_71_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_74_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ EmailEvents
 
 ### ARToken/EvilTokens device-code phishing: contact with pamconj C2 and Cloudflare Workers lures
 
-`UC_71_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_74_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### Zoho Assist Unattended Agent deployed for headless remote control (Warlock/Storm-2603)
 
-`UC_71_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_74_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### Domain-wide Sinobi ransomware encryption: mass .SINOBI file writes
 
-`UC_71_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_74_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ DeviceFileEvents
 
 ### rclone cloud-exfiltration staging prior to Sinobi encryption
 
-`UC_71_20` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_74_20` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceProcessEvents
 
 ### Post-compromise malicious inbox rule for defense evasion (UAT-11764 / ARToken BEC)
 
-`UC_71_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_74_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -633,7 +633,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q2 2026: Phishing and weaponized remote management tools drive attack
 
-`UC_71_14` · phase: **exploit** · confidence: **High**
+`UC_74_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
