@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Budibase OIDC login sequence (configs → callback → self) from single source
 
-`UC_108_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_110_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### IdP self-registration or profile email-change asserting a privileged Budibase user's email
 
-`UC_108_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_110_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

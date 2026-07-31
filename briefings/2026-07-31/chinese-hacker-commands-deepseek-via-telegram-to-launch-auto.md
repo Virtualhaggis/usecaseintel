@@ -217,7 +217,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 
-`UC_4_5` · phase: **install** · confidence: **High**
+`UC_8_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

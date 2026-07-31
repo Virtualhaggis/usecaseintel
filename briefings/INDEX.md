@@ -11,9 +11,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
+- [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
 - [anthropic says claude mistook the open internet for a ctf an](./2026-07-31/anthropic-says-claude-mistook-the-open-internet-for-a-ctf-an.md)
+- [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
 - [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
 - [eset tracks rise in malicious ai skills and adaptable malwar](./2026-07-31/eset-tracks-rise-in-malicious-ai-skills-and-adaptable-malwar.md)
+- [ghsa critical cve 2026 52855 wings exposes node configuratio](./2026-07-31/ghsa-critical-cve-2026-52855-wings-exposes-node-configuratio.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
 - [researchers report 84 flaws in 4g and 5g cores including a s](./2026-07-31/researchers-report-84-flaws-in-4g-and-5g-cores-including-a-s.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
@@ -58,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [four incident response decisions from the hugging face breac](./2026-07-29/four-incident-response-decisions-from-the-hugging-face-breac.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
-- [health isac warns of rising shinyhunters data theft attacks ](./2026-07-29/health-isac-warns-of-rising-shinyhunters-data-theft-attacks-.md)
 - [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
 - [openai agent used exposed credentials across four services d](./2026-07-29/openai-agent-used-exposed-credentials-across-four-services-d.md)
@@ -102,7 +104,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-25
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
-- [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
 
 ## 2026-07-24
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
@@ -687,7 +688,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-03-16
 - [cisa kev cve 2025 47813 wing ftp server information disclosu](./2026-03-16/cisa-kev-cve-2025-47813-wing-ftp-server-information-disclosu.md)
-- [glassworm strikes popular react native phone number packages](./2026-03-16/glassworm-strikes-popular-react-native-phone-number-packages.md)
 
 ## 2026-03-13
 - [cisa kev cve 2026 3909 google skia out of bounds write vulne](./2026-03-13/cisa-kev-cve-2026-3909-google-skia-out-of-bounds-write-vulne.md)

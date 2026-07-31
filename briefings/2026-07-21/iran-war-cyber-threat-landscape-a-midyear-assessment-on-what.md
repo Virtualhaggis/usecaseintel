@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Cavern Manticore WinDirStat DLL side-load of fake uxtheme.dll (Cavern backdoor)
 
-`UC_146_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_148_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceImageLoadEvents
 
 ### Masqueraded uxtheme.dll dropped outside Windows dirs via SysAid/RMM deployment (Cavern Manticore)
 
-`UC_146_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_148_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### AppDomainManager hijacking config artifact dropped in user-writable path (Screening Serpens/UNC1549)
 
-`UC_146_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_148_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

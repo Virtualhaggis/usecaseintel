@@ -11,12 +11,8 @@ Sponsored by ESET
 July 31, 2026
 10:01 AM
 0 
-
-
 The first half of 2026 shows how attackers continue to improve the efficiency and scalability of their operations. Rather than relying on entirely new methods and tools, they are quickly adapting established techniques to new platforms, technologies, and user behaviors.
-
-
-Artificial intelligence is playing a growing role in this development. In H1 2026, ESET analyzed nearly 900,000 A…
+Artificial intelligence is playing a growing role in this development. In H1 2026, ESET analyzed nearly 900,000 AI skills…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -436,7 +436,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OctLurk and SilkLurk: newly identified tailored backdoors in cyber-espionage cam
 
-`UC_30_11` · phase: **exploit** · confidence: **High**
+`UC_34_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

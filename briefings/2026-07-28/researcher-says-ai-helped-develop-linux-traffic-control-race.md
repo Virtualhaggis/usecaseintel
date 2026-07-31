@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Linux core_pattern overwritten to memfd/pipe handler (CVE-2026-53264 privesc payoff)
 
-`UC_81_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_84_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Linux root process executed from memfd (CVE-2026-53264 core-dump payload)
 
-`UC_81_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_84_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### Unprivileged Linux tc clsact/flower/gact traffic-control manipulation (CVE-2026-53264 trigger)
 
-`UC_81_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_84_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### CVE-2026-53264 unpatched kernel exposure (traffic-control UAF LPE)
 
-`UC_81_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_84_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

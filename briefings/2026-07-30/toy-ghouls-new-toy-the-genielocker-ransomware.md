@@ -227,7 +227,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Toy Ghouls’ new toy: the GenieLocker ransomware
 
-`UC_36_7` · phase: **exploit** · confidence: **High**
+`UC_40_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

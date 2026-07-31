@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Telnet credential brute force against internet-exposed IoT/Linux devices (Tengu dropper entry)
 
-`UC_73_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_76_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Tengu botnet C2 / IPFS beacon to 64.89.163.8 on TCP 9931 and 8080
 
-`UC_73_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_76_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### Tengu ELF-header corruption ('ELFOOD') of Linux reboot/shutdown utilities
 
-`UC_73_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_76_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### Tengu guardian process masquerading as kernel thread [kworker/0:0]
 
-`UC_73_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_76_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### Tengu immutable-binary persistence via chattr +i on Linux/IoT
 
-`UC_73_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_76_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
