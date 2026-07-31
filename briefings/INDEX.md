@@ -13,8 +13,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
 - [anthropic says claude mistook the open internet for a ctf an](./2026-07-31/anthropic-says-claude-mistook-the-open-internet-for-a-ctf-an.md)
 - [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
+- [eset tracks rise in malicious ai skills and adaptable malwar](./2026-07-31/eset-tracks-rise-in-malicious-ai-skills-and-adaptable-malwar.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
+- [researchers report 84 flaws in 4g and 5g cores including a s](./2026-07-31/researchers-report-84-flaws-in-4g-and-5g-cores-including-a-s.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
+- [three recent chrome releases fix 1 442 flaws more than prior](./2026-07-31/three-recent-chrome-releases-fix-1-442-flaws-more-than-prior.md)
 
 ## 2026-07-30
 - [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
@@ -59,7 +62,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
 - [openai agent used exposed credentials across four services d](./2026-07-29/openai-agent-used-exposed-credentials-across-four-services-d.md)
-- [openai agent used exposed credentials at 4 services in huggi](./2026-07-29/openai-agent-used-exposed-credentials-at-4-services-in-huggi.md)
 - [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
@@ -100,9 +102,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-25
 - [compromised pypi package mrmustard 0 7 4 steals ssh cloud an](./2026-07-25/compromised-pypi-package-mrmustard-0-7-4-steals-ssh-cloud-an.md)
-- [fastjson 1 x rce vulnerability targeted in attacks with no p](./2026-07-25/fastjson-1-x-rce-vulnerability-targeted-in-attacks-with-no-p.md)
 - [malvertising sends malware in pieces then makes the browser ](./2026-07-25/malvertising-sends-malware-in-pieces-then-makes-the-browser-.md)
-- [researcher publishes gitlab rce poc letting authenticated us](./2026-07-25/researcher-publishes-gitlab-rce-poc-letting-authenticated-us.md)
 
 ## 2026-07-24
 - [ghsa critical cve 2026 59864 microsoft kiota path url inject](./2026-07-24/ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject.md)
