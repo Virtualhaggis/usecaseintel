@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma Phantom Gyp: python.exe (gyp parser) spawning node index.js during npm install
 
-`UC_356_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_357_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### Miasma-tainted package install: binding.gyp dropped into known-compromised npm package paths
 
-`UC_356_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_357_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### Miasma payload SHA256 hash hit (published Phantom Gyp IOCs)
 
-`UC_356_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_357_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ union
 
 ### Node child of node-gyp/python making outbound to GitHub dead-drop or anomalous web service during install
 
-`UC_356_10` · phase: **exfil** · confidence: **Medium** · AI-generated for this article
+`UC_357_10` · phase: **exfil** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -288,7 +288,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Wait, binding.gyp Can Do What? Exploring npm's Weirdest Build System
 
-`UC_356_6` · phase: **exploit** · confidence: **High**
+`UC_357_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,12 +11,8 @@ By Bill Toulas
 July 30, 2026
 06:01 PM
 0 
-
-
 JetBrains is warning of a critical authentication bypass vulnerability affecting TeamCity On-Premises that could be exploited to achieve remote code execution.
-
-
-The security issue is tracked as CVE-2026-63077 and can be leveraged by an attacker with HTTPS access to a TeamCity server to bypass authentication via the agent polling protocol and execute arbitrary operating system command…
+The security issue is tracked as CVE-2026-63077 and can be leveraged by an attacker with HTTPS access to a TeamCity server to bypass authentication via the agent polling protocol and execute arbitrary operating system commands with t…
 
 ## Indicators of Compromise (high-fidelity only)
 

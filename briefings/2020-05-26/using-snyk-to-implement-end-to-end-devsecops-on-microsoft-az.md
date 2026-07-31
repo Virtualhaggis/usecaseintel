@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Using Snyk to implement end-to-end DevSecOps on Microsoft Azure
 
-`UC_3359_0` · phase: **exploit** · confidence: **High**
+`UC_3360_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

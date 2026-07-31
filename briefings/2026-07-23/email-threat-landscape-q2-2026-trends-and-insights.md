@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound phishing from BEC sender domain 9i6pokerdepot.com (Q2 2026 ClickUp/pixeldrain chain)
 
-`UC_119_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_120_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ EmailEvents
 
 ### Financial_report.bat dropper downloaded from ClickUp attachment host
 
-`UC_119_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_120_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### Hidden PowerShell pulls installer.exe from pixeldrain.com to %Temp% (self-deleting dropper)
 
-`UC_119_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_120_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Network/DNS contact to Q2 2026 campaign infrastructure (pixeldrain payload + ClickUp dropper hosts)
 
-`UC_119_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_120_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -420,7 +420,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Email threat landscape: Q2 2026 trends and insights
 
-`UC_119_9` · phase: **exploit** · confidence: **High**
+`UC_120_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

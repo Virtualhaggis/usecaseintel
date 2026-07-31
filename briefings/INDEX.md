@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2613 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-07-31
+- [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
 
 ## 2026-07-30
 - [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
@@ -16,6 +19,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
+- [compromised npm packages joyfill components and joyfill layo](./2026-07-30/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
 - [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
 - [ghsa critical cve 2025 4318 aws amplify studio ui component ](./2026-07-30/ghsa-critical-cve-2025-4318-aws-amplify-studio-ui-component-.md)
@@ -46,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [four incident response decisions from the hugging face breac](./2026-07-29/four-incident-response-decisions-from-the-hugging-face-breac.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
-- [hackers disrupt over 30 minnesota water utilities in coordin](./2026-07-29/hackers-disrupt-over-30-minnesota-water-utilities-in-coordin.md)
 - [health isac warns of rising shinyhunters data theft attacks ](./2026-07-29/health-isac-warns-of-rising-shinyhunters-data-theft-attacks-.md)
 - [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
