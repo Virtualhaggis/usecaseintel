@@ -30,12 +30,52 @@ The vulnerabilities also affect products containing vCenter or ESX, including VM
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1564.006** — Hide Artifacts: Run Virtual Instance
+- **T1673** — Virtual Machine Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### VMware ESX/vCenter hosts exposed to VMSA-2026-0006 critical CVEs (59309/59310/47876)
+
+`UC_28_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-59309","CVE-2026-59310","CVE-2026-47876","CVE-2026-41703","CVE-2026-41709") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.cvss
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - cvss
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2026-59309","CVE-2026-59310","CVE-2026-47876","CVE-2026-41703","CVE-2026-41709")
+| where SoftwareVendor has_any ("vmware","broadcom")
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| sort by IsInternetFacing desc, CveId asc
+```
+
+### ESXi rogue/'ghost' VM instantiated from the shell (VirtualGHOST persistence)
+
+`UC_28_5` · phase: **install** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=vmware (sourcetype="vmware:esxilog" OR sourcetype="vmw-syslog" OR sourcetype="esxi:syslog") (source="*shell.log" OR source="*hostd.log")
+("vim-cmd solo/registervm" OR "vim-cmd vmsvc/power.on" OR "vim-cmd vmsvc/reload" OR "esxcli vm process list")
+| rex field=_raw "(?<esxi_cmd>vim-cmd\s+\S+|esxcli\s+vm\s+process\s+\S+)"
+| stats count min(_time) as firstTime max(_time) as lastTime values(esxi_cmd) as commands values(source) as logfile by host
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -131,4 +171,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

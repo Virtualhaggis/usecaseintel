@@ -36,12 +36,138 @@ At least three of these intrusions led to the deployment of Chaos ransomware…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1105** — Ingress Tool Transfer
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1490** — Inhibit System Recovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### STAC4749 Teams vishing: Quick Assist / RemSupp remote-support tool spawning a shell
+
+`UC_33_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("quickassist.exe","remsupp.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","curl.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("quickassist.exe","remsupp.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","curl.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### STAC4749 PowerShell backdoor download into %AppData% (updater.exe / helper / msupdate.exe)
+
+`UC_33_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Invoke-WebRequest*" OR Processes.process="*Invoke-RestMethod*" OR Processes.process="*DownloadFile*" OR Processes.process="*DownloadString*" OR Processes.process="*Start-BitsTransfer*") AND (Processes.process="*AppData*" OR Processes.process="*Unblock-File*" OR Processes.process="*updater.exe*" OR Processes.process="*msupdate.exe*" OR Processes.process="*helper*") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has_any ("Invoke-WebRequest","iwr ","Invoke-RestMethod","DownloadFile","DownloadString","Start-BitsTransfer")
+| where ProcessCommandLine has_any ("AppData","Unblock-File","updater.exe","msupdate.exe","helper")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### STAC4749 Run-key persistence disguised as Realtek / WinAudio audio components
+
+`UC_33_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*") AND (Registry.registry_value_name IN ("Realtek HD Audio","Realtek Audio UHD","Realtek HD Audio Universal Service","Realtek Audio","WinAudio life2")) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType == "RegistryValueSet"
+| where RegistryKey has_any (@"\CurrentVersion\Run", @"\CurrentVersion\RunOnce")
+| where RegistryValueName in~ ("Realtek HD Audio","Realtek Audio UHD","Realtek HD Audio Universal Service","Realtek Audio","WinAudio life2")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### STAC4749 backup-access RMM (DWAgent/AnyDesk) install + RDP enablement for lateral movement
+
+`UC_33_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("dwagent.exe","anydesk.exe")) OR (Processes.process_name="reg.exe" AND Processes.process="*fDenyTSConnections*") OR (Processes.process_name="netsh.exe" AND Processes.process="*Remote Desktop*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName in~ ("dwagent.exe","anydesk.exe"))
+    or (FileName =~ "reg.exe" and ProcessCommandLine has "fDenyTSConnections")
+    or (FileName =~ "netsh.exe" and ProcessCommandLine has_all ("firewall","Remote Desktop"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### STAC4749 IT-themed .top C2 / lure domain contact (sequrityupdate.top et al.)
+
+`UC_33_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("sequrityupdate.top","scan-security.top","system-connect.top","corp-connect.top","supportsoft.top") OR DNS.query="*.sequrityupdate.top" OR DNS.query="*.scan-security.top" OR DNS.query="*.system-connect.top" OR DNS.query="*.corp-connect.top" OR DNS.query="*.supportsoft.top") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("sequrityupdate.top","scan-security.top","system-connect.top","corp-connect.top","supportsoft.top")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### STAC4749 Chaos ransomware note (readme.chaos.txt) creation across hosts
+
+`UC_33_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime dc(Filesystem.file_path) as pathCount from datamodel=Endpoint.Filesystem where Filesystem.file_name="readme.chaos.txt" by Filesystem.dest Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType == "FileCreated"
+| where FileName =~ "readme.chaos.txt"
+| summarize NoteCount = count(), Folders = make_set(FolderPath, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by FirstSeen desc
+```
 
 ### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
 
@@ -219,4 +345,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

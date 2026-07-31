@@ -17,19 +17,77 @@ Initial activity started with trojanizing…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `216.74.123.126`
+- **Domain (defanged):** `npmjs.store`
+- **SHA256:** `24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f`
+- **SHA256:** `2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Sapphire Sleet npm supply-chain C2 egress to npmjs.store / 216.74.123.126
+
+`UC_27_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="216.74.123.126" OR All_Traffic.dest_host="npmjs.store" OR All_Traffic.url="*npmjs.store*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let c2ip = "216.74.123.126";
+let c2dom = "npmjs.store";
+union
+(DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == c2ip or RemoteUrl has c2dom
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort),
+(DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "DnsQueryResponse"
+| where RemoteUrl has c2dom or AdditionalFields has c2dom
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl)
+| order by Timestamp desc
+```
+
+### Sapphire Sleet trojanized npm payload hashes on disk / in-execution
+
+`UC_27_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f" OR Processes.process_hash="2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let badHashes = dynamic(["24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f","2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73"]);
+union
+(DeviceFileEvents
+| where Timestamp > ago(90d)
+| where SHA256 in (badHashes)
+| project Timestamp, DeviceName, Kind="FileEvent", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where SHA256 in (badHashes)
+| project Timestamp, DeviceName, Kind="ProcessEvent", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -90,7 +148,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `216.74.123.126`, `npmjs.store`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f`, `2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

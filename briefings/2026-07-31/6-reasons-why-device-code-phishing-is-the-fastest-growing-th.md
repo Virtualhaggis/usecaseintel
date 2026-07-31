@@ -13,13 +13,12 @@ Designed for input-constrained devices like smart TVs, printers, and so on, the 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-50522`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,12 +29,55 @@ Designed for input-constrained devices like smart TVs, printers, and so on, the 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1530** — Data from Cloud Storage
+- **T1567.002** — Exfiltration to Cloud Storage
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Device code phishing token redemption via Microsoft Authentication Broker sign-in
+
+`UC_14_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as SignIns min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" Authentication.action=success by Authentication.user Authentication.app | `drop_dm_object_name(Authentication)` | where SignIns > 0 | convert ctime(firstTime) ctime(lastTime) | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where ErrorCode == 0
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e" or AppDisplayName == "Microsoft Authentication Broker"
+| where ResourceDisplayName in ("Device Registration Service","Microsoft Graph")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SignIns=count(), IPs=make_set(IPAddress,10), Countries=make_set(Country,10) by AccountUpn, AppDisplayName, ResourceDisplayName, ClientAppUsed
+| order by FirstSeen desc
+```
+
+### ARToken post-token abuse: inbox rules & SharePoint exfil from device-code sign-in IP
+
+`UC_14_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let brokerIPs = AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e" or AppDisplayName == "Microsoft Authentication Broker"
+| summarize by AccountObjectId, IPAddress;
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("New-InboxRule","Set-InboxRule","FileDownloaded","FileSyncDownloadedFull")
+| join kind=inner brokerIPs on AccountObjectId, IPAddress
+| summarize Ops=count(), Actions=make_set(ActionType,10), Objects=make_set(ObjectName,10), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by AccountObjectId, AccountDisplayName, Application, IPAddress
+| order by Ops desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -269,14 +311,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50522`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

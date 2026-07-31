@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Node.js multithreading with worker threads series: worker_threads tutorial
 
-`UC_1955_0` · phase: **exploit** · confidence: **High**
+`UC_1956_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

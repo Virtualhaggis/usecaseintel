@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Agama wallet C2/exfil callback to updatecheck.herokuapp.com (electron-native-notify)
 
-`UC_3515_0` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3516_0` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ DeviceNetworkEvents
 
 ### Malicious npm package electron-native-notify present in node_modules
 
-`UC_3515_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3516_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

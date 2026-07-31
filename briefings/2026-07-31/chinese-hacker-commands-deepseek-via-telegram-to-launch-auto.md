@@ -14,12 +14,15 @@ The operator, t…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-3055`
-- **CVE:** `CVE-2026-39987`
 - **CVE:** `CVE-2026-33017`
 - **CVE:** `CVE-2026-21858`
 - **CVE:** `CVE-2025-68613`
-- **CVE:** `CVE-2026-50522`
+- **CVE:** `CVE-2026-3055`
+- **CVE:** `CVE-2026-39987`
+- **CVE:** `CVE-2026-34486`
+- **CVE:** `CVE-2026-0300`
+- **CVE:** `CVE-2026-33824`
+- **Domain (defanged):** `code.newcli.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -32,12 +35,65 @@ The operator, t…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071** — Application Layer Protocol
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1552.001** — Unsecured Credentials: Credentials In Files/Memory
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Hermes/DeepSeek autonomous AI agent artifact: python3 -m http.server 8888 from /home/worker
+
+`UC_15_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python","python3") AND Processes.process="*http.server*" AND Processes.process="*8888*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("python","python3")
+| where ProcessCommandLine has "http.server" and ProcessCommandLine has "8888"
+| extend HermesHomeDir = (ProcessCommandLine has "/home/worker" or InitiatingProcessFolderPath has "/home/worker" or AccountName =~ "worker")
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, HermesHomeDir
+| order by Timestamp desc
+```
+
+### Marimo CVE-2026-39987 pre-auth RCE: marimo notebook process spawning a shell
+
+`UC_15_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*marimo*" AND Processes.process_name IN ("sh","bash","dash","zsh","curl","wget","id","whoami","python","python3")) by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessCommandLine has "marimo" or InitiatingProcessFileName =~ "marimo" or InitiatingProcessFolderPath has "marimo"
+| where FileName in~ ("sh","bash","dash","zsh","curl","wget","id","whoami","python","python3")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### NetScaler CVE-2026-3055 SAML IdP memory overread: high-volume /saml/login scraping
+
+`UC_15_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Web.http_user_agent) as user_agents min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/saml/login*") by Web.src Web.dest _time span=10m | `drop_dm_object_name(Web)` | where count > 100 | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -217,7 +273,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 
-`UC_8_5` · phase: **install** · confidence: **High**
+`UC_15_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -253,9 +309,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-3055`, `CVE-2026-39987`, `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-50522`
+  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-39987`, `CVE-2026-34486`, `CVE-2026-0300`, `CVE-2026-33824`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `code.newcli.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

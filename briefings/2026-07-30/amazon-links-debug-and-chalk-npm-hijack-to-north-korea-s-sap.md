@@ -1,4 +1,4 @@
-# [CRIT] Amazon Links Debug and Chalk npm Hijack to North Korea’s Sapphire Sleet
+# [HIGH] Amazon Links Debug and Chalk npm Hijack to North Korea’s Sapphire Sleet
 
 **Source:** The Hacker News
 **Published:** 2026-07-30
@@ -13,16 +13,16 @@ The original …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-50522`
 - **IPv4 (defanged):** `216.74.123.126`
 - **Domain (defanged):** `npmjs.store`
+- **SHA256:** `24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f`
+- **SHA256:** `2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -33,12 +33,75 @@ The original …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Sapphire Sleet npm supply-chain C2 contact (npmjs.store / 216.74.123.126)
+
+`UC_50_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="216.74.123.126" OR All_Traffic.dest_host="*npmjs.store*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "216.74.123.126" or RemoteUrl contains "npmjs.store"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, ActionType
+| order by Timestamp desc
+```
+
+### Trojanized typo-crypto / core.js npm artifact on disk or being installed
+
+`UC_50_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73" OR Filesystem.file_hash="24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f" OR (Filesystem.file_name="core.js" AND Filesystem.file_path="*typo-crypto*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceFileEvents
+ | where Timestamp > ago(30d)
+ | where SHA256 in ("2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73","24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f")
+    or (FileName =~ "core.js" and FolderPath contains "typo-crypto")
+ | project Timestamp, DeviceName, Evidence="file", Detail=strcat(FileName," @ ",FolderPath), SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceProcessEvents
+ | where Timestamp > ago(30d)
+ | where ProcessCommandLine contains "typo-crypto" and ProcessCommandLine has_any ("install","add","ci")
+ | project Timestamp, DeviceName, Evidence="install-cmd", Detail=ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName)
+| order by Timestamp desc
+```
+
+### core.js dropper obfuscation strings (XOR key 01042025 / trigger 0098273)
+
+`UC_50_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*01042025*" AND Processes.process="*0098273*" by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine contains "01042025" and ProcessCommandLine contains "0098273"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -306,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Amazon Links Debug and Chalk npm Hijack to North Korea’s Sapphire Sleet
 
-`UC_43_9` · phase: **exploit** · confidence: **High**
+`UC_50_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -360,10 +423,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `216.74.123.126`, `npmjs.store`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50522`
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f`, `2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

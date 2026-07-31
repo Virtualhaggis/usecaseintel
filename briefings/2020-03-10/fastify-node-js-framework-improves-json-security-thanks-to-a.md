@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Fastify Node.js framework improves JSON security thanks to a security report
 
-`UC_3409_0` · phase: **exploit** · confidence: **High**
+`UC_3410_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

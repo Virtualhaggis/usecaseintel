@@ -1,4 +1,4 @@
-# [HIGH] You were onto something with “It’s the Climb,” Miley
+# [CRIT] You were onto something with “It’s the Climb,” Miley
 
 **Source:** Cisco Talos
 **Published:** 2026-07-30
@@ -16,6 +16,9 @@ For my fianceé’s 30 th birthday, I took her on a weekend trip to Shenandoah N
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2026-16232`
+- **IPv4 (defanged):** `172.86.126.18`
+- **Domain (defanged):** `is-01-ast.ols-img-12.workers.dev`
 - **SHA256:** `9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507`
 - **SHA256:** `a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91`
 - **SHA256:** `9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f`
@@ -31,6 +34,8 @@ For my fianceé’s 30 th birthday, I took her on a weekend trip to Shenandoah N
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -44,12 +49,104 @@ For my fianceé’s 30 th birthday, I took her on a weekend trip to Shenandoah N
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1528** — Steal Application Access Token
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1219** — Remote Access Software
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
+- **T1114.003** — Email Collection: Email Forwarding Rule
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Successful Entra ID device-code authentication (ARToken/EvilTokens PhaaS MFA bypass)
+
+`UC_29_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as apps values(Authentication.src) as src_ips from datamodel=Authentication where (Authentication.signature="deviceCode" OR Authentication.authentication_method="deviceCode") Authentication.action="success" by Authentication.user | `drop_dm_object_name(Authentication)` | where count>0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where AuthenticationProcessingDetails has "Device Code"
+| where ErrorCode == 0            // successful device-code grant
+| project Timestamp, AccountUpn, Application, ApplicationId, IPAddress, Country, City, UserAgent, ClientAppUsed
+| order by Timestamp desc
+```
+
+### Trojanized MeshAgent running outside its install path (Sinobi ransomware C2)
+
+`UC_29_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="meshagent.exe" OR Processes.process="*meshagent*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT process_path="*\\Program Files\\Mesh Agent\\*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName has "meshagent"
+    or ProcessVersionInfoOriginalFileName has "MeshAgent"
+    or ProcessVersionInfoProductName has "MeshCentral"
+| where not(FolderPath has_any (@"\Program Files\Mesh Agent\", @"\Program Files (x86)\Mesh Agent\"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessIntegrityLevel, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Zoho Assist Unattended Agent deployment (Warlock / Storm-2603 ransomware)
+
+`UC_29_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("ZA_Access.exe","ZA_Connect.exe","ZMAgent.exe") OR Processes.process="*Zoho_Assist*" OR Processes.process="*Unattended*Zoho*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessVersionInfoCompanyName has "ZOHO"
+    or ProcessVersionInfoProductName has "Zoho Assist"
+    or FileName in~ ("ZA_Access.exe","ZA_Connect.exe","ZMAgent.exe")
+    or ProcessCommandLine has "Zoho_Assist"
+| where ProcessCommandLine has_any ("unattended","install","silent") or ProcessIntegrityLevel == "System"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessIntegrityLevel, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Email-hiding inbox rules created post-compromise (BEC / mailbox concealment)
+
+`UC_29_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`o365_management_activity` Operation IN ("New-InboxRule","Set-InboxRule","UpdateInboxRules") (Parameters="*DeleteMessage*" OR Parameters="*Deleted Items*" OR Parameters="*MarkAsRead*" OR Parameters="*ForwardTo*" OR Parameters="*RedirectTo*" OR Parameters="*Junk Email*") | stats count min(_time) as firstTime max(_time) as lastTime values(Parameters) as rule_params by UserId ClientIP Operation | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application == "Microsoft Exchange Online"
+| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules","Update-InboxRules")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("DeleteMessage","Deleted Items","MarkAsRead","Junk Email","MoveToFolder","ForwardTo","RedirectTo")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, ObjectName, Raw
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -320,7 +417,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — You were onto something with “It’s the Climb,” Miley
 
-`UC_22_8` · phase: **exploit** · confidence: **High**
+`UC_29_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -371,10 +468,16 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `172.86.126.18`, `is-01-ast.ols-img-12.workers.dev`
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-16232`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507`, `a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91`, `9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f`, `fc18d4060c6dad3057c0b5a70a2081473e066951720cafbd2aa159d3aaccf2e1`, `90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59`, `2915b3f8b703eb744fc54c81f4a9c67f`, `7bdbd180c081fa63ca94f9c22c457376`, `38de5b216c33833af710e88f7f64fc98` _(+2 more)_
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

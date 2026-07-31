@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### ImageMagick binary spawning shell/recon process (ImageTragick CVE-2016-3714 delegate RCE)
 
-`UC_3690_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3691_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ DeviceProcessEvents
 
 ### ImageMagick binary making outbound network connection (ImageTragick URL/HTTPS coder SSRF)
 
-`UC_3690_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3691_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Mitigating ImageMagick vulnerabilities in Node.js
 
-`UC_3690_0` · phase: **exploit** · confidence: **High**
+`UC_3691_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

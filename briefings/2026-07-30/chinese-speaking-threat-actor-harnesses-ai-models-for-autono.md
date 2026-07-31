@@ -27,20 +27,7 @@ Vulnerabi…
 - **CVE:** `CVE-2026-39987`
 - **CVE:** `CVE-2026-34486`
 - **CVE:** `CVE-2026-33824`
-- **CVE:** `CVE-2026-0300`
-- **CVE:** `CVE-2025-40947`
-- **CVE:** `CVE-2025-40948`
-- **CVE:** `CVE-2026-0257`
-- **CVE:** `CVE-2026-31431`
-- **CVE:** `CVE-2023-33538`
-- **CVE:** `CVE-2026-1731`
-- **CVE:** `CVE-2026-1281`
-- **CVE:** `CVE-2026-1340`
-- **CVE:** `CVE-2025-0921`
-- **CVE:** `CVE-2025-14847`
 - **Domain (defanged):** `code.newcli.com`
-- **Domain (defanged):** `api.deepseek.com`
-- **Domain (defanged):** `dashscope.aliyuncs.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -53,12 +40,96 @@ Vulnerabi…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1090.002** — Proxy: External Proxy
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1070** — Indicator Removal
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1590** — Gather Victim Network Information
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Connection to code.newcli.com — anti-attribution AI-coding-tool proxy (knaithe/KnYuan)
+
+`UC_44_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="*newcli.com*" OR All_Traffic.url="*code.newcli.com*" by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "newcli.com" or RemoteUrl endswith "code.newcli.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Server/non-browser process calling native Chinese LLM APIs (api.deepseek.com / dashscope.aliyuncs.com)
+
+`UC_44_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="api.deepseek.com" OR All_Traffic.dest_host="dashscope.aliyuncs.com") AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") by All_Traffic.src All_Traffic.dest_host All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("api.deepseek.com","dashscope.aliyuncs.com")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP
+| order by Timestamp desc
+```
+
+### Claude Code / Codex anti-attribution and skip-permission config (knaithe AI tooling)
+
+`UC_44_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*CLAUDE_CODE_ATTRIBUTION_HEADER*" OR Processes.process="*CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC*" OR Processes.process="*dangerously-skip-permissions*" OR Processes.process="*disable_response_storage*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("CLAUDE_CODE_ATTRIBUTION_HEADER","CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC","dangerously-skip-permissions","disable_response_storage")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Hermes Agent Langflow exploit + FOFA enumeration tooling (langflow_poc.py / fofoapi.py, CVE-2026-33017)
+
+`UC_44_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*langflow_poc.py*" OR Processes.process="*langflow_targets.txt*" OR Processes.process="*fofoapi.py*" OR (Processes.process="*langflow_poc*" AND Processes.process="*--scan-file*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("langflow_poc.py","langflow_targets.txt","fofoapi.py")
+   or (ProcessCommandLine has "langflow_poc" and ProcessCommandLine has "--scan-file")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -155,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese-Speaking Threat Actor Harnesses AI Models for Autonomous Cyberattacks
 
-`UC_37_5` · phase: **exploit** · confidence: **High**
+`UC_44_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -207,12 +278,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `code.newcli.com`, `api.deepseek.com`, `dashscope.aliyuncs.com`
+  - IP / domain IOC(s): `code.newcli.com`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-39987`, `CVE-2026-34486`, `CVE-2026-33824`, `CVE-2026-0300` _(+10 more)_
+  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-39987`, `CVE-2026-34486`, `CVE-2026-33824`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

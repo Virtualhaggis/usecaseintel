@@ -22,8 +22,8 @@ Once the attacker has breached the corporate network, subsequent stages of the a
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `zfcabqaiba.testlab.local`
-- **Domain (defanged):** `testlab.local`
+- **Domain (defanged):** `testinglab.ru`
+- **Domain (defanged):** `crust.testinglab.ru`
 
 ## MITRE ATT&CK Techniques
 
@@ -32,12 +32,57 @@ Once the attacker has breached the corporate network, subsequent stages of the a
 - **T1071** — Application Layer Protocol
 - **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1053.005** — Scheduled Task
+- **T1558.003** — Steal or Forge Kerberos Tickets: Kerberoasting
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted Non-C2 Protocol
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Kerberoasting: single account/host requesting TGS tickets for many unique non-system SPNs
+
+`UC_16_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`wineventlog_security` EventCode=4769 Service_Name!="*$" Service_Name!="krbtgt" Account_Name!="*$" Failure_Code="0x0"
+| eval win=bin(_time, span=10m)
+| stats dc(Service_Name) AS unique_spns values(Service_Name) AS targeted_spns count AS tgs_requests min(_time) AS firstTime max(_time) AS lastTime by Account_Name, Client_Address, win
+| where unique_spns >= 10
+| convert ctime(firstTime) ctime(lastTime)
+| sort - unique_spns
+```
+
+### DNS tunneling: host issuing many long unique subdomain queries under one parent domain
+
+`UC_16_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count AS query_count, dc(DNS.query) AS unique_subdomains, values(DNS.query) AS sample_queries FROM datamodel=Network_Resolution.DNS WHERE nodename=DNS DNS.message_type="QUERY" BY DNS.src, DNS.query, _time span=10m
+| eval parent=replace(DNS.query, "^.*?\.([^.]+\.[^.]+)$", "\1"), qlen=len(DNS.query)
+| stats sum(query_count) AS total_queries, dc(DNS.query) AS unique_subdomains, avg(qlen) AS avg_len, max(qlen) AS max_len, values(sample_queries) AS sample_queries BY DNS.src, parent
+| where unique_subdomains >= 50 AND avg_len >= 40
+| sort - unique_subdomains
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(1h)
+| where isnotempty(RemoteUrl)
+| extend Labels = split(RemoteUrl, ".")
+| where array_length(Labels) >= 3
+| extend Parent = strcat(tostring(Labels[array_length(Labels)-2]), ".", tostring(Labels[array_length(Labels)-1]))
+| where Parent !endswith "in-addr.arpa"
+| summarize UniqueFqdns = dcount(RemoteUrl), AvgLen = avg(strlen(RemoteUrl)), MaxLen = max(strlen(RemoteUrl)), Conns = count(), Sample = make_set(RemoteUrl, 10)
+    by DeviceName, Parent, bin(Timestamp, 10m)
+| where UniqueFqdns >= 50 and AvgLen >= 40    // 50 distinct long labels under one zone in 10m = tunneling shape
+| order by UniqueFqdns desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -140,9 +185,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `zfcabqaiba.testlab.local`, `testlab.local`
+  - IP / domain IOC(s): `testinglab.ru`, `crust.testinglab.ru`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

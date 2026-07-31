@@ -17,7 +17,7 @@ William Niles, CEO at Brinks Home, said that the company’s team was working wi
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `brinkshome.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -28,12 +28,99 @@ William Niles, CEO at Brinks Home, said that the company’s team was working wi
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1071** — Application Layer Protocol
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1566.004** — Phishing: Spearphishing Voice
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1528** — Steal Application Access Token
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Entra MFA/security-info registration fan-out from single source IP (ShinyHunters help-desk vishing)
+
+`UC_31_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(All_Changes.object) as DistinctUsers values(All_Changes.object) as TargetUsers min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category=user All_Changes.action=modified (All_Changes.command="User registered security info" OR All_Changes.command="User started security info registration" OR All_Changes.command="Admin registered security info" OR All_Changes.command="User registered all required security info") by All_Changes.src _time span=10m
+| `drop_dm_object_name(All_Changes)`
+| where DistinctUsers>=3
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - DistinctUsers
+```
+
+**Defender KQL:**
+```kql
+let window = 10m;
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application in ("Microsoft Entra ID","Office 365","Azure Active Directory")
+| where ActionType in ("User registered security info.","User started security info registration.","Admin registered security info.","User registered all required security info.")
+| where isnotempty(IPAddress)
+| summarize DistinctUsers = dcount(AccountObjectId), Users = make_set(AccountDisplayName, 20), Ops = make_set(ActionType), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by IPAddress, CountryCode, bin(Timestamp, window)
+| where DistinctUsers >= 3   // 3+ distinct users enrolling MFA from one IP in 10m = help-desk vishing (ReliaQuest guidance)
+| order by DistinctUsers desc
+```
+
+### Entra MFA method registered from an IP the user has never signed in from (attacker device enrollment)
+
+`UC_31_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as firstTime from datamodel=Change.All_Changes where All_Changes.object_category=user All_Changes.action=modified (All_Changes.command="User registered security info" OR All_Changes.command="Admin registered security info" OR All_Changes.command="User changed default security info" OR All_Changes.command="User registered all required security info") by All_Changes.object All_Changes.src
+| `drop_dm_object_name(All_Changes)`
+| rename object as user, src as reg_src
+| join type=left user [| tstats `summariesonly` values(Authentication.src) as known_src from datamodel=Authentication where Authentication.action=success earliest=-30d@d latest=-2d@d by Authentication.user | `drop_dm_object_name(Authentication)`]
+| eval known_match=if(isnull(known_src),0,mvcount(mvfilter(known_src=reg_src)))
+| where known_match=0
+| `security_content_ctime(firstTime)`
+| table firstTime user reg_src
+```
+
+**Defender KQL:**
+```kql
+let lookback = 30d;
+let recent = 2d;
+let knownIps = AADSignInEventsBeta
+    | where Timestamp between (ago(lookback) .. ago(recent))
+    | where ErrorCode == 0
+    | summarize by AccountObjectId, IPAddress;
+CloudAppEvents
+| where Timestamp > ago(recent)
+| where ActionType in ("User registered security info.","Admin registered security info.","User changed default security info.","User registered all required security info.","User started security info registration.")
+| where isnotempty(IPAddress) and isnotempty(AccountObjectId)
+| join kind=leftanti knownIps on AccountObjectId, IPAddress
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, City, ActionType, Application
+| order by Timestamp desc
+```
+
+### Entra user OAuth consent to connected app (ShinyHunters Data Loader-style Salesforce grant)
+
+`UC_31_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime values(All_Changes.object) as app values(All_Changes.object_attrs) as scopes from datamodel=Change.All_Changes where All_Changes.action=created (All_Changes.command="Consent to application" OR All_Changes.command="Add delegated permission grant" OR All_Changes.command="Add OAuth2PermissionGrant") by All_Changes.user All_Changes.src _time
+| `drop_dm_object_name(All_Changes)`
+| `security_content_ctime(firstTime)`
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("Consent to application.","Add delegated permission grant.","Add OAuth2PermissionGrant.")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ActionType, ObjectName, ActivityObjects, RawEventData
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -183,7 +270,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `brinkshome.com`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -28,83 +28,12 @@ XCSSET mal…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `91.108.106.229`
-- **IPv4 (defanged):** `95.142.35.34`
-- **IPv4 (defanged):** `95.142.35.206`
-- **IPv4 (defanged):** `95.142.37.159`
-- **IPv4 (defanged):** `151.243.109.188`
-- **IPv4 (defanged):** `178.208.92.129`
-- **IPv4 (defanged):** `178.208.92.168`
-- **Domain (defanged):** `accapple.ru`
-- **Domain (defanged):** `adschecks.ru`
-- **Domain (defanged):** `adsmobi.ru`
-- **Domain (defanged):** `adsmorein.in`
-- **Domain (defanged):** `adsmoreme.in`
-- **Domain (defanged):** `amdcdn.ru`
-- **Domain (defanged):** `amzndev.in`
-- **Domain (defanged):** `amzndev.ru`
-- **Domain (defanged):** `amznprod.in`
-- **Domain (defanged):** `applecdn.ru`
-- **Domain (defanged):** `appledisk.ru`
-- **Domain (defanged):** `appledns.ru`
-- **Domain (defanged):** `applehosts.ru`
-- **Domain (defanged):** `appletime.in`
-- **Domain (defanged):** `bulksec.ru`
-- **Domain (defanged):** `cdnamz.in`
-- **Domain (defanged):** `cdnamz.ru`
-- **Domain (defanged):** `cdnapple.in`
-- **Domain (defanged):** `cdnatapple.ru`
-- **Domain (defanged):** `cdnroute.ru`
-- **Domain (defanged):** `checkcdn.ru`
-- **Domain (defanged):** `chromeads.ru`
-- **Domain (defanged):** `cnmag.ru`
-- **Domain (defanged):** `devnetaps.ru`
-- **Domain (defanged):** `dnsapple.ru`
-- **Domain (defanged):** `dnsrelays.ru`
-- **Domain (defanged):** `explorecdn.ru`
-- **Domain (defanged):** `fiddlejoy.ru`
-- **Domain (defanged):** `figmacat.ru`
-- **Domain (defanged):** `figmanets.in`
-- **Domain (defanged):** `funchats.ru`
-- **Domain (defanged):** `gironetcdn.ru`
-- **Domain (defanged):** `goalmate.ru`
-- **Domain (defanged):** `googlenets.ru`
-- **Domain (defanged):** `greencn.ru`
-- **Domain (defanged):** `icloudsnet.ru`
-- **Domain (defanged):** `imails.ru`
-- **Domain (defanged):** `legalads.in`
-- **Domain (defanged):** `littleads.in`
-- **Domain (defanged):** `littledns.ru`
-- **Domain (defanged):** `maganet.ru`
-- **Domain (defanged):** `mindelgate.ru`
-- **Domain (defanged):** `netapsdev.ru`
-- **Domain (defanged):** `netcdnads.in`
-- **Domain (defanged):** `netcdnamz.ru`
-- **Domain (defanged):** `netcdndev.in`
-- **Domain (defanged):** `netcorps.ru`
-- **Domain (defanged):** `netsprot.in`
-- **Domain (defanged):** `netsproto.in`
-- **Domain (defanged):** `networkads.in`
-- **Domain (defanged):** `rigacdn.in`
-- **Domain (defanged):** `rigmajoys.in`
-- **Domain (defanged):** `rigmanet.ru`
-- **Domain (defanged):** `rigmanets.in`
-- **Domain (defanged):** `sahusuzuki.in`
-- **Domain (defanged):** `stuffdns.in`
-- **Domain (defanged):** `testjoys.ru`
-- **Domain (defanged):** `timewebnet.in`
-- **Domain (defanged):** `vigmanet.ru`
-- **Domain (defanged):** `whitead.in`
-- **Domain (defanged):** `whiteads.ru`
-- **Domain (defanged):** `wincdn.ru`
-- **Domain (defanged):** `windsecure.ru`
-- **SHA1:** `6e480d648fa1b70612f5d198a66875e28847547d`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -116,12 +45,78 @@ XCSSET mal…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.004** — Persistence (article-specific)
+- **T1185** — Browser Session Hijacking
+- **T1554** — Compromise Host Software Binary
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1059.002** — Command and Scripting Interpreter: AppleScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### XCSSET v40 CDP hijack: Google Chrome launched with remote-debugging-port
+
+`UC_17_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="Google Chrome" OR Processes.process="*Google Chrome*") Processes.process="*--remote-debugging-port*" NOT (Processes.parent_process_name IN ("chromedriver","node","Playwright","python*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | eval custom_profile=if(match(process,"--user-data-dir"),"yes","no") | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "Google Chrome"
+| where ProcessCommandLine has "--remote-debugging-port"
+| where InitiatingProcessFileName !in~ ("chromedriver","node","python","python3")
+| extend UsesCustomProfile = iff(ProcessCommandLine has "--user-data-dir", "yes", "no")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ParentProcess=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, UsesCustomProfile, SHA256
+| order by Timestamp desc
+```
+
+### XCSSET v40 chrome_remote backdoor execution and C2 WebSocket egress
+
+`UC_17_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="chrome_remote" OR Processes.process="*/chrome_remote*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "chrome_remote" or FolderPath endswith "/chrome_remote"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ParentProcess=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### XCSSET v40 build-triggered loader: Xcode build spawning osascript/curl
+
+`UC_17_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("osascript","curl")) (Processes.parent_process_name IN ("xcodebuild","Xcode") OR Processes.parent_process="*xcodebuild*" OR Processes.parent_process="*Xcode.app*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName in~ ("osascript","curl")
+| where InitiatingProcessFileName in~ ("xcodebuild","Xcode")
+    or InitiatingProcessParentFileName in~ ("xcodebuild","Xcode")
+    or InitiatingProcessCommandLine has_any (".xcodeproj",".xcworkspace","DerivedData","Build/Intermediates.noindex")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, GrandParent=InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -410,7 +405,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Xcode Assassin Returns: A Deep Dive Into the Latest XCSSET Version
 
-`UC_10_10` · phase: **install** · confidence: **High**
+`UC_17_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -441,17 +436,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `91.108.106.229`, `95.142.35.34`, `95.142.35.206`, `95.142.37.159`, `151.243.109.188`, `178.208.92.129`, `178.208.92.168`, `accapple.ru` _(+62 more)_
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6e480d648fa1b70612f5d198a66875e28847547d`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

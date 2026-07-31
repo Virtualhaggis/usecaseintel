@@ -26,12 +26,71 @@ The security issue is tracked as CVE-2026-63077 and can be leveraged by an attac
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1059** — Command and Scripting Interpreter
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### TeamCity On-Premises server (java/Tomcat) spawning OS command interpreter — CVE-2026-63077 RCE
+
+`UC_21_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java.exe","javaw.exe","tomcat9.exe","java") AND Processes.parent_process="*TeamCity*" AND (Processes.parent_process="*catalina*" OR Processes.parent_process="*Bootstrap*" OR Processes.parent_process="*teamcity-server*") AND Processes.parent_process!="*buildAgent*") (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","whoami.exe","net.exe","net1.exe","certutil.exe","curl.exe","wget.exe","bitsadmin.exe","nltest.exe","reg.exe","cscript.exe","wscript.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("java.exe","javaw.exe","tomcat9.exe","java")
+| where InitiatingProcessCommandLine has "TeamCity"
+| where InitiatingProcessCommandLine has_any ("catalina","Bootstrap","teamcity-server")
+| where InitiatingProcessCommandLine !has "buildAgent"   // builds run on the AGENT, not the server
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh","bash","whoami.exe","whoami","net.exe","net1.exe","certutil.exe","curl.exe","wget.exe","bitsadmin.exe","nltest.exe","ipconfig.exe","hostname.exe","reg.exe","cscript.exe","wscript.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Unpatched internet-facing TeamCity On-Premises exposed to CVE-2026-63077
+
+`UC_21_5` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-63077" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve Vulnerabilities.vendor_product
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId == "CVE-2026-63077"
+| summarize arg_max(Timestamp, *) by DeviceId
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, IsInternetFacing, PublicIP
+  ) on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion,
+          RecommendedSecurityUpdate, VulnerabilitySeverityLevel,
+          IsInternetFacing, PublicIP, CveId
+| order by IsInternetFacing desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -127,4 +186,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

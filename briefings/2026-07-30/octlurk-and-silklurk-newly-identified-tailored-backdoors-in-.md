@@ -35,9 +35,8 @@ Infrastru…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `154.196.162.76`
-- **IPv4 (defanged):** `64.7.198.130`
 - **IPv4 (defanged):** `45.138.157.165`
+- **IPv4 (defanged):** `154.196.162.76`
 - **IPv4 (defanged):** `95.179.210.138`
 - **IPv4 (defanged):** `45.77.136.228`
 - **IPv4 (defanged):** `95.179.141.26`
@@ -46,45 +45,43 @@ Infrastru…
 - **IPv4 (defanged):** `195.86.120.2`
 - **IPv4 (defanged):** `154.196.187.73`
 - **IPv4 (defanged):** `45.61.149.112`
-- **Domain (defanged):** `dns.ssentialserv.xyz`
+- **IPv4 (defanged):** `64.7.198.130`
 - **Domain (defanged):** `dns.multitoconference.com`
-- **Domain (defanged):** `gycudore.kozow.com`
-- **Domain (defanged):** `ctyuhjerf.kozow.com`
 - **Domain (defanged):** `tj.tajikistandip.com`
 - **Domain (defanged):** `fm01.clouddevicemetrics.com`
 - **Domain (defanged):** `confbase.mdpsupport.net`
-- **Domain (defanged):** `digital.leroymerling.com`
+- **Domain (defanged):** `digital.leroymerlin.com`
 - **Domain (defanged):** `api2.annoyingremote.com`
 - **Domain (defanged):** `about.blsouqs.com`
 - **Domain (defanged):** `ssl.blsouqs.com`
+- **Domain (defanged):** `dns.ssentialserv.xyz`
 - **Domain (defanged):** `tyhbgtyuj.gleeze.com`
 - **Domain (defanged):** `wedfcvbn.gleeze.com`
 - **Domain (defanged):** `rgnojb.casacam.net`
+- **Domain (defanged):** `ctyuhjerf.kozow.com`
 - **Domain (defanged):** `uyhvfredc.accesscam.org`
-- **MD5:** `6ecf84fb18f6747ed08d7598364d853a`
+- **Domain (defanged):** `gycudore.kozow.com`
 - **MD5:** `082d49ef9f14e6811d68c7e0e82e5069`
-- **MD5:** `b874123a80fc4f40e06872b9cb54ebc6`
-- **MD5:** `45cf5916fab4272a1313c26e67aa9220`
-- **MD5:** `4e6d5c4770d5a822d7fcce6a74f7ad73`
-- **MD5:** `32a5985543433a4f60da2fafd873b927`
-- **MD5:** `2a571f6cee42a17d873f4c942649813f`
-- **MD5:** `37dc84e4bcad92fa28f1e7778d088283`
-- **MD5:** `5e26df131ff0a679a0a2699b723b46e3`
-- **MD5:** `cf903e4a1629aa0582fd0363b5786676`
-- **MD5:** `18dc8bff47cc282508354771d0c8cf8c`
-- **MD5:** `9a1dd1d96481d61934dcc2d568971d06`
-- **MD5:** `3c9a1ba8e0c7475706adc6376e9d7b7c`
-- **MD5:** `62944e26b36b1dcace429ae26ba66164`
-- **MD5:** `ef59aad625eebda8650aec5820d6ce69`
-- **MD5:** `be4731c09734da2e8eb6814a9c82f266`
-- **MD5:** `7c2f64461bb519c6cbf1fc687675514c`
 - **MD5:** `f4578e869a735cfad691f927bae3e638`
-- **MD5:** `2f18472866f38c1e1c2c5c14b9a6ab56`
+- **MD5:** `7c2f64461bb519c6cbf1fc687675514c`
 - **MD5:** `8269d6ba1b6842f9152c90cf7add9b93`
+- **MD5:** `3c9a1ba8e0c7475706adc6376e9d7b7c`
+- **MD5:** `ef59aad625eebda8650aec5820d6ce69`
 - **MD5:** `a0cc7accc79abb0287aaba825d0351f0`
 - **MD5:** `a56cce62930a6bee80d679b4c495a340`
 - **MD5:** `1415a78b75de7db4ba3d1e61d7db4501`
 - **MD5:** `a4d550a3ba0cd073fe3839b99d98a7a8`
+- **MD5:** `32a5985543433a4f60da2fafd873b927`
+- **MD5:** `2a571f6cee42a17d873f4c942649813f`
+- **MD5:** `37dc84e4bcad92fa28f1e7778d088283`
+- **MD5:** `cf903e4a1629aa0582fd0363b5786676`
+- **MD5:** `18dc8bff47cc282508354771d0c8cf8c`
+- **MD5:** `9a1dd1d96481d61934dcc2d568971d06`
+- **MD5:** `6ecf84fb18f6747ed08d7598364d853a`
+- **MD5:** `b874123a80fc4f40e06872b9cb54ebc6`
+- **MD5:** `45cf5916fab4272a1313c26e67aa9220`
+- **MD5:** `4e6d5c4770d5a822d7fcce6a74f7ad73`
+- **MD5:** `5e26df131ff0a679a0a2699b723b46e3`
 
 ## MITRE ATT&CK Techniques
 
@@ -104,12 +101,120 @@ Infrastru…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
+- **T1059.003** — Windows Command Shell
+- **T1055** — Process Injection
+- **T1573.001** — Symmetric Cryptography
+- **T1614.001** — System Language Discovery
+- **T1033** — System Owner/User Discovery
+- **T1057** — Process Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### OctLurk persistence: 'GoogleUpDate' scheduled task executing Videos\1.bat
+
+`UC_41_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe AND Processes.process="*GoogleUpDate*") OR Processes.process="*\\Videos\\1.bat*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "GoogleUpDate")
+    or ProcessCommandLine has @"\Videos\1.bat"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, MD5
+| order by Timestamp desc
+```
+
+### OctLurk/LurkProxy service DLL side-load via RegisterService ServiceMain
+
+`UC_41_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Endpoint.Registry.registry_path="*\\Services\\*" AND ((Endpoint.Registry.registry_value_name=ServiceMain AND Endpoint.Registry.registry_value_data=RegisterService) OR (Endpoint.Registry.registry_value_name=ServiceDll AND (Endpoint.Registry.registry_value_data="*oleasapi.dll*" OR Endpoint.Registry.registry_value_data="*msbasesysdc.dll*"))) by Endpoint.Registry.dest Endpoint.Registry.registry_path Endpoint.Registry.registry_value_name Endpoint.Registry.registry_value_data
+| `drop_dm_object_name(Registry)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Services\"
+| where (RegistryValueName =~ "ServiceMain" and RegistryValueData =~ "RegisterService")
+    or (RegistryValueName =~ "ServiceDll" and RegistryValueData has_any ("oleasapi.dll","msbasesysdc.dll"))
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### OctLurk/SilkLurk/LurkProxy C2 beacon to campaign infrastructure
+
+`UC_41_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.138.157.165","154.196.162.76","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let c2Domains = dynamic(["dns.multitoconference.com","tj.tajikistandip.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","digital.leroymerlin.com","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","dns.ssentialserv.xyz","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","ctyuhjerf.kozow.com","uyhvfredc.accesscam.org","gycudore.kozow.com"]);
+let c2Ips = dynamic(["45.138.157.165","154.196.162.76","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl in~ (c2Domains) or RemoteIP in (c2Ips)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### OctLurk Command Shell plugin post-compromise recon cluster (chcp 1256 + session enum)
+
+`UC_41_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Processes.process) as commands dc(Processes.process_name) as distinct_cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=chcp.com AND Processes.process="*1256*") OR Processes.process_name=qwinsta.exe OR (Processes.process_name=klist.exe AND Processes.process="*sessions*") OR (Processes.process_name=tasklist.exe AND Processes.process="*/V*") OR Processes.process="*$PSVersionTable*" by Processes.dest _time span=1h
+| `drop_dm_object_name(Processes)`
+| where distinct_cmds>=3
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where (FileName =~ "chcp.com" and ProcessCommandLine has "1256")
+    or FileName =~ "qwinsta.exe"
+    or (FileName =~ "klist.exe" and ProcessCommandLine has "sessions")
+    or (FileName =~ "tasklist.exe" and ProcessCommandLine has "/V")
+    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "$PSVersionTable")
+| summarize DistinctCmds = dcount(FileName), Cmds = make_set(ProcessCommandLine),
+            Parents = make_set(InitiatingProcessFileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+            by DeviceName, bin(Timestamp, 1h)
+| where DistinctCmds >= 3
+| order by LastSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -436,7 +541,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OctLurk and SilkLurk: newly identified tailored backdoors in cyber-espionage cam
 
-`UC_34_11` · phase: **exploit** · confidence: **High**
+`UC_41_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -507,12 +612,12 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `154.196.162.76`, `64.7.198.130`, `45.138.157.165`, `95.179.210.138`, `45.77.136.228`, `95.179.141.26`, `45.32.152.50`, `212.11.39.138` _(+18 more)_
+  - IP / domain IOC(s): `45.138.157.165`, `154.196.162.76`, `95.179.210.138`, `45.77.136.228`, `95.179.141.26`, `45.32.152.50`, `212.11.39.138`, `195.86.120.2` _(+18 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6ecf84fb18f6747ed08d7598364d853a`, `082d49ef9f14e6811d68c7e0e82e5069`, `b874123a80fc4f40e06872b9cb54ebc6`, `45cf5916fab4272a1313c26e67aa9220`, `4e6d5c4770d5a822d7fcce6a74f7ad73`, `32a5985543433a4f60da2fafd873b927`, `2a571f6cee42a17d873f4c942649813f`, `37dc84e4bcad92fa28f1e7778d088283` _(+16 more)_
+  - file hash IOC(s): `082d49ef9f14e6811d68c7e0e82e5069`, `f4578e869a735cfad691f927bae3e638`, `7c2f64461bb519c6cbf1fc687675514c`, `8269d6ba1b6842f9152c90cf7add9b93`, `3c9a1ba8e0c7475706adc6376e9d7b7c`, `ef59aad625eebda8650aec5820d6ce69`, `a0cc7accc79abb0287aaba825d0351f0`, `a56cce62930a6bee80d679b4c495a340` _(+13 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

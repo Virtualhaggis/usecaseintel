@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Codefresh + Snyk = ship fast and securely
 
-`UC_3587_0` · phase: **exploit** · confidence: **High**
+`UC_3588_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

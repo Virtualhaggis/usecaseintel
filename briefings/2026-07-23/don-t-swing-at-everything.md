@@ -45,123 +45,12 @@ Lately I've found myself thinking a lot about the Australian TV series Mr. Inbet
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1218.007** — System Binary Proxy Execution: Msiexec
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1105** — Ingress Tool Transfer
-- **T1205** — Traffic Signaling
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1572** — Protocol Tunneling
-- **T1090.001** — Proxy: Internal Proxy
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### msaRAT: MSI impersonating Windows update executed from ProgramData
-
-`UC_123_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=msiexec.exe (Processes.process="*\\ProgramData\\*" AND Processes.process="*.msi*") (Processes.process="*update*" OR Processes.process="*Update*" OR Processes.process="*KB*" OR Processes.process="*patch*" OR Processes.process="*Windows*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "msiexec.exe"
-| where ProcessCommandLine has @"\ProgramData\"
-| where ProcessCommandLine has ".msi"
-| where ProcessCommandLine has_any ("update","kb","patch","windows")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### msaRAT: curl.exe downloading MSI payload into ProgramData
-
-`UC_123_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (curl.exe,wget.exe) Processes.process="*.msi*" (Processes.process="*\\ProgramData\\*" OR Processes.process="*172.86.126.18*" OR Processes.process="*workers.dev*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("curl.exe","wget.exe")
-| where ProcessCommandLine has ".msi"
-| where ProcessCommandLine has @"\ProgramData\" or ProcessCommandLine has_any ("172.86.126.18","workers.dev")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### msaRAT: Headless Chrome/Edge launched with remote-debugging (CDP abuse)
-
-`UC_123_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (chrome.exe,msedge.exe) (Processes.process="*--remote-debugging-port*" OR Processes.process="*--remote-debugging-pipe*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search parent_process_name!=explorer.exe parent_process_name!=chrome.exe parent_process_name!=msedge.exe | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("chrome.exe","msedge.exe")
-| where ProcessCommandLine has_any ("--remote-debugging-port","--remote-debugging-pipe")
-| where AccountName !endswith "$"
-| extend Headless = ProcessCommandLine has "--headless"
-| where Headless or InitiatingProcessFileName !in~ ("explorer.exe","chrome.exe","msedge.exe","userinit.exe")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, Headless, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### msaRAT: Connection to Chaos delivery IP / workers.dev signaling relay
-
-`UC_123_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="172.86.126.18" OR All_Traffic.dest="is-01-ast.ols-img-12.workers.dev") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "172.86.126.18" or RemoteUrl =~ "is-01-ast.ols-img-12.workers.dev"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
-
-### msaRAT: Headless browser initiating WebRTC STUN/TURN egress
-
-`UC_123_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (chrome.exe,msedge.exe) All_Traffic.dest_port IN (3478,5349) by All_Traffic.src All_Traffic.process_name All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe")
-| where RemotePort in (3478, 5349)
-| where InitiatingProcessParentFileName !in~ ("explorer.exe","chrome.exe","msedge.exe","userinit.exe","svchost.exe")
-| where InitiatingProcessCommandLine has_any ("--headless","--remote-debugging-port","--remote-debugging-pipe")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -308,7 +197,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Don’t swing at everything
 
-`UC_123_8` · phase: **exploit** · confidence: **High**
+`UC_127_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -371,4 +260,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

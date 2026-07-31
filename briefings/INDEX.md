@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2607 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,29 +10,30 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
+- [anthropic incident an ai agent published a malicious package](./2026-07-31/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
-- [anthropic says claude mistook the open internet for a ctf an](./2026-07-31/anthropic-says-claude-mistook-the-open-internet-for-a-ctf-an.md)
 - [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
 - [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
+- [cisa warns of cyberattacks disrupting u s water utilities](./2026-07-31/cisa-warns-of-cyberattacks-disrupting-u-s-water-utilities.md)
 - [eset tracks rise in malicious ai skills and adaptable malwar](./2026-07-31/eset-tracks-rise-in-malicious-ai-skills-and-adaptable-malwar.md)
 - [ghsa critical cve 2026 52855 wings exposes node configuratio](./2026-07-31/ghsa-critical-cve-2026-52855-wings-exposes-node-configuratio.md)
+- [ghsa critical cve 2026 54725 vault addr annotation ssrf webh](./2026-07-31/ghsa-critical-cve-2026-54725-vault-addr-annotation-ssrf-webh.md)
+- [hacker uses deepseek ai to autonomously attack vulnerable se](./2026-07-31/hacker-uses-deepseek-ai-to-autonomously-attack-vulnerable-se.md)
+- [hollowframe loader deploys matryoshka backdoor in spear phis](./2026-07-31/hollowframe-loader-deploys-matryoshka-backdoor-in-spear-phis.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
-- [researchers report 84 flaws in 4g and 5g cores including a s](./2026-07-31/researchers-report-84-flaws-in-4g-and-5g-cores-including-a-s.md)
+- [suspected chinese speaking hackers target central asian gove](./2026-07-31/suspected-chinese-speaking-hackers-target-central-asian-gove.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
-- [three recent chrome releases fix 1 442 flaws more than prior](./2026-07-31/three-recent-chrome-releases-fix-1-442-flaws-more-than-prior.md)
 
 ## 2026-07-30
 - [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
 - [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
 - [amazon links debug chalk npm supply chain attacks to north k](./2026-07-30/amazon-links-debug-chalk-npm-supply-chain-attacks-to-north-k.md)
-- [analog devices discloses data breach says operations unaffec](./2026-07-30/analog-devices-discloses-data-breach-says-operations-unaffec.md)
 - [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
 - [compromised npm packages joyfill components and joyfill layo](./2026-07-30/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
-- [fcc blocks new foreign produced robots and power inverters o](./2026-07-30/fcc-blocks-new-foreign-produced-robots-and-power-inverters-o.md)
 - [ghsa critical cve 2025 4318 aws amplify studio ui component ](./2026-07-30/ghsa-critical-cve-2025-4318-aws-amplify-studio-ui-component-.md)
 - [ghsa critical cve 2026 66066 active storage has possible arb](./2026-07-30/ghsa-critical-cve-2026-66066-active-storage-has-possible-arb.md)
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
@@ -46,7 +47,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
 - [shinyhunters claims brinks home breach threatens to leak sto](./2026-07-30/shinyhunters-claims-brinks-home-breach-threatens-to-leak-sto.md)
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
-- [the network has become the control plane for ai security](./2026-07-30/the-network-has-become-the-control-plane-for-ai-security.md)
+- [the attacker never sleeps neither can your testing](./2026-07-30/the-attacker-never-sleeps-neither-can-your-testing.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
 - [vmware fixes three critical flaws allowing auth bypass vm es](./2026-07-30/vmware-fixes-three-critical-flaws-allowing-auth-bypass-vm-es.md)
 - [what s new in microsoft security july 2026](./2026-07-30/what-s-new-in-microsoft-security-july-2026.md)
@@ -54,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-29
 - [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
-- [cisco warns of fmc static credential flaw exploited in zero ](./2026-07-29/cisco-warns-of-fmc-static-credential-flaw-exploited-in-zero-.md)
 - [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
 - [critical rails flaw could let unauthenticated attackers read](./2026-07-29/critical-rails-flaw-could-let-unauthenticated-attackers-read.md)
 - [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
@@ -94,12 +94,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
 - [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
-- [github adds 3 day dependabot cooldown to limit poisoned pack](./2026-07-27/github-adds-3-day-dependabot-cooldown-to-limit-poisoned-pack.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
 - [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
-- [teleshim abuses telegram for c2 in attacks against middle ea](./2026-07-27/teleshim-abuses-telegram-for-c2-in-attacks-against-middle-ea.md)
 - [what is ai pentesting and how does it work](./2026-07-27/what-is-ai-pentesting-and-how-does-it-work.md)
 
 ## 2026-07-25
@@ -300,7 +298,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
 - [ghsa critical cve 2026 41052 rancher has privilege escalatio](./2026-07-01/ghsa-critical-cve-2026-41052-rancher-has-privilege-escalatio.md)
 - [ghsa critical cve 2026 44935 rancher fleet vulnerable to cro](./2026-07-01/ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro.md)
-- [ghsa critical cve 2026 44939 rancher vulnerable to command i](./2026-07-01/ghsa-critical-cve-2026-44939-rancher-vulnerable-to-command-i.md)
 - [ghsa critical cve 2026 53943 ghost cache poisoning xss in gh](./2026-07-01/ghsa-critical-cve-2026-53943-ghost-cache-poisoning-xss-in-gh.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
@@ -679,7 +676,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-18
 - [cisa kev cve 2025 66376 synacor zimbra collaboration suite z](./2026-03-18/cisa-kev-cve-2025-66376-synacor-zimbra-collaboration-suite-z.md)
 - [cisa kev cve 2026 20963 microsoft sharepoint deserialization](./2026-03-18/cisa-kev-cve-2026-20963-microsoft-sharepoint-deserialization.md)
-- [fast draft open vsx extension compromised by bloktrooper](./2026-03-18/fast-draft-open-vsx-extension-compromised-by-bloktrooper.md)
 - [glassworm hides a rat inside a malicious chrome extension](./2026-03-18/glassworm-hides-a-rat-inside-a-malicious-chrome-extension.md)
 
 ## 2026-03-17
@@ -861,9 +857,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2009 0556 microsoft office powerpoint code inje](./2026-01-07/cisa-kev-cve-2009-0556-microsoft-office-powerpoint-code-inje.md)
 - [cisa kev cve 2025 37164 hewlett packard enterprise hpe onevi](./2026-01-07/cisa-kev-cve-2025-37164-hewlett-packard-enterprise-hpe-onevi.md)
 - [secure by default why snyk and augment code are the new stan](./2026-01-07/secure-by-default-why-snyk-and-augment-code-are-the-new-stan.md)
-
-## 2026-01-06
-- [2025 in review the evolution of supply chain security what s](./2026-01-06/2025-in-review-the-evolution-of-supply-chain-security-what-s.md)
 
 ## 2025-12-29
 - [cisa kev cve 2025 14847 mongodb and mongodb server improper ](./2025-12-29/cisa-kev-cve-2025-14847-mongodb-and-mongodb-server-improper-.md)

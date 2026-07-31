@@ -22,10 +22,20 @@ Some defen…
 - **CVE:** `CVE-2026-39987`
 - **CVE:** `CVE-2026-0300`
 - **CVE:** `CVE-2026-33824`
-- **CVE:** `CVE-2026-17650`
-- **CVE:** `CVE-2026-17656`
-- **CVE:** `CVE-2026-50522`
-- **Domain (defanged):** `cubepilot.org`
+- **IPv4 (defanged):** `85.206.161.241`
+- **IPv4 (defanged):** `103.216.221.95`
+- **Domain (defanged):** `agenticsora.com`
+- **Domain (defanged):** `malwareaudit.com`
+- **Domain (defanged):** `main.sdhomeinspectors.com`
+- **Domain (defanged):** `main.southcarolinacounselor.com`
+- **Domain (defanged):** `jacksonvillemma.com`
+- **SHA256:** `3db8befc08dc02ab7a76b5193abd81653775e8f3ceac5864c7c2188b2dbd3c54`
+- **SHA256:** `3ae26ed89d3a1a140edc89ca78513aba2895789ed0d0f64cad6605b6f2347c7e`
+- **SHA256:** `78dea0693ac2d70bdf8be7588667a75910e43fd84397ad484e710e37369a30f7`
+- **SHA256:** `9c09c303fa058c2d3e179969bd58ca5523775ff2d310fb2f8266ac74cb21ee81`
+- **SHA256:** `071bd109208eb1080ef525b5be394244cec467c59ffef5b8782cfb5e4850401d`
+- **SHA256:** `31566a1df7070f30cb990aa5eab310c1d4e0266c8776e9438138e5438ec1cff8`
+- **SHA256:** `230dff4bf9442a951dcd6898b2110924969a20668c20a43e3ceed6fcef65963e`
 
 ## MITRE ATT&CK Techniques
 
@@ -51,12 +61,128 @@ Some defen…
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
+- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.002** — Command and Scripting Interpreter: AppleScript
+- **T1555.001** — Credentials from Password Stores: Keychain
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1554** — Compromise Host Software Binary
+- **T1657** — Financial Theft
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### ClickFix rundll32 ordinal (#1) execution of non-DLL payload over WebDAV @SSL
+
+`UC_26_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=rundll32.exe (Processes.process="*,#1*" OR Processes.process="*#1*") (Processes.process="*@SSL*" OR Processes.process="*gc.key*" OR Processes.process="*j.pm*" OR Processes.process="*goog.ct*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "rundll32.exe"
+| where ProcessCommandLine has "#1"
+| where ProcessCommandLine has_any ("gc.key", "j.pm", "goog.ct") or ProcessCommandLine has "@SSL"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### MacSync fake-Claude Terminal one-liner: curl piped to zsh via base64 -D
+
+`UC_26_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=curl OR Processes.process_name=zsh OR Processes.process_name=sh OR Processes.process_name=bash) (Processes.process="*agenticsora.com*" OR Processes.process="*malwareaudit.com*" OR (Processes.process="*curl*" AND Processes.process="*base64 -D*" AND Processes.process="*zsh*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("curl", "zsh", "sh", "bash")
+| where ProcessCommandLine has_any ("agenticsora.com", "malwareaudit.com")
+    or (ProcessCommandLine has "curl" and ProcessCommandLine has "base64 -D" and ProcessCommandLine has "zsh")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### MacSync server-side AppleScript stealer: osascript, dscl authonly, keychain, ditto to /tmp/osalogging.zip
+
+`UC_26_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=osascript AND Processes.process="*dynamic?txd=*") OR (Processes.process_name=dscl AND Processes.process="*authonly*") OR (Processes.process_name=ditto AND Processes.process="*osalogging.zip*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "osascript" and (ProcessCommandLine has "dynamic?txd=" or InitiatingProcessCommandLine has "curl"))
+    or (FileName =~ "dscl" and ProcessCommandLine has "authonly")
+    or (FileName =~ "ditto" and ProcessCommandLine has "osalogging.zip")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### MacSync RAT C2 / wallet-exfil to 85.206.161.241 and agenticsora/malwareaudit infrastructure
+
+`UC_26_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="85.206.161.241" OR All_Traffic.dest="agenticsora.com" OR All_Traffic.dest="malwareaudit.com" OR All_Traffic.dest="main.sdhomeinspectors.com" OR All_Traffic.dest="main.southcarolinacounselor.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "85.206.161.241"
+    or RemoteUrl has_any ("agenticsora.com", "malwareaudit.com", "main.sdhomeinspectors.com", "main.southcarolinacounselor.com")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### MacSync wallet trojanization: app.asar swap + ad-hoc codesign of Ledger/Trezor apps
+
+`UC_26_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=modified OR Filesystem.action=created ( (Filesystem.file_name=app.asar AND (Filesystem.file_path="*Ledger*" OR Filesystem.file_path="*Trezor*")) OR Filesystem.file_name="recovery-step-*" ) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileModified", "FileCreated")
+| where (FileName =~ "app.asar" and FolderPath has_any ("Ledger", "Trezor"))
+    or FileName startswith "recovery-step-"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -463,12 +589,15 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `cubepilot.org`
+  - IP / domain IOC(s): `85.206.161.241`, `103.216.221.95`, `agenticsora.com`, `malwareaudit.com`, `main.sdhomeinspectors.com`, `main.southcarolinacounselor.com`, `jacksonvillemma.com`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-34486`, `CVE-2026-39987`, `CVE-2026-0300`, `CVE-2026-33824` _(+3 more)_
+  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-34486`, `CVE-2026-39987`, `CVE-2026-0300`, `CVE-2026-33824`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `3db8befc08dc02ab7a76b5193abd81653775e8f3ceac5864c7c2188b2dbd3c54`, `3ae26ed89d3a1a140edc89ca78513aba2895789ed0d0f64cad6605b6f2347c7e`, `78dea0693ac2d70bdf8be7588667a75910e43fd84397ad484e710e37369a30f7`, `9c09c303fa058c2d3e179969bd58ca5523775ff2d310fb2f8266ac74cb21ee81`, `071bd109208eb1080ef525b5be394244cec467c59ffef5b8782cfb5e4850401d`, `31566a1df7070f30cb990aa5eab310c1d4e0266c8776e9438138e5438ec1cff8`, `230dff4bf9442a951dcd6898b2110924969a20668c20a43e3ceed6fcef65963e`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 20 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

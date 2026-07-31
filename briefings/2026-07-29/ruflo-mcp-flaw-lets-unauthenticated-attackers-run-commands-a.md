@@ -26,12 +26,12 @@ The vulnerability, tracked as CVE-2026-59726 (CVSS score: 10.0), impacts all ver
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.004** — Unix Shell
 - **T1203** — Exploitation for Client Execution
-- **T1505.003** — Server Software Component: Web Shell
-- **T1105** — Ingress Tool Transfer
-- **T1565.001** — Data Manipulation: Stored Data Manipulation
-- **T1046** — Network Service Discovery
+- **T1552.001** — Credentials In Files
+- **T1552** — Unsecured Credentials
+- **T1565.001** — Stored Data Manipulation
+- **T1505.003** — Web Shell
 
 ## Kill chain phases observed
 
@@ -39,94 +39,98 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ruflo MCP bridge unauthenticated tools/call terminal_execute (RufRoot CVE-2026-59726)
+### Unauthenticated Ruflo MCP tools/call terminal_execute exploit request (CVE-2026-59726)
 
-`UC_54_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_60_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url="*/mcp*" (Web.dest_port=3001 OR Web.url="*:3001*") by Web.src Web.dest Web.dest_port Web.url Web.http_method Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST (Web.url="*/mcp" OR Web.url="*/mcp/*" OR Web.dest_port=3001) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | search url="*/mcp*" | where dest_port=3001 OR like(url,"%/mcp%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
-### Ruflo/Node MCP bridge spawning interactive shell inside container (RufRoot RCE)
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort == 3001
+| where RemoteIPType == "Public"
+| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, RemoteIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by LastSeen desc
+```
 
-`UC_54_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+### Shell process spawned by Ruflo Node MCP bridge (RufRoot RCE)
+
+`UC_60_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","ruflo","claude-flow") OR Processes.parent_process="*ruflo*" OR Processes.parent_process="*claude-flow*" OR Processes.parent_process="*mcp*") Processes.process_name IN ("sh","bash","dash","zsh") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("sh","bash","dash","zsh")) (Processes.parent_process_name="node" OR Processes.parent_process="*ruflo*" OR Processes.parent_process="*claude-flow*" OR Processes.parent_process="*mcp*") Processes.process="*-c*" by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node","ruflo","claude-flow")
-| where InitiatingProcessCommandLine has_any ("ruflo","claude-flow","mcp","3001")
 | where FileName in~ ("sh","bash","dash","zsh")
-| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("node","nodejs")
+    or InitiatingProcessCommandLine has_any ("ruflo","claude-flow","terminal_execute","mcp","bridge")
+| where ProcessCommandLine has "-c"
 | project Timestamp, DeviceName, AccountName,
-          ParentProcess = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildProcess = FileName,
-          ChildCmd = ProcessCommandLine,
-          FolderPath, SHA256
+          Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine,
+          Child=FileName, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Backdoor payload written to /app by shell/downloader after Ruflo RCE
+### LLM provider API key / environment dump inside Ruflo bridge container
 
-`UC_54_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_60_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="/app/*" Endpoint.Filesystem.process_name IN ("sh","bash","dash","zsh","curl","wget","python","python3","tee") by Endpoint.Filesystem.dest Endpoint.Filesystem.user Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="node" OR Processes.parent_process="*ruflo*" OR Processes.parent_process="*claude-flow*" OR Processes.parent_process="*mcp*") (Processes.process="*printenv*" OR Processes.process="*/proc/self/environ*" OR Processes.process="*ANTHROPIC_API_KEY*" OR Processes.process="*OPENAI_API_KEY*" OR Processes.process="*API_KEY*" OR Processes.process="*env*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node","nodejs","sh","bash","dash")
+    or InitiatingProcessCommandLine has_any ("ruflo","claude-flow","terminal_execute","mcp")
+| where ProcessCommandLine has_any ("printenv","/proc/self/environ","ANTHROPIC_API_KEY","OPENAI_API_KEY","API_KEY")
+    or (FileName in~ ("env","cat","grep") and ProcessCommandLine has_any ("environ","API_KEY","ANTHROPIC","OPENAI"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Ruflo AgentDB memory poisoning + /app backdoor persistence (RufRoot)
+
+`UC_60_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.file_path="/app/*" (Endpoint.process_name="node" OR Endpoint.process_name="sh" OR Endpoint.process_name="bash") (Endpoint.file_name="*.js" OR Endpoint.file_name="*.sh" OR Endpoint.file_name="*.py" OR Endpoint.action="created") by Endpoint.dest, Endpoint.user, Endpoint.process_name, Endpoint.file_path, Endpoint.file_name, Endpoint.action | `drop_dm_object_name(Endpoint)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath startswith "/app"
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName in~ ("sh","bash","dash","zsh","curl","wget","python","python3","tee")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where ActionType in ("FileCreated","FileModified")
+| where FolderPath startswith "/app/"
+| where InitiatingProcessFileName in~ ("node","nodejs","sh","bash","dash")
+    or InitiatingProcessCommandLine has_any ("ruflo","claude-flow","terminal_execute","mcp")
+| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Ruflo AgentDB memory poisoning via MCP pattern-store write
+### Ruflo MCP bridge (3001) / MongoDB (27017) exposed to untrusted networks
 
-`UC_54_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST (Web.url="*/mcp*" OR Web.url="*/mcp/*") by Web.src Web.dest Web.dest_port Web.url Web.http_method Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-### Inbound network access to Ruflo bridge (3001) / MongoDB (27017) from public source
-
-`UC_54_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_60_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=3001 OR All_Traffic.dest_port=27017) All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (3001,27017) All_Traffic.direction=inbound NOT (All_Traffic.src_ip=10.0.0.0/8 OR All_Traffic.src_ip=172.16.0.0/12 OR All_Traffic.src_ip=192.168.0.0/16) by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -136,8 +140,8 @@ DeviceNetworkEvents
 | where ActionType == "InboundConnectionAccepted"
 | where LocalPort in (3001, 27017)
 | where RemoteIPType == "Public"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SrcIPs=make_set(RemoteIP, 50) by DeviceName, LocalPort, InitiatingProcessFileName
+| order by LastSeen desc
 ```
 
 ### Phishing-link click correlated to endpoint execution

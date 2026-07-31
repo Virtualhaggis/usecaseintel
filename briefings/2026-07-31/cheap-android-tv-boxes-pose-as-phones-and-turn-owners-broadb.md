@@ -14,13 +14,13 @@ The same apps h…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-50522`
+- **Domain (defanged):** `fwgcloud.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,12 +30,39 @@ The same apps h…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090.002** — Proxy: External Proxy
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Fuyao Android TV-box botnet C2/backdoor egress to fwgcloud.com
+
+`UC_9_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.record_type) as record_type from datamodel=Network_Resolution.DNS where DNS.query="*fwgcloud.com" by DNS.src DNS.query DNS.dest index sourcetype | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*fwgcloud.com" OR All_Traffic.url="*fwgcloud.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let c2domain = "fwgcloud.com";
+union isfuzzy=true
+  (DeviceNetworkEvents
+   | where Timestamp > ago(30d)
+   | where RemoteUrl has c2domain
+   | project Timestamp, DeviceName, ClientProc = InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, SrcTable = "DeviceNetworkEvents"),
+  (DeviceEvents
+   | where Timestamp > ago(30d)
+   | where ActionType == "DnsQueryResponse"
+   | where AdditionalFields has c2domain or RemoteUrl has c2domain
+   | project Timestamp, DeviceName, ClientProc = InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort = int(null), SrcTable = "DeviceEvents-DNS")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -276,10 +303,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50522`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `fwgcloud.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
