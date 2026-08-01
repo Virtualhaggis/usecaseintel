@@ -84,7 +84,7 @@ _(none detected from narrative keywords)_
 
 ### CornFlake RAT dropper: svchost32.exe executing from %APPDATA%\svchost32\
 
-`UC_7_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### CornFlake service persistence: 'Cloud Sync Service' / svchost32
 
-`UC_7_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceRegistryEvents
 
 ### CaptiveCrunch C2 & doppelganger phishing infrastructure callbacks
 
-`UC_7_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceNetworkEvents
 
 ### Poisoned captive-portal connectivity check → fake update download
 
-`UC_7_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceFileEvents
 
 ### ClickFix: explorer.exe spawning PowerShell/cmd/mshta downloader
 
-`UC_7_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_8_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,7 +196,7 @@ DeviceProcessEvents
 
 ### Entra device-code phishing sign-in from CaptiveCrunch infrastructure
 
-`UC_7_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -217,7 +217,7 @@ AADSignInEventsBeta
 
 ### ChocoShell UAC bypass via SilentCleanup/wsreset/sdclt auto-elevate LOLBins
 
-`UC_7_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -589,7 +589,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CaptiveCrunch: Midnight Blizzard targets travelers worldwide for malware deliver
 
-`UC_7_11` · phase: **exploit** · confidence: **High**
+`UC_8_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

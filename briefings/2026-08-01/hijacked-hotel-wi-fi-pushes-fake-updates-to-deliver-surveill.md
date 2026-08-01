@@ -40,16 +40,15 @@ Researchers track the operation as CaptiveCrunch and attribute it to Storm-2945 
 - **T1071** — Application Layer Protocol
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1543.003** — Create or Modify System Process: Windows Service
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
 - **T1528** — Steal Application Access Token
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1621** — Multi-Factor Authentication Request Generation
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1557** — Adversary-in-the-Middle
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
@@ -57,133 +56,120 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### CornFlake RAT svchost32.exe masquerade executing from %APPDATA%
+### CornFlake RAT install: svchost32.exe drop to %APPDATA% + 'Cloud Sync Service'
 
-`UC_2_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="svchost32.exe" OR Processes.process_path="*\\AppData\\Roaming\\svchost32\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)` 
-| `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="svchost32.exe" AND Filesystem.file_path="*\\AppData\\Roaming\\svchost32\\svchost32.exe") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "svchost32.exe" or FolderPath has @"\AppData\Roaming\svchost32\"
-| where FolderPath !startswith @"C:\Windows\System32" and FolderPath !startswith @"C:\Windows\SysWOW64"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName =~ "svchost32.exe"
+| where FolderPath has @"\svchost32\" and FolderPath has @"\AppData\Roaming\"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### CornFlake persistence: 'Cloud Sync Service' / svchost32 service + Run key
+### CornFlake persistence: Run key / scheduled task pointing to svchost32
 
-`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where ((Registry.registry_path="*\\CurrentVersion\\Run*" AND Registry.registry_value_data="*svchost32*") OR Registry.registry_path="*\\Services\\svchost32*" OR Registry.registry_value_data="*\\AppData\\Roaming\\svchost32\\svchost32.exe*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data 
-| `drop_dm_object_name(Registry)` 
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*" AND Registry.registry_value_data="*svchost32*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(30d)
-| where (RegistryKey has @"\CurrentVersion\Run" and RegistryValueData has "svchost32")
-   or RegistryKey has @"\Services\svchost32"
-   or RegistryValueData has @"\AppData\Roaming\svchost32\svchost32.exe"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\CurrentVersion\Run"
+| where RegistryValueData has "svchost32" or RegistryValueName =~ "svchost32"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### ChocoShell token theft from Token Broker .tbres cache
+### ChocoShell token theft: process reading .tbres Token Broker cache
 
-`UC_2_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*.tbres*" OR Processes.process="*TokenBroker*Cache*" OR Processes.process="*\\Microsoft\\TokenBroker\\Cache*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name 
-| `drop_dm_object_name(Processes)` 
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*TokenBroker\\Cache*" OR Processes.process="*.tbres*")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has_any (@"TokenBroker\Cache", ".tbres", "tbres")
 | where AccountName !endswith "$"
-| where ProcessCommandLine has_any (".tbres", @"TokenBroker\Cache", "TokenBroker")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### CaptiveCrunch device-code auth abuse via Microsoft Authentication Broker
+### Microsoft device-code auth flow abuse (CaptiveCrunch credential phishing)
 
-`UC_2_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" AND (Authentication.src IN ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98") OR Authentication.app="Microsoft Authentication Broker") by Authentication.user Authentication.src Authentication.app Authentication.dest 
-| `drop_dm_object_name(Authentication)` 
-| `security_content_ctime(firstTime)`
-```
+`UC_3_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let IOCIPs = dynamic(["31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98"]);
 AADSignInEventsBeta
 | where Timestamp > ago(30d)
 | where ErrorCode == 0
-| where IPAddress in ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98")
-   or ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"
-| project Timestamp, AccountUpn, AppDisplayName, ApplicationId, IPAddress, Country, City, DeviceName, ClientAppUsed, ConditionalAccessStatus
+| where AuthenticationProcessingDetails has "Device Code" or IPAddress in (IOCIPs)
+| project Timestamp, AccountUpn, AppDisplayName, ResourceDisplayName, IPAddress, Country, ClientAppUsed, DeviceTrustType, ConditionalAccessStatus, AuthenticationRequirement
 | order by Timestamp desc
 ```
 
-### CaptiveCrunch C2 / Microsoft-impersonating domain and IP contact
+### CaptiveCrunch C2 / phishing infrastructure network contact
 
-`UC_2_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="m365-owa.com" OR DNS.query="owa-ms365.com" OR DNS.query="ms365-device.com" OR DNS.query="ms365-live.com" OR DNS.query="deltaode.com") by DNS.src DNS.query DNS.answer 
-| `drop_dm_object_name(DNS)` 
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98") OR All_Traffic.dest IN ("m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com","deltaode.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+let IOCIPs = dynamic(["31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98"]);
+let IOCDomains = dynamic(["m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com","deltaode.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98")
-   or RemoteUrl has_any ("m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com","deltaode.com")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| where RemoteIP in (IOCIPs) or RemoteUrl has_any (IOCDomains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Windows connectivity-check (NCSI) DNS hijack on untrusted network
+### ClickFix fake-update cradle fetching CaptiveCrunch payload
 
-`UC_2_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="dns.msftncsi.com" by DNS.src DNS.query DNS.answer 
-| `drop_dm_object_name(DNS)` 
-| search NOT answer="131.107.255.255" 
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","curl.exe","bitsadmin.exe","certutil.exe") AND Processes.parent_process_name IN ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe") AND (Processes.process="*m365-owa.com*" OR Processes.process="*owa-ms365.com*" OR Processes.process="*ms365-device.com*" OR Processes.process="*ms365-live.com*" OR Processes.process="*deltaode.com*" OR Processes.process="*31.57.243.154*" OR Processes.process="*104.194.159.150*" OR Processes.process="*38.146.28.75*" OR Processes.process="*89.124.79.98*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+let IOCStrings = dynamic(["m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com","deltaode.com","31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98"]);
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl in~ ("dns.msftncsi.com","www.msftncsi.com","www.msftconnecttest.com","ipv6.msftncsi.com")
-| where RemoteIP in ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98")
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","curl.exe","bitsadmin.exe","certutil.exe")
+| where InitiatingProcessFileName in~ ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe")
+| where ProcessCommandLine has_any (IOCStrings)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -451,7 +437,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hijacked Hotel Wi-Fi Pushes Fake Updates to Deliver Surveillance Malware
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_3_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -508,4 +494,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Adform crypto-swapper C2 beacon to 84.32.102.230 on port 7744
 
-`UC_0_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Exposure scoping: internal hosts fetched poisoned Adform trackpoint-async.js from s2.adform.net
 
-`UC_0_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### Confirmed Adform compromise: host loaded s2.adform.net script then beaconed to C2 84.32.102.230:7744
 
-`UC_0_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -403,7 +403,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
 
-`UC_0_9` · phase: **exploit** · confidence: **High**
+`UC_1_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
