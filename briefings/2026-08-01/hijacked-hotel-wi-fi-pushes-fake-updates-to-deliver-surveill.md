@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### CaptiveCrunch DNS hijack: resolution of Microsoft-impersonating captive-portal domains
 
-`UC_1_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### CaptiveCrunch ClickFix: shell launched with attacker-supplied command referencing campaign domains
 
-`UC_1_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### CornFlake persistence: 'Cloud Sync Service' / svchost32 service, Run key and scheduled task
 
-`UC_1_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceRegistryEvents
 
 ### CornFlake masquerade: svchost32.exe executing from %APPDATA%\svchost32\
 
-`UC_1_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### CornFlake surveillance: implant loading webcam/audio/screen-capture libraries
 
-`UC_1_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceImageLoadEvents
 
 ### ChocoShell token theft: access to .tbres Token Broker / WAM cache files
 
-`UC_1_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -209,7 +209,7 @@ union TokenActors, FileTouches
 
 ### CornFlake C2: svchost32 implant beaconing to CaptiveCrunch IOC infrastructure
 
-`UC_1_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -231,7 +231,7 @@ DeviceNetworkEvents
 
 ### CaptiveCrunch Entra token replay: sign-ins from Storm-2945 IP infrastructure
 
-`UC_1_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -506,7 +506,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hijacked Hotel Wi-Fi Pushes Fake Updates to Deliver Surveillance Malware
 
-`UC_1_8` · phase: **exploit** · confidence: **High**
+`UC_2_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Endpoint contact with F6 fraud-campaign hosting infra (212.127.73.235 / 167.86.100.68)
 
-`UC_70_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_71_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### DNS / web resolution of F6 counterfeit Russian-company domains
 
-`UC_70_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_71_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### Inbound email from F6 fraud clone domain (ruspromexport-group.ru / info@ruspromexport-group.ru)
 
-`UC_70_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_71_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

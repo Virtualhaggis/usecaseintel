@@ -1,23 +1,31 @@
-# [CRIT] n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process
+# [CRIT] Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sites
 
 **Source:** The Hacker News
-**Published:** 2026-07-27
-**Article:** https://thehackernews.com/2026/07/n8n-sandbox-escape-lets-workflow.html
+**Published:** 2026-08-01
+**Article:** https://thehackernews.com/2026/08/hackers-poison-adform-script-to-swap.html
 
 ## Threat Profile
 
-n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process 
- Swati Khandelwal  Jul 27, 2026 Vulnerability / Enterprise Security 
-n8n has patched a high-severity expression-sandbox escape that could let an authenticated workflow editor execute operating-system commands on the server running the automation platform. Security Joes found the flaw while probing n8n's February fix for CVE-2026-27577 for another bypass.
-The affected ranges are <2.31.5 and >=2.32.0,<2.32.1 . n8n fixed…
+Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sites 
+ Swati Khandelwal  Aug 01, 2026 Web Security / Supply Chain Attack 
+Attackers modified a JavaScript file served by advertising technology company Adform , turning it into a browser-side tool that rewrites cryptocurrency wallet addresses.
+Adform detected the incident on July 27, 2026, removed the malicious code, notified affected clients, and reported it to authorities.
+Anyone who visited a site carrying the aff…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-27577`
+- **IPv4 (defanged):** `84.32.102.230`
+- **Domain (defanged):** `adform.net`
+- **Domain (defanged):** `s2.adform.net`
+- **Domain (defanged):** `npmcdn.com`
+- **Domain (defanged):** `kjur.github.io`
+- **Domain (defanged):** `github.io`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
+- **T1005** — Data from Local System
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -27,15 +35,11 @@ The affected ranges are <2.31.5 and >=2.32.0,<2.32.1 . n8n fixed…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1059.004** — Unix Shell
-- **T1059.003** — Windows Command Shell
-- **T1203** — Exploitation for Client Execution
-- **T1071.001** — Web Protocols
-- **T1105** — Ingress Tool Transfer
+- **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1552.001** — Credentials In Files
-- **T1555** — Credentials from Password Stores
-- **T1083** — File and Directory Discovery
+- **T1189** — Drive-by Compromise
 
 ## Kill chain phases observed
 
@@ -43,63 +47,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### n8n/Node.js process spawning shell or recon utility (sandbox-escape RCE)
+### Adform crypto-stealer C2 beacon to 84.32.102.230:7744
 
-`UC_108_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n")) AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","csh","cmd.exe","powershell.exe","pwsh","pwsh.exe","whoami","id","curl","wget","nc","ncat","netcat","python","python3","perl","ruby")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node","node.exe","n8n") or InitiatingProcessParentFileName in~ ("node","node.exe","n8n")
-| where FileName in~ ("sh","bash","dash","zsh","ksh","csh","cmd.exe","powershell.exe","pwsh","pwsh.exe","whoami","id","curl","wget","nc","ncat","netcat","python","python3","perl","ruby")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### curl/wget/nc spawned by n8n/Node reaching external hosts (post-escape C2/exfil)
-
-`UC_108_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_0_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n")) AND (Processes.process_name IN ("curl","wget","nc","ncat","netcat","bash","sh","python","python3","perl")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" by All_Traffic.src_ip All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name("All_Traffic")` | eval susp_port=if(dest_port==7744,"true","false") | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessParentFileName in~ ("node","node.exe","n8n")
-| where InitiatingProcessFileName in~ ("curl","wget","nc","ncat","netcat","bash","sh","python","python3","perl")
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where Timestamp > ago(30d)
+| where RemoteIP == "84.32.102.230"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### n8n/Node child command accessing N8N_ENCRYPTION_KEY or host credential stores
+### Endpoint loaded poisoned Adform trackpoint-async.js then beaconed to C2
 
-`UC_108_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_0_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","n8n")) AND (Processes.process="*N8N_ENCRYPTION_KEY*" OR Processes.process="*/etc/shadow*" OR Processes.process="*/etc/passwd*" OR Processes.process="*id_rsa*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.n8n/config*" OR Processes.process="*printenv*" OR Processes.process="*/proc/self/environ*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*trackpoint-async.js*" AND Web.dest="*adform.net*" by Web.src Web.url Web.dest | `drop_dm_object_name("Web")` | search [ | tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" by All_Traffic.src_ip | `drop_dm_object_name("All_Traffic")` | rename src_ip as src | fields src ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node","node.exe","n8n") or InitiatingProcessParentFileName in~ ("node","node.exe","n8n")
-| where ProcessCommandLine has_any ("N8N_ENCRYPTION_KEY","/etc/shadow","/etc/passwd","id_rsa",".aws/credentials",".n8n/config","printenv","/proc/self/environ",".ssh/","/root/.n8n")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ChildProcess = FileName, ChildCmd = ProcessCommandLine
+let C2Hosts = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP == "84.32.102.230"
+    | distinct DeviceId;
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "adform.net"
+| where DeviceId in (C2Hosts)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
+```
+
+### Crypto-wallet file/keystore access by non-wallet process
+
+`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Ethereum\keystore\*"
+        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
+        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
+        OR Filesystem.file_path="*\Electrum\wallets\*"
+        OR Filesystem.file_path="*\MetaMask\*"
+        OR Filesystem.file_path="*\Phantom\*"
+        OR Filesystem.file_path="*\Atomic\Local Storage\*")
+      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
+| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -307,16 +352,40 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process
+### Trusted vendor binary / installer launching unusual children
 
-`UC_108_6` · phase: **exploit** · confidence: **High**
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process ```
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
+### Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
+
+`UC_0_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("node.js"))
+    where (Processes.process_name IN ("trackpoint-async.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -325,7 +394,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("node.js"))
+      AND (Filesystem.file_name IN ("trackpoint-async.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -334,12 +403,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — n8n Sandbox Escape Lets Workflow Editors Run OS Commands as the n8n Process
+// Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("node.js"))
+| where (FileName in~ ("trackpoint-async.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -349,7 +418,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("node.js"))
+| where (FileName in~ ("trackpoint-async.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -360,10 +429,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-27577`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `84.32.102.230`, `adform.net`, `s2.adform.net`, `npmcdn.com`, `kjur.github.io`, `github.io`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

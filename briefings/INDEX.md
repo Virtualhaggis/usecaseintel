@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-01
+- [hackers poison adform script to swap crypto wallet addresses](./2026-08-01/hackers-poison-adform-script-to-swap-crypto-wallet-addresses.md)
 - [hijacked hotel wi fi pushes fake updates to deliver surveill](./2026-08-01/hijacked-hotel-wi-fi-pushes-fake-updates-to-deliver-surveill.md)
 
 ## 2026-07-31
@@ -99,7 +100,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
 - [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
-- [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
 - [what is ai pentesting and how does it work](./2026-07-27/what-is-ai-pentesting-and-how-does-it-work.md)

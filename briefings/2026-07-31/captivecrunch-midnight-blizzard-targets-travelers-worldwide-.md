@@ -86,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### CaptiveCrunch C2 to Storm-2945 doppelganger M365 domains / infrastructure IPs
 
-`UC_6_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceNetworkEvents
 
 ### CornFlake RAT dropper execution from %APPDATA%\svchost32\svchost32.exe
 
-`UC_6_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceProcessEvents
 
 ### CornFlake 'Cloud Sync Service' svchost32 persistence (service / Run key)
 
-`UC_6_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceRegistryEvents
 
 ### Storm-2945 device-code phishing → Entra device registration via Auth Broker
 
-`UC_6_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_7_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -162,7 +162,7 @@ AADSignInEventsBeta
 
 ### CaptiveCrunch fake 'browser/OS update' download from actor infrastructure
 
-`UC_6_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +182,7 @@ DeviceFileEvents
 
 ### ClickFix delivery: browser-spawned shell fetching CaptiveCrunch payload
 
-`UC_6_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -553,7 +553,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CaptiveCrunch: Midnight Blizzard targets travelers worldwide for malware deliver
 
-`UC_6_11` · phase: **exploit** · confidence: **High**
+`UC_7_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
