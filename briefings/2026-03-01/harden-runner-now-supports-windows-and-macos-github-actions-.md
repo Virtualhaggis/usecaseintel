@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Harden Runner Now Supports Windows and macOS GitHub Actions Runners
 
-`UC_621_1` · phase: **exploit** · confidence: **High**
+`UC_622_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69)
 
-`UC_443_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_444_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### DNS lookup for azurestaticprovider[.]net node-ipc exfil domain
 
-`UC_443_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_444_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### node-ipc stealer __ntw=1 environment marker in process command line
 
-`UC_443_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_444_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### Malicious node-ipc package landed on disk under node_modules
 
-`UC_443_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_444_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### node.js process staging credential dump in nt-* temp directory
 
-`UC_443_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_444_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_443_3` · phase: **exploit** · confidence: **High**
+`UC_444_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

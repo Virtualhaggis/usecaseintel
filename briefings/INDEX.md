@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -961,9 +961,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-11-07
 - [in memoriam david harley](./2025-11-07/in-memoriam-david-harley.md)
 - [the who where and how of apt attacks in q2 2025 q3 2025](./2025-11-07/the-who-where-and-how-of-apt-attacks-in-q2-2025-q3-2025.md)
-
-## 2025-11-06
-- [eset apt activity report q2 2025 q3 2025](./2025-11-06/eset-apt-activity-report-q2-2025-q3-2025.md)
 
 ## 2025-11-05
 - [snyk studio brings security scanning and automated fixes to ](./2025-11-05/snyk-studio-brings-security-scanning-and-automated-fixes-to-.md)

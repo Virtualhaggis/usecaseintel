@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### GoSerpent ThumbcacheService staging DB (thumbcache_605a.db) written to C:\Users\Public
 
-`UC_178_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_179_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### GoSerpent 7-Zip archiving with hardcoded campaign password @vx0a9n5W2M0c3D6.#
 
-`UC_178_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_179_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### GoSerpent/McMx masquerading proxy binaries lass.exe and updates.exe
 
-`UC_178_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_179_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### GoSerpent QuarksDumpLocalHash / SAM hive local hash extraction
 
-`UC_178_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_179_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -259,7 +259,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GoSerpent: a persistent threat evolves with sophisticated data collection and ex
 
-`UC_178_4` · phase: **exploit** · confidence: **High**
+`UC_179_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
