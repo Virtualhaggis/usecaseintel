@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Entra MFA/security-info registration fan-out from single source IP (ShinyHunters help-desk vishing)
 
-`UC_43_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_44_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ CloudAppEvents
 
 ### Entra MFA method registered from an IP the user has never signed in from (attacker device enrollment)
 
-`UC_43_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_44_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ CloudAppEvents
 
 ### Entra user OAuth consent to connected app (ShinyHunters Data Loader-style Salesforce grant)
 
-`UC_43_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_44_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

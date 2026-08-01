@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### IoT/edge host resolving blockchain (ENS/SNS) name-service C2 infrastructure — Dysphoria
 
-`UC_104_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_105_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### Dysphoria victim-relay heartbeat to login.trees4sale.net:9000
 
-`UC_104_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_105_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### IoT propagation via CVE-2017-17215 Huawei HG532 command injection (Dysphoria spreading)
 
-`UC_104_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_105_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

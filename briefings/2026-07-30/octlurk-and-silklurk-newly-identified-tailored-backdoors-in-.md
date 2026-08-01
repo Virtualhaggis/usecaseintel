@@ -116,7 +116,7 @@ _(none detected from narrative keywords)_
 
 ### OctLurk persistence: 'GoogleUpDate' scheduled task executing Videos\1.bat
 
-`UC_50_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_51_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceProcessEvents
 
 ### OctLurk/LurkProxy service DLL side-load via RegisterService ServiceMain
 
-`UC_50_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_51_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceRegistryEvents
 
 ### OctLurk/SilkLurk/LurkProxy C2 beacon to campaign infrastructure
 
-`UC_50_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_51_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ DeviceNetworkEvents
 
 ### OctLurk Command Shell plugin post-compromise recon cluster (chcp 1256 + session enum)
 
-`UC_50_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_51_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -541,7 +541,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OctLurk and SilkLurk: newly identified tailored backdoors in cyber-espionage cam
 
-`UC_50_11` · phase: **exploit** · confidence: **High**
+`UC_51_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### C2 beacon to Adform clipper attacker server 84.32.102.230:7744
 
-`UC_7_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### Compromised Adform trackpoint-async.js clipper script by SHA256 on endpoint
 
-`UC_7_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Online ad firm Adform’s script compromised to steal cryptocurrency
 
-`UC_7_6` · phase: **exploit** · confidence: **High**
+`UC_8_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

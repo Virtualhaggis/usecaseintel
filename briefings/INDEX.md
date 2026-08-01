@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-01
+- [coldcard hardware wallet flaw linked to 70 million bitcoin t](./2026-08-01/coldcard-hardware-wallet-flaw-linked-to-70-million-bitcoin-t.md)
 - [hackers poison adform script to swap crypto wallet addresses](./2026-08-01/hackers-poison-adform-script-to-swap-crypto-wallet-addresses.md)
 - [hijacked hotel wi fi pushes fake updates to deliver surveill](./2026-08-01/hijacked-hotel-wi-fi-pushes-fake-updates-to-deliver-surveill.md)
 - [rails patches critical active storage flaw with rce potentia](./2026-08-01/rails-patches-critical-active-storage-flaw-with-rce-potentia.md)
