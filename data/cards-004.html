@@ -949,9 +949,9 @@ level: high
   data-sources="The Hacker News"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="11" data-llm-uc-count="4"
-  data-search="Dysphoria IoT Botnet Adds Blockchain C2 and Victim Relays After JackSkid Disruption Dysphoria, an Internet of Things (IoT) botnet line tracked by CNCERT and XLab, has adopted blockchain-based name services and infected-device relays after a March law-enforcement operation against JackSkid infrastructure. The researchers say the design makes the botnet harder to disrupt. CNCERT, China&#x27;s national computer emergency response team, and XLab, the threat-intelligence lab of Chinese CVE-2025-9528 T1190 T1566 T1566.002 [LLM] Dysphoria botnet blockchain C2 resolution via ENS/SNS (.eth/.sol) domains [LLM] Egress to Dysphoria distribution-node / relay IPs (194.87.198.x, 194.58.38.x) [LLM] Compromised device Telnet/SSH weak-password worm fan-out [LLM] Dysphoria relay node: public-to-public traffic bridging (UPnP port-forwarding relay) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
+  data-targets="azure,linux,m365,windows"
+  data-uc-count="12" data-llm-uc-count="5"
+  data-search="Dysphoria IoT Botnet Adds Blockchain C2 and Victim Relays After JackSkid Disruption Dysphoria, an Internet of Things (IoT) botnet line tracked by CNCERT and XLab, has adopted blockchain-based name services and infected-device relays after a March law-enforcement operation against JackSkid infrastructure. The researchers say the design makes the botnet harder to disrupt. CNCERT, China&#x27;s national computer emergency response team, and XLab, the threat-intelligence lab of Chinese CVE-2025-9528 T1190 T1566 T1566.002 [LLM] Dysphoria botnet blockchain (ENS/SNS) C2 domain resolution [LLM] Dysphoria heartbeat C2 / distribution-node relay egress (trees4sale.net:9000) [LLM] Edge/server egress to public blockchain RPC &amp; ENS/SNS resolver gateways [LLM] IoT/Linux SSH/Telnet weak-credential brute-force to successful logon [LLM] Dysphoria relay node UPnP/IGD port-mapping burst (NAT traversal) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-27-dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -960,7 +960,7 @@ level: high
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-27</span>
-    <span>11 use cases</span>
+    <span>12 use cases</span>
     <span>3 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -1012,32 +1012,32 @@ level: high
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Compromised device Telnet/SSH weak-password worm fan-out · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] IoT/Linux SSH/Telnet weak-credential brute-force to successful logon · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Dysphoria botnet blockchain C2 resolution via ENS/SNS (.eth/.sol) domains · [LLM] Egress to Dysphoria distribution-node / relay IPs (194.87.198.x, 194.58.38.x) · [LLM] Dysphoria relay node: public-to-public traffic bridging (UPnP port-forwarding relay) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Dysphoria botnet blockchain (ENS/SNS) C2 domain resolution · [LLM] Dysphoria heartbeat C2 / distribution-node relay egress (trees4sale.net:9000) · [LLM] Edge/server egress to public blockchain RPC &amp; ENS/SNS resolver gateways · [LLM] Dysphoria relay node UPnP/IGD port-mapping burst (NAT traversal) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="f42a52fa85" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="d8e34fb6c0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Dysphoria botnet blockchain C2 resolution via ENS/SNS (.eth/.sol) domains</span>
+    <span class="uc-title">Dysphoria botnet blockchain (ENS/SNS) C2 domain resolution</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f42a52fa85" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d8e34fb6c0" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts hosts resolving or connecting to the Dysphoria/JackSkid blockchain naming-service C2 records (m3rnbvs5d.eth, burrberry.eth, 24carnforth2merseyside.sol) or any .eth/.sol pseudo-TLD used to encode distribution-node IPv4 addresses. Blockchain name resolution on IoT/enterprise gear is highly abnormal and is the botnet&#x27;s headline resilience mechanism.
+    <div class="uc-desc">Hunts DNS/URL resolution of the specific Ethereum Name Service and Solana Name Service domains Dysphoria uses to hide its C2 (burrberry.eth, ukranianhorseriding.eth, 24carnforth2merseyside.sol, m3rnbvs5d.eth). These blockchain names are the botnet&#x27;s headline resilience mechanism and appear in no legitimate enterprise DNS traffic.
 
-Rationale: Anchored on the three concrete blockchain C2 records named by XLab/CNCERT and cross-confirmed by BleepingComputer and GBHackers; .eth/.sol resolution is near-zero baseline on corporate/IoT segments, making the pseudo-TLD hunt high-fidelity as well as the exact-domain match.
+Rationale: Uses the exact ENS/SNS C2 domains cross-confirmed by TheHackerNews and Security Affairs (burrberry.eth, ukranianhorseriding.eth, 24carnforth2merseyside.sol) plus the March JackSkid fallback ENS m3rnbvs5d.eth. Blockchain TLDs (.eth/.sol) are non-ICANN and never appear in legitimate enterprise DNS.
 
 Cross-checked against:
-  • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
-  • https://gbhackers.com/dysphoria-iot-botnet/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Dynamic Resolution">T1568</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+  • https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html
+  • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Dynamic Resolution: Domain Generation Algorithms">T1568.002</span> <span class="ind tech" title="Dynamic Resolution">T1568</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Web3/blockchain developer workstations resolving ENS/SNS names via eth.limo or eth.link gateways</li><li>MetaMask or other crypto wallet browser extensions performing ENS lookups</li><li>DeFi/NFT research or trading endpoints in fintech orgs</li><li>Security researchers detonating samples in an internal sandbox</li><li>IPFS gateways that proxy .eth content addresses</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;) and RemoteUrl has_any (&quot;eth.limo&quot;,&quot;eth.link&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the resolving asset — if it is an IoT device, router, camera or Linux edge box with no legitimate crypto function, treat as compromised; capture InitiatingProcess and the resolved IPv4. 2) Contain: block the .eth/.sol domains and any resolved distribution-node IPs at the egress firewall and isolate the device from the internet. 3) Hunt: pivot on the resolved IPs (see distribution-node UC), search the same segment for Telnet/SSH scanning fan-out and UPnP port-mapping bursts, and sweep all IoT subnets for additional .eth/.sol resolvers.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer or crypto researcher intentionally resolving these exact strings during malware analysis in a sandbox VLAN</li><li>Threat-intel feed enrichment tooling that pre-resolves IOCs (whitelist known TI hosts)</li><li>A blockchain-explorer or ENS-aware browser extension a user manually typed one of these names into</li><li>Security scanner replaying IOC lists against internal resolvers</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;SenseIR.exe&quot;) and DeviceName !has &quot;sandbox&quot; and DeviceName !has &quot;malware-lab&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the resolving host/ClientIP and the initiating process; confirm it is an IoT/edge/server device and not a sanctioned malware-analysis or TI host. 2) CONTAIN: Sinkhole/block the four blockchain domains and any ENS/SNS gateway they were reached through at the resolver/egress firewall; network-isolate the resolving device pending imaging. 3) HUNT: Pivot on the device for outbound connections to login.trees4sale.net:9000 and the distribution-node relay IPs (UC2), and check for inbound SSH/Telnet brute-force that preceded infection (UC4).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc0-sentinel">Sentinel KQL</button>
@@ -1048,71 +1048,65 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;)
-    or RemoteUrl endswith &quot;.eth&quot; or RemoteUrl endswith &quot;.sol&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| where RemoteUrl has_any (&quot;burrberry.eth&quot;,&quot;ukranianhorseriding.eth&quot;,&quot;24carnforth2merseyside.sol&quot;,&quot;m3rnbvs5d.eth&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-100-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
 | where TimeGenerated &gt; ago(30d)
-| where Name has_any (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;)
-    or Name endswith &quot;.eth&quot; or Name endswith &quot;.sol&quot;
-| project TimeGenerated, Computer, ClientIP, Name, QueryType, Answer = Result
+| where Name has_any (&quot;burrberry.eth&quot;,&quot;ukranianhorseriding.eth&quot;,&quot;24carnforth2merseyside.sol&quot;,&quot;m3rnbvs5d.eth&quot;)
+| project TimeGenerated, Computer, ClientIP, Name, QueryType, ResultCode
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria IoT Botnet Blockchain C2 Domain Resolution (ENS/SNS)
-id: 9c1f2a44-7b3e-4c6a-9d21-8e5f0a3b1c77
-description: Detects DNS resolution of Dysphoria/JackSkid blockchain naming-service C2 records or any .eth/.sol pseudo-TLD used to hide distribution-node IPv4 addresses.
+    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria Botnet Blockchain ENS/SNS C2 Domain Resolution
+id: 6f1e0b2a-9c34-4d51-8b77-2a4d3e9f0c11
+description: Detects DNS resolution of Ethereum/Solana Name Service domains used by the Dysphoria IoT botnet to hide C2 infrastructure.
 references:
   - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
-  - https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
+  - https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html
 author: SOC Detection Engineering
-date: 2026/07/28
+date: 2026/08/01
 tags:
   - attack.command_and_control
-  - attack.t1568
   - attack.t1071.001
+  - attack.t1568.002
 logsource:
   category: dns
 detection:
-  selection_domains:
+  selection:
     query|contains:
-      - &#x27;m3rnbvs5d.eth&#x27;
       - &#x27;burrberry.eth&#x27;
+      - &#x27;ukranianhorseriding.eth&#x27;
       - &#x27;24carnforth2merseyside.sol&#x27;
-  selection_tld:
-    query|endswith:
-      - &#x27;.eth&#x27;
-      - &#x27;.sol&#x27;
-  condition: selection_domains or selection_tld
+      - &#x27;m3rnbvs5d.eth&#x27;
+  condition: selection
 falsepositives:
-  - Web3 developer workstations using ENS/SNS gateways
-  - Browser wallet extensions (MetaMask via eth.limo/eth.link)
+  - None expected; these are attacker-controlled blockchain-name IOCs.
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(*m3rnbvs5d.eth OR *burrberry.eth OR *24carnforth2merseyside.sol OR *.eth OR *.sol)</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(m3rnbvs5d\.eth|burrberry\.eth|24carnforth2merseyside\.sol|\.(eth|sol))$/i
+    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.syslog OR windows.security OR windows.defender) (&quot;burrberry.eth&quot; OR &quot;ukranianhorseriding.eth&quot; OR &quot;24carnforth2merseyside.sol&quot; OR &quot;m3rnbvs5d.eth&quot;)</code></pre></div>
+    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| DomainName=/(burrberry\.eth|ukranianhorseriding\.eth|24carnforth2merseyside\.sol|m3rnbvs5d\.eth)/i
 | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;,&quot;*.eth&quot;,&quot;*.sol&quot;) by DNS.src DNS.query DNS.answer DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN (&quot;m3rnbvs5d.eth&quot;,&quot;burrberry.eth&quot;,&quot;24carnforth2merseyside.sol&quot;,&quot;*.eth&quot;,&quot;*.sol&quot;) by DNS.src DNS.query DNS.answer DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS (DNS.query=&quot;*burrberry.eth*&quot; OR DNS.query=&quot;*ukranianhorseriding.eth*&quot; OR DNS.query=&quot;*24carnforth2merseyside.sol*&quot; OR DNS.query=&quot;*m3rnbvs5d.eth*&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS (DNS.query=&quot;*burrberry.eth*&quot; OR DNS.query=&quot;*ukranianhorseriding.eth*&quot; OR DNS.query=&quot;*24carnforth2merseyside.sol*&quot; OR DNS.query=&quot;*m3rnbvs5d.eth*&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="3eb45d1cad" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="dcb0e0b287" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Egress to Dysphoria distribution-node / relay IPs (194.87.198.x, 194.58.38.x)</span>
+    <span class="uc-title">Dysphoria heartbeat C2 / distribution-node relay egress (trees4sale.net:9000)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3eb45d1cad" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="dcb0e0b287" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on any monitored host connecting to the five Dysphoria distribution-node IPv4 addresses that the ENS/SNS records resolve to and that infected relays forward traffic through. These are named campaign IOCs so a hit is high-confidence C2/relay activity.
+    <div class="uc-desc">Hunts outbound connections to the Dysphoria heartbeat collection server login.trees4sale.net on TCP/9000 and to the encoded distribution-node relay IPs. These are the reachable, non-blockchain links in the chain that the operator still depends on despite the blockchain C2.
 
-Rationale: The five IPs are the pre-extracted campaign IOCs and correspond to the HTTP-served distribution nodes/relays described by XLab (confirmed by GBHackers/BleepingComputer); a direct-IP match needs no behavioural context to be actionable.
+Rationale: login.trees4sale.net:9000 is the heartbeat collection server named by Security Affairs&#x27; XLab-derived reporting (second source), a high-fidelity anchor. The five distribution-node IPs are single-source (pipeline-extracted) so they are gated behind the port-9000 correlation to keep fidelity high; treat a bare-IP hit as medium confidence pending re-confirmation.
 
 Cross-checked against:
-  • https://gbhackers.com/dysphoria-iot-botnet/
-  • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
+  • https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Non-Standard Port">T1571</span> <span class="ind tech" title="Proxy: Internal Proxy">T1090.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Corporate vulnerability scanner (Nessus/Qualys) reaching the IPs during a scheduled scan</li><li>Threat-intel enrichment appliance actively probing published IOCs</li><li>Shared-hosting IP reuse where the address later serves a benign service</li><li>Security researcher sandbox traffic egressing through the corporate perimeter</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;scanner&quot;,&quot;nessus&quot;,&quot;qualys&quot;) or InitiatingProcessFileName in~ (&quot;nessusd&quot;,&quot;qualys-cloud-agent&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm direction and initiating process/asset; a low-privilege IoT/edge device beaconing to these IPs is a confirmed relay/bot. 2) Contain: block the five IPs at egress, quarantine the source device, and preserve any /tmp payloads for the malware team. 3) Hunt: correlate the source with .eth/.sol resolution and Telnet/SSH scanning UCs, and check whether the host is also serving inbound public connections (relay role).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal service that happens to listen on TCP/9000 (e.g. SonarQube, some management APIs) sharing an IP range</li><li>Threat-intel scanning appliance actively probing the relay IPs from a sanctioned scanner host</li><li>NAT/proxy egress IP overlap causing the source attribution to point at a gateway rather than the true bot</li><li>Reused hosting-provider IP later re-allocated to a benign tenant</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DestinationHostName == &quot;&quot; and toint(DestinationPort) != 9000)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the internal source is not a sanctioned scanner and that TCP/9000 traffic to login.trees4sale.net (not an unrelated service) is present; capture the initiating process/binary path. 2) CONTAIN: Block login.trees4sale.net and the five relay IPs at egress; isolate the beaconing device and preserve volatile memory for the RC4/epoll relay artifacts. 3) HUNT: Sweep for other hosts resolving the blockchain C2 domains (UC1), for the same device relaying inbound external traffic (UC5), and validate the relay IPs against current XLab/ThreatFox feeds before promoting them to a block-all rule.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc1-sentinel">Sentinel KQL</button>
@@ -1123,158 +1117,237 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, ActionType
+| where RemoteUrl has &quot;trees4sale.net&quot;
+    or RemoteIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
+    or (RemotePort == 9000 and RemoteIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-100-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where DestinationIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
-| project TimeGenerated, SourceHostName, SourceIP, DestinationIP, DestinationPort, ApplicationProtocol, DeviceProduct
+| where DestinationHostName has &quot;trees4sale.net&quot;
+    or RequestURL has &quot;trees4sale.net&quot;
+    or DestinationIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;)
+    or (toint(DestinationPort) == 9000 and DestinationIP in (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;))
+| project TimeGenerated, DeviceVendor, SourceIP, DestinationIP, DestinationPort, DestinationHostName, RequestURL, DeviceAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria Botnet Distribution-Node C2 IP Connection
-id: 3a7d6e12-4f88-4b0c-a1e9-2c4b7f9d5e30
-description: Detects outbound connections to the five Dysphoria/JackSkid distribution-node and relay IPv4 addresses published by XLab and CNCERT.
+    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Dysphoria Botnet Heartbeat C2 and Relay Node Egress
+id: b2d7c419-3a6e-4f80-9c2b-7e15a0d4f822
+description: Detects outbound network connections to the Dysphoria heartbeat server login.trees4sale.net:9000 and the encoded distribution-node relay IPs.
 references:
-  - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
-  - https://gbhackers.com/dysphoria-iot-botnet/
+  - https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html
 author: SOC Detection Engineering
-date: 2026/07/28
+date: 2026/08/01
 tags:
   - attack.command_and_control
-  - attack.t1071.001
   - attack.t1571
+  - attack.t1090.001
 logsource:
   category: network_connection
 detection:
-  selection:
+  selection_ip:
     DestinationIp:
       - &#x27;194.87.198.208&#x27;
       - &#x27;194.87.198.104&#x27;
       - &#x27;194.58.38.79&#x27;
       - &#x27;194.58.38.49&#x27;
       - &#x27;194.58.38.96&#x27;
-  condition: selection
+  selection_hb:
+    DestinationHostname|contains: &#x27;trees4sale.net&#x27;
+  condition: selection_ip or selection_hb
 falsepositives:
-  - Threat-intel or vulnerability scanners probing the same IPs
+  - None expected for the domain; validate relay IP re-use before wide rollout.
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(194.87.198.208 OR 194.87.198.104 OR 194.58.38.79 OR 194.58.38.49 OR 194.58.38.96)</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(194\.87\.198\.(208|104)|194\.58\.38\.(79|49|96))$/
+    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.syslog) (@DestinationHostname:(*trees4sale.net* OR *TREES4SALE.NET*) OR @DestinationIp:(194.87.198.208 OR 194.87.198.104 OR 194.58.38.79 OR 194.58.38.49 OR 194.58.38.96) OR (@DestinationPort:9000 AND @DestinationIp:(194.87.198.208 OR 194.87.198.104 OR 194.58.38.79 OR 194.58.38.49 OR 194.58.38.96)))</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| RemoteAddressIP4=/^(194\.87\.198\.208|194\.87\.198\.104|194\.58\.38\.79|194\.58\.38\.49|194\.58\.38\.96)$/
 | groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where nodename=All_Traffic (All_Traffic.dest_ip IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) OR (All_Traffic.dest_port=9000 AND All_Traffic.dest IN (&quot;login.trees4sale.net&quot;))) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where nodename=All_Traffic (All_Traffic.dest_ip IN (&quot;194.87.198.208&quot;,&quot;194.87.198.104&quot;,&quot;194.58.38.79&quot;,&quot;194.58.38.49&quot;,&quot;194.58.38.96&quot;) OR (All_Traffic.dest_port=9000 AND All_Traffic.dest IN (&quot;login.trees4sale.net&quot;))) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cb98ffa163" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="89baf9f720" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Compromised device Telnet/SSH weak-password worm fan-out</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">Edge/server egress to public blockchain RPC &amp; ENS/SNS resolver gateways</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="cb98ffa163" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="89baf9f720" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects a single internal host initiating outbound connections to many distinct public destinations on TCP/23 (Telnet) or TCP/22 (SSH) — the credential-guessing worm-spread behaviour XLab and CNCERT call the botnet&#x27;s most consistent way in. High distinct-destination fan-out on these ports is the signature of a newly infected node scanning for the next victim.
+    <div class="uc-desc">Behavioral hunt for IoT, edge, and server devices reaching public Ethereum/Solana RPC and ENS/SNS resolution gateways (eth.limo, eth.link, cloudflare-eth.com, infura.io, ankr.com, mainnet-beta.solana.com, alchemy.com). This is the infrastructure Dysphoria must touch to resolve its blockchain C2 even when the specific .eth/.sol name rotates.
 
-Rationale: Both published lists agree weak Telnet/SSH credential guessing is the primary propagation channel; distinct-destination fan-out on 22/23 from one source is the cleanest network expression of that worm behaviour without needing per-device auth logs the IoT gear won&#x27;t ship. Threshold is aggregation-based so no single-event Sigma is emitted.
+Rationale: Blockchain-name resolution is the article&#x27;s headline mechanism; matching the public ENS/SNS/RPC gateways catches the resolution step even after the specific .eth/.sol name rotates. Scoped to server/edge/IoT context because these gateways are expected on developer endpoints (hence hunting tier + high FP).
 
 Cross-checked against:
-  • https://gbhackers.com/dysphoria-iot-botnet/
+  • https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html
   • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Brute Force: Password Guessing">T1110.001</span> <span class="ind tech" title="Remote Services: SSH">T1021.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanner (Nessus/Qualys/Nmap) sweeping SSH/Telnet across a range</li><li>Ansible/SaltStack/Puppet config-management pushing to many hosts over SSH</li><li>IT jump/bastion host with legitimate broad SSH reach</li><li>Network monitoring platform probing device availability on 22/23</li><li>Backup or patch-orchestration appliance connecting to many managed devices</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;bastion&quot;,&quot;jump&quot;,&quot;scanner&quot;,&quot;ansible&quot;,&quot;nessus&quot;,&quot;qualys&quot;) or InitiatingProcessFileName in~ (&quot;nmap&quot;,&quot;nessusd&quot;,&quot;ssh&quot;,&quot;sshpass&quot;,&quot;ansible&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: is the source a sanctioned scanner/bastion/config-mgmt host? Check the initiating process and whether targets are internal (admin) or public (worm scan) — public fan-out from an IoT/edge device is malicious. 2) Contain: block outbound 22/23 from the device, isolate it, and rotate any credentials it could have brute-forced. 3) Hunt: check the same host for .eth/.sol resolution and distribution-node IP egress; sweep destinations it hit for successful logons indicating fresh compromise.</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Dynamic Resolution">T1568</span> <span class="ind tech" title="Non-Application Layer Protocol">T1095</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer/engineering workstations running Web3 SDKs (web3.js, ethers.js) or MetaMask/Phantom wallets</li><li>CI/CD runners deploying smart contracts via Infura/Alchemy RPC</li><li>Corporate treasury or blockchain-analytics teams legitimately using Solana/Ethereum RPC</li><li>Browser telemetry/prefetch resolving eth.limo from a link a user opened</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;node.exe&quot;,&quot;python.exe&quot;) and DeviceName !has &quot;dev&quot; and DeviceName !has &quot;build&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Classify the source device — a router/camera/gateway/Linux server contacting blockchain RPC is anomalous; a developer laptop or CI runner is expected. Suppress the latter via asset tags. 2) CONTAIN: For unexpected devices, block the gateway domains at egress and isolate; check for concurrent hits on UC1 (specific .eth/.sol names). 3) HUNT: On confirmed devices, look for the heartbeat beacon (UC2), UPnP port-mapping bursts (UC5), and preceding SSH/Telnet brute-force (UC4) to establish the full infection chain.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-100-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-100-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-100-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-100-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemotePort in (22, 23)
-| where RemoteIPType == &quot;Public&quot;
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| summarize DistinctTargets = dcount(RemoteIP), SampleTargets = make_set(RemoteIP, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemotePort, InitiatingProcessFileName
-| where DistinctTargets &gt;= 30   // 30 = worm-scan fan-out floor; normal client SSH/Telnet hits &lt;5 distinct public hosts/day
-| order by DistinctTargets desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(1d)
-| where DestinationPort in (22, 23)
-| where CommunicationDirection =~ &quot;Outbound&quot; or isempty(CommunicationDirection)
-| summarize DistinctTargets = dcount(DestinationIP), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by SourceIP, DestinationPort
-| where DistinctTargets &gt;= 30   // worm-scan fan-out floor
-| order by DistinctTargets desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:(22 OR 23)</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemotePort=22 OR RemotePort=23) ConnectionDirection=1
-| groupBy([aid, ComputerName], function=count(field=RemoteAddressIP4, distinct=true))
-| _count &gt;= 30</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(All_Traffic.dest_ip) as distinct_targets min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_port IN (22,23) All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where distinct_targets &gt;= 30 | convert ctime(firstTime) ctime(lastTime) | sort - distinct_targets</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(All_Traffic.dest_ip) as distinct_targets min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_port IN (22,23) All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where distinct_targets &gt;= 30 | convert ctime(firstTime) ctime(lastTime) | sort - distinct_targets</code></pre></div></div>
+| where Timestamp &gt; ago(14d)
+| where RemoteUrl has_any (&quot;eth.limo&quot;,&quot;eth.link&quot;,&quot;cloudflare-eth.com&quot;,&quot;infura.io&quot;,&quot;rpc.ankr.com&quot;,&quot;mainnet-beta.solana.com&quot;,&quot;alchemy.com&quot;,&quot;quiknode&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Gateways=make_set(RemoteUrl, 15) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
+| where TimeGenerated &gt; ago(14d)
+| where Name has_any (&quot;eth.limo&quot;,&quot;eth.link&quot;,&quot;cloudflare-eth.com&quot;,&quot;infura.io&quot;,&quot;rpc.ankr.com&quot;,&quot;mainnet-beta.solana.com&quot;,&quot;alchemy.com&quot;,&quot;quiknode&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Hits=count(), Gateways=make_set(Name, 15) by Computer, ClientIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Device Egress to Public Blockchain RPC and ENS/SNS Resolver Gateways
+id: 9a41c7de-25b8-4c6f-a0d3-1f8e6b2c4907
+description: Detects DNS resolution of public Ethereum/Solana RPC and name-service gateways, the resolution infrastructure used by the Dysphoria botnet&#x27;s blockchain C2.
+references:
+  - https://thehackernews.com/2026/07/dysphoria-iot-botnet-adds-blockchain-c2.html
+author: SOC Detection Engineering
+date: 2026/08/01
+tags:
+  - attack.command_and_control
+  - attack.t1071.001
+  - attack.t1568
+logsource:
+  category: dns
+detection:
+  selection:
+    query|contains:
+      - &#x27;eth.limo&#x27;
+      - &#x27;eth.link&#x27;
+      - &#x27;cloudflare-eth.com&#x27;
+      - &#x27;infura.io&#x27;
+      - &#x27;rpc.ankr.com&#x27;
+      - &#x27;mainnet-beta.solana.com&#x27;
+      - &#x27;alchemy.com&#x27;
+  condition: selection
+falsepositives:
+  - Developer workstations, crypto wallets, and Web3 browser extensions on user endpoints.
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.syslog) (@DestinationHostname:(*eth.limo* OR *eth.link* OR *cloudflare-eth.com* OR *infura.io* OR *rpc.ankr.com* OR *mainnet-beta.solana.com* OR *alchemy.com*) OR &quot;eth.limo&quot; OR &quot;cloudflare-eth.com&quot; OR &quot;mainnet-beta.solana.com&quot;)</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| DomainName=/(eth\.limo|eth\.link|cloudflare-eth\.com|infura\.io|rpc\.ankr\.com|mainnet-beta\.solana\.com|alchemy\.com|quiknode)/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS (DNS.query=&quot;*eth.limo*&quot; OR DNS.query=&quot;*eth.link*&quot; OR DNS.query=&quot;*cloudflare-eth.com*&quot; OR DNS.query=&quot;*infura.io*&quot; OR DNS.query=&quot;*rpc.ankr.com*&quot; OR DNS.query=&quot;*mainnet-beta.solana.com*&quot; OR DNS.query=&quot;*alchemy.com*&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS (DNS.query=&quot;*eth.limo*&quot; OR DNS.query=&quot;*eth.link*&quot; OR DNS.query=&quot;*cloudflare-eth.com*&quot; OR DNS.query=&quot;*infura.io*&quot; OR DNS.query=&quot;*rpc.ankr.com*&quot; OR DNS.query=&quot;*mainnet-beta.solana.com*&quot; OR DNS.query=&quot;*alchemy.com*&quot;) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="87bbfe218f" data-platforms="def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="9e99a2ffc4" data-platforms="datadog,def,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Dysphoria relay node: public-to-public traffic bridging (UPnP port-forwarding relay)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="87bbfe218f" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">IoT/Linux SSH/Telnet weak-credential brute-force to successful logon</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="9e99a2ffc4" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the relay-only Dysphoria variant that drops DDoS modules and turns a device into a proxy, using UPnP to create ~155 gateway port-forwarding rules and Linux epoll to shuttle traffic between an inbound internet connection and a remote C2. Surfaces monitored hosts that simultaneously accept many inbound public connections and open many outbound public connections — the traffic-symmetry signature of a relay bridge.
+    <div class="uc-desc">Detects the primary Dysphoria infection vector: high-volume failed SSH/Telnet authentication from a single source IP against an internet-facing/IoT/Linux device, followed by a successful logon from that same source. All researchers agree weak Telnet/SSH credentials are the botnet&#x27;s most consistent way in.
 
-Rationale: Anchored on XLab&#x27;s June relay-only variant that uses UPnP (155 port-forwarding rules, per BleepingComputer) and epoll to bridge an inbound internet connection to a remote C2; the detectable enterprise signature is one host with high inbound-public AND high outbound-public connection cardinality. Confidence is Low because IoT relays rarely emit EDR telemetry and legit reverse proxies share the shape — treat as a triage-list hunt, not an alert.
+Rationale: Every source (THN, Security Affairs, BleepingComputer) states weak Telnet/SSH credentials are Dysphoria&#x27;s most consistent entry vector. The failed-then-accepted correlation on ports 22/23 from a single source is the high-fidelity shape; a bare failed-auth count would be noise.
 
 Cross-checked against:
-  • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/
-  • https://gbhackers.com/dysphoria-iot-botnet/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Proxy: Internal Proxy">T1090.001</span> <span class="ind tech" title="Proxy">T1090</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate reverse proxies / load balancers (NGINX, HAProxy) fronting public services</li><li>VPN concentrators or SASE gateways terminating and forwarding sessions</li><li>Corporate NAT gateway or SD-WAN edge bridging many flows</li><li>Public-facing jump/bastion host with broad inbound and outbound reach</li><li>CDN or caching appliance in a DMZ</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !has_any (&quot;proxy&quot;,&quot;lb&quot;,&quot;haproxy&quot;,&quot;nginx&quot;,&quot;vpn&quot;,&quot;gateway&quot;,&quot;bastion&quot;,&quot;edge&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the host is a sanctioned proxy/gateway/LB; an IoT device, camera, router or unmanaged Linux box exhibiting relay symmetry is suspect — inspect for miniupnpd/UPnP AddPortMapping bursts and unexpected listeners. 2) Contain: remove the device&#x27;s UPnP port mappings on the gateway, block its inbound exposure, and isolate it. 3) Hunt: pivot the host&#x27;s outbound peers against the distribution-node IP and .eth/.sol UCs, and enumerate the gateway for the ~155 forwarding rules characteristic of this variant.</div></details>
+  • https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html
+  • https://www.bleepingcomputer.com/news/security/new-dysphoria-ddos-botnet-spreads-to-200k-devices-worldwide/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Brute Force: Password Guessing">T1110.001</span> <span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A misconfigured application or backup job retrying SSH with stale credentials until it finally succeeds</li><li>Ansible/automation host hammering a fleet then legitimately logging in</li><li>Internal vulnerability scanner (Nessus/Qualys) performing credentialed SSH checks</li><li>A user fat-fingering a password many times over VPN before getting it right</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIP !startswith &quot;10.&quot; and SrcIP !startswith &quot;192.168.&quot; and SrcIP !startswith &quot;172.16.&quot; and AcctUser !in~ (&quot;ansible&quot;,&quot;svc_backup&quot;,&quot;scanner&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the source IP is external/untrusted and the succeeding account is a default/weak IoT account (root, admin, service); check whether the source is a sanctioned automation/scanner host. 2) CONTAIN: Block the source IP at perimeter, force-rotate the compromised credential, and disable remote SSH/Telnet management on the affected device if not required. 3) HUNT: On the newly-accessed device, look for immediate outbound to the blockchain C2 domains (UC1), heartbeat to trees4sale.net:9000 (UC2), and UPnP port-mapping bursts (UC5) confirming relay enrollment.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-100-uc3-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-100-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let Window = 1d;
-let Inbound = DeviceNetworkEvents
-    | where Timestamp &gt; ago(Window)
-    | where ActionType == &quot;InboundConnectionAccepted&quot;
-    | where RemoteIPType == &quot;Public&quot;
-    | summarize InboundPublic = dcount(RemoteIP) by DeviceId, DeviceName;
-let Outbound = DeviceNetworkEvents
-    | where Timestamp &gt; ago(Window)
-    | where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionRequest&quot;)
-    | where RemoteIPType == &quot;Public&quot;
-    | summarize OutboundPublic = dcount(RemoteIP) by DeviceId;
-Inbound
-| join kind=inner Outbound on DeviceId
-| where InboundPublic &gt;= 10 and OutboundPublic &gt;= 10   // relay bridges public&lt;-&gt;public on one node
-| project DeviceName, InboundPublic, OutboundPublic
-| order by InboundPublic desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 1d;
-let Inb = ImNetworkSession
-    | where TimeGenerated &gt; ago(Window)
-    | where NetworkDirection =~ &quot;Inbound&quot;
-    | where ipv4_is_private(SrcIpAddr) == false
-    | summarize InboundPublic = dcount(SrcIpAddr) by DvcHostname;
-let Outb = ImNetworkSession
-    | where TimeGenerated &gt; ago(Window)
-    | where NetworkDirection =~ &quot;Outbound&quot;
-    | where ipv4_is_private(DstIpAddr) == false
-    | summarize OutboundPublic = dcount(DstIpAddr) by DvcHostname;
-Inb
-| join kind=inner Outb on DvcHostname
-| where InboundPublic &gt;= 10 and OutboundPublic &gt;= 10
-| project DvcHostname, InboundPublic, OutboundPublic
-| order by InboundPublic desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ConnectionDirection=0 RemoteAddressIP4=/^(?!10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/
-| groupBy([aid, ComputerName], function=count(field=RemoteAddressIP4, distinct=true))
-| _count &gt;= 10
-| join({#event_simpleName=NetworkConnectIP4 ConnectionDirection=1 RemoteAddressIP4=/^(?!10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/ | groupBy([aid], function=count(field=RemoteAddressIP4, distinct=true)) | _count &gt;= 10}, field=aid)</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(All_Traffic.src_ip) as inbound_sources from datamodel=Network_Traffic where All_Traffic.direction=&quot;inbound&quot; by All_Traffic.dest_ip | rename All_Traffic.dest_ip as host | where inbound_sources &gt;= 10 | append [| tstats `summariesonly` dc(All_Traffic.dest_ip) as outbound_dests from datamodel=Network_Traffic where All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src_ip | rename All_Traffic.src_ip as host | where outbound_dests &gt;= 10] | stats values(inbound_sources) as inbound_sources values(outbound_dests) as outbound_dests by host | where isnotnull(inbound_sources) AND isnotnull(outbound_dests)</code></pre><pre class="spl-mode-body" id="art-100-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(All_Traffic.src_ip) as inbound_sources from datamodel=Network_Traffic where All_Traffic.direction=&quot;inbound&quot; by All_Traffic.dest_ip | rename All_Traffic.dest_ip as host | where inbound_sources &gt;= 10 | append [| tstats summariesonly=false dc(All_Traffic.dest_ip) as outbound_dests from datamodel=Network_Traffic where All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src_ip | rename All_Traffic.src_ip as host | where outbound_dests &gt;= 10] | stats values(inbound_sources) as inbound_sources values(outbound_dests) as outbound_dests by host | where isnotnull(inbound_sources) AND isnotnull(outbound_dests)</code></pre></div></div>
+    <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let win = 1h;
+let thr = 20;   // &gt;=20 failed remote auths from one source IP in 1h = brute-force floor for IoT/SSH
+let fails = DeviceLogonEvents
+    | where Timestamp &gt; ago(7d)
+    | where ActionType == &quot;LogonFailed&quot;
+    | where RemotePort in (22, 23)
+    | summarize Fails=count(), FirstFail=min(Timestamp), LastFail=max(Timestamp) by DeviceName, RemoteIP
+    | where Fails &gt;= thr;
+DeviceLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where RemotePort in (22, 23)
+| join kind=inner fails on DeviceName, RemoteIP
+| where Timestamp between (FirstFail .. LastFail + 10m)
+| project SuccessTime=Timestamp, DeviceName, RemoteIP, AccountName, Fails, FirstFail, LastFail
+| order by SuccessTime desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 1h;
+let thr = 20;   // brute-force floor; tune to P99 of per-source failed-auth baseline
+let fails = Syslog
+    | where TimeGenerated &gt; ago(7d)
+    | where ProcessName == &quot;sshd&quot;
+    | where SyslogMessage has_any (&quot;Failed password&quot;,&quot;Invalid user&quot;,&quot;authentication failure&quot;,&quot;Failed none&quot;,&quot;Connection closed by authenticating user&quot;)
+    | extend SrcIP = extract(@&quot;from (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
+    | where isnotempty(SrcIP)
+    | summarize Fails=count(), FirstFail=min(TimeGenerated), LastFail=max(TimeGenerated) by Computer, SrcIP
+    | where Fails &gt;= thr;
+Syslog
+| where TimeGenerated &gt; ago(7d)
+| where ProcessName == &quot;sshd&quot;
+| where SyslogMessage has &quot;Accepted&quot;
+| extend SrcIP = extract(@&quot;from (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
+| extend AcctUser = extract(@&quot;for (\w+)&quot;, 1, SyslogMessage)
+| project SuccessTime=TimeGenerated, Computer, SrcIP, AcctUser
+| join kind=inner fails on Computer, SrcIP
+| where SuccessTime between (FirstFail .. LastFail + 10m)
+| project SuccessTime, Computer, SrcIP, AcctUser, Fails, FirstFail, LastFail
+| order by SuccessTime desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog @process.name:sshd (&quot;Failed password&quot; OR &quot;Invalid user&quot; OR &quot;authentication failure&quot; OR &quot;Failed none&quot;)</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Authentication where nodename=Authentication (Authentication.app=&quot;sshd&quot; OR Authentication.dest_port=22 OR Authentication.dest_port=23) by Authentication.src Authentication.dest Authentication.action _time span=1h | `drop_dm_object_name(Authentication)` | eval fail=if(action=&quot;failure&quot;,count,0), success=if(action=&quot;success&quot;,count,0) | stats sum(fail) as Fails sum(success) as Successes values(dest) as dest by src _time | where Fails &gt;= 20 AND Successes &gt;= 1</code></pre><pre class="spl-mode-body" id="art-100-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Authentication where nodename=Authentication (Authentication.app=&quot;sshd&quot; OR Authentication.dest_port=22 OR Authentication.dest_port=23) by Authentication.src Authentication.dest Authentication.action _time span=1h | `drop_dm_object_name(Authentication)` | eval fail=if(action=&quot;failure&quot;,count,0), success=if(action=&quot;success&quot;,count,0) | stats sum(fail) as Fails sum(success) as Successes values(dest) as dest by src _time | where Fails &gt;= 20 AND Successes &gt;= 1</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="df0c548ff7" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Dysphoria relay node UPnP/IGD port-mapping burst (NAT traversal)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf low">Low</span>
+    <button class="share-btn" data-share-uc="df0c548ff7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a single internal host issuing a high volume of UPnP/IGD control and SSDP requests to the local gateway — the behavior of Dysphoria&#x27;s relay-only variant, which maps ~155 port-forwarding rules via UPnP to expose itself as a NAT-traversing victim relay. Distinct from normal single-rule UPnP from a console or media app.
+
+Rationale: XLab (via Security Affairs) documents the relay-only build using UPnP to map ~155 port-forwarding rules on the local gateway for NAT traversal. A per-host burst of SSDP/IGD control traffic (&gt;=50 attempts) is the distinctive, article-specific signal distinguishing a relay node from benign single-rule UPnP.
+
+Cross-checked against:
+  • https://securityaffairs.com/196182/malware/dysphoria-botnet-uses-blockchain-domains-to-hide-c2-infrastructure.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Proxy: Internal Proxy">T1090.001</span> <span class="ind tech" title="Non-Standard Port">T1571</span> <span class="ind tech" title="Protocol Tunneling">T1572</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Game consoles / Xbox/PlayStation opening multiple NAT rules for multiplayer</li><li>BitTorrent or Plex/DLNA media servers requesting many UPnP mappings</li><li>VoIP softphones and video-conferencing clients auto-mapping RTP port ranges</li><li>Smart-home hubs enumerating UPnP/SSDP devices on the LAN</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;plexmediaserver.exe&quot;,&quot;qbittorrent.exe&quot;,&quot;utorrent.exe&quot;,&quot;transmission-daemon&quot;,&quot;teams.exe&quot;,&quot;zoom.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the source device and the process/binary driving the UPnP burst; a router/camera/Linux server mapping dozens of rules is anomalous, a console/media server is expected — tag and suppress the latter. 2) CONTAIN: Disable UPnP/IGD on the gateway for that segment, isolate the device, and inspect for the epoll relay process and outbound heartbeat to trees4sale.net:9000 (UC2). 3) HUNT: Correlate with blockchain C2 resolution (UC1/UC3) and preceding SSH/Telnet brute-force (UC4); review firewall for the device relaying inbound external connections to external destinations (relay-mesh symmetry).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-100-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-100-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemotePort in (1900, 2869, 5000, 5431)   // SSDP + common UPnP/IGD SOAP control ports
+| where RemoteIPType == &quot;Private&quot;
+| summarize MapAttempts=count(), Ports=make_set(RemotePort, 10), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName, RemoteIP
+| where MapAttempts &gt;= 50   // Dysphoria relay maps ~155 IGD rules; sustained high-volume UPnP from one host is anomalous
+| order by MapAttempts desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where toint(DestinationPort) in (1900, 2869, 5000, 5431)
+| summarize MapAttempts=count(), Ports=make_set(DestinationPort, 10), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by SourceIP, DestinationIP
+| where MapAttempts &gt;= 50   // relay maps ~155 UPnP rules; high-volume IGD from one host is anomalous
+| order by MapAttempts desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.syslog) @DestinationPort:(1900 OR 2869 OR 5000 OR 5431)</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| RemotePort=/^(1900|2869|5000|5431)$/
+| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())
+| _count &gt;= 50</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Network_Traffic where nodename=All_Traffic (All_Traffic.dest_port=1900 OR All_Traffic.dest_port=2869 OR All_Traffic.dest_port=5000 OR All_Traffic.dest_port=5431) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | stats sum(count) as MapAttempts values(dest_port) as Ports by src dest | where MapAttempts &gt;= 50</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Traffic where nodename=All_Traffic (All_Traffic.dest_port=1900 OR All_Traffic.dest_port=2869 OR All_Traffic.dest_port=5000 OR All_Traffic.dest_port=5431) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | stats sum(count) as MapAttempts values(dest_port) as Ports by src dest | where MapAttempts &gt;= 50</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -1292,11 +1365,11 @@ Inb
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-100-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -1309,7 +1382,7 @@ Inb
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-100-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -1319,7 +1392,7 @@ Inb
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-100-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -1328,7 +1401,7 @@ Inb
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-100-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -1355,17 +1428,17 @@ Inb
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-100-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;194.87.198.208&quot;, &quot;194.87.198.104&quot;, &quot;194.58.38.79&quot;, &quot;194.58.38.49&quot;, &quot;194.58.38.96&quot;) or RemoteUrl has_any (&quot;m3rnbvs5d.eth&quot;, &quot;burrberry.eth&quot;, &quot;24carnforth2merseyside.sol&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-100-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;194.87.198.208&quot;, &quot;194.87.198.104&quot;, &quot;194.58.38.79&quot;, &quot;194.58.38.49&quot;, &quot;194.58.38.96&quot;]);
+    <div class="tab-content" id="art-100-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;194.87.198.208&quot;, &quot;194.87.198.104&quot;, &quot;194.58.38.79&quot;, &quot;194.58.38.49&quot;, &quot;194.58.38.96&quot;]);
 let BadDomains = dynamic([&quot;m3rnbvs5d.eth&quot;, &quot;burrberry.eth&quot;, &quot;24carnforth2merseyside.sol&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -1374,7 +1447,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-100-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -1404,7 +1477,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;194.87.198.208&quot;, &quot;194.87.198.104&quot;, &quot;194.58.38.79&quot;, &quot;194.58.38.49&quot;, &quot;194.58.38.96&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -1418,7 +1491,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;m3rnbvs5d.eth&quot;, &quot;burrberry.eth&quot;, &quot;24carnforth2merseyside.sol&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-100-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-100-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;194.87.198.208&quot;, &quot;194.87.198.104&quot;, &quot;194.58.38.79&quot;, &quot;194.58.38.49&quot;, &quot;194.58.38.96&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -1450,11 +1523,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-100-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1463,7 +1536,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-100-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -1475,12 +1548,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-9528&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-100-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-100-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-9528&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -1512,11 +1585,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-100-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -1556,7 +1629,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-100-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -1581,7 +1654,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc7-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-100-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -1613,7 +1686,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-100-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-100-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -1663,11 +1736,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc8-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-100-uc9-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -1681,7 +1754,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-100-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-100-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -1704,7 +1777,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-100-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -1715,7 +1788,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-100-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-100-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -1744,18 +1817,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-100-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-100-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-100-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -1778,7 +1851,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-100-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -1822,13 +1895,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -1852,19 +1925,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-100-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-100-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-100-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -1878,7 +1951,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-100-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -1922,7 +1995,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -1930,7 +2003,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-100-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-100-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -1950,7 +2023,7 @@ level: high
   data-splunk-cats="application,endpoint,web"
   data-targets="azure,linux,m365,windows"
   data-uc-count="8" data-llm-uc-count="3"
-  data-search="Public Exploit Released for Patched vBulletin Pre-Auth Code Execution Flaw Public exploit details released on July 27 show how an unauthenticated request can reach PHP&#x27;s eval() function inside vBulletin and execute code on an unpatched forum server. The attack requires no account, administrative access, or interaction from another user. SSD Secure Disclosure lists vBulletin 6.2.1 and earlier, and 6.1.6 and earlier, as affected, but does not give a lower version CVE-2026-61511 T1190 T1566 T1566.002 [LLM] vBulletin CVE-2026-61511 pre-auth RCE via operator-laden pagenav[pagenumber] to ajax/render/pagenav [LLM] vBulletin web-server process (php-fpm/httpd/w3wp) spawning OS shell — CVE-2026-61511 post-exploitation [LLM] Unpatched vBulletin instances exposed to CVE-2026-61511 Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
+  data-search="Public Exploit Released for Patched vBulletin Pre-Auth Code Execution Flaw Public exploit details released on July 27 show how an unauthenticated request can reach PHP&#x27;s eval() function inside vBulletin and execute code on an unpatched forum server. The attack requires no account, administrative access, or interaction from another user. SSD Secure Disclosure lists vBulletin 6.2.1 and earlier, and 6.1.6 and earlier, as affected, but does not give a lower version CVE-2026-61511 T1190 T1566 T1566.002 [LLM] vBulletin CVE-2026-61511 pre-auth RCE: POST to ajax/render/pagenav template route [LLM] vBulletin web-server process (php-fpm/httpd/nginx) spawning shell after CVE-2026-61511 RCE [LLM] Internet-facing hosts still exposed to vBulletin CVE-2026-61511 (unpatched &lt; 6.2.2) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-27-public-exploit-released-for-patched-vbulletin-pre-auth-code-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2007,49 +2080,53 @@ level: high
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Unpatched vBulletin instances exposed to CVE-2026-61511 · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Internet-facing hosts still exposed to vBulletin CVE-2026-61511 (unpatched &lt; 6.2.2) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] vBulletin CVE-2026-61511 pre-auth RCE via operator-laden pagenav[pagenumber] to ajax/render/pagenav · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] vBulletin CVE-2026-61511 pre-auth RCE: POST to ajax/render/pagenav template route · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] vBulletin web-server process (php-fpm/httpd/w3wp) spawning OS shell — CVE-2026-61511 post-exploitation</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] vBulletin web-server process (php-fpm/httpd/nginx) spawning shell after CVE-2026-61511 RCE</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="ecb437cfa7" data-platforms="sent,sigma,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="1a8045de9e" data-platforms="datadog,sent,sigma,spl" data-targets="linux" open>
   <summary>
-    <span class="uc-title">vBulletin CVE-2026-61511 pre-auth RCE via operator-laden pagenav[pagenumber] to ajax/render/pagenav</span>
+    <span class="uc-title">vBulletin CVE-2026-61511 pre-auth RCE: POST to ajax/render/pagenav template route</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ecb437cfa7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1a8045de9e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests to vBulletin&#x27;s public template-render route ajax/render/pagenav where the pagenav[pagenumber] parameter — normally a plain integer — carries parentheses, XOR/OR/NOT operators or concatenation characters. This is the exact &#x27;phpfuck&#x27; restricted-character payload SSD&#x27;s PoC feeds into vB5_Template_Runtime::runMaths() and PHP eval() for unauthenticated code execution.
+    <div class="uc-desc">Hunts unauthenticated exploitation of vBulletin CVE-2026-61511 where an attacker POSTs a crafted pagenav[pagenumber] value to the public &#x27;ajax/render/pagenav&#x27; route, driving vB5_Template_Runtime::runMaths() into PHP eval(). Article-specific because it keys on the exact vulnerable template route plus the &#x27;phpfuck&#x27; digit/XOR/parenthesis-only payload shape rather than a generic web-attack signature.
 
-Rationale: pagenav[pagenumber] legitimately only ever holds an integer, so any parenthesis, XOR (^/%5e), OR (|/%7c), NOT (~/%7e) or concatenation character in it on the ajax/render/pagenav route is the phpfuck eval payload from SSD&#x27;s PoC — near-zero legitimate overlap. Corroborated against SSD&#x27;s technical advisory and independent write-ups.
+Rationale: Uses the exact vulnerable route &#x27;ajax/render/pagenav&#x27; and parameter &#x27;pagenav[pagenumber]&#x27; named in the SSD advisory, plus POST method and phpfuck marker chars (^ / ~ / nested parens) that separate exploit traffic from legit numeric pagination. Cross-checked SSD advisory, BleepingComputer, and KarmaInSecurity KIS-2026-13.
 
 Cross-checked against:
   • https://ssd-disclosure.com/vbulletin-runtime-template-runmaths-preauth-rce/
-  • https://gbhackers.com/vbulletin-pre-auth-rce-flaw/
-  • https://cybersecuritynews.com/vbulletin-flaw-execute-php-code/</div>
+  • https://www.bleepingcomputer.com/news/security/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-exploit/
+  • https://karmainsecurity.com/KIS-2026-13
+  • https://gbhackers.com/vbulletin-pre-auth-rce-flaw/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners/pentest tools (Acunetix, Nuclei) firing the same CVE-2026-61511 template against your own forum</li><li>Internal vulnerability-management authenticated scans replaying the PoC</li><li>A plugin or theme that legitimately passes non-numeric pagenav values (rare — verify against a known-good baseline)</li><li>WAF in monitor-only mode logging blocked attempts that never reached PHP</li><li>Bug-bounty researchers testing the endpoint from known IPs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceAction !in (&quot;blocked&quot;,&quot;deny&quot;,&quot;Blocked&quot;) and SourceIP !in (&quot;&quot;)   // keep allowed requests; append known scanner IPs to the exclusion list</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestURL/body and SourceIP; URL-decode the pagenav[pagenumber] value and confirm it reconstructs PHP tokens (parentheses + ^ + digits, no letters). Check whether the WAF blocked or allowed (DeviceAction) and the HTTP response code. 2) Contain: block the source IP at the WAF/edge, and confirm the forum is on vBulletin 6.2.2 (or branch patch for 6.2.1/6.2.0/6.1.6) — if not, take it offline or virtual-patch the ajax/render/pagenav route immediately. 3) Hunt: on the web host run the companion &#x27;web-server spawns shell&#x27; detection to see if system() executed, review file writes under the webroot for dropped PHP web shells, and search all historical logs for the same SourceIP and payload signature.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate AJAX pagination hitting ajax/render/pagenav via GET with a plain numeric pagenumber</li><li>Web vulnerability scanners (Nessus/Qualys/Nuclei) probing the CVE-2026-61511 route in authorized scans</li><li>Internal security team running the public SSD PoC during patch validation</li><li>Uptime/synthetic monitors that replay forum navigation requests</li><li>WAF in monitor-only mode logging blocked exploit attempts that never reached the app</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RequestMethod =~ &quot;GET&quot; and RequestURL matches regex @&quot;pagenumber(%5D)?=\d{1,4}(&amp;|$)&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request for the flagged SourceIP - confirm method=POST and inspect the pagenav[pagenumber] body for digit/XOR/paren-only content (phpfuck) versus a small integer. Note the responding host&#x27;s vBulletin version. 2) Contain: block the SourceIP at the WAF/edge; if the host is &lt;=6.2.1 (6.x) or &lt;=5.7.5 (5.x) pull it behind auth or offline until upgraded to 6.2.2 / branch patch. 3) Hunt: pivot to UC2 (web-server process spawning a shell) on the same host/time window; check for new files under the vBulletin webroot, outbound connections from php-fpm/httpd, and cron/systemd persistence.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(24h)
+| where TimeGenerated &gt; ago(7d)
+| where isnotempty(RequestURL)
 | where RequestURL has &quot;ajax/render/pagenav&quot;
-| where RequestURL matches regex @&quot;(?i)pagenav(?:\[|%5b)pagenumber(?:\]|%5d)=[^&amp;]*(?:%28|%29|%5e|%7c|%7e|[()^|~])&quot;
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, DeviceAction
+// exploit is a POST that carries the phpfuck body; legit AJAX pagination is a GET with a small numeric pagenumber
+| where RequestMethod =~ &quot;POST&quot; or RequestURL has_any (&quot;pagenav%5Bpagenumber%5D&quot;,&quot;^&quot;,&quot;~&quot;,&quot;%5E&quot;,&quot;%7E&quot;)
+| project TimeGenerated, SourceIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, DeviceProduct
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: vBulletin CVE-2026-61511 pagenav Pre-Auth RCE Payload
-id: 6b1e3f2a-4c7d-4e18-9b5a-1f0c9d2e7a44
-description: Detects requests to vBulletin ajax/render/pagenav where pagenav[pagenumber] contains PHP operator/parenthesis characters characteristic of the CVE-2026-61511 phpfuck runMaths eval payload
+    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: vBulletin CVE-2026-61511 pre-auth RCE via ajax/render/pagenav
+id: 5b3c9d1e-0a2f-4c77-9b3a-2c8e1f6a7d40
+description: Detects a POST to the vBulletin ajax/render/pagenav template route used to exploit CVE-2026-61511 (runMaths eval RCE via pagenav[pagenumber]).
 references:
   - https://ssd-disclosure.com/vbulletin-runtime-template-runmaths-preauth-rce/
   - https://thehackernews.com/2026/07/public-exploit-released-for-patched.html
@@ -2057,38 +2134,48 @@ author: SOC Detection Engineering
 date: 2026/07/28
 tags:
   - attack.t1190
+  - attack.initial_access
 logsource:
   category: webserver
 detection:
-  selection_route:
-    cs-uri-query|contains: &#x27;ajax/render/pagenav&#x27;
-  selection_payload:
-    cs-uri-query|re: &#x27;pagenav(\[|%5[bB])pagenumber(\]|%5[dD])=[^&amp;]*(%28|%29|%5[eE]|%7[cC]|%7[eE]|[()^|~])&#x27;
-  condition: selection_route and selection_payload
+  selection:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem|contains: &#x27;ajax/render/pagenav&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*ajax/render/pagenav*&quot; AND (Web.url=&quot;*pagenav%5Bpagenumber%5D=*&quot; OR Web.url=&quot;*pagenav[pagenumber]=*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent | rename Web.* as * | regex url=&quot;(?i)pagenav(?:\[|%5b)pagenumber(?:\]|%5d)=[^&amp;]*(?:%28|%29|%5e|%7c|%7e|[()^|~])&quot; | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*ajax/render/pagenav*&quot; AND (Web.url=&quot;*pagenav%5Bpagenumber%5D=*&quot; OR Web.url=&quot;*pagenav[pagenumber]=*&quot;) by Web.src, Web.dest, Web.http_method, Web.url, Web.http_user_agent | rename Web.* as * | regex url=&quot;(?i)pagenav(?:\[|%5b)pagenumber(?:\]|%5d)=[^&amp;]*(?:%28|%29|%5e|%7c|%7e|[()^|~])&quot; | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (&quot;ajax/render/pagenav&quot; AND pagenumber AND (&quot;^&quot; OR &quot;~&quot; OR &quot;%5E&quot; OR &quot;pagenav%5Bpagenumber%5D&quot;))</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*ajax/render/pagenav*&quot; AND Web.http_method=&quot;POST&quot;) by Web.src Web.dest Web.http_method Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| eval phpfuck_markers=if(match(url,&quot;(?i)(pagenav.*(%5E|%7E|%5B|\^|~|\(\())&quot;),&quot;yes&quot;,&quot;no&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*ajax/render/pagenav*&quot; AND Web.http_method=&quot;POST&quot;) by Web.src Web.dest Web.http_method Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| eval phpfuck_markers=if(match(url,&quot;(?i)(pagenav.*(%5E|%7E|%5B|\^|~|\(\())&quot;),&quot;yes&quot;,&quot;no&quot;)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="50c6416a58" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="93528eb2c2" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">vBulletin web-server process (php-fpm/httpd/w3wp) spawning OS shell — CVE-2026-61511 post-exploitation</span>
+    <span class="uc-title">vBulletin web-server process (php-fpm/httpd/nginx) spawning shell after CVE-2026-61511 RCE</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="50c6416a58" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="93528eb2c2" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the vBulletin/PHP web-server process spawning a command interpreter or recon binary, which is exactly what SSD&#x27;s PoC does after rebuilding PHP&#x27;s system() to run an OS command and return output in the HTTP response. A php-fpm/httpd/w3wp parent launching cmd/powershell/bash/curl/whoami is not normal forum behaviour.
+    <div class="uc-desc">Hunts post-exploitation of CVE-2026-61511 where PHP system() executed via runMaths() causes the web-server worker (php-fpm, httpd, apache2, nginx) to spawn an interactive shell or recon binary. Article-specific because the exploit&#x27;s whole point is arbitrary OS command execution as the web-server user through the pagenav template.
 
-Rationale: A php-fpm/httpd/w3wp/nginx parent process spawning cmd/powershell/bash/curl/whoami is the direct on-host artefact of the runMaths()-&gt;eval()-&gt;system() chain described by SSD; forum servers effectively never legitimately shell out from the web worker. Parent+child pairing keeps FP low.
+Rationale: Keys on the specific parent set of vBulletin web-server workers (php-fpm/httpd/apache2/nginx, plus w3wp/php-cgi on IIS) spawning shells/recon binaries - the direct observable of PHP system() being reached through runMaths() eval() per the SSD write-up. Parent+child pairing keeps FPs low. Cross-checked SSD advisory and CybersecurityNews.
 
 Cross-checked against:
   • https://ssd-disclosure.com/vbulletin-runtime-template-runmaths-preauth-rce/
-  • https://gbhackers.com/vbulletin-pre-auth-rce-flaw/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Web Shell">T1505.003</span></div>
+  • https://thehackernews.com/2026/07/public-exploit-released-for-patched.html
+  • https://cybersecuritynews.com/vbulletin-flaw-execute-php-code/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate PHP plugins that shell out (image processing via ImageMagick/convert, cron-like maintenance tasks)</li><li>Server admins running interactive troubleshooting under the web service account</li><li>Deployment/CI scripts invoking curl or git from the web root during releases</li><li>Monitoring agents that exec whoami/uname under the httpd context</li><li>Backup jobs spawned by the web user</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has_any (&quot;convert&quot;,&quot;ImageMagick&quot;,&quot;git pull&quot;,&quot;/usr/local/bin/backup&quot;)   // drop known benign image/maintenance shell-outs; tune per environment</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the child ProcessCommandLine and grandparent chain; benign maintenance has predictable args (image resize, git pull) whereas exploitation shows recon (whoami/id/uname) or outbound curl/wget to unknown hosts. Correlate the timestamp with the web-log detection&#x27;s SourceIP hitting ajax/render/pagenav. 2) Contain: isolate the host, kill the spawned process tree, and rotate any DB/API credentials readable from the vBulletin config. 3) Hunt: enumerate files written by the web user under the webroot for PHP web shells, review outbound connections from the web-server process, and confirm patch level is 6.2.2.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate vBulletin/plugin features shelling out (e.g. image processing calling convert/ffmpeg, mail via sendmail)</li><li>Sysadmin running maintenance scripts under the web-server user</li><li>Backup/monitoring agents launched from an apache-owned cron</li><li>Composer/deployment tasks that invoke curl or git as the web user during a release</li><li>Security team validating the PoC on a staging forum</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;logrotate&quot;,&quot;newrelic&quot;,&quot;freshclam&quot;,&quot;certbot&quot;) or InitiatingProcessCommandLine has &quot;cron&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the child ProcessCommandLine and the parent InitiatingProcessCommandLine - is it interactive recon (id/whoami/uname), a payload fetch (curl/wget to an external IP), or a reverse shell (bash -i, nc -e, python pty)? Confirm the host runs vBulletin &lt;=6.2.1 or &lt;=5.7.5. 2) Contain: isolate the host, kill the offending php-fpm/child process tree, and rotate any secrets readable by the web-server user (DB creds in config.php, API keys). 3) Hunt: correlate back to UC1 for the originating ajax/render/pagenav POST and SourceIP; enumerate new webshell files under the webroot, outbound C2 from the web-server process, and new cron/systemd/authorized_keys persistence.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
@@ -2099,99 +2186,112 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;php&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;w3wp.exe&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;python&quot;,&quot;python3&quot;)
+| where InitiatingProcessFileName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
 | where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;w3wp.exe&quot;,&quot;nginx&quot;)
-| where ActingProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;bash&quot;,&quot;/bin/sh&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;python&quot;)
+| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;/php&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/id&quot;,&quot;/whoami&quot;,&quot;/uname&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/python&quot;,&quot;/perl&quot;)
 | project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: vBulletin Web Server Process Spawning Shell (CVE-2026-61511 Post-Exploitation)
-id: 2f8a91d6-6b0e-4d33-8c21-7a5e4b9c0e12
-description: Detects vBulletin/PHP web-server processes spawning command interpreters or recon binaries, consistent with CVE-2026-61511 runMaths eval RCE executing OS commands via rebuilt system()
+    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: vBulletin web-server process spawning shell (CVE-2026-61511 post-exploit)
+id: c7a41f6b-9d20-4e3a-8f11-6b2d0a5c9e33
+description: Detects php-fpm/httpd/apache2/nginx spawning a shell or recon binary, consistent with PHP system() execution via the CVE-2026-61511 runMaths eval RCE.
 references:
   - https://ssd-disclosure.com/vbulletin-runtime-template-runmaths-preauth-rce/
   - https://thehackernews.com/2026/07/public-exploit-released-for-patched.html
 author: SOC Detection Engineering
 date: 2026/07/28
 tags:
-  - attack.t1190
-  - attack.t1059
-  - attack.t1505.003
+  - attack.t1059.004
+  - attack.execution
 logsource:
   category: process_creation
+  product: linux
 detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\w3wp.exe&#x27;
-      - &#x27;\php-cgi.exe&#x27;
-      - &#x27;\php.exe&#x27;
-      - &#x27;\httpd.exe&#x27;
-      - &#x27;\nginx.exe&#x27;
-      - &#x27;/php-fpm&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/nginx&#x27;
-  selection_child:
+  parent:
+    ParentImage|contains:
+      - &#x27;php-fpm&#x27;
+      - &#x27;/php&#x27;
+      - &#x27;httpd&#x27;
+      - &#x27;apache2&#x27;
+      - &#x27;nginx&#x27;
+  child:
     Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;/bash&#x27;
       - &#x27;/sh&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;/curl&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/id&#x27;
       - &#x27;/whoami&#x27;
-      - &#x27;\whoami.exe&#x27;
       - &#x27;/uname&#x27;
-  condition: selection_parent and selection_child
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/perl&#x27;
+  condition: parent and child
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\w3wp.exe OR *\\W3WP.EXE OR *\\php-cgi.exe OR *\\php.exe OR *\\httpd.exe OR *\\nginx.exe) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\curl.exe OR *\\whoami.exe)</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(php-fpm|php-cgi|php|httpd|apache2|w3wp\.exe|nginx)$/i
-| ImageFileName=/[\\\/](cmd|powershell|pwsh|bash|sh|dash|curl|wget|whoami|id|uname|python3?)(\.exe)?$/i
+    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\w3wp.exe OR *\\W3WP.EXE OR *\\php-cgi.exe OR *\\PHP-CGI.EXE) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE)</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php|httpd|apache2|nginx|w3wp\.exe|php-cgi\.exe)/i
+| ImageFileName=/(\/(sh|bash|dash|id|whoami|uname|curl|wget|nc|ncat|python[0-9.]*|perl)$|\\(cmd|powershell)\.exe$)/i
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;php&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;w3wp.exe&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | rename Processes.* as * | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-cgi&quot;,&quot;php&quot;,&quot;php.exe&quot;,&quot;php-cgi.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;apache2&quot;,&quot;w3wp.exe&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;curl.exe&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;whoami.exe&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | rename Processes.* as * | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;id&quot;,&quot;whoami&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="e6c7cdc834" data-platforms="def,sent" data-targets="">
+<details class="uc" data-uc-slug="2e1127e285" data-platforms="def,sent" data-targets="">
   <summary>
-    <span class="uc-title">Unpatched vBulletin instances exposed to CVE-2026-61511</span>
+    <span class="uc-title">Internet-facing hosts still exposed to vBulletin CVE-2026-61511 (unpatched &lt; 6.2.2)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="e6c7cdc834" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="2e1127e285" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Audit hunt surfacing managed hosts running vBulletin below the fixed 6.2.2 release (affected: 6.2.1 and earlier, 6.1.6 and earlier). Given a public exploit is live and the fix predates disclosure by ~4 weeks, this identifies the concentrated self-hosted, internet-facing population still exploitable.
+    <div class="uc-desc">Surfaces managed hosts where Defender/MDVM flags CVE-2026-61511 and the device is internet-facing - the exact &#x27;self-hosted, internet-facing forums that have not updated&#x27; population the article says carries the live risk. This is an exposure-audit pivot (vulnerability management), distinct from the traffic and process detections.
 
-Rationale: Anchored on the concrete CVE id CVE-2026-61511 and the vendor&#x27;s fixed version 6.2.2 versus affected 6.2.1/6.1.6-and-earlier stated in the article and SSD advisory; joining IsInternetFacing prioritises the exact exploitable population the article flags. If TVM has not yet mapped the CVE, fall back to DeviceTvmSoftwareInventory where SoftwareName has &#x27;vbulletin&#x27; and SoftwareVersion != &#x27;6.2.2&#x27;.
+Rationale: Directly targets the article&#x27;s stated risk concentration - unpatched (&lt; 6.2.2) internet-facing self-hosted vBulletin - by keying on the concrete CVE id and the IsInternetFacing device attribute. Cross-checked SSD advisory and BleepingComputer, which confirm affected ranges (6.x &lt;= 6.2.1, 5.x &lt;= 5.7.5) and the 6.2.2 fix.
 
 Cross-checked against:
   • https://ssd-disclosure.com/vbulletin-runtime-template-runmaths-preauth-rce/
-  • https://gbhackers.com/vbulletin-pre-auth-rce-flaw/</div>
+  • https://www.bleepingcomputer.com/news/security/vbulletin-fixes-critical-pre-auth-rce-flaw-with-public-exploit/
+  • https://latesthackingnews.com/2026/07/28/vbulletin-rce-vulnerability-cve-2026-61511/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Hosts already patched to 6.2.2 but TVM inventory lagging its scan refresh</li><li>Development/staging forum clones not reachable from the internet (lower priority, not false — still vulnerable)</li><li>vBulletin Cloud-managed sites reported already patched by the vendor</li><li>Version string parsed from a customised/rebranded footer that misreports the build</li><li>Decommissioned hosts still in the TVM inventory</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: sort results by IsInternetFacing to prioritise externally reachable forums; confirm the reported SoftwareVersion is genuinely below 6.2.2 (or a branch patch for 6.2.1/6.2.0/6.1.6). 2) Contain: schedule emergency upgrade to 6.2.2 or apply the branch patch; where patching is delayed, virtual-patch or block the ajax/render/pagenav route at the WAF. 3) Hunt: for each unpatched internet-facing host, run the web-log payload detection and the web-server-spawns-shell detection over the full ~4-week exposure window (late-June patch to July-27 disclosure) to check for prior compromise.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>MDVM has not yet catalogued the specific vBulletin build so CveId is absent (false negative, not FP)</li><li>Host flagged as vulnerable but already firewalled/behind auth despite IsInternetFacing=true</li><li>Staging/QA vBulletin instances intentionally kept on an old build</li><li>Version detected but the vendor branch patch was applied without a version-string bump</li><li>IsInternetFacing stale for a host recently moved behind a WAF</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each internet-facing hit confirm the live vBulletin version and whether the 6.2.2 upgrade or branch patch (6.2.1/6.2.0/6.1.6) has been applied. 2) Contain: prioritise internet-facing hosts for immediate patching/upgrade to 6.2.2; where patching must wait, place a WAF virtual-patch/block on POST ajax/render/pagenav and restrict admin routes. 3) Hunt: run UC1 and UC2 against each exposed host&#x27;s logs for the four-week window between the late-June patch and the July 27 disclosure to check for prior exploitation.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
     </div>
     <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where CveId == &quot;CVE-2026-61511&quot;
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| join kind=leftouter (DeviceInfo | where Timestamp &gt; ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, SoftwareName, SoftwareVersion, IsInternetFacing, PublicIP, RecommendedSecurityUpdate
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp &gt; ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId
+  ) on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, IsInternetFacing, RecommendedSecurityUpdate
 | order by IsInternetFacing desc</code></pre></div>
     <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
+| where TimeGenerated &gt; ago(7d)
 | where CveId == &quot;CVE-2026-61511&quot;
-| project TimeGenerated, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
+| join kind=leftouter (
+    DeviceInfo
+    | where TimeGenerated &gt; ago(1d)
+    | summarize arg_max(TimeGenerated, IsInternetFacing) by DeviceId
+  ) on DeviceId
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, IsInternetFacing, RecommendedSecurityUpdate
+| order by IsInternetFacing desc</code></pre></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">

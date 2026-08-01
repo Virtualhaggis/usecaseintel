@@ -11,19 +11,13 @@ By Bill Toulas
 July 31, 2026
 05:09 PM
 0 
-
-
 Online advertising firm Adform suffered a supply-chain attack that delivered cryptocurrency-stealing scripts to websites using its ad platform, replacing wallet addresses copied to visitors’ clipboards with ones controlled by an attacker.
-
-
-Adform is one of Europe’s largest adtech firms, providing a full-stack platform that includes Demand-Side Platform (DSP), Supply-Side Platform …
+Adform is one of Europe’s largest adtech firms, providing a full-stack platform that includes Demand-Side Platform (DSP), Supply-Side Platform (SSP), a…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `84.32.102.230`
-- **Domain (defanged):** `s2.adform.net`
-- **Domain (defanged):** `ai1.adform.net`
-- **Domain (defanged):** `a1.adform.net`
+- **Domain (defanged):** `ai.adform.net`
 - **SHA256:** `02ff86c7f9fe609a753ff15bda90baa3c3e0d4a2e559ec4fcf8a3de0954b7c55`
 
 ## MITRE ATT&CK Techniques
@@ -248,7 +242,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `84.32.102.230`, `s2.adform.net`, `ai1.adform.net`, `a1.adform.net`
+  - IP / domain IOC(s): `84.32.102.230`, `ai.adform.net`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `02ff86c7f9fe609a753ff15bda90baa3c3e0d4a2e559ec4fcf8a3de0954b7c55`

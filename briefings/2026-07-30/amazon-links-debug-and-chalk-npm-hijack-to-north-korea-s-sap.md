@@ -33,9 +33,11 @@ The original …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
-- **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
 
 ## Kill chain phases observed
 
@@ -43,63 +45,65 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Sapphire Sleet npm supply-chain C2 contact (npmjs.store / 216.74.123.126)
+### Sapphire Sleet npm supply-chain C2 egress to npmjs.store / 216.74.123.126
 
 `UC_55_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="216.74.123.126" OR All_Traffic.dest_host="*npmjs.store*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="npmjs.store" OR DNS.query="*.npmjs.store" OR DNS.answer="216.74.123.126") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "216.74.123.126" or RemoteUrl contains "npmjs.store"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, ActionType
-| order by Timestamp desc
-```
-
-### Trojanized typo-crypto / core.js npm artifact on disk or being installed
-
-`UC_55_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73" OR Filesystem.file_hash="24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f" OR (Filesystem.file_name="core.js" AND Filesystem.file_path="*typo-crypto*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
+let c2domain = "npmjs.store";
+let c2ip = "216.74.123.126";
 union
-(DeviceFileEvents
- | where Timestamp > ago(30d)
- | where SHA256 in ("2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73","24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f")
-    or (FileName =~ "core.js" and FolderPath contains "typo-crypto")
- | project Timestamp, DeviceName, Evidence="file", Detail=strcat(FileName," @ ",FolderPath), SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceProcessEvents
- | where Timestamp > ago(30d)
- | where ProcessCommandLine contains "typo-crypto" and ProcessCommandLine has_any ("install","add","ci")
- | project Timestamp, DeviceName, Evidence="install-cmd", Detail=ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName)
+ (DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has c2domain or RemoteIP == c2ip
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort, Src="NetworkConnect"),
+ (DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | where RemoteUrl has c2domain or AdditionalFields has c2ip
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, Src="DnsQuery")
 | order by Timestamp desc
 ```
 
-### core.js dropper obfuscation strings (XOR key 01042025 / trigger 0098273)
+### Known Sapphire Sleet npm payload hashes written or executed
 
-`UC_55_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_55_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*01042025*" AND Processes.process="*0098273*" by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f", "2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73")) by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine contains "01042025" and ProcessCommandLine contains "0098273"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+let mal = dynamic(["24604384b0e748ada07923630b3d037489e696284a98c4409fb9b6763565571f", "2014d09c7ded74d89c885b5f11693865224116f1b25df9330e61fe528f419d73"]);
+union
+ (DeviceFileEvents | where Timestamp > ago(90d) | where SHA256 in (mal) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Actor=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine, User=InitiatingProcessAccountName),
+ (DeviceProcessEvents | where Timestamp > ago(90d) | where SHA256 in (mal) | project Timestamp, DeviceName, ActionType="ProcessExec", FileName, FolderPath, SHA256, Actor=InitiatingProcessFileName, ActorCmd=ProcessCommandLine, User=AccountName)
+| order by Timestamp desc
+```
+
+### npm registry look-alike phishing domains (npmjs.help / npmjs.store) in mail & web
+
+`UC_55_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*npmjs.help*" OR Web.url="*npmjs.store*" OR Web.dest="npmjs.help" OR Web.dest="npmjs.store") by Web.src Web.user Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let lures = dynamic(["npmjs.help", "npmjs.store"]);
+union
+ (EmailUrlInfo | where Timestamp > ago(90d) | where UrlDomain in~ (lures) | project Timestamp, NetworkMessageId, Url, Domain=UrlDomain, Src="EmailUrlInfo"),
+ (UrlClickEvents | where Timestamp > ago(90d) | where Url has_any ("npmjs.help", "npmjs.store") | project Timestamp, NetworkMessageId, Url, AccountUpn, IsClickedThrough, ActionType, Src="UrlClick")
 | order by Timestamp desc
 ```
 
@@ -429,4 +433,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

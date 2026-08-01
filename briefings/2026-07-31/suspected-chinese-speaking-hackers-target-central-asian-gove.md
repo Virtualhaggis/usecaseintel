@@ -73,16 +73,21 @@ These targeted organizations operate across several sectors, suc…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
+- **T1574.002** — DLL Side-Loading
+- **T1055.001** — Dynamic-link Library Injection
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1095** — Non-Application Layer Protocol
-- **T1003.006** — OS Credential Dumping: DCSync
-- **T1003.003** — OS Credential Dumping: NTDS
+- **T1571** — Non-Standard Port
+- **T1090** — Proxy
 - **T1046** — Network Service Discovery
 - **T1110.001** — Brute Force: Password Guessing
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1003.006** — OS Credential Dumping: DCSync
+- **T1003.003** — OS Credential Dumping: NTDS
 - **T1056.001** — Input Capture: Keylogging
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1560.001** — Archive Collected Data: Archive via Utility
-- **T1039** — Data from Network Shared Drive
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1543.003** — Create or Modify System Process: Windows Service
 
 ## Kill chain phases observed
 
@@ -90,102 +95,154 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OctLurk/SilkLurk/LurkProxy C2 beacon to campaign domains & IPs
+### SilkLurk/PlugX DLL side-loading via signed NVIDIA/Realtek/Symantec binaries
 
-`UC_8_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("154.196.162.76","45.138.157.165","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name IN ("vulkan-1.dll","nvml.dll","RtkSmbusLoc.dll","RtkNGUI64Loc.dll","RasTls.dll","oleasapi.dll","msbasesysdc.dll","mscastrac.dll") AND (Endpoint.Filesystem.file_path="*\\ProgramData\\*" OR Endpoint.Filesystem.file_path="*\\Users\\*" OR Endpoint.Filesystem.file_path="*\\Windows\\Temp\\*" OR Endpoint.Filesystem.file_path="*\\intel\\*") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name | drop_dm_object_name(Endpoint.Filesystem) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["dns.ssentialserv.xyz","dns.multitoconference.com","tj.tajikistandip.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","ctyuhjerf.kozow.com","uyhvfredc.accesscam.org","gycudore.kozow.com"]);
-let c2Ips = dynamic(["154.196.162.76","45.138.157.165","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130"]);
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessFileName in~ ("nvgwls.exe","NetSetSvc.exe","RtkSmbus.exe","RtkNGUI64.exe","RasTls.exe")
+         and FileName in~ ("vulkan-1.dll","nvml.dll","RtkSmbusLoc.dll","RtkNGUI64Loc.dll","RasTls.dll"))
+    or MD5 in ("8269d6ba1b6842f9152c90cf7add9b93","ef59aad625eebda8650aec5820d6ce69","082d49ef9f14e6811d68c7e0e82e5069","f4578e869a735cfad691f927bae3e638","7c2f64461bb519c6cbf1fc687675514c")
+| where FolderPath has_any (@"\ProgramData\", @"\Users\", @"\Windows\Temp\", @"\intel\")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, MD5, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### OctLurk/SilkLurk/LurkProxy C2 and connectivity-check callout
+
+`UC_8_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("dns.ssentialserv.xyz","dns.multitoconference.com","tj.tajikistandip.com","ctyuhjerf.kozow.com","gycudore.kozow.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","uyhvfredc.accesscam.org") by DNS.src DNS.query | drop_dm_object_name(DNS) | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl in~ (c2Domains) or RemoteIP in (c2Ips)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has_any ("dns.ssentialserv.xyz","dns.multitoconference.com","tj.tajikistandip.com","ctyuhjerf.kozow.com","gycudore.kozow.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","uyhvfredc.accesscam.org")
+    or RemoteIP in ("154.196.162.76","45.138.157.165","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Impacket secretsdump DC hash harvesting via OctLurk shell plugin
+### Fscan internal/external scanning (fc.exe) with pp.txt credential list
 
-`UC_8_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_8_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*secretsdump*" OR Processes.process="*-just-dc*" OR Processes.process="*-just-dc-ntlm*") AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="fc.exe" AND Processes.process_path="*\\Temp\\*") OR Processes.process="*pp.txt*" OR Processes.process="*result.txt*" OR Processes.process_hash="cf903e4a1629aa0582fd0363b5786676" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | drop_dm_object_name(Processes) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "secretsdump" or ProcessCommandLine has_any ("-just-dc", "-just-dc-ntlm", "-outputfile") and ProcessCommandLine has_any ("ntds", "lsa", "sam")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where (FileName =~ "fc.exe" and FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\"))
+    or MD5 == "cf903e4a1629aa0582fd0363b5786676"
+    or (ProcessCommandLine has "pp.txt" and ProcessCommandLine has_any ("-h","-hf","-m ","-p ","-pwf"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Fscan internal/public scanning with pp.txt credential file
+### Impacket secretsdump masquerading as Adobe.exe dumping DC secrets
 
-`UC_8_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*pp.txt*" OR Processes.process_name="fscan*" OR Processes.process="*fscan*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="Adobe.exe" AND (Processes.process="*-just-dc*" OR Processes.process="*secretsdump*" OR Processes.process="*-ntds*")) OR Processes.process="*secretsdump*" OR Processes.process_hash="32a5985543433a4f60da2fafd873b927" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | drop_dm_object_name(Processes) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "fscan" or FileName startswith "fscan" or ProcessCommandLine has "pp.txt" or (ProcessCommandLine has_all ("-p","22","3306") and ProcessCommandLine has_any ("-h","-pwdf","-rf"))
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| where MD5 == "32a5985543433a4f60da2fafd873b927"
+    or (FileName =~ "Adobe.exe" and ProcessCommandLine has_any ("-just-dc","-just-dc-ntlm","secretsdump","-ntds","-history","-outputfile"))
+    or ProcessCommandLine has "secretsdump"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Keylogger masquerading as AnyDesk (name/path/publisher mismatch)
+### AnyDesk-masquerading keylogger drop and keystroke/clipboard capture files
 
-`UC_8_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="anydesk.exe" AND NOT (Processes.process_path="*\\Program Files*\\AnyDesk*" OR Processes.process_path="*\\AppData\\Roaming\\AnyDesk*") by Processes.dest Processes.user Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="AnyDesk.exe" AND Processes.process_path="*\\Users\\Public\\Pictures\\*") OR Processes.process_hash="2a571f6cee42a17d873f4c942649813f" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process_hash | drop_dm_object_name(Processes) | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceProcessEvents
+ | where Timestamp > ago(30d)
+ | where (FileName =~ "AnyDesk.exe" and FolderPath has @"\Users\Public\Pictures\") or MD5 == "2a571f6cee42a17d873f4c942649813f"
+ | project Timestamp, DeviceName, AccountName, Kind="Process", FileName, FolderPath, MD5, ProcessCommandLine),
+(DeviceFileEvents
+ | where Timestamp > ago(30d)
+ | where FolderPath has @"\Users\Public\Libraries\msect\" or (FileName =~ "AnyDesk.exe" and FolderPath has @"\Users\Public\Pictures\")
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Kind="File", FileName, FolderPath, MD5, ProcessCommandLine=InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### SilkLurk data staging via renamed WinRAR/7-Zip from admin shares
+
+`UC_8_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="RecordedTV.exe" AND Processes.process_path="*\\Libraries\\*") OR (Processes.process_name="7z.exe" AND Processes.process_path="*\\windows\\vss\\*") OR Processes.process_hash IN ("18dc8bff47cc282508354771d0c8cf8c","9a1dd1d96481d61934dcc2d568971d06") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | drop_dm_object_name(Processes) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "anydesk.exe"
-| where ProcessVersionInfoCompanyName != "AnyDesk Software GmbH"
-    or (FolderPath !has @"\\Program Files\\AnyDesk" and FolderPath !has @"\\Program Files (x86)\\AnyDesk" and FolderPath !has @"\\AppData\\Roaming\\AnyDesk")
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, ProcessCommandLine, SHA256, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### SilkLurk share collection & WinRAR/7-Zip staging via cmd/PowerShell
-
-`UC_8_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("rar.exe","winrar.exe","7z.exe","7za.exe","7zg.exe")) AND (Processes.parent_process_name IN ("cmd.exe","powershell.exe","pwsh.exe")) AND (Processes.process="*a *" OR Processes.process="* a *" OR Processes.process="*-hp*" OR Processes.process="*-r *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("rar.exe","winrar.exe","7z.exe","7za.exe","7zg.exe")
-| where InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_any (" a ", "-hp", "-p", "-r ", " a -")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where (FileName =~ "RecordedTV.exe" and FolderPath has @"\Libraries\")
+    or (FileName =~ "7z.exe" and FolderPath has @"\windows\vss\")
+    or MD5 in ("18dc8bff47cc282508354771d0c8cf8c","9a1dd1d96481d61934dcc2d568971d06")
+    or (ProcessVersionInfoOriginalFileName in~ ("WinRAR.exe","Rar.exe","7z.exe","7za.exe") and FileName !in~ ("winrar.exe","rar.exe","7z.exe","7za.exe","7zg.exe","7zfm.exe") and ProcessCommandLine has_any (" a ","-hp","-p","-r ","-m5"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoOriginalFileName, ProcessCommandLine, MD5, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### OctLurk/SilkLurk persistence: GoogleUpDate task and rogue service names
+
+`UC_8_17` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" AND Processes.process="*GoogleUpDate*") OR ((Processes.process_name="sc.exe" OR Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe") AND (Processes.process="*NgcCIntSvc*" OR Processes.process="*Cusrxsrv*" OR Processes.process="*specitsrc*" OR Processes.process="*cmtastsvc*" OR Processes.process="*RmSs*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | drop_dm_object_name(Processes) | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceProcessEvents
+ | where Timestamp > ago(30d)
+ | where (FileName =~ "schtasks.exe" and ProcessCommandLine has "GoogleUpDate")
+     or (FileName in~ ("sc.exe","cmd.exe","powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("NgcCIntSvc","Cusrxsrv","specitsrc","cmtastsvc","RmSs"))
+ | project Timestamp, DeviceName, AccountName, Kind="Process", FileName, ProcessCommandLine, InitiatingProcessFileName),
+(DeviceRegistryEvents
+ | where Timestamp > ago(30d)
+ | where RegistryKey has @"\Services\" and RegistryKey has_any ("NgcCIntSvc","Cusrxsrv","specitsrc","cmtastsvc","RmSs")
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Kind="Registry", FileName=RegistryValueName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName)
 | order by Timestamp desc
 ```
 
@@ -550,4 +607,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

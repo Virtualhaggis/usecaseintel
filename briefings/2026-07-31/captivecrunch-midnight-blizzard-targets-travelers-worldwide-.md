@@ -64,14 +64,15 @@ Microsoft Entra ID Protecti…
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1543.003** — Create or Modify System Process: Windows Service
-- **T1036.004** — Masquerading: Masquerade Task or Service
+- **T1543.003** — Windows Service
+- **T1036.005** — Match Legitimate Name or Location
+- **T1036.004** — Masquerade Task or Service
+- **T1583.001** — Domains
 - **T1557** — Adversary-in-the-Middle
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1189** — Drive-by Compromise
 - **T1621** — Multi-Factor Authentication Request Generation
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1584.002** — Compromise Infrastructure: DNS Server
+- **T1204.002** — Malicious File
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -79,74 +80,126 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### CornFlake RAT drop/exec at %APPDATA%\svchost32\svchost32.exe (Storm-2945)
+### CornFlake implant execution from %APPDATA%\svchost32\svchost32.exe
 
 `UC_4_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="*\\svchost32\\svchost32.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_path="*\\svchost32\\svchost32.exe" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents | where Timestamp > ago(30d) | where FolderPath endswith @"\svchost32\svchost32.exe" | project Timestamp, DeviceName, DeviceId, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, AccountName, ReportId | order by Timestamp desc
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath endswith @"\svchost32\svchost32.exe"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, DeviceId, AccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, ReportId
+| order by Timestamp desc
 ```
 
-### CornFlake 'Cloud Sync Service' (svchost32) service masquerade persistence
+### CornFlake persistence: 'svchost32' service / 'Cloud Sync Service' registration
 
 `UC_4_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Services where (Services.service_name="svchost32" OR Services.description="Synchronizes files with the cloud storage provider") by Services.dest Services.service_name Services.service_path Services.description Services.start_mode | `drop_dm_object_name(Services)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Services where Services.service_name="svchost32" OR Services.description="Synchronizes files with the cloud storage provider" by Services.dest Services.service_name Services.description Services.service_path | `drop_dm_object_name(Services)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceRegistryEvents | where Timestamp > ago(30d) | where (RegistryKey has @"\Services\svchost32") or (RegistryValueData in~ ("Cloud Sync Service", "Synchronizes files with the cloud storage provider")) | project Timestamp, DeviceName, DeviceId, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ReportId | order by Timestamp desc
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has @"\Services\svchost32"
+   or (RegistryValueName == "DisplayName" and RegistryValueData =~ "Cloud Sync Service")
+   or (RegistryValueName == "Description" and RegistryValueData =~ "Synchronizes files with the cloud storage provider")
+| project Timestamp, DeviceName, DeviceId, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
-### CaptiveCrunch AiTM/C2 connections to Storm-2945 doppelganger domains and IPs
+### Network connection to Storm-2945 doppelganger M365 domains / C2 IPs
 
 `UC_4_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let target_domains = dynamic(["ms365-device.com","ms365-live.com","m365-owa.com","owa-ms365.com"]); let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]); DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (target_domains) or RemoteIP in (target_ips) | project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, ReportId | order by Timestamp desc
+let target_domains = dynamic(["ms365-device.com","ms365-live.com","m365-owa.com","owa-ms365.com"]);
+let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any(target_domains) or RemoteIP in (target_ips)
+| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
-### Storm-2945 device-code phishing: Entra sign-in / device registration from actor IPs
+### Captive-portal hijack: connectivity-check endpoint resolving to Storm-2945 IP
 
-`UC_4_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where (Authentication.src IN ("31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112") AND Authentication.action="success") by Authentication.user Authentication.src Authentication.app Authentication.signature | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("msftconnecttest.com","msftncsi.com","edge-http.microsoft.com","captive.apple.com","detectportal.firefox.com","connectivitycheck.gstatic.com","connectivitycheck.android.com")) AND (DNS.answer IN ("31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112")) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]); AADSignInEventsBeta | where Timestamp > ago(30d) | where IPAddress in (target_ips) | where ErrorCode == 0 | project Timestamp, AccountUpn, AccountObjectId, Application, AppDisplayName, ResourceDisplayName, IPAddress, Country, City, ClientAppUsed, DeviceTrustType, ConditionalAccessStatus, UserAgent | order by Timestamp desc
+let ncsi_endpoints = dynamic(["msftconnecttest.com","edge-http.microsoft.com","msftncsi.com","captive.apple.com","connectivitycheck.gstatic.com","connectivitycheck.android.com","android.clients.google.com","www.gstatic.com","detectportal.firefox.com","detectportal.brave-http-only.com"]);
+let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any(ncsi_endpoints)
+| where RemoteIP in (target_ips)
+| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
-### Captive-portal NCSI hijack: connectivity-check host resolving to Storm-2945 IP
+### Entra sign-in / device-code auth from Storm-2945 CaptiveCrunch IPs
 
-`UC_4_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_ip IN ("31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112") AND (Web.url="*msftconnecttest.com*" OR Web.url="*msftncsi.com*" OR Web.url="*edge-http.microsoft.com*" OR Web.url="*connectivitycheck.gstatic.com*" OR Web.url="*captive.apple.com*" OR Web.url="*detectportal.firefox.com*")) by Web.src Web.url Web.dest_ip Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" AND Authentication.src IN ("31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112") by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let ncsi_endpoints = dynamic(["msftconnecttest.com","edge-http.microsoft.com","msftncsi.com","captive.apple.com","clients1.google.com","clients3.google.com","clients4.google.com","clients6.google.com","connectivitycheck.gstatic.com","connectivitycheck.android.com","android.clients.google.com","www.gstatic.com","detectportal.firefox.com","detectportal.brave-http-only.com"]); let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]); DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (ncsi_endpoints) | where RemoteIP in (target_ips) | project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, ReportId | order by Timestamp desc
+let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]);
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress in (target_ips)
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City, Application, AppDisplayName, ResourceDisplayName, ClientAppUsed, ConditionalAccessStatus
+| order by Timestamp desc
+```
+
+### ClickFix fake-update chain: browser/Run-dialog interpreter reaching Storm-2945 infra
+
+`UC_4_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("explorer.exe","msedge.exe","chrome.exe","firefox.exe","brave.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","curl.exe","bitsadmin.exe","certutil.exe")) AND (Processes.process="*http*" OR Processes.process="*ms365-*" OR Processes.process="*m365-*" OR Processes.process="*owa-ms365*" OR Processes.process="*.apk*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let target_domains = dynamic(["ms365-device.com","ms365-live.com","m365-owa.com","owa-ms365.com"]);
+let target_ips = dynamic(["31.57.243.154","38.146.28.75","38.146.28.132","104.194.159.150","107.189.26.194","213.145.86.112"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","curl.exe","bitsadmin.exe","certutil.exe")
+| where InitiatingProcessParentFileName in~ ("explorer.exe","msedge.exe","chrome.exe","firefox.exe","brave.exe")
+| where RemoteUrl has_any(target_domains) or RemoteIP in (target_ips)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -559,4 +612,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

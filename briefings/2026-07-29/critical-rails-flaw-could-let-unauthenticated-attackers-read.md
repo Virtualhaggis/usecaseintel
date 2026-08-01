@@ -29,8 +29,8 @@ Tracked as CVE-2026-66066 (CVSS score: 9.5), the flaw can expose the Rails proce
 - **T1569.002** — Service Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1083** — File and Directory Discovery
+- **T1211** — Exploitation for Defense Evasion
+- **T1552.001** — Credentials In Files
 - **T1005** — Data from Local System
 
 ## Kill chain phases observed
@@ -39,55 +39,60 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Exposed Rails apps vulnerable to Active Storage libvips file-read (CVE-2026-66066)
+### Active Storage direct-upload + representation abuse (CVE-2026-66066 libvips file read)
 
-`UC_60_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_60_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-66066" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.category Vulnerabilities.severity Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| `ctime(firstTime)` | `ctime(lastTime)`
-| sort - severity
+| tstats summariesonly=t count, values(Web.url) as urls, dc(eval(if(like(Web.url,"%direct_uploads%"),1,null()))) as uploads, dc(eval(if(like(Web.url,"%representations%"),1,null()))) as reps from datamodel=Web where (Web.url="*/rails/active_storage/direct_uploads*" OR Web.url="*/rails/active_storage/representations*" OR Web.url="*/rails/active_storage/blobs*") by Web.src, Web.http_user_agent, Web.dest, Web.status | `drop_dm_object_name(Web)` | where uploads>0 AND reps>0 | sort - count
+```
+
+### libvips 'matload' / MATLAB-HDF5 unsafe loader invocation on Rails host
+
+`UC_60_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process_name IN ("vips","vipsthumbnail","vipsheader") AND (Processes.process="*matload*" OR Processes.process="*VipsForeignLoadMat*" OR Processes.process="*.mat*" OR Processes.process="*matio*")) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId == "CVE-2026-66066"
-| join kind=leftouter (
-    DeviceInfo
-    | where Timestamp > ago(1d)
-    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId
-  ) on DeviceId
-| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
-| order by IsInternetFacing desc, DeviceName asc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("vips","vipsthumbnail","vipsheader")
+| where ProcessCommandLine has_any ("matload","VipsForeignLoadMat",".mat","matio")
+| where InitiatingProcessFileName has_any ("ruby","puma","bundle","rails","unicorn","passenger")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
-### Unauthenticated image-upload burst to Rails Active Storage endpoints (CVE-2026-66066 delivery)
-
-`UC_60_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Web where Web.http_method IN ("POST","PUT") AND (Web.uri_path="*/rails/active_storage/*" OR Web.uri_path="*/active_storage/direct_uploads*" OR Web.uri_path="*/active_storage/blobs*") by Web.src Web.dest Web.uri_path Web.status
-| `drop_dm_object_name(Web)`
-| stats sum(count) as upload_attempts values(uri_path) as paths values(status) as statuses dc(uri_path) as distinct_paths by src dest
-| where upload_attempts > 20
-| sort - upload_attempts
-```
-
-### Rails/libvips worker reading process environment or system secrets (CVE-2026-66066 file-read)
+### Rails worker reads secret files after Active Storage upload (CVE-2026-66066 payoff)
 
 `UC_60_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action=read AND (Endpoint.Filesystem.file_path="/proc/self/environ" OR Endpoint.Filesystem.file_path="*/proc/*/environ" OR Endpoint.Filesystem.file_path="/etc/passwd" OR Endpoint.Filesystem.file_path="/etc/shadow" OR Endpoint.Filesystem.file_path="*/.aws/credentials" OR Endpoint.Filesystem.file_path="*/.ssh/id_rsa") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.user Endpoint.Filesystem.process_guid
-| `drop_dm_object_name(Endpoint.Filesystem)`
-| `ctime(firstTime)` | `ctime(lastTime)`
-| sort - lastTime
+| tstats summariesonly=t count, values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*/config/master.key","*/config/credentials.yml.enc","*/config/credentials/*.key","*/config/database.yml","*/.env","/etc/passwd")) by Filesystem.dest, Filesystem.file_path, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name IN ("vips","vipsthumbnail") | sort - count
+```
+
+### Exposure: unpatched Rails/libvips vulnerable to CVE-2026-66066
+
+`UC_60_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count from datamodel=Vulnerabilities.All_Vulnerabilities where Vulnerabilities.cve="CVE-2026-66066" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2026-66066"
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -328,4 +333,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
