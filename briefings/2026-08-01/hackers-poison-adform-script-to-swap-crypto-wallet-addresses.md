@@ -39,9 +39,7 @@ Anyone who visited a site carrying the aff…
 - **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1571** — Non-Standard Port
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1189** — Drive-by Compromise
+- **T1199** — Trusted Relationship
 
 ## Kill chain phases observed
 
@@ -49,64 +47,43 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Adform crypto-stealer C2 beacon to 84.32.102.230:7744
+### Adform crypto-stealer C2 beacon to 84.32.102.230:7744 from browser
 
 `UC_2_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" AND All_Traffic.dest_port=7744 by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteIP == "84.32.102.230"
-| where RemotePort == 7744
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
+| where Timestamp > ago(30d)
+| where RemoteIP == "84.32.102.230" and RemotePort == 7744
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Browser process beaconing to raw public IP on non-standard port 7744
+### Adform supply-chain: browser loaded s2.adform.net/trackpoint-async.js then beaconed to C2
 
-`UC_2_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, dc(All_Traffic.src) as hosts, min(_time) as firstTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=7744 All_Traffic.direction="outbound" NOT (All_Traffic.dest="10.0.0.0/8" OR All_Traffic.dest="172.16.0.0/12" OR All_Traffic.dest="192.168.0.0/16") by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) | sort - count
-```
+`UC_2_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let Lookback = 30d;
+let Beacon = DeviceNetworkEvents
+    | where Timestamp > ago(Lookback)
+    | where RemoteIP == "84.32.102.230" and RemotePort == 7744
+    | project BeaconTime = Timestamp, DeviceId, BeaconProcess = InitiatingProcessFileName;
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemotePort == 7744
-| where RemoteIPType == "Public"
-| where isempty(RemoteUrl)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe","iexplore.exe")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), Hosts=dcount(DeviceName) by RemoteIP, RemotePort, InitiatingProcessFileName
-| order by FirstSeen desc
-```
-
-### Exposure hunt: hosts that loaded Adform trackpoint-async.js during the compromise window
-
-`UC_2_12` · phase: **delivery** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url="*s2.adform.net/trackpoint-async.js*" by Web.src, Web.user, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp between (datetime(2026-07-20) .. datetime(2026-07-28 23:59:59))
+| where Timestamp > ago(Lookback)
 | where RemoteUrl has "s2.adform.net"
-| where RemoteUrl has "trackpoint" or RemoteUrl has "trackpoint-async.js"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe","iexplore.exe")
-| project Timestamp, DeviceName, User=InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName
-| order by Timestamp desc
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| join kind=inner Beacon on DeviceId
+| where BeaconTime between (Timestamp .. Timestamp + 10m)
+| project ScriptLoadTime = Timestamp, BeaconTime, DeviceName, InitiatingProcessFileName, RemoteUrl, BeaconProcess
+| order by ScriptLoadTime desc
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -456,4 +433,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

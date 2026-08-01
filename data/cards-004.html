@@ -2119,11 +2119,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1566,T1566.002"
   data-sources="The Hacker News"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
-  data-targets="azure,linux,m365,windows"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network,web"
+  data-targets="azure,m365,windows"
   data-uc-count="9" data-llm-uc-count="3"
-  data-search="Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue CVE-2026-16812 CVE-2025-68686 CVE-2026-16723 T1190 T1566 T1566.002 [LLM] Arista VeloCloud Orchestrator (CVE-2026-16812) OS command injection in HTTP requests [LLM] Inbound connection from Arista VeloCloud CVE-2026-16812 attacker IPs [LLM] Outbound connection to Arista VeloCloud CVE-2026-16812 attacker infrastructure Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
+  data-search="Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue CVE-2026-16812 CVE-2025-68686 CVE-2026-16723 T1190 T1566 T1566.002 [LLM] Inbound access to Arista VeloCloud Orchestrator web interface from CVE-2026-16812 attacker IPs [LLM] OS command-injection payload patterns in VeloCloud Orchestrator web access logs [LLM] Outbound C2/exfil from internal host to VeloCloud CVE-2026-16812 attacker IPs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-attackers-exploit-arista-velocloud-orchestrator-command-inje" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2183,138 +2183,65 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Inbound connection from Arista VeloCloud CVE-2026-16812 attacker IPs · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Arista VeloCloud Orchestrator (CVE-2026-16812) OS command injection in HTTP requests · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Inbound access to Arista VeloCloud Orchestrator web interface from CVE-2026-16812 attacker IPs · [LLM] OS command-injection payload patterns in VeloCloud Orchestrator web access logs · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound connection to Arista VeloCloud CVE-2026-16812 attacker infrastructure · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound C2/exfil from internal host to VeloCloud CVE-2026-16812 attacker IPs · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="73b694a981" data-platforms="sent,sigma,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="933f2c4864" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Arista VeloCloud Orchestrator (CVE-2026-16812) OS command injection in HTTP requests</span>
+    <span class="uc-title">Inbound access to Arista VeloCloud Orchestrator web interface from CVE-2026-16812 attacker IPs</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="73b694a981" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="933f2c4864" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP GET/POST requests to an on-prem VeloCloud Orchestrator (VCO) web interface carrying OS command-injection metacharacters (;, |, &amp;&amp;, $( ), backticks and their URL-encoded forms) — the CWE-78 vector for the actively-exploited CVE-2026-16812. Boosted to high confidence when the request also originates from one of the three Arista-published attacker IPs.
+    <div class="uc-desc">Hunts inbound network/web traffic sourced from the three Arista-attributed attacker IPs (8.19.75.217, 206.72.242.124, 206.72.242.162) reaching an internet-facing VeloCloud Orchestrator (VCO) web interface. These IPs were named by Arista Security Advisory 0144 as responsible for actively exploiting the unauthenticated OS command-injection flaw, so any appearance as a source of web/management traffic is high-fidelity.
 
-Rationale: Anchors on the CVE-2026-16812 vector confirmed by Arista/BleepingComputer (unauthenticated CWE-78 command injection delivered via HTTP GET/POST) plus the three published attacker IPs. Web-payload logic only lives in web/proxy telemetry, so Splunk Web DM and Sentinel CommonSecurityLog carry it; Defender AH / Falcon FDR / CloudTrail have no web-request-body surface, hence left empty.
+Rationale: Anchored on the three IPs Arista Security Advisory 0144 explicitly names as conducting the CVE-2026-16812 attacks (corroborated by CISA KEV and BleepingComputer); Arista directly instructs operators to block these IPs and review logs for their presence. Attacker-attributed IOC IPs are near-zero-FP.
 
 Cross-checked against:
   • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://www.securityweek.com/critical-arista-velocloud-orchestrator-vulnerability-exploited-as-zero-day/
-  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate VCO/API calls that legitimately carry &#x27;;&#x27; or &#x27;|&#x27; or URL-encoded characters in query strings (filter expressions, base64 tokens)</li><li>Authorized vulnerability scanners (Nessus/Qualys/Rapid7) probing the orchestrator with injection test strings</li><li>Internal penetration test or red-team engagement against the VCO</li><li>Monitoring/backup integrations that pass complex encoded parameters to orchestrator endpoints</li><li>WAF already blocking the request (DeviceAction=blocked) — still logged but not a true compromise</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestClientApplication !has &quot;Nessus&quot; and RequestClientApplication !has &quot;Qualys&quot; and RequestClientApplication !has &quot;Rapid7&quot; and SourceIP !in (&quot;10.0.0.0/8-scanner-range-placeholder&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestURL/body and HTTP status for the matched requests; a 200/500 with command output or long processing time on an injection payload is far higher fidelity than a 403/blocked probe. Confirm the DestinationIP/host is a VCO on an affected build (5.2.x&lt;5.2.3.14, 6.1.x&lt;6.1.3.4, 6.4.x&lt;6.4.2.4, 7.0.x&lt;7.0.0.1). 2) Contain: block the source IP at the perimeter, restrict the VCO web interface to trusted admin networks, and if source is one of the three IOC IPs treat as confirmed and isolate the VCO. 3) Hunt: preserve VCO web-access, backend app, system and DB logs; pivot to UC &#x27;Outbound connection to attacker infrastructure&#x27; for the same host, review recent admin/config changes and any credential/certificate access on the VCO and downstream VeloCloud Edge devices.</div></details>
+  • https://www.securityweek.com/critical-arista-velocloud-orchestrator-vulnerability-exploited-as-zero-day/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A threat-intel or attack-surface scanning vendor you subscribe to reusing one of these IPs after takedown/reassignment</li><li>Your own external penetration test or ASM scan happening to egress from a cloud IP later attributed elsewhere</li><li>Shared-hosting/CDN IP reallocation months after the campaign</li><li>Firewall NAT logging that records the IP but the connection was already dropped/denied</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceAction != &quot;deny&quot; and DeviceAction != &quot;blocked&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm whether the destination of the inbound flow is an internet-exposed VeloCloud Orchestrator and whether DeviceAction/action shows allowed vs blocked; if allowed, pull the matching VCO web-access log lines for the same timestamp. 2) CONTAIN: Block all three IPs at the perimeter, restrict the VCO web interface to trusted admin networks, and if the request was allowed, isolate the VCO host and begin evidence preservation (web-access, backend app, system, and DB logs) before patching to the fixed release (5.2.3.14 / 6.1.3.4 / 6.4.2.4 / 7.0.0.1). 3) HUNT: Pivot to UC #2 (injection payloads in the web logs) and UC #3 (outbound callbacks) for the same host and rotate VCO/Edge credentials, certificates and keys per Arista guidance.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestMethod in (&quot;GET&quot;,&quot;POST&quot;)
-| where RequestURL contains &quot;;&quot; or RequestURL contains &quot;|&quot; or RequestURL contains &quot;$(&quot; or RequestURL contains &quot;`&quot; or RequestURL contains &quot;&amp;&amp;&quot; or RequestURL contains &quot;%3B&quot; or RequestURL contains &quot;%7C&quot; or RequestURL contains &quot;%24%28&quot; or RequestURL contains &quot;%60&quot; or RequestURL contains &quot;%26%26&quot; or SourceIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, RequestClientApplication, DeviceAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator CVE-2026-16812 OS Command Injection in Web Request
-id: 6b1f0c2a-9d4e-4a7c-8b21-1f2e3a4c5d61
-description: Detects HTTP GET/POST requests to a VeloCloud Orchestrator carrying OS command-injection metacharacters (CVE-2026-16812, CWE-78), or requests from the three Arista-published attacker IPs.
-references:
-  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
-  - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
-author: SOC Detection Engineering
-date: 2026/07/28
-tags:
-  - attack.t1190
-  - attack.t1059
-  - attack.t1059.004
-logsource:
-  category: webserver
-detection:
-  selection_method:
-    cs-method:
-      - &#x27;GET&#x27;
-      - &#x27;POST&#x27;
-  selection_payload:
-    cs-uri-query|contains:
-      - &#x27;;&#x27;
-      - &#x27;|&#x27;
-      - &#x27;$(&#x27;
-      - &#x27;`&#x27;
-      - &#x27;&amp;&amp;&#x27;
-      - &#x27;%3B&#x27;
-      - &#x27;%7C&#x27;
-      - &#x27;%24%28&#x27;
-      - &#x27;%60&#x27;
-      - &#x27;%26%26&#x27;
-  selection_ioc:
-    c-ip:
-      - &#x27;8.19.75.217&#x27;
-      - &#x27;206.72.242.124&#x27;
-      - &#x27;206.72.242.162&#x27;
-  condition: (selection_method and selection_payload) or selection_ioc
-level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;)) AND (Web.url=&quot;*;*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*`*&quot; OR Web.url=&quot;*&amp;&amp;*&quot; OR Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*%26%26*&quot; OR Web.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_method IN (&quot;GET&quot;,&quot;POST&quot;)) AND (Web.url=&quot;*;*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*`*&quot; OR Web.url=&quot;*&amp;&amp;*&quot; OR Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*%26%26*&quot; OR Web.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.url Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="06f097c98e" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Inbound connection from Arista VeloCloud CVE-2026-16812 attacker IPs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="06f097c98e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Alerts on any inbound network connection or web request sourced from the three IP addresses Arista attributed to CVE-2026-16812 exploitation (8.19.75.217, 206.72.242.124, 206.72.242.162). A direct IOC match indicating an exploit/scan attempt against an internet-facing VCO or any exposed asset.
-
-Rationale: Pure IOC match on the three attacker IPs published by Arista and re-confirmed by BleepingComputer and CyberSecurityNews. Because they are dedicated attack-source IPs (not shared CDN/hosting), a src-side match on an internet-facing VCO is high-fidelity for an exploit/scan attempt.
-
-Cross-checked against:
-  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
-  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The IP is later re-allocated to a benign hosting/VPN provider and reused by legitimate traffic (revalidate IOC age before alerting)</li><li>A third-party threat-intel or research scanner transiently sharing the same IP block</li><li>Internal security tool configured to source-spoof or proxy through an external range that overlaps</li><li>Firewall already dropped the connection (DeviceAction=deny) — telemetry present but no exposure</li><li>Sinkhole/honeypot traffic if the org runs deception on the same segment</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify which internal asset was the destination and whether it is a VCO on an affected build; check whether the firewall permitted or denied the flow and what ports/URLs were hit. 2) Contain: block all three IOC IPs at the perimeter (Arista&#x27;s explicit guidance) and restrict the VCO web interface to trusted admin networks. 3) Hunt: for any host that ACCEPTED a connection from these IPs, review VCO web-access/app/DB logs for command-injection payloads (UC1) and check for return outbound connections to the same IPs (UC3); rotate credentials/certificates and validate managed VeloCloud Edge device state if compromise is confirmed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-102-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-102-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let attackerIPs = dynamic([&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]);
+DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionRequest&quot;,&quot;ConnectionSuccess&quot;,&quot;ListeningConnectionCreated&quot;)
-| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where RemoteIP in (attackerIPs)
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let attackerIPs = dynamic([&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]);
+CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where SourceIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationHostName, DestinationPort, RequestURL, DeviceAction, Activity
+| where SourceIP in (attackerIPs)
+| where DestinationPort in (80,443,8443,9443) or isempty(tostring(DestinationPort))
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourcePort, DestinationIP, DestinationPort, RequestURL, RequestMethod, DeviceAction, DeviceEventClassID
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Inbound Connection From Arista VeloCloud CVE-2026-16812 Attacker IPs
-id: 2c9a7e14-5b83-4f6d-9a12-7e4d8c1b3f92
-description: Detects inbound network traffic originating from the three IPs Arista attributed to CVE-2026-16812 VeloCloud Orchestrator exploitation.
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Arista VeloCloud Orchestrator CVE-2026-16812 Attacker IP Inbound Connection
+id: 3f6c2b91-2a1e-4d0b-9d6e-8c2a5b71e401
+description: Detects inbound traffic from IP addresses attributed by Arista Security Advisory 0144 to active exploitation of the VeloCloud Orchestrator on-prem OS command-injection flaw (CVE-2026-16812).
 references:
   - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
 author: SOC Detection Engineering
-date: 2026/07/28
+date: 2026/08/01
 tags:
+  - attack.initial_access
   - attack.t1190
-  - attack.t1595.002
 logsource:
   category: firewall
 detection:
@@ -2325,89 +2252,149 @@ detection:
       - &#x27;206.72.242.162&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog CIDR(@network.client.ip, 8.19.75.217/32, 206.72.242.124/32, 206.72.242.162/32)</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| RemoteAddressIP4=/^(8\.19\.75\.217|206\.72\.242\.124|206\.72\.242\.162)$/
-| groupBy([aid, ComputerName, LocalAddressIP4, LocalPort, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
-| filter srcAddr in [&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:8.19.75.217 OR @DestinationIp:206.72.242.124 OR @DestinationIp:206.72.242.162 OR @SourceIp:8.19.75.217 OR @SourceIp:206.72.242.124 OR @SourceIp:206.72.242.162)</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemoteAddressIP4=&quot;8.19.75.217&quot; OR RemoteAddressIP4=&quot;206.72.242.124&quot; OR RemoteAddressIP4=&quot;206.72.242.162&quot;)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) AND All_Traffic.dest_port IN (80,443,8443,9443) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) AND All_Traffic.dest_port IN (80,443,8443,9443) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="df79a15e35" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="133017d310" data-platforms="sent,sigma,spl" data-targets="">
   <summary>
-    <span class="uc-title">Outbound connection to Arista VeloCloud CVE-2026-16812 attacker infrastructure</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">OS command-injection payload patterns in VeloCloud Orchestrator web access logs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="df79a15e35" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="133017d310" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects any internal host — especially the VeloCloud Orchestrator itself — initiating outbound connections to the three attacker IPs. Arista explicitly flags unexpected outbound HTTP/HTTPS from the VCO host as a compromise sign; a VCO reaching OUT to attacker infra indicates reverse shell, C2 beacon, or config/DB exfiltration following successful command injection.
+    <div class="uc-desc">Hunts VeloCloud Orchestrator web/proxy access logs for HTTP requests whose URL or query string carries shell metacharacters, command-substitution syntax, or encoded equivalents — the exploitation shape of the unauthenticated OS command-injection flaw CVE-2026-16812. Arista&#x27;s own indicator list calls out web requests containing encoded characters and references to internal services, making the request content the pivot regardless of source IP.
 
-Rationale: Directly implements Arista&#x27;s compromise-detection guidance (&#x27;unexpected outbound HTTP/HTTPS traffic from the VCO host&#x27;) using the three published IOC IPs on the destination side. Outbound-to-attacker is the strongest single confirmation of a successful CVE-2026-16812 exploit and carries near-zero benign FP.
+Rationale: Uses the request-content indicators Arista published for CVE-2026-16812 (encoded characters / internal-service references in web requests) combined with the vulnerability class (OS command injection). Hunting-tier and source-agnostic because the article/advisory publish no endpoint path or parameter name — the metacharacter set is the only groundable signal, so it needs analyst triage.
 
 Cross-checked against:
   • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
-  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/</div>
+  • https://www.rescana.com/post/active-exploitation-alert-arista-velocloud-orchestrator-cve-2026-16812-command-injection-vulnerability-enables-remote-co
+  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate VCO admin/API calls that URL-encode pipe or semicolon characters inside filter or query parameters</li><li>SSO/OAuth redirect URLs carrying encoded &#x27;&amp;&#x27; and &#x27;;&#x27; in state parameters</li><li>Monitoring/health-check probes that append query strings</li><li>Automation or config-push tooling that legitimately passes list parameters delimited by &#x27;;&#x27; or &#x27;|&#x27;</li><li>Security scanners you own probing the same interface</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestMethod in (&quot;POST&quot;,&quot;GET&quot;) and RequestURL matches regex @&quot;(?i)(%24%28|\$\(|%60|`|\$\{IFS|%3b[a-z/]|;[a-z/])&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Decode the flagged RequestURL/uri_query and judge whether the metacharacters form an executable command (e.g. `;id`, `$(...)`, backticked subshell, `${IFS}`) versus benign encoded delimiters; correlate SourceIP against the UC #1 attacker-IP list. 2) CONTAIN: If a plausible injection is confirmed on an internet-facing VCO, restrict the web interface to trusted admin nets, snapshot and preserve web/app/system/DB logs, and patch to the fixed VCO release. 3) HUNT: On the same host look for spawned shells, file/archive creation, database exports and outbound callbacks (UC #3), then rotate VCO and downstream Edge credentials, certs and keys.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let injTokens = dynamic([&quot;;&quot;,&quot;|&quot;,&quot;`&quot;,&quot;$(&quot;,&quot;&amp;&amp;&quot;,&quot;%3b&quot;,&quot;%7c&quot;,&quot;%60&quot;,&quot;%24%28&quot;,&quot;%26%26&quot;,&quot;${IFS&quot;,&quot;$%7bIFS&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where isnotempty(RequestURL)
+| where RequestURL has_any (injTokens)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, RequestClientApplication, DeviceAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator Web Request With OS Command-Injection Metacharacters (CVE-2026-16812)
+id: b7d4e0a2-5c93-4f18-8a2b-1e9c7d3a5f22
+description: Detects HTTP requests to the VeloCloud Orchestrator web interface whose URI/query contains shell metacharacters or command-substitution syntax (raw or URL-encoded), consistent with exploitation of the CVE-2026-16812 OS command-injection flaw.
+references:
+  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  - https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
+author: SOC Detection Engineering
+date: 2026/08/01
+tags:
+  - attack.execution
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - &#x27;;&#x27;
+      - &#x27;|&#x27;
+      - &#x27;`&#x27;
+      - &#x27;$(&#x27;
+      - &#x27;&amp;&amp;&#x27;
+      - &#x27;%3b&#x27;
+      - &#x27;%7c&#x27;
+      - &#x27;%60&#x27;
+      - &#x27;%24%28&#x27;
+      - &#x27;%26%26&#x27;
+      - &#x27;${IFS&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query=&quot;*;*&quot; OR Web.uri_query=&quot;*|*&quot; OR Web.uri_query=&quot;*`*&quot; OR Web.uri_query=&quot;*$(*&quot; OR Web.uri_query=&quot;*&amp;&amp;*&quot; OR Web.uri_query=&quot;*%3b*&quot; OR Web.uri_query=&quot;*%7c*&quot; OR Web.uri_query=&quot;*%60*&quot; OR Web.uri_query=&quot;*%24%28*&quot; OR Web.uri_query=&quot;*%26%26*&quot; OR Web.uri_query=&quot;*$%7bIFS*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*%24%28*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query=&quot;*;*&quot; OR Web.uri_query=&quot;*|*&quot; OR Web.uri_query=&quot;*`*&quot; OR Web.uri_query=&quot;*$(*&quot; OR Web.uri_query=&quot;*&amp;&amp;*&quot; OR Web.uri_query=&quot;*%3b*&quot; OR Web.uri_query=&quot;*%7c*&quot; OR Web.uri_query=&quot;*%60*&quot; OR Web.uri_query=&quot;*%24%28*&quot; OR Web.uri_query=&quot;*%26%26*&quot; OR Web.uri_query=&quot;*$%7bIFS*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*%24%28*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="890fed2be8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Outbound C2/exfil from internal host to VeloCloud CVE-2026-16812 attacker IPs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="890fed2be8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts outbound HTTP/HTTPS connections from any internal host — especially a VeloCloud Orchestrator — to the three Arista-attributed attacker IPs, sizing transferred bytes to catch beaconing or data staging. Arista specifically warns to check for unexpected outbound network activity from the VCO host after exploitation; an outbound flow to attacker infrastructure indicates established post-exploitation control rather than a blocked inbound probe.
+
+Rationale: Combines the attacker-attributed IPs (Arista SA 0144 / CISA KEV) with Arista&#x27;s explicit guidance to hunt unexpected outbound HTTP/HTTPS from the VCO host, scoped to web ports and aggregated on bytes_out to surface beaconing/exfil. Outbound to named C2 infra is a distinct, high-fidelity pivot from the inbound exploitation in UC #1.
+
+Cross-checked against:
+  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  • https://securityaffairs.com/196130/security/u-s-cisa-adds-arista-velocloud-orchestrator-and-fortinet-fortios-flaws-to-its-known-exploited-vulnerabilities-catalog.html
+  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IOC IP later re-used by a benign SaaS/CDN endpoint the org legitimately calls (revalidate IOC freshness)</li><li>Security tooling or threat-intel enrichment service performing a deliberate reachability/callback test to the IPs</li><li>A sandbox/detonation host intentionally beaconing to attacker infra during analysis</li><li>Firewall denied the egress (DeviceAction=deny) — flagged but no data actually left</li><li>Proxy that NATs many hosts, obscuring which internal system truly initiated the connection</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source host — if it is the VeloCloud Orchestrator or a host that earlier accepted inbound from these IPs (UC2), treat as confirmed compromise; pull the InitiatingProcess and bytes transferred to gauge exfil vs beacon. 2) Contain: isolate the source host from the network, block the IOC IPs egress-wide, and snapshot VCO web-access/backend/system/DB logs plus file-system timestamps before remediation. 3) Hunt: rotate all VCO admin credentials, certificates and key material; review recent config changes and database exports; validate managed VeloCloud Edge device state and rebuild/restore the orchestrator from a trusted source per Arista guidance.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A monitoring/threat-intel appliance you operate that actively probes or sinkholes these IPs</li><li>IP reassignment after campaign takedown so a benign service now answers on the same address</li><li>Reverse-DNS/geolocation enrichment tools resolving the IP as part of triage automation</li><li>A honeypot or deception host you run that is expected to touch attacker infra</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;honeypot&quot;,&quot;decoy&quot;,&quot;sinkhole&quot;) or InitiatingProcessFileName in~ (&quot;nessus.exe&quot;,&quot;nmap.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the internal source host and the initiating process; if the source is the VeloCloud Orchestrator or another internet-facing appliance, treat as likely post-exploitation and check byte volume for exfil sizing. 2) CONTAIN: Block the three IPs egress-wide, isolate the source host, and preserve VCO web/app/system/DB logs and file-system timestamps before rebuilding from a trusted image per Arista guidance. 3) HUNT: Correlate back to UC #1/#2 for the initial inbound exploitation window, review recent VCO admin activity and config changes, validate managed Edge device state, and rotate all VCO/Edge credentials, certificates and cryptographic keys.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-102-uc2-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let attackerIPs = dynamic([&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]);
+DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionRequest&quot;,&quot;ConnectionFailed&quot;)
-| project Timestamp, DeviceName, ActionType, LocalIP, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where ActionType == &quot;ConnectionSuccess&quot;
+| where RemoteIP in (attackerIPs)
+| where RemotePort in (80,443,8443,9443)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let attackerIPs = dynamic([&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]);
+ImNetworkSession
 | where TimeGenerated &gt; ago(30d)
-| where DestinationIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourceHostName, DestinationIP, DestinationPort, SentBytes, ReceivedBytes, RequestURL, DeviceAction
-| order by SentBytes desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection To Arista VeloCloud CVE-2026-16812 Attacker Infrastructure
-id: 8d3b6f27-1c94-4a05-b7e8-2f6a9d4c0e13
-description: Detects internal hosts (notably the VeloCloud Orchestrator) connecting outbound to the three IPs Arista attributed to CVE-2026-16812 exploitation - a post-exploitation C2/exfil indicator.
+| where DstIpAddr in (attackerIPs)
+| where DstPortNumber in (80,443,8443,9443) or NetworkDirection == &quot;Outbound&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Sessions=count(), BytesOut=sum(NetworkBytes) by SrcIpAddr, DvcHostname, DstIpAddr, DstPortNumber, NetworkApplicationProtocol
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Arista VeloCloud CVE-2026-16812 Attacker Infrastructure
+id: c1a9e4f7-6b28-4c3d-9f10-2d7b8e5a4c33
+description: Detects an internal host establishing an outbound connection to IPs Arista Security Advisory 0144 attributes to CVE-2026-16812 exploitation, indicating post-exploitation C2 or exfiltration.
 references:
   - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
-  - https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
+  - https://securityaffairs.com/196130/security/u-s-cisa-adds-arista-velocloud-orchestrator-and-fortinet-fortios-flaws-to-its-known-exploited-vulnerabilities-catalog.html
 author: SOC Detection Engineering
-date: 2026/07/28
+date: 2026/08/01
 tags:
+  - attack.command_and_control
   - attack.t1071.001
-  - attack.t1041
 logsource:
   category: network_connection
+  product: windows
 detection:
   selection:
-    dst_ip:
+    Initiated: &#x27;true&#x27;
+    DestinationIp:
       - &#x27;8.19.75.217&#x27;
       - &#x27;206.72.242.124&#x27;
       - &#x27;206.72.242.162&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:3 @DestinationIp:(8.19.75.217 OR 206.72.242.124 OR 206.72.242.162)) OR (source:linux.auditd CIDR(@network.destination.ip, 8.19.75.217/32, 206.72.242.124/32, 206.72.242.162/32))</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| RemoteAddressIP4=/^(8\.19\.75\.217|206\.72\.242\.124|206\.72\.242\.162)$/
-| groupBy([aid, ComputerName, ContextImageFileName, ContextProcessId, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
-| filter dstAddr in [&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]
-| stats sum(bytes) as totalBytes, count(*) as flows by srcAddr, dstAddr, dstPort
-| sort totalBytes desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count sum(All_Traffic.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - bytes_out</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count sum(All_Traffic.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - bytes_out</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:8.19.75.217 OR @DestinationIp:206.72.242.124 OR @DestinationIp:206.72.242.162) (@DestinationPort:80 OR @DestinationPort:443 OR @DestinationPort:8443 OR @DestinationPort:9443)</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemoteAddressIP4=&quot;8.19.75.217&quot; OR RemoteAddressIP4=&quot;206.72.242.124&quot; OR RemoteAddressIP4=&quot;206.72.242.162&quot;) (RemotePort=80 OR RemotePort=443 OR RemotePort=8443 OR RemotePort=9443)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true allow_old_summaries=true count sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) AND All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - bytes_out</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false allow_old_summaries=true count sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) AND All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - bytes_out</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
