@@ -39,8 +39,7 @@ Anyone who visited a site carrying the aff…
 - **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1565.002** — Data Manipulation: Transmitted Data Manipulation
+- **T1189** — Drive-by Compromise
 
 ## Kill chain phases observed
 
@@ -48,13 +47,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Adform crypto-swapper C2 beacon to 84.32.102.230 on port 7744
+### Adform crypto-stealer C2 beacon to 84.32.102.230:7744
 
 `UC_1_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -63,54 +65,29 @@ DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "84.32.102.230"
 | where RemotePort == 7744
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
-| order by LastSeen desc
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| order by Timestamp desc
 ```
 
-### Exposure scoping: internal hosts fetched poisoned Adform trackpoint-async.js from s2.adform.net
+### Endpoints that loaded poisoned Adform trackpoint-async.js (exposure scoping)
 
 `UC_1_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*trackpoint-async.js*" Web.url="*adform.net*" by Web.src Web.dest Web.url Web.http_user_agent Web.site | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*s2.adform.net/trackpoint-async.js*" OR Web.dest="s2.adform.net") by Web.src Web.user Web.dest Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl contains "s2.adform.net"
-| where RemoteUrl contains "trackpoint-async.js" or RemoteUrl contains "s2.adform.net"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl
-| order by FirstSeen desc
-```
-
-### Confirmed Adform compromise: host loaded s2.adform.net script then beaconed to C2 84.32.102.230:7744
-
-`UC_1_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true min(_time) as c2Time from datamodel=Network_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | join type=inner src [| tstats summariesonly=true min(_time) as scriptTime from datamodel=Web where Web.url="*trackpoint-async.js*" Web.url="*adform.net*" by Web.src | `drop_dm_object_name(Web)`] | where c2Time>=scriptTime | eval delaySec=c2Time-scriptTime | where delaySec<=3600 | table src scriptTime c2Time delaySec | sort - c2Time
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 30d;
-let WindowSec = 3600;
-let ScriptLoads = DeviceNetworkEvents
-    | where Timestamp > ago(LookbackDays)
-    | where RemoteUrl contains "s2.adform.net"
-    | project ScriptTime=Timestamp, DeviceId, DeviceName, ScriptUrl=RemoteUrl;
-DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
-| where RemoteIP == "84.32.102.230" and RemotePort == 7744
-| project C2Time=Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort
-| join kind=inner ScriptLoads on DeviceId
-| where C2Time between (ScriptTime .. ScriptTime + WindowSec * 1s)
-| project DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, ScriptTime, C2Time, DelaySec=datetime_diff('second', C2Time, ScriptTime), ScriptUrl, RemoteIP, RemotePort
-| order by C2Time desc
+| where Timestamp between (datetime(2026-07-20) .. datetime(2026-07-28T23:59:59))
+| where RemoteUrl has "s2.adform.net"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Requests=count(), ExposedHosts=make_set(DeviceName, 100) by RemoteUrl, InitiatingProcessFileName
+| order by Requests desc
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -460,4 +437,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

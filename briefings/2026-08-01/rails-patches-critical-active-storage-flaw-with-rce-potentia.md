@@ -11,12 +11,8 @@ By Bill Toulas
 August 1, 2026
 10:20 AM
 0 
-
-
 A critical vulnerability in the Active Storage framework can allow an unauthenticated attacker to read arbitrary files from a Rails application, and potentially escalate to remote code execution (RCE).
-
-
-Rails is a popular open-source web application framework written in Ruby for building websites and web apps. It uses the built-in Rails component Active Storage for handling file uploa…
+Rails is a popular open-source web application framework written in Ruby for building websites and web apps. It uses the built-in Rails component Active Storage for handling file uploads and a…
 
 ## Indicators of Compromise (high-fidelity only)
 
