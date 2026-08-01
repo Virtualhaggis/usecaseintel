@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound email BCC'd to giftshop.club exfil domain (postmark-mcp backdoor)
 
-`UC_850_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_851_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ EmailEvents
 
 ### DNS or HTTP egress to giftshop.club exfil domain
 
-`UC_850_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_851_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union
 
 ### Installation or presence of malicious postmark-mcp npm package (v1.0.16+)
 
-`UC_850_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_851_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious MCP Server on npm postmark-mcp Harvests Emails
 
-`UC_850_2` · phase: **exploit** · confidence: **High**
+`UC_851_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

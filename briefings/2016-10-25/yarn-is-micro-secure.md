@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Yarn is Micro Secure
 
-`UC_3674_1` · phase: **exploit** · confidence: **High**
+`UC_3675_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

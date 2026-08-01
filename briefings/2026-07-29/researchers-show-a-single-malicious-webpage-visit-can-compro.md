@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Firefox exposed to CVE-2026-10702 JIT RCE (147 through 151.0.2)
 
-`UC_66_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_70_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Outdated Tor Browser bundling vulnerable Firefox (CVE-2026-10702 exposure)
 
-`UC_66_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_70_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Firefox/Tor renderer (content) process spawning an unexpected child — sandbox escape / RCE
 
-`UC_66_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_70_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Endpoint exposed to GhostLock kernel futex LPE (CVE-2026-43499, IonStack stage 2)
 
-`UC_66_9` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_70_9` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

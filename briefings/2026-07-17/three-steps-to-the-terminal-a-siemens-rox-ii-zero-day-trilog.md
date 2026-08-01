@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Siemens RUGGEDCOM ROX II devices exposed to CVE-2025-40947/48/49 (firmware < V2.17.1)
 
-`UC_166_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_170_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -64,7 +64,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Siemens ROX II xz utility misused as cat to read root-owned secrets (CVE-2025-40948)
 
-`UC_166_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_170_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Siemens ROX II root cron table injection via web task scheduler (CVE-2025-40949)
 
-`UC_166_6` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_170_6` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Three Steps to the Terminal: A Siemens ROX II Zero-Day Trilogy
 
-`UC_166_3` · phase: **install** · confidence: **High**
+`UC_170_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

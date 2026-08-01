@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Ruby/gem process downloading payload from git.disroot.org (SleeperGem)
 
-`UC_162_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_166_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### Ruby interpreter spawning PowerShell -ExecutionPolicy bypass or /bin/sh (SleeperGem dropper)
 
-`UC_162_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_166_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### SleeperGem malicious gem artifacts written to gems path (git_credential_manager / Dendreo / fastlane-plugin)
 
-`UC_162_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_166_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceFileEvents
 
 ### SleeperGem Unix persistence: cron/systemd/LaunchAgent write by Ruby-descended shell
 
-`UC_162_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_166_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem: RubyGems supply chain attack targets dormant maintainer accounts
 
-`UC_162_3` · phase: **install** · confidence: **High**
+`UC_166_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

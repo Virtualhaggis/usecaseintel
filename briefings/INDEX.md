@@ -13,20 +13,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [anthropic incident an ai agent published a malicious package](./2026-07-31/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
+- [arch linux disables aur package adoption to stop malware flo](./2026-07-31/arch-linux-disables-aur-package-adoption-to-stop-malware-flo.md)
+- [captivecrunch midnight blizzard targets travelers worldwide ](./2026-07-31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-.md)
 - [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
 - [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
 - [cisa warns of cyberattacks disrupting u s water utilities](./2026-07-31/cisa-warns-of-cyberattacks-disrupting-u-s-water-utilities.md)
 - [eset tracks rise in malicious ai skills and adaptable malwar](./2026-07-31/eset-tracks-rise-in-malicious-ai-skills-and-adaptable-malwar.md)
 - [ghsa critical cve 2026 52855 wings exposes node configuratio](./2026-07-31/ghsa-critical-cve-2026-52855-wings-exposes-node-configuratio.md)
+- [ghsa critical cve 2026 52887 nocobase sql injection in api m](./2026-07-31/ghsa-critical-cve-2026-52887-nocobase-sql-injection-in-api-m.md)
+- [ghsa critical cve 2026 53609 apostrophe has server side prot](./2026-07-31/ghsa-critical-cve-2026-53609-apostrophe-has-server-side-prot.md)
 - [ghsa critical cve 2026 54725 vault addr annotation ssrf webh](./2026-07-31/ghsa-critical-cve-2026-54725-vault-addr-annotation-ssrf-webh.md)
 - [hacker uses deepseek ai to autonomously attack vulnerable se](./2026-07-31/hacker-uses-deepseek-ai-to-autonomously-attack-vulnerable-se.md)
 - [hollowframe loader deploys matryoshka backdoor in spear phis](./2026-07-31/hollowframe-loader-deploys-matryoshka-backdoor-in-spear-phis.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
+- [online ad firm adform s script compromised to steal cryptocu](./2026-07-31/online-ad-firm-adform-s-script-compromised-to-steal-cryptocu.md)
 - [suspected chinese speaking hackers target central asian gove](./2026-07-31/suspected-chinese-speaking-hackers-target-central-asian-gove.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
 ## 2026-07-30
-- [after the break in what attackers do once they re already in](./2026-07-30/after-the-break-in-what-attackers-do-once-they-re-already-in.md)
 - [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
 - [amazon links debug chalk npm supply chain attacks to north k](./2026-07-30/amazon-links-debug-chalk-npm-supply-chain-attacks-to-north-k.md)
 - [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
@@ -67,7 +71,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
-- [russian hackers exploit exchange owa zero day for long term ](./2026-07-29/russian-hackers-exploit-exchange-owa-zero-day-for-long-term-.md)
 - [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
 - [two compromised joyfill npm packages run rat when imported i](./2026-07-29/two-compromised-joyfill-npm-packages-run-rat-when-imported-i.md)
 
@@ -175,6 +178,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 39808 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-39808-fortinet-fortisandbox-os-command-inj.md)
 - [cisa kev cve 2026 58644 microsoft sharepoint deserialization](./2026-07-16/cisa-kev-cve-2026-58644-microsoft-sharepoint-deserialization.md)
+- [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-16/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
 - [ghsa critical cve 2026 53713 envoy gateway authentication by](./2026-07-16/ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by.md)
 - [ghsa critical cve 2026 55579 pheditor hardcoded default pass](./2026-07-16/ghsa-critical-cve-2026-55579-pheditor-hardcoded-default-pass.md)
 - [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
@@ -182,7 +186,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)
-- [unpacking the asyncapi npm supply chain compromise and impor](./2026-07-16/unpacking-the-asyncapi-npm-supply-chain-compromise-and-impor.md)
 
 ## 2026-07-15
 - [cisa kev cve 2023 4346 knx association knx protocol connecti](./2026-07-15/cisa-kev-cve-2023-4346-knx-association-knx-protocol-connecti.md)
@@ -296,8 +299,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-07-01/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [cisa kev cve 2026 45659 microsoft sharepoint server deserial](./2026-07-01/cisa-kev-cve-2026-45659-microsoft-sharepoint-server-deserial.md)
 - [codfish semantic release action github action has been compr](./2026-07-01/codfish-semantic-release-action-github-action-has-been-compr.md)
-- [ghsa critical cve 2026 41052 rancher has privilege escalatio](./2026-07-01/ghsa-critical-cve-2026-41052-rancher-has-privilege-escalatio.md)
-- [ghsa critical cve 2026 44935 rancher fleet vulnerable to cro](./2026-07-01/ghsa-critical-cve-2026-44935-rancher-fleet-vulnerable-to-cro.md)
 - [ghsa critical cve 2026 53943 ghost cache poisoning xss in gh](./2026-07-01/ghsa-critical-cve-2026-53943-ghost-cache-poisoning-xss-in-gh.md)
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
@@ -676,7 +677,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-18
 - [cisa kev cve 2025 66376 synacor zimbra collaboration suite z](./2026-03-18/cisa-kev-cve-2025-66376-synacor-zimbra-collaboration-suite-z.md)
 - [cisa kev cve 2026 20963 microsoft sharepoint deserialization](./2026-03-18/cisa-kev-cve-2026-20963-microsoft-sharepoint-deserialization.md)
-- [glassworm hides a rat inside a malicious chrome extension](./2026-03-18/glassworm-hides-a-rat-inside-a-malicious-chrome-extension.md)
 
 ## 2026-03-17
 - [i read cursor s security agent prompts so you don t have to](./2026-03-17/i-read-cursor-s-security-agent-prompts-so-you-don-t-have-to.md)

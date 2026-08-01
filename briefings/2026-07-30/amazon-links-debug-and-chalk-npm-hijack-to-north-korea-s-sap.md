@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Sapphire Sleet npm supply-chain C2 contact (npmjs.store / 216.74.123.126)
 
-`UC_50_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_55_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### Trojanized typo-crypto / core.js npm artifact on disk or being installed
 
-`UC_50_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_55_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ union
 
 ### core.js dropper obfuscation strings (XOR key 01042025 / trigger 0098273)
 
-`UC_50_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_55_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -369,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Amazon Links Debug and Chalk npm Hijack to North Korea’s Sapphire Sleet
 
-`UC_50_9` · phase: **exploit** · confidence: **High**
+`UC_55_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

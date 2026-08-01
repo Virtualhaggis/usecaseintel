@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### STAC4749 Teams vishing: Quick Assist / RemSupp remote-support tool spawning a shell
 
-`UC_33_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_40_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### STAC4749 PowerShell backdoor download into %AppData% (updater.exe / helper / msupdate.exe)
 
-`UC_33_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### STAC4749 Run-key persistence disguised as Realtek / WinAudio audio components
 
-`UC_33_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceRegistryEvents
 
 ### STAC4749 backup-access RMM (DWAgent/AnyDesk) install + RDP enablement for lateral movement
 
-`UC_33_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_40_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceProcessEvents
 
 ### STAC4749 IT-themed .top C2 / lure domain contact (sequrityupdate.top et al.)
 
-`UC_33_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_40_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceNetworkEvents
 
 ### STAC4749 Chaos ransomware note (readme.chaos.txt) creation across hosts
 
-`UC_33_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_40_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

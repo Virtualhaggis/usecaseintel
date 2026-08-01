@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated Ruflo MCP tools/call terminal_execute exploit request (CVE-2026-59726)
 
-`UC_60_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_64_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### Shell process spawned by Ruflo Node MCP bridge (RufRoot RCE)
 
-`UC_60_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_64_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### LLM provider API key / environment dump inside Ruflo bridge container
 
-`UC_60_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_64_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Ruflo AgentDB memory poisoning + /app backdoor persistence (RufRoot)
 
-`UC_60_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_64_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### Ruflo MCP bridge (3001) / MongoDB (27017) exposed to untrusted networks
 
-`UC_60_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_64_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

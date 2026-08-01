@@ -11,12 +11,8 @@ By Lawrence Abrams
 July 31, 2026
 01:35 PM
 0 
-
-
 A Chinese-speaking threat actor is using the DeepSeek AI model and the open-source Hermes Agent to conduct autonomous cyberattacks on exposed servers with limited human involvement.
-
-
-The activity was discovered by Palo Alto Networks' Unit 42 researchers after Hermes accidentally created a web server from its home directory, exposing the attacker's environment, including API key…
+The activity was discovered by Palo Alto Networks' Unit 42 researchers after Hermes accidentally created a web server from its home directory, exposing the attacker's environment, including API keys, explo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -24,10 +20,9 @@ The activity was discovered by Palo Alto Networks' Unit 42 researchers after Her
 - **CVE:** `CVE-2026-21858`
 - **CVE:** `CVE-2025-68613`
 - **CVE:** `CVE-2026-3055`
-- **CVE:** `CVE-2026-34486`
 - **CVE:** `CVE-2026-39987`
+- **CVE:** `CVE-2026-34486`
 - **CVE:** `CVE-2026-33824`
-- **CVE:** `CVE-2026-0300`
 - **Domain (defanged):** `code.newcli.com`
 
 ## MITRE ATT&CK Techniques
@@ -44,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### CVE-2026-3055 NetScaler SAML IdP memory-overread scrape (rapid /saml/login loop)
 
-`UC_4_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_11_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +55,7 @@ _(none detected from narrative keywords)_
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-34486`, `CVE-2026-39987`, `CVE-2026-33824`, `CVE-2026-0300`
+  - CVE(s): `CVE-2026-33017`, `CVE-2026-21858`, `CVE-2025-68613`, `CVE-2026-3055`, `CVE-2026-39987`, `CVE-2026-34486`, `CVE-2026-33824`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `code.newcli.com`

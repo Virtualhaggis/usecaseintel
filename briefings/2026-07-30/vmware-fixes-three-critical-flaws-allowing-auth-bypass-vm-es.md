@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### VMware ESX/vCenter hosts exposed to VMSA-2026-0006 critical CVEs (59309/59310/47876)
 
-`UC_28_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_35_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### ESXi rogue/'ghost' VM instantiated from the shell (VirtualGHOST persistence)
 
-`UC_28_5` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_35_5` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

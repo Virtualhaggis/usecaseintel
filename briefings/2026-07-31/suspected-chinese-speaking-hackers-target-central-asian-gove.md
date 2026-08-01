@@ -92,7 +92,7 @@ _(none detected from narrative keywords)_
 
 ### OctLurk/SilkLurk/LurkProxy C2 beacon to campaign domains & IPs
 
-`UC_1_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### Impacket secretsdump DC hash harvesting via OctLurk shell plugin
 
-`UC_1_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_8_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### Fscan internal/public scanning with pp.txt credential file
 
-`UC_1_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Keylogger masquerading as AnyDesk (name/path/publisher mismatch)
 
-`UC_1_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### SilkLurk share collection & WinRAR/7-Zip staging via cmd/PowerShell
 
-`UC_1_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -490,7 +490,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Suspected Chinese-Speaking Hackers Target Central Asian Governments With OctLurk
 
-`UC_1_10` · phase: **exploit** · confidence: **High**
+`UC_8_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

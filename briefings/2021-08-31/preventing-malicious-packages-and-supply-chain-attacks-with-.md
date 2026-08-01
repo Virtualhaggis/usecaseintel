@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Known-malicious npm packages flatmap-stream / lyft-dataset-sdk landing on host
 
-`UC_3100_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3101_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
