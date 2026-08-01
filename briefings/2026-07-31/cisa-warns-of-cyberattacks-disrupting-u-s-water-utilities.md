@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Network communication with Iranian-APT infrastructure targeting Rockwell PLCs (185.82.73.160-171 / 135.136.1.133)
 
-`UC_12_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_14_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Inbound EtherNet/IP (TCP 44818) or TCP 2222 to OT assets from the public internet
 
-`UC_12_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

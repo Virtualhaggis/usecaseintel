@@ -99,7 +99,7 @@ _(none detected from narrative keywords)_
 
 ### OctLurk/SilkLurk/LurkProxy/PlugX C2 callback to campaign infrastructure
 
-`UC_8_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### Impacket secretsdump / DCSync hash extraction via masquerading Adobe.exe
 
-`UC_8_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### AnyDesk-masquerading keylogger execution (OctLurk campaign)
 
-`UC_8_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceProcessEvents
 
 ### Fscan internal/public port scan with pp.txt credential file
 
-`UC_8_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### SilkLurk / PlugX DLL side-loading via signed NVIDIA/Realtek binaries
 
-`UC_8_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -202,7 +202,7 @@ DeviceImageLoadEvents
 
 ### SilkLurk document staging and WinRAR/7-Zip archiving for exfiltration
 
-`UC_8_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -223,7 +223,7 @@ DeviceProcessEvents
 
 ### GoogleUpDate scheduled task launching LurkProxy batch scripts
 
-`UC_8_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -542,7 +542,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Suspected Chinese-Speaking Hackers Target Central Asian Governments With OctLurk
 
-`UC_8_10` · phase: **exploit** · confidence: **High**
+`UC_10_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

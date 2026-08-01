@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Dysphoria botnet blockchain (ENS/SNS) name-service C2 resolution
 
-`UC_100_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Dysphoria distribution-node egress + /nodes?key=meowmeowmeow server-list fetch
 
-`UC_100_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### CVE-2025-9528 Linksys E1700 /goform/systemCommand command injection
 
-`UC_100_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_102_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### Inbound Telnet/SSH weak-credential access to IoT/edge gear (Dysphoria vector)
 
-`UC_100_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_102_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### Dysphoria victim-relay mesh heartbeat to *.trees4sale.net / peer domains on port 9000
 
-`UC_100_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceNetworkEvents
 
 ### Dysphoria process masquerade as libdalvikengine.so on Linux/IoT hosts
 
-`UC_100_12` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_102_12` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

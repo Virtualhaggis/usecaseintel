@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### CornFlake RAT drop/execution from %APPDATA%\svchost32\svchost32.exe
 
-`UC_4_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### CornFlake service persistence: 'svchost32' service / 'Cloud Sync Service' display name
 
-`UC_4_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceRegistryEvents
 
 ### CaptiveCrunch C2 / AiTM traffic to Storm-2945 doppelganger domains and IPs
 
-`UC_4_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### ClickFix: browser-spawned interpreter downloading fake-update payload
 
-`UC_4_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceProcessEvents
 
 ### Captive-portal connectivity-check to browser-delivered executable download
 
-`UC_4_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_6_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceFileEvents
 
 ### Storm-2945 AiTM token replay: Entra sign-in from CaptiveCrunch actor IPs
 
-`UC_4_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -564,7 +564,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CaptiveCrunch: Midnight Blizzard targets travelers worldwide for malware deliver
 
-`UC_4_11` · phase: **exploit** · confidence: **High**
+`UC_6_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

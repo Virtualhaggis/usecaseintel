@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2607 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-08-01
+- [hijacked hotel wi fi pushes fake updates to deliver surveill](./2026-08-01/hijacked-hotel-wi-fi-pushes-fake-updates-to-deliver-surveill.md)
 
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
@@ -95,11 +98,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-27
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
-- [cruciferra crypter uses byovd and process ghosting to hide w](./2026-07-27/cruciferra-crypter-uses-byovd-and-process-ghosting-to-hide-w.md)
 - [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
 - [n8n sandbox escape lets workflow editors run os commands as ](./2026-07-27/n8n-sandbox-escape-lets-workflow-editors-run-os-commands-as-.md)
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
-- [operation bluedash deploys level rmm and screenconnect via f](./2026-07-27/operation-bluedash-deploys-level-rmm-and-screenconnect-via-f.md)
 - [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
 - [what is ai pentesting and how does it work](./2026-07-27/what-is-ai-pentesting-and-how-does-it-work.md)
 
