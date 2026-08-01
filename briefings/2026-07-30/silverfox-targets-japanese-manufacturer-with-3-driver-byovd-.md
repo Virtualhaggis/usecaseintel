@@ -32,12 +32,107 @@ The Chinese cybercrime group known as Silver Fox has been observed using new dri
 - **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1053.005** — Persistence (article-specific)
+- **T1574.002** — DLL Side-Loading
+- **T1574.001** — DLL Search Order Hijacking
+- **T1068** — Exploitation for Privilege Escalation
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1105** — Ingress Tool Transfer
+- **T1095** — Non-Application Layer Protocol
+- **T1055.003** — Thread Execution Hijacking
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### SilverFox DLL side-loading: PDFCORE8.dll loaded by ConvertToPDF.exe / PDFDirect.exe
+
+`UC_48_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ConvertToPDF.exe" OR Processes.process_name="PDFDirect.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | search process_path!="*\\Program Files\\Zeon*" | `ctime(firstTime)` | `ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "PDFCORE8.dll"
+| where InitiatingProcessFileName in~ ("ConvertToPDF.exe","PDFDirect.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          Loader = InitiatingProcessFileName,
+          LoaderPath = InitiatingProcessFolderPath,
+          Dll = FileName, DllPath = FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### SilverFox 3-driver BYOVD: BootRepair.sys / EnPortv.sys / wsftprm.sys dropped to disk
+
+`UC_48_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="BootRepair.sys" OR Filesystem.file_name="EnPortv.sys" OR Filesystem.file_name="wsftprm.sys" OR Filesystem.file_name="amsdk.sys") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `ctime(firstTime)` | `ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("BootRepair.sys","EnPortv.sys","wsftprm.sys","amsdk.sys")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          FileName, FolderPath, SHA256,
+          WrittenBy = InitiatingProcessFileName,
+          WriterPath = InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### SilverFox ValleyRAT C2 / shellcode fetch to 43.128.26.132
+
+`UC_48_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="43.128.26.132" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `ctime(firstTime)` | `ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "43.128.26.132"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### ValleyRAT thread-context-hijack svchost.exe spawned by non-services.exe parent
+
+`UC_48_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="svchost.exe" AND Processes.parent_process_name!="services.exe" AND Processes.parent_process_name!="MsMpEng.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | search process_path="*\\Windows\\System32\\svchost.exe" OR process_path="*\\Windows\\SysWOW64\\svchost.exe" | `ctime(firstTime)` | `ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "svchost.exe"
+| where InitiatingProcessFileName !in~ ("services.exe","MsMpEng.exe","ngen.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName,
+          ParentPath = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildPath = FolderPath, ChildCmd = ProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -340,4 +435,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
