@@ -19,7 +19,6 @@ The first of the three critical-rated flaws is CVE-2026-59309 (CVSS score: 9.8),
 - **CVE:** `CVE-2026-47876`
 - **CVE:** `CVE-2026-41703`
 - **CVE:** `CVE-2026-41709`
-- **CVE:** `CVE-2026-50522`
 
 ## MITRE ATT&CK Techniques
 
@@ -275,7 +274,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-59309`, `CVE-2026-59310`, `CVE-2026-47876`, `CVE-2026-41703`, `CVE-2026-41709`, `CVE-2026-50522`
+  - CVE(s): `CVE-2026-59309`, `CVE-2026-59310`, `CVE-2026-47876`, `CVE-2026-41703`, `CVE-2026-41709`
 
 
 ## Why this matters
