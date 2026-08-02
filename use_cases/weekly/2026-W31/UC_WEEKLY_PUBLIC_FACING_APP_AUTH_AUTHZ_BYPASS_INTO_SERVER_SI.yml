@@ -1,0 +1,148 @@
+id: UC_WEEKLY_PUBLIC_FACING_APP_AUTH_AUTHZ_BYPASS_INTO_SERVER_SI
+title: "[WEEKLY] Public-facing app auth/authz bypass into server-side code execution (patch-bypass wave)"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1556
+  name: Modify Authentication Process
+- id: T1548
+  name: Abuse Elevation Control Mechanism
+data_models:
+  defender:
+  - Web
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+description: |-
+  Detects the two-stage chain where an attacker abuses a public-facing web/app framework to defeat an authentication or authorization gate and then reaches server-side code execution — an anomalous shell, interpreter, or recon binary spawned by the web/app-server process (java, node, php, w3wp, httpd, nginx) within minutes of a suspicious write-verb or gadget-bearing HTTP request. This fortnight is dominated by 'incomplete-fix / patch-bypass' auth-bypass and RCE advisories: ApostropheCMS SSPP authorization bypass (CVE-2026-53609), Check Point SmartConsole auth bypass (CVE-2026-16232), VMware vCenter auth bypass + traversal RCE (CVE-2026-59309/59310), goshs empty-password SFTP bypass (CVE-2026-62325) and WebDAV MOVE bypass (CVE-2026-64863), OpenAM WebAuthn Java deserialization RCE (CVE-2026-62263), Velocity.js Function-constructor RCE, Pheditor forced-password-change bypass, kin-openapi fail-open NoopAuthenticationFunc, and Auth.js homoglyph normalization bypass. It spans the exploit → install/execution kill-chain: the HTTP stage carries the auth/authz-bypass or deserialization/SSTI marker, the endpoint stage is the framework process spawning an unexpected child or dropping a webshell. It FIRES when a server-tier process (not a browser/user shell) launches cmd/powershell/bash/curl/whoami-class children, or drops a new script under webroot, correlated to a preceding anomalous request; it does NOT fire on ordinary authenticated CRUD, on developer shells launched by IDEs, or on framework processes running their own bundled tooling under a service account with no post-request child spawn.
+  
+  Rationale: Every article in the batch is a T1190 public-facing-app auth/authz-bypass or bypass-driven RCE (mostly 'incomplete-fix' patch bypasses); the invariant they share is a framework/app-server process transitioning from serving a request to executing an unexpected shell/interpreter/recon binary, which this UC correlates against the preceding anomalous HTTP write-verb/gadget request rather than any one rotating IOC.
+defender_kql: |-
+  let Lookback = 7d;
+  DeviceProcessEvents
+  | where Timestamp > ago(Lookback)
+  | where InitiatingProcessFileName in~ ("java.exe","javaw.exe","node.exe","php.exe","php-cgi.exe","w3wp.exe","httpd.exe","nginx.exe","tomcat.exe")
+  | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe","curl.exe","wget.exe","whoami.exe","certutil.exe","bitsadmin.exe","python.exe","python3.exe","nc.exe","ncat.exe")
+  | where AccountName !endswith "$"
+  | project Timestamp, DeviceName, AccountName,
+            ParentImage = InitiatingProcessFolderPath,
+            ParentCmd   = InitiatingProcessCommandLine,
+            ChildImage  = FolderPath,
+            ChildCmd    = ProcessCommandLine,
+            SHA256,
+            InitiatingProcessTokenElevation
+  | order by Timestamp desc
+sentinel_kql: |-
+  let Lookback = 7d;
+  DeviceProcessEvents
+  | where TimeGenerated > ago(Lookback)
+  | where InitiatingProcessFileName in~ ("java.exe","javaw.exe","node.exe","php.exe","php-cgi.exe","w3wp.exe","httpd.exe","nginx.exe","tomcat.exe")
+  | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe","curl.exe","wget.exe","whoami.exe","certutil.exe","bitsadmin.exe","python.exe","python3.exe","nc.exe","ncat.exe")
+  | where AccountName !endswith "$"
+  | project TimeGenerated, DeviceName, AccountName,
+            ParentImage = InitiatingProcessFolderPath,
+            ParentCmd   = InitiatingProcessCommandLine,
+            ChildImage  = FolderPath,
+            ChildCmd    = ProcessCommandLine,
+            SHA256,
+            InitiatingProcessTokenElevation
+  | order by TimeGenerated desc
+sigma_yaml: |-
+  title: Web/App-Server Process Spawns Shell or Recon Binary (Public-Facing App RCE Chain)
+  id: 7c2a1e94-3f6b-4d21-9a4e-8b1c2f0d6e11
+  status: experimental
+  description: Detects a web/application server process (java, node, php, w3wp, httpd, nginx) spawning an interpreter, shell, or recon/download binary — the server-side code-execution stage of a public-facing app auth-bypass/RCE chain.
+  logsource:
+    category: process_creation
+  detection:
+    selection_parent:
+      ParentImage|endswith:
+        - '\java.exe'
+        - '\javaw.exe'
+        - '\node.exe'
+        - '\php.exe'
+        - '\php-cgi.exe'
+        - '\w3wp.exe'
+        - '\httpd.exe'
+        - '\nginx.exe'
+        - '\tomcat.exe'
+    selection_child:
+      Image|endswith:
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\bash.exe'
+        - '\sh.exe'
+        - '\wsl.exe'
+        - '\curl.exe'
+        - '\wget.exe'
+        - '\whoami.exe'
+        - '\certutil.exe'
+        - '\bitsadmin.exe'
+        - '\python.exe'
+        - '\nc.exe'
+        - '\ncat.exe'
+    condition: selection_parent and selection_child
+  falsepositives:
+    - CI/CD build agents or app health checks that shell out
+    - Framework-bundled tooling invoking curl/certutil under a service account
+  level: high
+  tags:
+    - attack.execution
+    - attack.t1190
+    - attack.t1059
+    - attack.t1505.003
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as webTime max(_time) as webLast from datamodel=Web where Web.status IN (200,201,204,500) (Web.http_method IN ("POST","PUT","PATCH","MOVE","COPY") OR Web.url IN ("*__proto__*","*$pullAll*","*constructor.constructor*","*child_process*","*process.mainModule*","*rO0AB*","*/json/authenticate*")) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+  | `drop_dm_object_name(Web)`
+  | join type=inner dest [
+      | tstats `summariesonly` count min(_time) as procTime max(_time) as procLast from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java.exe","java","javaw.exe","node.exe","node","php.exe","php-cgi.exe","php-fpm","w3wp.exe","httpd.exe","httpd","nginx.exe","nginx","tomcat.exe")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","ash","zsh","curl","curl.exe","wget","wget.exe","whoami","whoami.exe","python","python3","perl","nc","ncat","certutil.exe","bitsadmin.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+      | `drop_dm_object_name(Processes)`
+    ]
+  | where procTime >= webTime AND procTime <= (webTime + 300)
+  | eval delaySec = procTime - webTime
+  | convert ctime(webTime) ctime(procTime)
+  | table webTime procTime delaySec src dest user http_method url status parent_process_name process_name process
+  | sort - procTime
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\java.exe OR *\\javaw.exe OR *\\node.exe OR *\\php.exe OR *\\php-cgi.exe OR *\\w3wp.exe OR *\\httpd.exe OR *\\nginx.exe OR *\\tomcat.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\sh.exe OR *\\wsl.exe OR *\\curl.exe OR *\\wget.exe OR *\\whoami.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\python.exe OR *\\nc.exe OR *\\ncat.exe)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2
+  | ParentBaseFileName=/^(java|javaw|node|php|php-cgi|w3wp|httpd|nginx|tomcat)\.exe$/i
+  | ImageFileName=/\\(cmd|powershell|pwsh|bash|sh|wsl|curl|wget|whoami|certutil|bitsadmin|python|python3|nc|ncat)\.exe$/i
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
+  | sort(_count, order=desc)
+required_telemetry:
+- Sysmon EID 1
+- Defender DeviceProcessEvents
+- Sentinel DeviceProcessEvents
+- CIM Web (proxy/WAF/access logs)
+- CIM Endpoint.Processes
+- CrowdStrike FDR ProcessRollup2
+kill_chain_phase: execution
+expected_fp_scenarios:
+- CI/CD or build agents running under node/java that legitimately shell out to curl/python during pipelines
+- APM/health-check tooling where w3wp or httpd invokes certutil or powershell for cert renewal
+- Application plugins/extensions that legitimately call system() for image processing (ImageMagick, ffmpeg wrappers) — tune parent app list
+- Java/Tomcat management consoles executing admin scripts during scheduled maintenance windows
+- Developer workstations running local dev servers (node/php) that spawn shells interactively
+response_runbook: |-
+  1) Triage: Confirm the parent is a genuine internet-facing web/app-server (not a dev box or CI runner) and inspect the child command line for recon (whoami/id), download (curl/wget/certutil), or reverse-shell patterns. Pull the correlated Web/access-log request (dest match) for auth-bypass or gadget markers (__proto__, $pullAll, rO0AB, constructor.constructor, MOVE/PATCH write verbs). 2) Contain: Isolate the host, kill the child process tree, capture memory, and rotate any service-account and app secrets reachable from that process; block the source IP at the WAF/edge and snapshot for forensics. 3) Hunt: Sweep for newly written .php/.jsp/.aspx files under webroot and for the same parent→shell pattern across all servers of that framework in the prior 14 days; validate the underlying CVE/advisory patch level (CVE-2026-53609/16232/59309/59310/62263/62325/64863) and confirm no prior-fix bypass applies.
+false_positive_filters: |-
+  | where NOT (Processes.process IN ("*\\ci\\*","*jenkins*","*azure-pipelines*","*\\actions-runner\\*") OR Processes.user IN ("buildagent","jenkins","gitlab-runner"))

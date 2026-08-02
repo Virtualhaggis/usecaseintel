@@ -1,0 +1,172 @@
+id: UC_WEEKLY_INTERNET_FACING_SERVICE_DAEMON_SPAWNS_SHELL_OR_ING
+title: "[WEEKLY] Internet-Facing Service Daemon Spawns Shell or Ingress Tool Then Beacons Out"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.003
+  name: "Command and Scripting Interpreter: Windows Command Shell"
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+- id: T1105
+  name: Ingress Tool Transfer
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects a long-running, internet-exposed service daemon (java/TeamCity agent, node/MCP-bridge, gitea/git, uhttpd/LuCI, nginx/php, python) spawning an OS command interpreter or ingress-transfer binary (sh/bash/cmd/powershell/curl/wget/certutil/bitsadmin/nc) and then making an outbound connection to a public IP within a 5-minute window — the post-exploitation signature shared by this fortnight's unauthenticated-RCE wave. It matters now because six critical (CVSS 9.8-10.0) flaws all landed together: CVE-2026-53921 OpenWrt DHCPv6/LuCI root RCE ('Critical OpenWrt DHCPv6 Flaw…'), CVE-2026-63077 TeamCity unauth OS command exec ('Critical TeamCity Flaw…'), CVE-2026-60004 Gitea git-hook RCE ('New Gitea RCE Lets Repository Writers Plant a Git Hook…'), CVE-2026-59726 Ruflo MCP RufRoot RCE ('Ruflo MCP Flaw Lets Unauthenticated Attackers Run Commands…'), the DEV#POPPER @joyfill npm RAT ('Two Compromised joyfill npm Packages…'), and CVE-2026-67426 Flyto2 SSRF ('Flyto2 Core… callback_url SSRF'). Every IOC in those advisories rotates, but the daemon→shell→egress chain persists, so the UC keys on the process-lineage TTP rather than any hash or C2 host. It spans the exploit → execution → command-and-control kill-chain stages by requiring the server-parent/shell-child pairing AND a subsequent public egress. It FIRES when a web/app service account's process tree pivots to an interactive shell or downloader that then dials out; it does NOT fire on developer or CI shells launched by a human logon, on daemon-to-daemon internal traffic with no shell spawn, or on a shell spawn with no outbound follow-through.
+  
+  Rationale: Every article describes a different unauthenticated RCE, but the shared observable is an internet-exposed service process pivoting to an OS shell/downloader and then reaching out — this UC keys on that parent-daemon→shell-child→public-egress lineage instead of the per-CVE IOCs that rotate weekly.
+defender_kql: |-
+  let Window = 5m;
+  let Daemons = dynamic(["java.exe","java","node.exe","node","gitea","git.exe","git","httpd.exe","nginx.exe","w3wp.exe","php-cgi.exe","php.exe","python.exe","python3","uhttpd","dnsmasq","tomcat.exe"]);
+  let Shells = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","nc.exe","ncat.exe"]);
+  let SpawnEvents = DeviceProcessEvents
+      | where Timestamp > ago(7d)
+      | where InitiatingProcessFileName has_any (Daemons)
+      | where FileName has_any (Shells)
+      | where AccountName !endswith "$"           // exclude machine accounts
+      | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentProc = InitiatingProcessFileName, ChildProc = FileName,
+                ChildCmd = ProcessCommandLine;
+  SpawnEvents
+  | join kind=inner (
+      DeviceNetworkEvents
+      | where Timestamp > ago(7d)
+      | where RemoteIPType == "Public"
+      | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort,
+                NetProc = InitiatingProcessFileName
+    ) on DeviceId
+  | where NetTime between (SpawnTime .. SpawnTime + Window)   // egress within 5 min of shell spawn
+  | project SpawnTime, NetTime,
+            DelaySec = datetime_diff('second', NetTime, SpawnTime),
+            DeviceName, AccountName, ParentProc, ChildProc, ChildCmd,
+            RemoteIP, RemotePort, NetProc
+  | order by SpawnTime desc
+sentinel_kql: |-
+  let Window = 5m;
+  let Daemons = dynamic(["java.exe","java","node.exe","node","gitea","git.exe","git","httpd.exe","nginx.exe","w3wp.exe","php-cgi.exe","php.exe","python.exe","python3","uhttpd","dnsmasq","tomcat.exe"]);
+  let Shells = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","nc.exe","ncat.exe"]);
+  let SpawnEvents = DeviceProcessEvents
+      | where TimeGenerated > ago(7d)
+      | where InitiatingProcessFileName has_any (Daemons)
+      | where FileName has_any (Shells)
+      | where AccountName !endswith "$"
+      | project SpawnTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                ParentProc = InitiatingProcessFileName, ChildProc = FileName,
+                ChildCmd = ProcessCommandLine;
+  SpawnEvents
+  | join kind=inner (
+      DeviceNetworkEvents
+      | where TimeGenerated > ago(7d)
+      | where RemoteIPType == "Public"
+      | project NetTime = TimeGenerated, DeviceId, RemoteIP, RemotePort,
+                NetProc = InitiatingProcessFileName
+    ) on DeviceId
+  | where NetTime between (SpawnTime .. SpawnTime + Window)
+  | project SpawnTime, NetTime,
+            DelaySec = datetime_diff('second', NetTime, SpawnTime),
+            DeviceName, AccountName, ParentProc, ChildProc, ChildCmd,
+            RemoteIP, RemotePort, NetProc
+  | order by SpawnTime desc
+sigma_yaml: |-
+  title: Internet-Facing Service Daemon Spawns Shell or Ingress Tool
+  id: 7b3c9e21-4f6a-4d2b-9a1e-8c5d2f0a1e77
+  status: experimental
+  description: Detects a web/app service daemon spawning an OS shell or ingress-transfer binary, the post-exploitation signature of the Jul-2026 unauthenticated-RCE wave (OpenWrt CVE-2026-53921, TeamCity CVE-2026-63077, Gitea CVE-2026-60004, Ruflo MCP CVE-2026-59726, joyfill npm RAT).
+  logsource:
+    category: process_creation
+  detection:
+    parent:
+      ParentImage|endswith:
+        - '/java'
+        - '\\java.exe'
+        - '/node'
+        - '\\node.exe'
+        - '/gitea'
+        - '/git'
+        - '\\git.exe'
+        - '/uhttpd'
+        - '/nginx'
+        - '\\nginx.exe'
+        - '/php-fpm'
+        - '\\php-cgi.exe'
+        - '/python3'
+        - '\\python.exe'
+        - '\\w3wp.exe'
+    child:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/dash'
+        - '\\cmd.exe'
+        - '\\powershell.exe'
+        - '\\pwsh.exe'
+        - '/curl'
+        - '\\curl.exe'
+        - '/wget'
+        - '\\certutil.exe'
+        - '\\bitsadmin.exe'
+        - '/nc'
+        - '/ncat'
+    condition: parent and child
+  falsepositives:
+    - Application plugins or build steps that legitimately shell out
+    - Container entrypoints wrapping the daemon in sh -c
+  level: high
+  tags:
+    - attack.t1190
+    - attack.t1059.004
+    - attack.t1059.003
+    - attack.t1505.003
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as command values(Processes.process_name) as child_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java","java.exe","node","node.exe","gitea","git","uhttpd","httpd","nginx","php-fpm","php","php-cgi.exe","python","python3","tomcat*","w3wp.exe","dnsmasq","odhcpd")) AND (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","certutil.exe","bitsadmin.exe","nc","ncat","socat","perl")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.user _time span=5m
+  | `drop_dm_object_name("Processes")`
+  | join type=inner dest [
+      | tstats `summariesonly` count as egress_conn dc(All_Traffic.dest) as egress_targets min(_time) as egress_firstTime max(_time) as egress_lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.action=allowed by All_Traffic.src
+      | `drop_dm_object_name("All_Traffic")`
+      | rename src as dest
+    ]
+  | where egress_lastTime >= firstTime AND egress_firstTime <= (lastTime + 300)
+  | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+  | table firstTime lastTime dest user parent_process_name child_process command egress_conn egress_targets
+  | sort - lastTime
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\java.exe OR *\\node.exe OR *\\w3wp.exe OR *\\php-cgi.exe OR *\\python.exe OR *\\git.exe OR *\\nginx.exe OR *\\httpd.exe OR *\\tomcat.exe) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\wget.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\nc.exe OR *\\ncat.exe)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(java|node|gitea|git|httpd|nginx|w3wp|php-cgi|python3?|uhttpd|dnsmasq|tomcat)(\.exe)?$/i ImageFileName=/(\\|\/)(cmd\.exe|powershell\.exe|pwsh\.exe|bash|sh|dash|zsh|curl(\.exe)?|wget(\.exe)?|certutil\.exe|bitsadmin\.exe|nc|ncat|socat)$/i
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, UserName], function=([count(as=spawns), collect([CommandLine])]))
+  | spawns >= 1
+required_telemetry:
+- Sysmon EID 1
+- Sysmon EID 3
+- Defender DeviceProcessEvents
+- Defender DeviceNetworkEvents
+- Sentinel DeviceProcessEvents
+- Sentinel DeviceNetworkEvents
+- CrowdStrike FDR ProcessRollup2
+- Splunk CIM Endpoint.Processes
+kill_chain_phase: execution
+expected_fp_scenarios:
+- CI/CD runners where the build daemon (java/node/git) legitimately shells out to run test or deploy scripts that also fetch dependencies over the internet
+- Application plugins/webhooks that intentionally invoke curl/wget to call external APIs shortly after a request
+- "Container images whose entrypoint wraps the service in `sh -c`, producing a daemon→sh parent/child on every start with subsequent registry/package pulls"
+- Admin or backup jobs launched under the service account that spawn bash/powershell and reach an update mirror
+- Monitoring/APM agents embedded in the app process spawning helper shells and phoning home to a public SaaS collector
+response_runbook: |-
+  1) Triage: Pull the full process tree for the flagged host around SpawnTime — confirm the parent is a genuinely internet-exposed daemon (not a local dev/CI shell) and inspect ChildCmd for interpreter flags, base64, or downloader URLs. Correlate the outbound RemoteIP against threat intel and check whether it is a known update mirror/API. 2) Contain: If the shell command or egress is unrecognized, isolate the host from the network, kill the child process tree, suspend the service account, and snapshot the daemon's working dir plus any newly written git hooks / npm postinstall / web-shell files for forensics. 3) Hunt: Sweep the fleet for the same daemon→shell→public-egress chain, pivot on the RemoteIP/domain and any dropped SHA256 as substitution slots (<c2_domain_list>, <sha256_list>), and verify the exposed service is patched to the fixed version for the relevant CVE (OpenWrt 24.10.8, TeamCity 2025.11.7, Gitea 1.27.1, Ruflo 3.16.3, Flyto2 fixed build).
+false_positive_filters: |-
+  | where NOT (ChildCmd has_any ("npm ci","npm install","apt-get","yum ","dnf ","pip install","gradle","mvn ") and RemoteIP in ("<known_update_mirror_ip_list>")) | where NOT (DeviceName has_any ("ci-","build-","runner-"))

@@ -1,0 +1,126 @@
+id: UC_WEEKLY_PUBLIC_FACING_APP_AUTH_BYPASS_TO_SERVER_SIDE_CODE_
+title: "[WEEKLY] Public-Facing App Auth-Bypass to Server-Side Code Execution (web-server process spawning a shell/interpreter)"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects a web-application or appliance service process (httpd, nginx, php-fpm, w3wp, java/tomcat, node, or VMware vpxd) directly spawning an OS shell, scripting interpreter, or download/recon LOLBin — the universal post-exploitation tell after a pre-auth or auth-bypass flaw is turned into code execution. This matters this fortnight because a cluster of critical public-facing-app bypass and RCE disclosures landed together: vBulletin pre-auth eval() RCE (CVE-2026-61511) now has a public exploit, VMware vCenter auth-bypass + directory-traversal RCE and ESX VM-escape (CVE-2026-59309/59310/47876), plus a wave of GHSA auth-bypass advisories (LightRAG hardcoded DEFAULT_TOKEN_SECRET CVE-2026-61740, Auth.js fail-open GHSA-8fpg-xm3f-6cx3, Budibase cross-origin credential leak GHSA-mqhr-6j6h-74p5, @better-auth/scim provider-id collision GHSA-rjg6-39jm-rgg4) — all sharing the T1190 → code-execution/destructive-action chain. It spans the exploit and execution kill-chain stages: the auth check is defeated (exploit) and the server process is coerced into running attacker code (install/actions). It FIRES when an internet-facing service binary is the parent of an interactive shell or interpreter it never legitimately launches; it does NOT fire on normal application workers, CI/build agents, or admin-initiated maintenance scripts whose parent is a login shell or scheduler rather than the network-facing daemon. Reference IOCs (<c2_domain_list>, <sha256_list>) are substitution slots only — the parent/child process relationship is the durable signal.
+  
+  Rationale: Every article in the batch is a public-facing auth/authorization defeat whose payoff is server-side execution or destructive action; the one endpoint signal common to the RCE-capable members (vBulletin eval(), VMware vCenter traversal RCE, and any bypass chained to shell/webshell) is the internet-facing service process becoming the parent of a shell/interpreter — a relationship that survives IOC rotation.
+defender_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where InitiatingProcessFileName in~ ("httpd","apache2","nginx","php-fpm","php-cgi","php","w3wp.exe","java","java.exe","node","node.exe","tomcat.exe","vmware-vpxd","vpxd","vmdird")
+  | where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","python","python3","perl","ruby","curl","wget","certutil.exe","bitsadmin.exe","whoami","id","uname")
+  | where AccountName !endswith "$"
+  | where AccountName !in~ ("system","local service","network service")
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256, InitiatingProcessTokenElevation
+  | order by Timestamp desc
+sentinel_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where InitiatingProcessFileName in~ ("httpd","apache2","nginx","php-fpm","php-cgi","php","w3wp.exe","java","java.exe","node","node.exe","tomcat.exe","vmware-vpxd","vpxd","vmdird")
+  | where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","python","python3","perl","ruby","curl","wget","certutil.exe","bitsadmin.exe","whoami","id","uname")
+  | where AccountName !endswith "$"
+  | where AccountName !in~ ("system","local service","network service")
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256
+  | order by Timestamp desc
+sigma_yaml: |-
+  title: Public-Facing Web/App Service Spawning Shell or Interpreter (Post Auth-Bypass RCE)
+  id: 5f2c9e7a-4b1d-4a3e-9c88-7a1e0d2b6f41
+  status: experimental
+  description: Web server or application/appliance service process spawns an OS shell, scripting interpreter, or download LOLBin - post-exploitation of a public-facing auth-bypass/RCE.
+  logsource:
+    category: process_creation
+  detection:
+    selection_parent:
+      ParentImage|endswith:
+        - '/httpd'
+        - '/apache2'
+        - '/nginx'
+        - '/php-fpm'
+        - '/php-cgi'
+        - '/php'
+        - '\\w3wp.exe'
+        - '/java'
+        - '\\java.exe'
+        - '/node'
+        - '\\node.exe'
+        - '/vmware-vpxd'
+        - '/vpxd'
+        - '/vmdird'
+    selection_child:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/dash'
+        - '/zsh'
+        - '\\cmd.exe'
+        - '\\powershell.exe'
+        - '\\pwsh.exe'
+        - '/python'
+        - '/python3'
+        - '/perl'
+        - '/ruby'
+        - '/curl'
+        - '/wget'
+        - '\\certutil.exe'
+        - '\\bitsadmin.exe'
+        - '/whoami'
+        - '/id'
+        - '/uname'
+    condition: selection_parent and selection_child
+  falsepositives:
+    - Application plugins or health checks that legitimately shell out
+    - CI/CD build steps executed under the web-service account
+    - Admin maintenance scripts launched via the app runtime
+  level: high
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("httpd","apache2","nginx","php-fpm","php-cgi","php","w3wp.exe","java","java.exe","node","node.exe","tomcat.exe","catalina.sh","vmware-vpxd","vpxd","vmdird")) AND (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","python","python3","perl","ruby","curl","wget","certutil.exe","bitsadmin.exe","whoami","id","uname")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path
+  | `drop_dm_object_name(Processes)`
+  | where NOT match(user,"(?i)\$$")
+  | convert ctime(firstTime) ctime(lastTime)
+  | sort - lastTime
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\w3wp.exe OR *\\httpd.exe OR *\\nginx.exe OR *\\php-cgi.exe OR *\\java.exe OR *\\node.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\wget.exe OR *\\whoami.exe)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2
+  | ParentBaseFileName=/(httpd|apache2|nginx|php-fpm|php-cgi|php|w3wp\.exe|java|java\.exe|node|node\.exe|tomcat\.exe|vmware-vpxd|vpxd|vmdird)$/i
+  | ImageFileName=/\\?\/?(sh|bash|dash|zsh|cmd\.exe|powershell\.exe|pwsh\.exe|python|python3|perl|ruby|curl|wget|certutil\.exe|bitsadmin\.exe|whoami|id|uname)$/i
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
+  | sort(count, order=desc)
+required_telemetry:
+- Sysmon EID 1
+- Defender DeviceProcessEvents
+- Sentinel DeviceProcessEvents
+- CrowdStrike FDR ProcessRollup2
+- Splunk Endpoint.Processes (CIM)
+kill_chain_phase: execution
+expected_fp_scenarios:
+- Web application plugins/extensions that legitimately shell out (e.g. PHP calling imagemagick, git hooks, backup jobs) under the service account
+- CI/CD or deployment agents running as the same web-service user and invoking sh/bash/python during a release
+- Monitoring/health-check probes that exec whoami/id/uname from the app runtime
+- Admin maintenance run via a web console (e.g. Tomcat manager, Jenkins) that spawns interpreters by design
+- Container base images where the app PID 1 (node/java) forks shell wrappers for entrypoint scripts
+response_runbook: |-
+  1) Triage: Pull the full process tree for the alerting host — confirm the network-facing daemon (httpd/nginx/php-fpm/w3wp/java/vpxd) is the true parent and inspect the child command line for recon (whoami/id/uname), download (curl/wget/certutil to <c2_domain_list>), or reverse-shell syntax. Correlate the timestamp with web/access logs and any Vulnerabilities datamodel match for the in-scope CVEs (CVE-2026-61511, CVE-2026-59309/59310/47876, CVE-2026-61740). 2) Contain: If the child is unexpected, isolate the host, kill the spawned interpreter, snapshot for forensics, and rotate any datasource/service credentials reachable from that server (Budibase/Auth.js/SCIM token exposure). Block observed egress IOCs at the proxy/firewall. 3) Hunt: Sweep all internet-facing hosts for the same parent→child pattern over 30d, pivot on SHA256 of any dropped payload, and check for new web-shell files and persistence written by the web-service account.
+false_positive_filters: |-
+  | where not(ProcessCommandLine has_any ("convert","identify","git","composer","npm","/healthz","heartbeat","backup") and InitiatingProcessCommandLine has_any ("deploy","release","cron"))
