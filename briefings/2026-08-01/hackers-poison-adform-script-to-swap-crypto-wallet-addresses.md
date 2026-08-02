@@ -39,8 +39,6 @@ Anyone who visited a site carrying the aff…
 - **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
@@ -48,45 +46,50 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Adform crypto-stealer C2 beacon to 84.32.102.230:7744 from browser
+### Adform poisoned trackpoint-async.js — browser C2 beacon to 84.32.102.230:7744
 
-`UC_2_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip="84.32.102.230" by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.process, All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src_ip, All_Traffic.src_host, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "84.32.102.230"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where Timestamp > ago(14d)
+| where RemoteIP == "84.32.102.230" and RemotePort == 7744
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Third-party Adform script (trackpoint-async.js) integrity / tamper anomaly
+### Adform crypto-swap C2 egress to 84.32.102.230:7744 at perimeter firewall/proxy
 
-`UC_2_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count max(Web.bytes_in) as max_bytes_in from datamodel=Web where Web.url="*trackpoint-async.js*" AND Web.dest="*adform.net*" by Web.url, Web.src, _time span=1h | `drop_dm_object_name(Web)` | eventstats median(max_bytes_in) as baseline_bytes | where max_bytes_in > baseline_bytes*1.10 | sort - _time
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" All_Traffic.dest_port=7744 (All_Traffic.vendor_product="*firewall*" OR All_Traffic.vendor_product="*proxy*" OR sourcetype="cisco:asa" OR sourcetype="pan:traffic") by All_Traffic.src_ip, All_Traffic.user, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.action, All_Traffic.vendor_product | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+### Adform supply-chain fan-out — multiple internal hosts beaconing 84.32.102.230:7744
+
+`UC_3_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime dc(All_Traffic.src_ip) as DistinctHosts values(All_Traffic.app) as apps from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.dest_ip, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where DistinctHosts >= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let ScriptHosts = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has "s2.adform.net" or RemoteUrl has "trackpoint-async.js"
-    | distinct DeviceId;
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "84.32.102.230"
-| where DeviceId in (ScriptHosts)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
+| where Timestamp > ago(14d)
+| where RemoteIP == "84.32.102.230" and RemotePort == 7744
+| summarize DistinctHosts = dcount(DeviceName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hosts = make_set(DeviceName, 25), Processes = make_set(InitiatingProcessFileName, 10) by RemoteIP, RemotePort
+| where DistinctHosts >= 3   // 3+ unrelated internal hosts hitting one attacker IP:port = shared poisoned resource, not a one-off
+| order by DistinctHosts desc
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -379,7 +382,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_3_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -436,4 +439,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -54,7 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
-- [shinyhunters claims brinks home breach threatens to leak sto](./2026-07-30/shinyhunters-claims-brinks-home-breach-threatens-to-leak-sto.md)
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [the attacker never sleeps neither can your testing](./2026-07-30/the-attacker-never-sleeps-neither-can-your-testing.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
