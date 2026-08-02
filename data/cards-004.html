@@ -842,7 +842,7 @@ level: high
   data-splunk-cats="cloud,endpoint,network,web"
   data-targets="azure,m365,windows"
   data-uc-count="13" data-llm-uc-count="5"
-  data-search="Mirage Kitten targets Middle East and Africa region with new malware Kaspersky researchers reveal previously undocumented malware attributed to Mirage Kitten (UNC1549, Smoke Sandstorm, Nimbus Manticore): NightLedger backdoor, ArcBridge, and BridgeHead tunneling tools.  T1021.002 T1190 T1204.002 T1566 [LLM] NightLedger DLL search-order hijack: rogue SspiCli.dll loaded from non-system path [LLM] NightLedger C2 beacon to realhealthshop/tjconsultingservices and unique URI endpoints [LLM] BridgeHead WebSocket SOCKS5 tunnel to smartconnect.azurewebsites.net [LLM] BridgeHead tunneler DLL planted at anomalous VisualStudio/univpn paths [LLM] NightLedger command execution/discovery via hijacked AppVShNotify.exe parent Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware">
+  data-search="Mirage Kitten targets Middle East and Africa region with new malware Kaspersky researchers reveal previously undocumented malware attributed to Mirage Kitten (UNC1549, Smoke Sandstorm, Nimbus Manticore): NightLedger backdoor, ArcBridge, and BridgeHead tunneling tools.  T1021.002 T1190 T1204.002 T1566 [LLM] NightLedger DLL search-order hijack: malicious SspiCli.dll loaded by AppVShNotify.exe [LLM] NightLedger C2 beacon: realhealthshop.com / tjconsultingservices.com and unique NightLedger URIs [LLM] App-V notifier (AppVShNotify.exe) beaconing to public internet [LLM] BridgeHead/ArcBridge WebSocket tunneler C2: smartconnect.azurewebsites.net /connect handshake [LLM] NightLedger command execution &amp; discovery: AppVShNotify.exe spawning child processes Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-mirage-kitten-targets-middle-east-and-africa-region-with-new" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -904,31 +904,31 @@ level: high
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] NightLedger DLL search-order hijack: rogue SspiCli.dll loaded from non-system path · [LLM] BridgeHead tunneler DLL planted at anomalous VisualStudio/univpn paths · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] NightLedger C2 beacon to realhealthshop/tjconsultingservices and unique URI endpoints · [LLM] BridgeHead WebSocket SOCKS5 tunnel to smartconnect.azurewebsites.net · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] NightLedger command execution/discovery via hijacked AppVShNotify.exe parent</em></div></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] NightLedger DLL search-order hijack: malicious SspiCli.dll loaded by AppVShNotify.exe · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] NightLedger C2 beacon: realhealthshop.com / tjconsultingservices.com and unique NightLedger URIs · [LLM] App-V notifier (AppVShNotify.exe) beaconing to public internet · [LLM] BridgeHead/ArcBridge WebSocket tunneler C2: smartconnect.azurewebsites.net /connect handshake · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] NightLedger command execution &amp; discovery: AppVShNotify.exe spawning child processes</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="0607579ec0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="8fb13d846f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">NightLedger DLL search-order hijack: rogue SspiCli.dll loaded from non-system path</span>
+    <span class="uc-title">NightLedger DLL search-order hijack: malicious SspiCli.dll loaded by AppVShNotify.exe</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0607579ec0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8fb13d846f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts Mirage Kitten&#x27;s NightLedger backdoor, which masquerades as SspiCli.dll and is delay-loaded via RPCRT4.dll into a co-located legitimate AppVShNotify.exe. Legitimate SspiCli.dll only ever loads from System32/SysWOW64/WinSxS, so any load from another directory is the implant.
+    <div class="uc-desc">Hunts Mirage Kitten&#x27;s NightLedger backdoor, which masquerades as SspiCli.dll and is side-loaded via the legitimate AppVShNotify.exe (App-V notifier) through RPCRT4.dll delay-loading. Surfaces a co-located SspiCli.dll dropped/loaded from a non-system directory, which the genuine OS never does.
 
-Rationale: Anchors on the exact NightLedger masquerade string &#x27;SspiCli.dll&#x27; plus the fact that the legitimate DLL only loads from system dirs; a non-system load path is the hijack. Corroborated by Kaspersky and secondary write-ups describing UNC1549 sideloading.
+Rationale: Anchored on the article&#x27;s explicit mechanism: NightLedger &#x27;masquerades as SspiCli.dll&#x27; side-loaded via &#x27;a legitimate AppVShNotify.exe binary&#x27; through RPCRT4.dll delay-load. The genuine SspiCli.dll only ships from System32/SysWOW64/WinSxS, so any other path co-located with AppVShNotify is high fidelity. Corroborated by thehackernews.com and technadu.com write-ups of the same toolset.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
   • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html
-  • https://www.nextron-systems.com/2026/06/01/detecting-nimbus-manticore-and-their-sideloading-infection-chains/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="DLL Search Order Hijacking">T1574.001</span> <span class="ind tech" title="DLL Side-Loading">T1574.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Portable/legacy apps bundling their own outdated sspicli.dll for XP compat</li><li>Software installers staging DLLs to a temp folder before moving to System32</li><li>Developer build output directories containing a locally-compiled sspicli.dll</li><li>Third-party security tools that redirect/shim system DLLs into a sandbox path</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;msiexec.exe&quot;,&quot;setup.exe&quot;,&quot;vs_installer.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the loading process (should be AppVShNotify.exe) and the DLL&#x27;s SHA256/MD5; check signer and compare hash against c832ecd135781b11f59e3fffb3d2b6ac and VT. 2) Contain: isolate the host, quarantine the rogue SspiCli.dll and the co-located AppVShNotify.exe, kill the host process. 3) Hunt: sweep the org for AppVShNotify.exe running outside its normal App-V install path and for outbound traffic to realhealthshop.com / tjconsultingservices.com.</div></details>
+  • https://www.technadu.com/mirage-kittens-new-malware-toolkit-targets-aerospace-and-defense-across-middle-east-and-africa/632036/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow: DLL Search Order Hijacking">T1574.001</span> <span class="ind tech" title="Hijack Execution Flow: DLL Side-Loading">T1574.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer/debug builds of App-V or SSPI shims placed in a custom test directory</li><li>Third-party software bundling a private copy of sspicli.dll in its install folder (rare, worth allowlisting by SHA256)</li><li>Application virtualization staging that extracts DLLs to a temp/WinSxS-adjacent path</li><li>EDR self-test or red-team side-load exercise</li><li>Backup/restore tooling temporarily writing sspicli.dll to a staging folder</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the SspiCli.dll SHA256/MD5 and the AppVShNotify.exe path; verify the DLL is unsigned or signature-mismatched and not the Microsoft System32 copy; check for the NightLedger mutex A8215357-F99A-44FE-BC65-D8F0434B0C03. 2) Contain: isolate the host, quarantine the rogue SspiCli.dll and its parent folder, kill the AppVShNotify.exe process tree. 3) Hunt: pivot to outbound HTTPS from AppVShNotify.exe to realhealthshop.com/tjconsultingservices.com and the /edfcvfgbhnjmkqwasderfgg beacon URI across the fleet.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc0-sentinel">Sentinel KQL</button>
@@ -940,18 +940,19 @@ Cross-checked against:
     <div class="tab-content active" id="art-100-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceImageLoadEvents
 | where Timestamp &gt; ago(30d)
 | where FileName =~ &quot;SspiCli.dll&quot;
-| where FolderPath !startswith &quot;C:\\Windows\\System32&quot; and FolderPath !startswith &quot;C:\\Windows\\SysWOW64&quot; and FolderPath !startswith &quot;C:\\Windows\\WinSxS&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, LoadedDll = FileName, LoadedDllPath = FolderPath, SHA256, MD5
+| where FolderPath !startswith @&quot;C:\Windows\System32\&quot; and FolderPath !startswith @&quot;C:\Windows\SysWOW64\&quot; and FolderPath !startswith @&quot;C:\Windows\WinSxS\&quot;
+| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot; or InitiatingProcessCommandLine has &quot;AppVShNotify&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, MD5
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-100-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
 | where TargetFileName =~ &quot;SspiCli.dll&quot;
-| where TargetFilePath !startswith &quot;C:\\Windows\\System32&quot; and TargetFilePath !startswith &quot;C:\\Windows\\SysWOW64&quot; and TargetFilePath !startswith &quot;C:\\Windows\\WinSxS&quot;
+| where TargetFilePath !startswith @&quot;C:\Windows\System32\&quot; and TargetFilePath !startswith @&quot;C:\Windows\SysWOW64\&quot; and TargetFilePath !startswith @&quot;C:\Windows\WinSxS\&quot;
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetFilePath, TargetFileMD5, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger SspiCli.dll Loaded From Non-System Directory
-id: 8f2a1c94-6d3b-4e77-9a21-2f0c5b7d4e18
-description: Detects a SspiCli.dll image load from outside the Windows system directories, indicative of Mirage Kitten NightLedger DLL search-order hijacking against AppVShNotify.exe.
+    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger SspiCli.dll Side-Load via AppVShNotify.exe
+id: 6f3b1a2e-9c4d-4f18-8b1a-1c2d3e4f5a6b
+description: Detects a co-located malicious SspiCli.dll loaded from a non-system directory by AppVShNotify.exe, the DLL search-order hijack used by Mirage Kitten&#x27;s NightLedger backdoor.
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
@@ -965,6 +966,7 @@ logsource:
 detection:
   selection:
     ImageLoaded|endswith: &#x27;\SspiCli.dll&#x27;
+    Image|endswith: &#x27;\AppVShNotify.exe&#x27;
   filter_system:
     ImageLoaded|startswith:
       - &#x27;C:\Windows\System32\&#x27;
@@ -972,32 +974,34 @@ detection:
       - &#x27;C:\Windows\WinSxS\&#x27;
   condition: selection and not filter_system
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:7 @ImageLoaded:(*\SspiCli.dll OR *\sspicli.dll OR *\SSPICLI.DLL) -@ImageLoaded:(*\Windows\System32\* OR *\Windows\SysWOW64\* OR *\Windows\WinSxS\*)</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ClassifiedModuleLoad TargetFileName=/\\SspiCli\.dll$/i | NOT (TargetFileName=/\\Windows\\(System32|SysWOW64|WinSxS)\\/i) | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;SspiCli.dll&quot; AND NOT (Filesystem.file_path IN (&quot;*\\Windows\\System32\\*&quot;,&quot;*\\Windows\\SysWOW64\\*&quot;,&quot;*\\Windows\\WinSxS\\*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;SspiCli.dll&quot; AND NOT (Filesystem.file_path IN (&quot;*\\Windows\\System32\\*&quot;,&quot;*\\Windows\\SysWOW64\\*&quot;,&quot;*\\Windows\\WinSxS\\*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\SspiCli.dll OR *\\sspicli.dll OR *\\SSPICLI.DLL) -@TargetFilename:(*\\System32\\* OR *\\SysWOW64\\* OR *\\WinSxS\\*)</code></pre></div>
+    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/\\sspicli\.dll$/i
+| NOT TargetFileName=/\\(System32|SysWOW64|WinSxS)\\/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;SspiCli.dll&quot; NOT (Filesystem.file_path IN (&quot;*\\System32\\*&quot;,&quot;*\\SysWOW64\\*&quot;,&quot;*\\WinSxS\\*&quot;)) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;SspiCli.dll&quot; NOT (Filesystem.file_path IN (&quot;*\\System32\\*&quot;,&quot;*\\SysWOW64\\*&quot;,&quot;*\\WinSxS\\*&quot;)) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="76e8364327" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="a61c3ff4cf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">NightLedger C2 beacon to realhealthshop/tjconsultingservices and unique URI endpoints</span>
+    <span class="uc-title">NightLedger C2 beacon: realhealthshop.com / tjconsultingservices.com and unique NightLedger URIs</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="76e8364327" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="a61c3ff4cf" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects NightLedger&#x27;s HTTPS beacon to its primary C2 realhealthshop[.]com (fallback tjconsultingservices[.]com) and its hard-coded operational URIs (GET /edfcvfgbhnjmkqwasderfgg, POST /qasxcdfvgbhnmyuioplkhnj upload, POST /wsdefvvbnhyuijkplmbgfrtt command output). The random-looking fixed URIs are extremely high-fidelity.
+    <div class="uc-desc">Hunts NightLedger&#x27;s HTTPS command-and-control: periodic GET to /edfcvfgbhnjmkqwasderfgg, result POST to /wsdefvvbnhyuijkplmbgfrtt, and file upload POST to /qasxcdfvgbhnmyuioplkhnj against realhealthshop.com (primary) with tjconsultingservices.com fallback. The URI paths are cryptographically-random and unique to this implant, making this near-zero-FP.
 
-Rationale: The three non-dictionary URIs (/edfcvfgbhnjmkqwasderfgg, /qasxcdfvgbhnmyuioplkhnj, /wsdefvvbnhyuijkplmbgfrtt) and the two C2 domains are unique implant artifacts with effectively zero legitimate collision. Domains corroborated by The Hacker News and TechTimes coverage.
+Rationale: Uses the article&#x27;s exact C2 domains (realhealthshop.com primary, tjconsultingservices.com fallback) plus the three verbatim NightLedger URI paths (GET /edfcvfgbhnjmkqwasderfgg, upload POST /qasxcdfvgbhnmyuioplkhnj, output POST /wsdefvvbnhyuijkplmbgfrtt). The random-looking URIs are unique to this implant so they hold signal even if the domains rotate. Domains cross-referenced against the Securelist IOC block.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html
-  • https://www.techtimes.com/articles/321943/20260729/iran-deploys-nightledger-backdoor-websocket-relays-across-six-nations.htm</div>
+  • https://www.technadu.com/mirage-kittens-new-malware-toolkit-targets-aerospace-and-defense-across-middle-east-and-africa/632036/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel enrichment/sandbox appliances resolving the IOC domains for research</li><li>Security researcher workstation manually fetching the IOCs</li><li>DNS sinkhole/blocklist telemetry echoing the domains as blocked hits</li><li>URL-path collision is essentially impossible; near-zero FP on the URI selection</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess making the connection (expect AppVShNotify.exe host) and confirm periodic beacon cadence to the /edfcvfgbhnjmkqwasderfgg endpoint. 2) Contain: block realhealthshop.com, tjconsultingservices.com, businessmixture.com, aecert.org at proxy/DNS/firewall and isolate the host. 3) Hunt: search for POST traffic to the upload (/qasxcdfvgbhnmyuioplkhnj) and output (/wsdefvvbnhyuijkplmbgfrtt) URIs indicating active exfiltration, and pivot to the SspiCli.dll load event on the same host.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Network_Resolution</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher/sandbox deliberately resolving the IOC domains during analysis</li><li>Threat-intel feed validation tooling that beacons IOC domains to test blocking</li><li>DNS sinkhole or protective-DNS test hitting the domain</li><li>Typosquat of a legitimate health/consulting site coincidentally sharing a substring (mitigated by endswith anchoring)</li><li>Proxy log replay/re-ingestion double-counting historical hits</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process (expect AppVShNotify.exe/rundll32.exe) and confirm the URI matches one of the three NightLedger paths; grab the destination IP and check periodicity (beacon interval command 30). 2) Contain: block realhealthshop.com, tjconsultingservices.com and resolved IPs at proxy/firewall, isolate the beaconing host. 3) Hunt: search the fleet for the same URIs, the SspiCli.dll side-load, and any POST to /qasxcdfvgbhnmyuioplkhnj indicating data upload; scope which files were exfiltrated.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc1-sentinel">Sentinel KQL</button>
@@ -1008,66 +1012,62 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;,&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)
+    or RemoteUrl has_any (&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-100-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(30d)
-| where Url has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;,&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
-| project TimeGenerated, SrcHostname, SrcIpAddr, Url, HttpMethod, HttpRequestHeaderUserAgent, DstHostname, DstIpAddr
+| where Url has_any (&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
+    or HttpHostName has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)
+    or Url has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)
+| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, HttpHostName, Url, HttpMethod, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger C2 Domains and Hard-Coded Beacon URIs
-id: b3d9e4a1-7c22-4f0e-8b95-1a6d2c8f7043
-description: Detects Mirage Kitten NightLedger command-and-control over its named domains and fixed operational URI paths.
+    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger Backdoor C2 Domains
+id: 8a1c2d3e-4f5a-4b6c-9d0e-1f2a3b4c5d6e
+description: Detects DNS resolution of Mirage Kitten NightLedger C2 domains realhealthshop.com (primary) and tjconsultingservices.com (fallback).
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
   - attack.t1071.001
-  - attack.t1041
 logsource:
-  category: proxy
+  category: dns
+  product: windows
 detection:
-  selection_domain:
-    c-uri|contains:
+  selection:
+    QueryName|endswith:
       - &#x27;realhealthshop.com&#x27;
       - &#x27;tjconsultingservices.com&#x27;
-      - &#x27;businessmixture.com&#x27;
-      - &#x27;aecert.org&#x27;
-  selection_uri:
-    c-uri|contains:
-      - &#x27;/edfcvfgbhnjmkqwasderfgg&#x27;
-      - &#x27;/qasxcdfvgbhnmyuioplkhnj&#x27;
-      - &#x27;/wsdefvvbnhyuijkplmbgfrtt&#x27;
-  condition: selection_domain or selection_uri
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon (@EventID:22 OR @EventID:3) @QueryName:(*realhealthshop.com* OR *tjconsultingservices.com* OR *businessmixture.com* OR *aecert.org*) OR @DestinationHostname:(*realhealthshop.com* OR *tjconsultingservices.com* OR *businessmixture.com* OR *aecert.org*)</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(realhealthshop\.com|tjconsultingservices\.com|businessmixture\.com|aecert\.org)$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN (&quot;*/edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*/qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*/wsdefvvbnhyuijkplmbgfrtt*&quot;) OR Web.dest IN (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN (&quot;*/edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*/qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*/wsdefvvbnhyuijkplmbgfrtt*&quot;) OR Web.dest IN (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon ((@EventID:22 @QueryName:(*realhealthshop.com* OR *tjconsultingservices.com*)) OR (@EventID:3 @DestinationHostname:(*realhealthshop.com* OR *tjconsultingservices.com*)))</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| DomainName=/(realhealthshop\.com|tjconsultingservices\.com)$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN (&quot;*realhealthshop.com*&quot;,&quot;*tjconsultingservices.com*&quot;) OR Web.uri_path IN (&quot;*edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*wsdefvvbnhyuijkplmbgfrtt*&quot;)) by Web.src Web.dest Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN (&quot;*realhealthshop.com*&quot;,&quot;*tjconsultingservices.com*&quot;) OR Web.uri_path IN (&quot;*edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*wsdefvvbnhyuijkplmbgfrtt*&quot;)) by Web.src Web.dest Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="f8ad062372" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="ed535cff0b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">BridgeHead WebSocket SOCKS5 tunnel to smartconnect.azurewebsites.net</span>
+    <span class="uc-title">App-V notifier (AppVShNotify.exe) beaconing to public internet</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f8ad062372" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="ed535cff0b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the BridgeHead tunneler&#x27;s HTTPS WebSocket handshake (GET /connect, Upgrade: websocket) to its Azure-hosted C2 smartconnect.azurewebsites.net using a fixed legacy Chrome/86 + Edg/86 User-Agent. Once established it acts as a full SOCKS5 relay through the victim.
+    <div class="uc-desc">Behavioural backstop for NightLedger when C2 domains rotate: the App-V notifier AppVShNotify.exe has no legitimate reason to open outbound public-internet connections. Surfaces AppVShNotify.exe (host of the hijacked SspiCli.dll) talking to any non-RFC1918 destination.
 
-Rationale: Combines the exact BridgeHead C2 subdomain smartconnect.azurewebsites.net with its distinctive fixed URI /connect and hard-coded stale Edg/86.0.622.38 User-Agent — a triple anchor that legitimate Azure web-app traffic will not reproduce. Azure C2 pattern corroborated by SOCPrime/Nextron UNC1549 reporting.
+Rationale: AppVShNotify.exe is the specific signed binary the article names as the NightLedger side-load host; it is a local App-V UI notifier with no legitimate outbound-internet role, so public egress from it is a durable behavioural indicator even after C2 domain rotation. Sentinel query correlates ImProcessCreate (AppVShNotify) with ImNetworkSession by host+time because ImNetworkSession carries no process attribution column.
 
 Cross-checked against:
-  • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://socprime.com/active-threats/detecting-nimbus-manticore-and-their-sideloading-infection-chains/
-  • https://www.technadu.com/mirage-kittens-new-malware-toolkit-targets-aerospace-and-defense-across-middle-east-and-africa/632036/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Proxy">T1090</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A benign SaaS app legitimately hosted at a different *.azurewebsites.net site (excluded — subdomain is exact)</li><li>Internal dev/test app someone named smartconnect on azurewebsites.net (verify ownership)</li><li>Proxy replaying the stale UA for a legacy line-of-business app (rare; pair with the /connect URI)</li><li>Security scanner probing the C2 host during IOC validation</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the WebSocket upgrade (HTTP 101) and the loading DLL context (unbcl.dll or libwinpthread-1.dll host process) on the same device. 2) Contain: block smartconnect.azurewebsites.net, isolate the host, and terminate the tunneling process — the victim is being used as a SOCKS5 relay so review any inbound tunnel-initiated lateral traffic. 3) Hunt: enumerate all internal hosts that received TCP relayed from this device and check other endpoints for the same UA/URI pattern.</div></details>
+  • https://securelist.com/mirage-kitten-new-tools/120811/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy">T1090</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Microsoft Application Virtualization (App-V) telemetry/streaming that legitimately reaches a cloud publishing server in some enterprise App-V-over-internet configs</li><li>Process-hollowing false-attribution where another process&#x27; socket is credited to AppVShNotify by the sensor</li><li>Proxy-aware environment where all egress is via internal proxy (dest is private) — will not fire, expected</li><li>Software distribution agent temporarily hosting App-V packages from a public CDN</li><li>Sensor time-skew in the Sentinel join surfacing an unrelated same-host connection</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the AppVShNotify.exe path and SHA256 (System32 vs. a rogue copy) and whether a co-located SspiCli.dll exists; review the destination reputation. 2) Contain: isolate the host and block the destination IP; capture memory before killing the process tree to preserve NightLedger artifacts. 3) Hunt: check the same host/fleet for the SspiCli.dll side-load, NightLedger beacon URIs, and BridgeHead/ArcBridge tunneler DLLs (unbcl.dll, libwinpthread-1.dll).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc2-sentinel">Sentinel KQL</button>
@@ -1078,61 +1078,76 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl endswith &quot;smartconnect.azurewebsites.net&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot;
+| where RemoteIPType == &quot;Public&quot;
+| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort,10), Urls=make_set(RemoteUrl,10) by DeviceName, RemoteIP, InitiatingProcessFolderPath, InitiatingProcessSHA256
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 10m;
+let appv = ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where DstHostname =~ &quot;smartconnect.azurewebsites.net&quot; or Url has &quot;smartconnect.azurewebsites.net&quot;
-| where (HttpMethod =~ &quot;GET&quot; and Url has &quot;/connect&quot;) or HttpRequestHeaderUserAgent has &quot;Edg/86.0.622.38&quot;
-| project TimeGenerated, SrcHostname, SrcIpAddr, Url, HttpMethod, HttpRequestHeaderUserAgent, DstHostname, DstIpAddr
+| where ActingProcessName endswith &quot;AppVShNotify.exe&quot;
+| project ProcTime = TimeGenerated, DvcHostname, ActingProcessName, ActorUsername;
+ImNetworkSession
+| where TimeGenerated &gt; ago(30d)
+| where isnotempty(DstIpAddr)
+| where not(ipv4_is_private(DstIpAddr))
+| join kind=inner appv on DvcHostname
+| where TimeGenerated between (ProcTime .. ProcTime + win)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, DstIpAddr, DstPortNumber, DstHostname, Url
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: BridgeHead WebSocket Tunnel Handshake to smartconnect.azurewebsites.net
-id: 5c71f0a8-9e34-4d6b-b2a7-8f13d5c6e920
-description: Detects Mirage Kitten BridgeHead tunneler establishing a WebSocket channel to its Azure C2 with a fixed legacy Edge/86 User-Agent.
+    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AppVShNotify.exe Outbound Public Network Connection
+id: 2b3c4d5e-6f7a-4b8c-9d1e-2f3a4b5c6d7e
+description: Detects the App-V notifier AppVShNotify.exe (NightLedger side-load host) connecting to a non-private destination, which the legitimate binary never does.
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
-  - attack.t1572
-  - attack.t1090
   - attack.t1071.001
+  - attack.t1090
 logsource:
-  category: proxy
+  category: network_connection
+  product: windows
 detection:
-  selection_host:
-    c-uri|contains: &#x27;smartconnect.azurewebsites.net&#x27;
-  selection_context:
-    - c-uri|contains: &#x27;/connect&#x27;
-    - c-useragent|contains: &#x27;Edg/86.0.622.38&#x27;
-  condition: selection_host and selection_context
+  selection:
+    Image|endswith: &#x27;\AppVShNotify.exe&#x27;
+    Initiated: &#x27;true&#x27;
+  filter_private:
+    DestinationIp|cidr:
+      - &#x27;10.0.0.0/8&#x27;
+      - &#x27;172.16.0.0/12&#x27;
+      - &#x27;192.168.0.0/16&#x27;
+      - &#x27;127.0.0.0/8&#x27;
+  condition: selection and not filter_private
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(*smartconnect.azurewebsites.net OR *SmartConnect.azurewebsites.net)</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/^smartconnect\.azurewebsites\.net$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest=&quot;smartconnect.azurewebsites.net&quot; AND (Web.url=&quot;*/connect*&quot; OR Web.http_user_agent=&quot;*Edg/86.0.622.38*&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest=&quot;smartconnect.azurewebsites.net&quot; AND (Web.url=&quot;*/connect*&quot; OR Web.http_user_agent=&quot;*Edg/86.0.622.38*&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\\AppVShNotify.exe OR *\\appvshnotify.exe OR *\\APPVSHNOTIFY.EXE) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8)</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/\\AppVShNotify\.exe$/i
+| NOT (cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) OR cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) OR cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) OR cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4))
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=&quot;AppVShNotify.exe&quot; NOT (All_Traffic.dest IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=&quot;AppVShNotify.exe&quot; NOT (All_Traffic.dest IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="899a7626e0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="2d5c603bd9" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">BridgeHead tunneler DLL planted at anomalous VisualStudio/univpn paths</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">BridgeHead/ArcBridge WebSocket tunneler C2: smartconnect.azurewebsites.net /connect handshake</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="899a7626e0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="2d5c603bd9" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the BridgeHead tunneler dropped as unbcl.dll under %LocalAppData%\Microsoft\VisualStudio or as libwinpthread-1.dll under C:\Program Files (x86)\univpn\promote — both are DLL side-load masquerades in directories where those DLLs never legitimately appear. Also flags the known sample hash.
+    <div class="uc-desc">Hunts Mirage Kitten&#x27;s BridgeHead/ArcBridge WebSocket tunnelers that establish an HTTPS WebSocket to smartconnect.azurewebsites.net (GET /connect, Upgrade: websocket) and relay SOCKS5 traffic, plus the distinctive side-load DLL paths unbcl.dll (%LocalAppData%\Microsoft\VisualStudio) and libwinpthread-1.dll (C:\program files (x86)\univpn\promote).
 
-Rationale: unbcl.dll and libwinpthread-1.dll are real DLL names, so the fidelity comes from the anomalous drop paths named in the article (%LocalAppData%\Microsoft\VisualStudio, univpn\promote) plus the article&#x27;s sample MD5 c832ecd135781b11f59e3fffb3d2b6ac.
+Rationale: Uses the article&#x27;s exact WebSocket C2 host smartconnect.azurewebsites.net (GET /connect, Upgrade: websocket) for the network angle and the two verbatim side-load tunneler DLL locations — unbcl.dll under %LocalAppData%\Microsoft\VisualStudio and libwinpthread-1.dll under C:\program files (x86)\univpn\promote — for the host angle. unbcl.dll=BridgeHead corroborated by thehackernews.com.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://blog.polyswarm.io/mirage-kitten-deploys-nightledger-backdoor-in-espionage-campaign-targeting-the-middle-east-and-africa</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="DLL Side-Loading">T1574.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Genuine Visual Studio installs write unbcl.dll to its own program-files path, NOT under %LocalAppData%\Microsoft\VisualStudio (path-scoped out)</li><li>A legit UniVPN client bundling libwinpthread-1.dll in its own install dir (verify signer)</li><li>MinGW/GCC toolchains dropping libwinpthread-1.dll into project build folders (path won&#x27;t match univpn\promote)</li><li>Backup/sync tool replicating an existing infected DLL into the same relative path</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: hash the dropped DLL and compare to c832ecd135781b11f59e3fffb3d2b6ac; identify the process that wrote it and the intended host EXE it sits beside. 2) Contain: quarantine the DLL, isolate the host, kill any process that has the DLL loaded. 3) Hunt: confirm outbound WebSocket to smartconnect.azurewebsites.net from the host and sweep the fleet for the same two path/filename combinations.</div></details>
+  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy">T1090</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Network_Resolution</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate business app genuinely hosted on the same *.azurewebsites.net app-service name (verify exact FQDN smartconnect before dismissing)</li><li>A real &#x27;univpn&#x27; VPN client that legitimately ships libwinpthread-1.dll under program files (x86) — validate hash/signature</li><li>Visual Studio component genuinely placing unbcl.dll in the LocalAppData VS folder (rare; validate signer)</li><li>Sandbox/researcher resolving the C2 host during analysis</li><li>Azure health-probe or uptime monitor hitting the app-service endpoint</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination FQDN is exactly smartconnect.azurewebsites.net and/or that unbcl.dll / libwinpthread-1.dll live in the flagged non-standard paths and are unsigned; check for a preceding username-substring recon gate. 2) Contain: block the azurewebsites host + IP, isolate the host, quarantine the tunneler DLL, and terminate the loader process to break the SOCKS5 relay. 3) Hunt: because this host becomes a relay node, review lateral traffic that appears to originate from it, and sweep the fleet for the same DLL paths and NightLedger indicators.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc3-sentinel">Sentinel KQL</button>
@@ -1141,68 +1156,69 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-100-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-100-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Angle A: WebSocket C2 host
+let net = DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (FileName =~ &quot;unbcl.dll&quot; and FolderPath has @&quot;\Microsoft\VisualStudio\&quot;)
-    or (FileName =~ &quot;libwinpthread-1.dll&quot; and FolderPath has @&quot;\univpn\promote\&quot;)
-    or MD5 == &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, MD5, SHA256
+| where RemoteUrl has &quot;smartconnect.azurewebsites.net&quot;
+| project Timestamp, DeviceName, Signal=&quot;C2:smartconnect&quot;, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort;
+// Angle B: side-load tunneler DLL load paths
+let dll = DeviceImageLoadEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName =~ &quot;unbcl.dll&quot; and FolderPath has @&quot;\Microsoft\VisualStudio&quot;)
+    or (FileName =~ &quot;libwinpthread-1.dll&quot; and FolderPath has @&quot;\univpn\promote&quot;)
+| project Timestamp, DeviceName, Signal=strcat(&quot;DLL:&quot;,FileName), InitiatingProcessFileName, InitiatingProcessCommandLine=&quot;&quot;, RemoteUrl=FolderPath, RemoteIP=&quot;&quot;, RemotePort=0;
+union net, dll
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
 | where TimeGenerated &gt; ago(30d)
-| where (TargetFileName =~ &quot;unbcl.dll&quot; and TargetFilePath has @&quot;\Microsoft\VisualStudio\&quot;)
-    or (TargetFileName =~ &quot;libwinpthread-1.dll&quot; and TargetFilePath has @&quot;\univpn\promote\&quot;)
-    or TargetFileMD5 == &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
-| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath, TargetFileMD5, TargetFileSHA256
+| where HttpHostName =~ &quot;smartconnect.azurewebsites.net&quot; or Url has &quot;smartconnect.azurewebsites.net&quot;
+| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, HttpHostName, Url, HttpMethod, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: BridgeHead Tunneler DLL Planted at Anomalous Path
-id: a1e6c3b2-4f88-4a19-9c07-6b2d1f9e5c34
-description: Detects Mirage Kitten BridgeHead tunneler side-load DLLs written to non-standard VisualStudio or univpn directories, or matching the known sample MD5.
+    <div class="tab-content" id="art-100-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: BridgeHead/ArcBridge WebSocket Tunneler C2 Host
+id: 4d5e6f7a-8b9c-4d0e-1f2a-3b4c5d6e7f8a
+description: Detects DNS resolution of Mirage Kitten BridgeHead/ArcBridge WebSocket tunneler C2 host smartconnect.azurewebsites.net.
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
-  - attack.t1574.002
-  - attack.t1105
+  - attack.t1572
+  - attack.t1071.001
 logsource:
-  category: file_event
+  category: dns
   product: windows
 detection:
-  selection_unbcl:
-    TargetFilename|endswith: &#x27;\unbcl.dll&#x27;
-    TargetFilename|contains: &#x27;\Microsoft\VisualStudio\&#x27;
-  selection_pthread:
-    TargetFilename|endswith: &#x27;\libwinpthread-1.dll&#x27;
-    TargetFilename|contains: &#x27;\univpn\promote\&#x27;
-  condition: selection_unbcl or selection_pthread
+  selection:
+    QueryName|endswith: &#x27;smartconnect.azurewebsites.net&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\Microsoft\VisualStudio\*\unbcl.dll OR *\Microsoft\VisualStudio\*\UNBCL.DLL) OR @TargetFilename:(*\univpn\promote\libwinpthread-1.dll OR *\univpn\promote\LIBWINPTHREAD-1.DLL))</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten (TargetFileName=/\\Microsoft\\VisualStudio\\.*\\unbcl\.dll$/i OR TargetFileName=/\\univpn\\promote\\libwinpthread-1\.dll$/i) | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;unbcl.dll&quot; AND Filesystem.file_path=&quot;*\\Microsoft\\VisualStudio\\*&quot;) OR (Filesystem.file_name=&quot;libwinpthread-1.dll&quot; AND Filesystem.file_path=&quot;*\\univpn\\promote\\*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;unbcl.dll&quot; AND Filesystem.file_path=&quot;*\\Microsoft\\VisualStudio\\*&quot;) OR (Filesystem.file_name=&quot;libwinpthread-1.dll&quot; AND Filesystem.file_path=&quot;*\\univpn\\promote\\*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon ((@EventID:22 @QueryName:*smartconnect.azurewebsites.net*) OR (@EventID:3 @DestinationHostname:*smartconnect.azurewebsites.net*))</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| DomainName=/smartconnect\.azurewebsites\.net$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*smartconnect.azurewebsites.net*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.uri_path | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*smartconnect.azurewebsites.net*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.uri_path | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="784797053d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="a542cb8f2f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">NightLedger command execution/discovery via hijacked AppVShNotify.exe parent</span>
+    <span class="uc-title">NightLedger command execution &amp; discovery: AppVShNotify.exe spawning child processes</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="784797053d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="a542cb8f2f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the NightLedger backdoor executing its dispatcher commands (execute process, list processes, host/network recon) from inside the hijacked AppVShNotify.exe. AppVShNotify.exe is a quiet App-V helper that should virtually never spawn shells or discovery binaries, so any such child is high-signal.
+    <div class="uc-desc">Hunts NightLedger&#x27;s execute-a-process (cmd 3) and discovery (process list cmd 90, drive enumeration cmd 75, directory listing cmd 17) behaviour. The hijacked host AppVShNotify.exe is a UI notifier that legitimately spawns no children, so any child process it launches is operator activity.
 
-Rationale: Anchors on the article&#x27;s named legitimate side-load host AppVShNotify.exe as the parent; since NightLedger runs inside it, any shell/recon child maps directly to its dispatcher commands (3 execute, 25 host/network info, 90 list processes, 93 NetSetup.log collection). AppVShNotify.exe almost never spawns children legitimately.
+Rationale: Grounded in NightLedger&#x27;s documented command set (3 execute process, 90 list processes, 75 enumerate logical drives, 17 list directories) all executed from the AppVShNotify.exe host context. AppVShNotify.exe is a passive App-V notifier that spawns no children legitimately, so a parent-image pivot on it needs no child allowlist and stays near-zero-FP.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Windows Command Shell">T1059.003</span> <span class="ind tech" title="Process Discovery">T1057</span> <span class="ind tech" title="System Network Configuration Discovery">T1016</span> <span class="ind tech" title="System Information Discovery">T1082</span></div>
+  • https://www.technadu.com/mirage-kittens-new-malware-toolkit-targets-aerospace-and-defense-across-middle-east-and-africa/632036/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Process Discovery">T1057</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="System Information Discovery">T1082</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate App-V virtualized application invoking a helper script at publish/refresh time (rare, verify signed chain)</li><li>App-V troubleshooting where an admin manually drives AppVShNotify context</li><li>EDR/management tooling injecting a diagnostic command into an App-V package</li><li>Software metering agents enumerating virtualized app processes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where AccountName !endswith &quot;$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full child command line (look for tasklist/systeminfo/ipconfig recon and reads of C:\Windows\debug\NetSetup.log) and confirm a non-System32 SspiCli.dll is loaded in the AppVShNotify.exe process. 2) Contain: isolate the host and suspend/kill the AppVShNotify.exe process tree. 3) Hunt: pivot to outbound C2 (realhealthshop.com/tjconsultingservices.com) and to any staged output being POSTed to /wsdefvvbnhyuijkplmbgfrtt; sweep other hosts for AppVShNotify.exe parenting shells.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Microsoft App-V servicing that briefly invokes a helper (validate the child binary is signed Microsoft)</li><li>Crash-handler (WerFault.exe) spawned when AppVShNotify.exe itself crashes</li><li>EDR/AV live-response tooling attaching to and spawning under AppVShNotify.exe during investigation</li><li>Software packaging tool that repackages App-V and drives the notifier</li><li>Red-team emulation of the NightLedger side-load</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FileName =~ &quot;WerFault.exe&quot; and ProcessCommandLine has &quot;AppVShNotify&quot;) // exclude crash-reporting spawns</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine for recon patterns (tasklist, whoami, net, systeminfo, dir of shares, C:\Windows\debug\NetSetup.log) and confirm the AppVShNotify.exe copy is the rogue side-load. 2) Contain: isolate the host, capture volatile memory, kill the AppVShNotify.exe tree and quarantine the co-located SspiCli.dll. 3) Hunt: correlate with the NightLedger beacon URIs and the collection of C:\Windows\debug\NetSetup.log (cmd 93); enumerate what the operator ran and which files/screenshots were staged for upload to /qasxcdfvgbhnmyuioplkhnj.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
@@ -1214,18 +1230,18 @@ Cross-checked against:
     <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
 | where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;nltest.exe&quot;,&quot;reg.exe&quot;,&quot;wmic.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, ChildProc = FileName, ChildCmd = ProcessCommandLine, SHA256
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessSHA256, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has &quot;AppVShNotify.exe&quot;
-| where ActingProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;nltest.exe&quot;,&quot;reg.exe&quot;,&quot;wmic.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| where ParentProcessName endswith &quot;AppVShNotify.exe&quot;
+| where ActorUsername !endswith &quot;$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine, SHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: AppVShNotify.exe Spawning Shell or Discovery Binary (NightLedger)
-id: d4f2b7e0-3a15-4c88-9e61-0b7c9d2a5f16
-description: Detects the App-V helper AppVShNotify.exe (abused as NightLedger DLL-hijack host) spawning command-shell or discovery processes.
+    <div class="tab-content" id="art-100-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: AppVShNotify.exe Spawning Child Process (NightLedger Command Execution)
+id: 7a8b9c0d-1e2f-4a3b-8c4d-5e6f7a8b9c0d
+description: Detects any child process spawned by AppVShNotify.exe, the NightLedger side-load host, indicating operator command execution or discovery.
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
@@ -1233,32 +1249,20 @@ date: 2026/08/02
 tags:
   - attack.t1059.003
   - attack.t1057
-  - attack.t1016
-  - attack.t1082
+  - attack.t1083
 logsource:
   category: process_creation
   product: windows
 detection:
   selection:
     ParentImage|endswith: &#x27;\AppVShNotify.exe&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\tasklist.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\ipconfig.exe&#x27;
-      - &#x27;\systeminfo.exe&#x27;
-      - &#x27;\net.exe&#x27;
-      - &#x27;\net1.exe&#x27;
-      - &#x27;\nltest.exe&#x27;
-      - &#x27;\reg.exe&#x27;
-      - &#x27;\wmic.exe&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\AppVShNotify.exe OR *\appvshnotify.exe OR *\APPVSHNOTIFY.EXE) @Image:(*\cmd.exe OR *\powershell.exe OR *\tasklist.exe OR *\whoami.exe OR *\ipconfig.exe OR *\systeminfo.exe OR *\net.exe OR *\net1.exe OR *\nltest.exe OR *\reg.exe OR *\wmic.exe)</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/appvshnotify\.exe$/i | ImageFileName=/\\(cmd|powershell|pwsh|tasklist|whoami|ipconfig|systeminfo|net|net1|nltest|reg|wmic)\.exe$/i | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;AppVShNotify.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;nltest.exe&quot;,&quot;reg.exe&quot;,&quot;wmic.exe&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;AppVShNotify.exe&quot; AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;nltest.exe&quot;,&quot;reg.exe&quot;,&quot;wmic.exe&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\AppVShNotify.exe OR *\\appvshnotify.exe OR *\\APPVSHNOTIFY.EXE)</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/appvshnotify\.exe$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;AppVShNotify.exe&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;AppVShNotify.exe&quot; by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -2082,11 +2086,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1566,T1566.002"
   data-sources="The Hacker News"
-  data-platforms="cloudwatch,def,falcon,sent,sigma,spl"
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,linux,m365,windows"
   data-uc-count="9" data-llm-uc-count="3"
-  data-search="Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue CVE-2026-16812 CVE-2025-68686 CVE-2026-16723 T1190 T1566 T1566.002 [LLM] Arista VeloCloud Orchestrator attacker infrastructure contact (CVE-2026-16812 IOC IPs) [LLM] OS command-injection payload in HTTP requests to VeloCloud Orchestrator (CVE-2026-16812) [LLM] VeloCloud Orchestrator service process spawns shell or recon binary (post-injection RCE) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
+  data-search="Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue CVE-2026-16812 CVE-2025-68686 CVE-2026-16723 T1190 T1566 T1566.002 [LLM] Network communication with Arista-published VeloCloud attacker IPs (CVE-2026-16812) [LLM] OS command-injection payload against VeloCloud Orchestrator web interface (CVE-2026-16812) [LLM] VeloCloud Orchestrator web-interface access from known CVE-2026-16812 attacker IPs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-attackers-exploit-arista-velocloud-orchestrator-command-inje" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2144,39 +2148,40 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] VeloCloud Orchestrator web-interface access from known CVE-2026-16812 attacker IPs · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Arista VeloCloud Orchestrator attacker infrastructure contact (CVE-2026-16812 IOC IPs) · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OS command-injection payload in HTTP requests to VeloCloud Orchestrator (CVE-2026-16812) · [LLM] VeloCloud Orchestrator service process spawns shell or recon binary (post-injection RCE) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Network communication with Arista-published VeloCloud attacker IPs (CVE-2026-16812) · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OS command-injection payload against VeloCloud Orchestrator web interface (CVE-2026-16812) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="cb2b6899f9" data-platforms="cloudwatch,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="781c497525" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Arista VeloCloud Orchestrator attacker infrastructure contact (CVE-2026-16812 IOC IPs)</span>
+    <span class="uc-title">Network communication with Arista-published VeloCloud attacker IPs (CVE-2026-16812)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="cb2b6899f9" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="781c497525" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts any network communication to/from the three IP addresses Arista attributed to active exploitation of CVE-2026-16812. Primary use is inbound exploitation traffic against the on-prem VCO web interface, but also catches any VCO-host outbound callback to the same infrastructure.
+    <div class="uc-desc">Hunts any inbound or outbound traffic involving the three IP addresses Arista named as responsible for conducting the CVE-2026-16812 attacks against on-prem VeloCloud Orchestrator. Inbound flags exploitation attempts against the VCO web interface; outbound flags a post-exploitation C2/reverse-shell callback from a compromised host.
 
-Rationale: Uses the three exact attacker IPs (8.19.75.217, 206.72.242.124, 206.72.242.162) named in Arista Advisory 0144 and reproduced across multiple second sources; a pure atomic-IOC match is the single highest-fidelity signal in this article.
+Rationale: Uses the three exact attacker IPs (8.19.75.217, 206.72.242.124, 206.72.242.162) Arista published in its advisory and explicitly told customers to block and hunt for. Hard IOCs, corroborated across BleepingComputer/SecurityWeek/The Register, so near-zero FP.
 
 Cross-checked against:
-  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://securityaffairs.com/196130/security/u-s-cisa-adds-arista-velocloud-orchestrator-and-fortinet-fortios-flaws-to-its-known-exploited-vulnerabilities-catalog.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+  • https://www.securityweek.com/critical-arista-velocloud-orchestrator-vulnerability-exploited-as-zero-day/
+  • https://www.theregister.com/security/2026/07/28/arista-patches-actively-exploited-velocloud-bug-as-cisa-puts-admins-on-the-clock/5279414</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security researcher or scanning vendor (Shadowserver/Censys) temporarily sourcing from a reassigned 206.72.242.0/24 host</li><li>Threat-intel feed connectivity tests or sinkhole traffic to the same IPs</li><li>An internal proxy/NAT egress IP coincidentally sharing a /24 with the listed addresses</li><li>Legacy firewall log replay during SIEM backfill re-firing historical hits</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the VCO host or its front-end proxy is the local peer and identify direction — inbound from these IPs to the VCO web port is exploitation; outbound from the VCO host is likely post-compromise callback. Pull the matching web/access log lines. 2) Contain: block all three IPs at the perimeter (per Arista guidance), isolate the VCO instance, and preserve VCO web access, backend, system, and database logs before remediation. 3) Hunt: pivot on the VCO host for shells/recon spawned by service processes (UC3), review recent administrator activity and credential material, and rotate VeloCloud Edge device credentials as Arista recommends.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized external pentest/red-team using the same VPS provider that later reassigned one of these IPs</li><li>Threat-intel or attack-surface scanning service that happens to share the IP block</li><li>Corporate proxy/NAT egress IP being logged as source rather than the true internal host</li><li>Reverse-DNS or reputation-lookup tooling contacting the IP for enrichment</li><li>Historical log replay/backfill re-surfacing already-triaged connections</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceAction in (&quot;deny&quot;,&quot;drop&quot;,&quot;blocked&quot;) and SourcePort == 0)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the internal peer of the IOC IP — is it the VCO host or another asset? Pull the full 5-tuple, direction, and byte counts; inbound to the VCO web port = exploitation attempt, outbound = likely C2. 2) Contain: Block all three IPs at the perimeter firewall (Arista&#x27;s explicit guidance); if the VCO host is the peer, isolate it and preserve VCO web access, backend app, system and DB logs plus file-system timestamps before remediation. 3) Hunt: Search 90 days of logs for the IPs across all assets, review recent VCO administrator activity for unexpected changes, and check VeloCloud Edge device state — compromise of VCO can pivot to managed Edges.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
@@ -2184,92 +2189,91 @@ Cross-checked against:
     <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
 | where RemoteIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project Timestamp, DeviceName, LocalIP, RemoteIP, RemotePort, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let iocs = dynamic([&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]);
+CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where SourceIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) or DestinationIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, RequestURL, DeviceAction, Message
+| where SourceIP in (iocs) or DestinationIP in (iocs)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourcePort, DestinationIP, DestinationPort, DeviceAction, RequestURL, Activity
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Arista VeloCloud Orchestrator Exploitation Infrastructure Contact (CVE-2026-16812)
-id: 6f2c1e4a-8b3d-4a2e-9c11-7d5e9f0a1b23
-description: Detects network connections to or from the three IP addresses Arista attributed to active exploitation of the VeloCloud Orchestrator OS command injection flaw CVE-2026-16812.
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator CVE-2026-16812 Attacker IP Network Connection
+id: 5a2f1c04-8b7e-4d61-9f0a-7c9e2d1a4b30
+description: Detects network connection to an IP address Arista attributed to active exploitation of CVE-2026-16812 in on-prem VeloCloud Orchestrator.
 references:
-  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
+  - https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
   - attack.t1190
-  - attack.t1071
+  - attack.t1071.001
 logsource:
   category: network_connection
-  product: linux
+  product: windows
 detection:
-  selection_dst:
+  selection:
     DestinationIp:
       - &#x27;8.19.75.217&#x27;
       - &#x27;206.72.242.124&#x27;
       - &#x27;206.72.242.162&#x27;
-  selection_src:
-    SourceIp:
-      - &#x27;8.19.75.217&#x27;
-      - &#x27;206.72.242.124&#x27;
-      - &#x27;206.72.242.162&#x27;
-  condition: selection_dst or selection_src
+  condition: selection
 level: high</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(8.19.75.217 OR 206.72.242.124 OR 206.72.242.162)</code></pre></div>
     <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(8\.19\.75\.217|206\.72\.242\.124|206\.72\.242\.162)$/
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
     <div class="tab-content" id="art-102-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, protocol, action, bytes
+fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
 | filter srcAddr in [&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;] or dstAddr in [&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action
+| stats sum(bytes) as totalBytes, count(*) as flows by srcAddr, dstAddr, dstPort, action
+| sort totalBytes desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.src in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action
 | `drop_dm_object_name(All_Traffic)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action
+| sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.src in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action
 | `drop_dm_object_name(All_Traffic)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="b2ed2b006c" data-platforms="sent,sigma,spl" data-targets="">
+<details class="uc" data-uc-slug="91b3e3bb40" data-platforms="sent,sigma,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">OS command-injection payload in HTTP requests to VeloCloud Orchestrator (CVE-2026-16812)</span>
+    <span class="uc-title">OS command-injection payload against VeloCloud Orchestrator web interface (CVE-2026-16812)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b2ed2b006c" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="91b3e3bb40" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts web requests carrying shell metacharacters and command-substitution syntax against the VCO web interface, the exploitation primitive for the unauthenticated OS command injection CVE-2026-16812. Surfaces exploitation attempts even from source IPs beyond the three Arista published (Arista noted its IP list is not definitive).
+    <div class="uc-desc">Hunts HTTP requests to the VCO web/API interface carrying OS command-injection indicators — shell separators (;, |, &amp;&amp;), subshell/command-substitution syntax ($( ), backticks, URL-encoded equivalents) combined with common Unix recon/download utilities. Targets the unauthenticated CWE-78 vector reported for CVE-2026-16812.
 
-Rationale: Anchors on the article&#x27;s core vector — OS command injection via the VCO web interface — using command-injection metacharacters (; | $( ` &amp;&amp;) and their URL-encoded forms in web logs; deliberately not IP-scoped so it catches exploitation from infrastructure Arista did not enumerate.
+Rationale: Grounds on the article&#x27;s core attack class — OS command injection against the VCO web interface (confirmed CWE-78, unauthenticated) — plus the corroborated detail that exploitation is delivered via HTTP POST/GET to orchestrator endpoints. Requires metacharacter AND a Unix utility to suppress benign punctuation. Defender/Falcon/Datadog left empty: a Linux VCO appliance&#x27;s inbound web requests aren&#x27;t in EDR/FDR telemetry.
 
 Cross-checked against:
-  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/
   • https://www.securityweek.com/critical-arista-velocloud-orchestrator-vulnerability-exploited-as-zero-day/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate VCO admin API calls whose query strings contain semicolons or pipes as list delimiters</li><li>URL-encoded JSON/GraphQL bodies containing $ or &amp;&amp; operators</li><li>Monitoring/health-check probes that append metacharacter-laden test strings</li><li>Browser or SDK requests URL-encoding matrix parameters (;) in path segments</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Url has_any (&quot;/health&quot;,&quot;/status&quot;,&quot;/ping&quot;) or UserAgent has_any (&quot;Pingdom&quot;,&quot;StatusCake&quot;,&quot;UptimeRobot&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: decode the Url and confirm the metacharacters sit in a parameter reaching a shell (command name, subshell, or chained operator) rather than benign delimiters; check the response status and whether the source IP matches UC1&#x27;s known-bad list. 2) Contain: if injection is confirmed, isolate the VCO instance, restrict the web interface to trusted admin networks, and preserve web access + backend logs. 3) Hunt: correlate the source IP and timestamp with UC3 process-execution on the VCO host and any UC1 outbound callbacks; expand the URL sample to identify the vulnerable endpoint/parameter for a WAF virtual patch.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate VCO API calls that embed pipes or semicolons in query strings or filter expressions</li><li>Encoded parameters (base64/JSON) that coincidentally contain %3B/%7C sequences</li><li>Security scanners (Nessus/Qualus/Burp) running authorized command-injection checks against the appliance</li><li>Admin troubleshooting URLs that reference /etc/ paths or shell tokens in ticket-linked requests</li><li>POST-body payloads missed entirely (access logs record only the URI), producing selective/partial coverage</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;10.0.0.0/8&quot;) and RequestMethod in~ (&quot;GET&quot;,&quot;POST&quot;,&quot;PUT&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Decode the RequestURL, confirm whether the shell metacharacter is inside a genuine command context vs a benign parameter value, and check the HTTP status/response size — a 200 with unusual body size suggests successful injection. 2) Contain: If the source IP matches the Arista IOCs or the payload clearly injects a command, block the source, restrict the VCO web interface to trusted admin networks, and snapshot the appliance. 3) Hunt: Pivot on the source IP across all web logs, inspect VCO backend application and system logs for spawned shell/child processes at the payload timestamp, and validate managed Edge device integrity.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where HttpMethod in (&quot;POST&quot;,&quot;GET&quot;,&quot;PUT&quot;)
-| where Url has_any (&quot;;&quot;, &quot;%3B&quot;, &quot;|&quot;, &quot;%7C&quot;, &quot;$(&quot;, &quot;%24%28&quot;, &quot;`&quot;, &quot;%60&quot;, &quot;&amp;&amp;&quot;)
-| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, HttpMethod, Url, UserAgent = HttpRequestHeaderUserAgent, HttpStatusCode
+| where isnotempty(RequestURL)
+| where (RequestURL contains &quot;;&quot; or RequestURL contains &quot;|&quot; or RequestURL contains &quot;$(&quot; or RequestURL contains &quot;`&quot; or RequestURL contains &quot;%3B&quot; or RequestURL contains &quot;%7C&quot; or RequestURL contains &quot;%24%28&quot; or RequestURL contains &quot;%60&quot;)
+| where (RequestURL has_any (&quot;whoami&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;/bin/&quot;,&quot;/etc/passwd&quot;) or RequestURL contains &quot;id;&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, RequestMethod, RequestURL, Activity
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator Command-Injection Payload in Web Request (CVE-2026-16812)
-id: b3d9a2c7-1e64-4f8a-8b0c-2a9f4e6d7c51
-description: Detects shell metacharacters and command-substitution syntax in HTTP request URIs against the VeloCloud Orchestrator web interface, the exploitation primitive for CVE-2026-16812.
+    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator OS Command Injection Payload in Web Request (CVE-2026-16812)
+id: b71d3e29-4c60-4a12-9d8f-2e6a1f0c5d84
+description: Detects OS command-injection indicators (shell metacharacters plus Unix recon/download utilities) in HTTP requests, consistent with exploitation of the unauthenticated CWE-78 flaw CVE-2026-16812 in on-prem VeloCloud Orchestrator.
 references:
-  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
+  - https://www.securityweek.com/critical-arista-velocloud-orchestrator-vulnerability-exploited-as-zero-day/
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
@@ -2278,118 +2282,93 @@ tags:
 logsource:
   category: webserver
 detection:
-  selection:
-    c-uri|contains:
+  selection_meta:
+    cs-uri-query|contains:
       - &#x27;;&#x27;
-      - &#x27;%3B&#x27;
       - &#x27;|&#x27;
-      - &#x27;%7C&#x27;
       - &#x27;$(&#x27;
-      - &#x27;%24%28&#x27;
       - &#x27;`&#x27;
+      - &#x27;%3B&#x27;
+      - &#x27;%7C&#x27;
+      - &#x27;%24%28&#x27;
       - &#x27;%60&#x27;
-      - &#x27;&amp;&amp;&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*;*&quot; OR Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*`*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*&amp;&amp;*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+  selection_cmd:
+    cs-uri-query|contains:
+      - &#x27;whoami&#x27;
+      - &#x27;curl&#x27;
+      - &#x27;wget&#x27;
+      - &#x27;/bin/&#x27;
+      - &#x27;/etc/passwd&#x27;
+  condition: selection_meta and selection_cmd
+level: high</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*;*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*`*&quot;) (Web.url=&quot;*whoami*&quot; OR Web.url=&quot;*/bin/*&quot; OR Web.url=&quot;*curl*&quot; OR Web.url=&quot;*wget*&quot; OR Web.url=&quot;*bash*&quot; OR Web.url=&quot;*/etc/passwd*&quot; OR Web.url=&quot;*id;*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.url Web.status
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*;*&quot; OR Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*`*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*&amp;&amp;*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+| sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%3B*&quot; OR Web.url=&quot;*%7C*&quot; OR Web.url=&quot;*%24%28*&quot; OR Web.url=&quot;*%60*&quot; OR Web.url=&quot;*;*&quot; OR Web.url=&quot;*|*&quot; OR Web.url=&quot;*$(*&quot; OR Web.url=&quot;*`*&quot;) (Web.url=&quot;*whoami*&quot; OR Web.url=&quot;*/bin/*&quot; OR Web.url=&quot;*curl*&quot; OR Web.url=&quot;*wget*&quot; OR Web.url=&quot;*bash*&quot; OR Web.url=&quot;*/etc/passwd*&quot; OR Web.url=&quot;*id;*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.url Web.status
 | `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="58bd802306" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="e853d8dc5a" data-platforms="sent,sigma,spl" data-targets="">
   <summary>
-    <span class="uc-title">VeloCloud Orchestrator service process spawns shell or recon binary (post-injection RCE)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">VeloCloud Orchestrator web-interface access from known CVE-2026-16812 attacker IPs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="58bd802306" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="e853d8dc5a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the VCO Orchestrator service tier (java/nginx/node/php-fpm) spawning an interactive shell or reconnaissance/download utility — the arbitrary-code-execution outcome of CVE-2026-16812 command injection. A web-service process launching /bin/sh, whoami, uname, curl or nc is a textbook command-injection execution signal.
+    <div class="uc-desc">Forensic/hunting query over VCO web access logs surfacing every request originating from the three Arista-published attacker IPs, with the endpoints, methods and response codes they touched. Directly implements Arista&#x27;s guidance to preserve and review VCO web access logs for these source IPs, and reveals endpoint enumeration/scanning that precedes exploitation.
 
-Rationale: Grounded in Arista&#x27;s statement that exploitation achieves arbitrary code execution on the VCO host; a web-service parent (java/nginx/php-fpm) spawning shells or recon tools (whoami/uname/curl/nc) is the concrete, low-noise post-injection execution behaviour for this Linux appliance.
+Rationale: Combines the hard IOC IPs with Layer-7 web-access telemetry to answer Arista&#x27;s explicit directive: &#x27;review the logs to determine if [these IPs] are present&#x27; and &#x27;preserve VCO web access logs&#x27;. Distinct pivot from the L3/L4 IP match — it surfaces which orchestrator endpoints and response codes the attacker touched (enumeration/exploit confirmation). Defender/Falcon empty: Linux appliance inbound web logs aren&#x27;t in EDR/FDR.
 
 Cross-checked against:
-  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
-  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="System Information Discovery">T1082</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Scheduled VCO maintenance/backup scripts where the service invokes /bin/sh via cron or a wrapper</li><li>Java or node health-check logic calling curl/wget against internal endpoints</li><li>Package updates or configuration-management (Ansible/Chef) runs shelling out on the appliance</li><li>Legitimate operator troubleshooting running whoami/id/uname inside a service-owned session</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;/opt/vc/scripts/&quot;,&quot;backup&quot;,&quot;healthcheck&quot;,&quot;ansible&quot;) or InitiatingProcessCommandLine has &quot;cron&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine for reverse-shell syntax (/dev/tcp, nc -e, bash -i), external download URLs, or recon chains, and confirm the parent is genuinely the internet-facing VCO service rather than a scheduled job. 2) Contain: isolate the VCO host, capture volatile process/network state, and preserve system + backend application logs before rebuild; Arista recommends restoring/replacing the orchestrator from trusted sources. 3) Hunt: correlate the execution time with UC2 injection payloads and UC1 attacker-IP traffic, then rotate VeloCloud Edge and administrator credentials and validate managed-device state for downstream compromise.</div></details>
+  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
+  • https://www.theregister.com/security/2026/07/28/arista-patches-actively-exploited-velocloud-bug-as-cisa-puts-admins-on-the-clock/5279414</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The attacker IP was later reassigned by its hosting provider to a benign scanner or CDN node</li><li>Internal monitoring or uptime check misconfigured to egress via an IP overlapping the block</li><li>Log source-IP field populated with a proxy/load-balancer address rather than the true client</li><li>Threat-intel validation tooling deliberately probing the IOC to confirm reachability</li><li>Backfilled/duplicated web logs re-alerting on previously reviewed activity</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Review the returned URIs and status codes — many 404/403 across distinct paths = reconnaissance/scanning; a 200 to a privileged internal endpoint = probable successful exploitation. Note first/last seen to bound the incident window. 2) Contain: Block the three IPs, restrict the VCO web interface to trusted admin networks per Arista guidance, and preserve web access, backend app, system, and DB logs before remediation. 3) Hunt: Correlate the timestamps with any command-injection payloads (UC2), inspect the appliance for new persistence or outbound C2, rotate VeloCloud Edge/admin credentials, and validate managed device state — VCO compromise can extend to Edge devices.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;java&quot;,&quot;nginx&quot;,&quot;node&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;php-fpm&quot;) or InitiatingProcessFolderPath has &quot;velocloud&quot;
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content active" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let iocs = dynamic([&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]);
+W3CIISLog
 | where TimeGenerated &gt; ago(30d)
-| where ParentProcessName has_any (&quot;/java&quot;,&quot;/nginx&quot;,&quot;/node&quot;,&quot;/httpd&quot;,&quot;/apache2&quot;,&quot;/php-fpm&quot;,&quot;velocloud&quot;)
-| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/whoami&quot;,&quot;/id&quot;,&quot;/uname&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/python&quot;,&quot;/perl&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator Service Spawns Shell or Recon Binary (CVE-2026-16812 RCE)
-id: c1a7e5d2-9f43-4b6e-8d20-3e7c8a1f9b64
-description: Detects the VeloCloud Orchestrator web-service tier spawning a shell or reconnaissance/download utility, the arbitrary-code-execution outcome of CVE-2026-16812 command injection.
+| where cIP in (iocs)
+| summarize Requests=count(), DistinctURIs=dcount(csUriStem), URIs=make_set(csUriStem, 50), Methods=make_set(csMethod, 10), Statuses=make_set(scStatus, 20), firstSeen=min(TimeGenerated), lastSeen=max(TimeGenerated) by cIP, sSiteName, Computer
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator Web Access From CVE-2026-16812 Attacker IP
+id: 9e4c7a15-2d38-4f6b-8a01-b3d5e6f207ac
+description: Detects any web-server request sourced from an IP Arista attributed to active exploitation of CVE-2026-16812, indicating the attacker reached the VeloCloud Orchestrator web interface.
 references:
-  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
+  - https://www.theregister.com/security/2026/07/28/arista-patches-actively-exploited-velocloud-bug-as-cisa-puts-admins-on-the-clock/5279414
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
+  - attack.t1595.002
   - attack.t1190
-  - attack.t1059.004
-  - attack.t1082
 logsource:
-  category: process_creation
-  product: linux
+  category: webserver
 detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;/java&#x27;
-      - &#x27;/nginx&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/php-fpm&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/whoami&#x27;
-      - &#x27;/id&#x27;
-      - &#x27;/uname&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/ncat&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/perl&#x27;
-  condition: selection_parent and selection_child
+  selection:
+    c-ip:
+      - &#x27;8.19.75.217&#x27;
+      - &#x27;206.72.242.124&#x27;
+      - &#x27;206.72.242.162&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(java|nginx|node|httpd|apache2|php-fpm)$/i
-| ImageFileName=/\/(sh|bash|dash|whoami|id|uname|curl|wget|nc|ncat|python[0-9]?|perl)$/i
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java&quot;,&quot;nginx&quot;,&quot;node&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;php-fpm&quot;) OR Processes.parent_process=&quot;*velocloud*&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count dc(Web.uri_path) as distinct_uris min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.status) as statuses from datamodel=Web.Web where Web.src in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) by Web.src Web.dest
+| `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java&quot;,&quot;nginx&quot;,&quot;node&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;php-fpm&quot;) OR Processes.parent_process=&quot;*velocloud*&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
+| sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count dc(Web.uri_path) as distinct_uris min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.status) as statuses from datamodel=Web.Web where Web.src in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) by Web.src Web.dest
+| `drop_dm_object_name(Web)`
 | convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| sort - count</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
