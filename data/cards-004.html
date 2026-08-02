@@ -5,8 +5,8 @@
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="cloud,endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="14" data-llm-uc-count="6"
-  data-search="Mirage Kitten targets Middle East and Africa region with new malware Kaspersky researchers reveal previously undocumented malware attributed to Mirage Kitten (UNC1549, Smoke Sandstorm, Nimbus Manticore): NightLedger backdoor, ArcBridge, and BridgeHead tunneling tools.  T1021.002 T1190 T1204.002 T1566 [LLM] NightLedger C2 beacon to Mirage Kitten domains / unique URI endpoints [LLM] BridgeHead/ArcBridge WebSocket tunnel C2 to smartconnect.azurewebsites.net [LLM] NightLedger DLL search-order hijack: AppVShNotify.exe side-loading SspiCli.dll [LLM] BridgeHead/ArcBridge tunneler DLL planted in anomalous VisualStudio / univpn paths [LLM] NightLedger host recon: AppVShNotify.exe spawning discovery LOLBins [LLM] Mirage Kitten recruitment-lure phishing with file-sharing / videoconferencing redirect Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware">
+  data-uc-count="12" data-llm-uc-count="4"
+  data-search="Mirage Kitten targets Middle East and Africa region with new malware Kaspersky researchers reveal previously undocumented malware attributed to Mirage Kitten (UNC1549, Smoke Sandstorm, Nimbus Manticore): NightLedger backdoor, ArcBridge, and BridgeHead tunneling tools.  T1021.002 T1190 T1204.002 T1566 [LLM] NightLedger backdoor C2 beacon to realhealthshop / tjconsultingservices with unique URI paths [LLM] NightLedger DLL search-order hijack: SspiCli.dll loaded from non-System32 via AppVShNotify.exe [LLM] BridgeHead WebSocket tunneler C2 to smartconnect.azurewebsites.net [LLM] Mirage Kitten tunneler DLL masquerade drop (unbcl.dll / libwinpthread-1.dll) in anomalous paths Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-mirage-kitten-targets-middle-east-and-africa-region-with-new" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15,7 +15,7 @@
   <div class="source-badges"><span class="source-badge securelist">Securelist (Kaspersky)</span></div>
   <div class="pubmeta">
     <span>2026-07-28</span>
-    <span>14 use cases</span>
+    <span>12 use cases</span>
     <span>4 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -66,33 +66,33 @@
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Mirage Kitten recruitment-lure phishing with file-sharing / videoconferencing redirect · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] NightLedger DLL search-order hijack: AppVShNotify.exe side-loading SspiCli.dll · [LLM] BridgeHead/ArcBridge tunneler DLL planted in anomalous VisualStudio / univpn paths · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] NightLedger C2 beacon to Mirage Kitten domains / unique URI endpoints · [LLM] BridgeHead/ArcBridge WebSocket tunnel C2 to smartconnect.azurewebsites.net · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] NightLedger host recon: AppVShNotify.exe spawning discovery LOLBins</em></div></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] NightLedger DLL search-order hijack: SspiCli.dll loaded from non-System32 via AppVShNotify.exe · [LLM] Mirage Kitten tunneler DLL masquerade drop (unbcl.dll / libwinpthread-1.dll) in anomalous paths · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] NightLedger backdoor C2 beacon to realhealthshop / tjconsultingservices with unique URI paths · [LLM] BridgeHead WebSocket tunneler C2 to smartconnect.azurewebsites.net · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="510f6ab58f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="c30760d8a1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">NightLedger C2 beacon to Mirage Kitten domains / unique URI endpoints</span>
+    <span class="uc-title">NightLedger backdoor C2 beacon to realhealthshop / tjconsultingservices with unique URI paths</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="510f6ab58f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c30760d8a1" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts NightLedger backdoor HTTPS C2 to Mirage Kitten (UNC1549) infrastructure, anchored on the four campaign domains and the three hard-coded, high-entropy URI endpoints used for beacon GET, file upload POST, and command-output POST. Article-specific because the URI strings are unique to this implant.
+    <div class="uc-desc">Hunts NightLedger&#x27;s HTTPS beaconing to Mirage Kitten C2 domains realhealthshop[.]com (primary) and tjconsultingservices[.]com (fallback), plus the three hardcoded, high-entropy URI paths the implant uses for GET beacon, file upload and command-output POST. These strings are unique to this campaign and do not appear in legitimate traffic.
 
-Rationale: Uses the exact NightLedger C2 domains and the three unique high-entropy URI endpoints (/edfcvfgbhnjmkqwasderfgg beacon, /qasxcdfvgbhnmyuioplkhnj upload, /wsdefvvbnhyuijkplmbgfrtt command output) from the article — random alphanumeric paths that will not appear in benign traffic.
+Rationale: Anchored on the two confirmed C2 domains and three campaign-unique URI paths (/edfcvfgbhnjmkqwasderfgg, /qasxcdfvgbhnmyuioplkhnj, /wsdefvvbnhyuijkplmbgfrtt) named in the Securelist writeup; the paths are effectively zero-FP tokens. Domains cross-confirmed by The Hacker News and TechNadu.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://research.checkpoint.com/2025/nimbus-manticore-deploys-new-malware-targeting-europe/
-  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html</div>
+  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html
+  • https://www.technadu.com/mirage-kittens-new-malware-toolkit-targets-aerospace-and-defense-across-middle-east-and-africa/632036/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / sandbox detonating the sample from a corporate host</li><li>Threat-intel enrichment tooling actively resolving IOC domains</li><li>A newly-registered but benign domain reusing one of the recycled IPs after takedown</li><li>Web proxy pre-fetch/URL-scanning bots crawling the URIs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;msedge.exe&quot;,&quot;chrome.exe&quot;,&quot;firefox.exe&quot;) and DeviceName !in~ (&quot;sandbox-deton-01&quot;,&quot;tip-enrich-01&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess making the connection — legitimate NightLedger loads via AppVShNotify.exe, so a non-browser parent is a strong TP indicator; pull SHA256 and check against MD5 c832ecd135781b11f59e3fffb3d2b6ac. 2) Contain: isolate the host, block all four domains at proxy/DNS, and revoke the user&#x27;s active sessions. 3) Hunt: pivot on DeviceId for the SspiCli.dll side-load, NetSetup.log collection, and any WebSocket tunnel to smartconnect.azurewebsites.net.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/sandbox detonation hosts deliberately resolving the IOC domains</li><li>Security researcher or IR analyst pivoting on the domains from the same corporate range</li><li>Passive DNS / URL-scanning appliances that pre-resolve submitted URLs</li><li>Sinkholed domain redirecting to a benign parking IP after takedown</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;,&quot;detonation&quot;,&quot;malware-analysis&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the resolving host is a production endpoint (not a sandbox/scanner) and identify InitiatingProcess making the connection — expect AppVShNotify.exe or an unsigned process in a user-writable path. 2) Contain: block realhealthshop[.]com and tjconsultingservices[.]com at proxy/DNS, network-isolate the host, capture memory before reimage. 3) Hunt: pivot on the host for a co-located SspiCli.dll (UC2), the A8215357-F99A-44FE-BC65-D8F0434B0C03 mutex, and outbound WebSocket tunneling to smartconnect.azurewebsites.net (UC3).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc0-sentinel">Sentinel KQL</button>
@@ -103,64 +103,66 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;,&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
-| where RemoteIPType == &quot;Public&quot;
+| where RemoteUrl has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content" id="art-100-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where RemoteUrl has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;,&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| where RequestURL has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;/edfcvfgbhnjmkqwasderfgg&quot;,&quot;/qasxcdfvgbhnmyuioplkhnj&quot;,&quot;/wsdefvvbnhyuijkplmbgfrtt&quot;)
+   or DestinationHostName has_any (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)
+| project TimeGenerated, SourceIP, SourceHostName, DestinationHostName, RequestURL, RequestMethod, RequestClientApplication, DeviceProduct
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger C2 Domain Resolution (Mirage Kitten)
-id: 8d2f1a3c-6b4e-4c2a-9f11-2a7c9d0e5b41
-description: Detects DNS resolution of Mirage Kitten / UNC1549 NightLedger C2 domains.
+    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger C2 Beacon to Mirage Kitten Infrastructure
+id: 6b1f3c2a-9d84-4a6e-8c0f-2e7d1a4b9f31
+description: Detects NightLedger backdoor beaconing to Mirage Kitten (UNC1549) C2 domains and hardcoded URI paths
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
 date: 2026/08/02
 tags:
   - attack.t1071.001
-  - attack.command_and_control
+  - attack.t1041
 logsource:
-  category: dns
-  product: windows
+  category: proxy
 detection:
-  selection:
-    QueryName:
+  selection_domain:
+    c-uri|contains:
       - &#x27;realhealthshop.com&#x27;
       - &#x27;tjconsultingservices.com&#x27;
-      - &#x27;businessmixture.com&#x27;
-      - &#x27;aecert.org&#x27;
-  condition: selection
+  selection_uri:
+    c-uri|contains:
+      - &#x27;/edfcvfgbhnjmkqwasderfgg&#x27;
+      - &#x27;/qasxcdfvgbhnmyuioplkhnj&#x27;
+      - &#x27;/wsdefvvbnhyuijkplmbgfrtt&#x27;
+  condition: selection_domain or selection_uri
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(realhealthshop.com OR tjconsultingservices.com OR businessmixture.com OR aecert.org)</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(realhealthshop|tjconsultingservices|businessmixture)\.com$|aecert\.org$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;) OR All_Traffic.url IN (&quot;*/edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*/qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*/wsdefvvbnhyuijkplmbgfrtt*&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;,&quot;businessmixture.com&quot;,&quot;aecert.org&quot;) OR All_Traffic.url IN (&quot;*/edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*/qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*/wsdefvvbnhyuijkplmbgfrtt*&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(*realhealthshop.com* OR *tjconsultingservices.com*)</code></pre></div>
+    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(realhealthshop|tjconsultingservices)\.com$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*realhealthshop.com*&quot;,&quot;*tjconsultingservices.com*&quot;,&quot;*/edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*/qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*/wsdefvvbnhyuijkplmbgfrtt*&quot;) OR Web.dest IN (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (&quot;*realhealthshop.com*&quot;,&quot;*tjconsultingservices.com*&quot;,&quot;*/edfcvfgbhnjmkqwasderfgg*&quot;,&quot;*/qasxcdfvgbhnmyuioplkhnj*&quot;,&quot;*/wsdefvvbnhyuijkplmbgfrtt*&quot;) OR Web.dest IN (&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="459ca8adbc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="740181bc9c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">BridgeHead/ArcBridge WebSocket tunnel C2 to smartconnect.azurewebsites.net</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">NightLedger DLL search-order hijack: SspiCli.dll loaded from non-System32 via AppVShNotify.exe</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="459ca8adbc" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="740181bc9c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the BridgeHead/ArcBridge WebSocket tunnelers establishing an HTTPS WebSocket relay to the operator-controlled Azure Web App smartconnect.azurewebsites.net over the /connect endpoint. Article-specific because UNC1549 hosts this SOCKS5-over-WebSocket relay on that exact Azure subdomain with a fixed dated Chrome/Edge 86 User-Agent.
+    <div class="uc-desc">Hunts NightLedger&#x27;s execution primitive — a malicious SspiCli.dll co-located with a legitimate AppVShNotify.exe so it is delay-loaded via RPCRT4.dll. SspiCli.dll is a core Windows DLL that should only ever resolve from System32/SysWOW64/WinSxS; loading it from any other path is a reliable hijack signal.
 
-Rationale: Anchored on the exact operator-controlled Azure Web App FQDN smartconnect.azurewebsites.net named in the article&#x27;s WebSocket GET /connect handshake; the specific subdomain (not generic *.azurewebsites.net) makes this high-fidelity for the BridgeHead/ArcBridge relay.
+Rationale: Uses the exact hijack pair from the article (SspiCli.dll masquerade + AppVShNotify.exe host) plus the sample MD5 c832ecd135781b11f59e3fffb3d2b6ac. Non-System32 load of SspiCli.dll is near-zero-FP because Windows always resolves it from System32.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://research.checkpoint.com/2025/nimbus-manticore-deploys-new-malware-targeting-europe/
-  • https://cloud.google.com/blog/topics/threat-intelligence/suspected-iranian-unc1549-targets-israel-middle-east</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Proxy">T1090</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate internal app coincidentally deployed to an Azure Web App named smartconnect (verify ownership in your subscription)</li><li>Blue-team infrastructure reusing the takendown Azure app name</li><li>Security scanner probing the /connect endpoint</li><li>Azure health-probe traffic to the same App Service</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm smartconnect.azurewebsites.net is NOT an owned Azure App Service; inspect the initiating process — BridgeHead loads as unbcl.dll or libwinpthread-1.dll, so a rundll32/host-exe parent from those paths confirms it. 2) Contain: isolate host, block the FQDN and resolved IP at egress proxy, and treat the machine as a pivot/relay node (audit downstream TCP it forwarded). 3) Hunt: search DeviceFileEvents for the tunneler DLL drop paths and correlate with any NightLedger beacon on the same DeviceId.</div></details>
+  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html
+  • https://cloud.google.com/blog/topics/threat-intelligence/analysis-of-unc1549-ttps-targeting-aerospace-defense</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow: DLL Search Order Hijacking">T1574.001</span> <span class="ind tech" title="Hijack Execution Flow: DLL Side-Loading">T1574.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy App-V (Application Virtualization) packages that redistribute AppVShNotify.exe into non-standard folders</li><li>Software installers that temporarily stage a copy of AppVShNotify.exe with a private SspiCli import</li><li>Developer test rigs running signed binaries from a build output directory</li><li>EDR/AV self-protection copies of system DLLs into quarantine paths (usually excluded already)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !startswith @&quot;C:\Program Files\Microsoft Office&quot; and InitiatingProcessFolderPath !startswith @&quot;C:\Program Files (x86)\Microsoft Office&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the SHA256/MD5 of the loaded SspiCli.dll and the FolderPath; a valid Microsoft signature + System32 path = benign, an unsigned DLL beside AppVShNotify.exe in a user-writable dir = confirmed. 2) Contain: isolate the host, kill the AppVShNotify.exe process tree, quarantine the folder. 3) Hunt: search the same host and peers for the NightLedger mutex, C2 beacons to realhealthshop[.]com (UC1) and BridgeHead tunneler DLLs (UC4).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc1-sentinel">Sentinel KQL</button>
@@ -169,87 +171,24 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-100-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-100-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;smartconnect.azurewebsites.net&quot;
-| where RemoteIPType == &quot;Public&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where TimeGenerated &gt; ago(30d)
-| where RemoteUrl has &quot;smartconnect.azurewebsites.net&quot;
-| where RemoteIPType == &quot;Public&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: BridgeHead WebSocket Tunnel to Azure Web App (Mirage Kitten)
-id: 3a91c7d2-5e88-4b1f-8c0a-9d4e2f6b7c33
-description: Detects the Mirage Kitten BridgeHead/ArcBridge WebSocket tunneler contacting its Azure-hosted relay smartconnect.azurewebsites.net.
-references:
-  - https://securelist.com/mirage-kitten-new-tools/120811/
-author: SOC Detection Engineering
-date: 2026/08/02
-tags:
-  - attack.t1572
-  - attack.t1071.001
-  - attack.command_and_control
-logsource:
-  category: dns
-  product: windows
-detection:
-  selection:
-    QueryName: &#x27;smartconnect.azurewebsites.net&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:smartconnect.azurewebsites.net</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/smartconnect\.azurewebsites\.net$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_host=&quot;smartconnect.azurewebsites.net&quot; OR Web.url=&quot;*/connect*&quot;) Web.http_user_agent=&quot;*Edg/86.0.622.38*&quot; by Web.src Web.dest Web.dest_host Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest_host=&quot;smartconnect.azurewebsites.net&quot; OR Web.url=&quot;*/connect*&quot;) Web.http_user_agent=&quot;*Edg/86.0.622.38*&quot; by Web.src Web.dest Web.dest_host Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="14f4a4ce88" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">NightLedger DLL search-order hijack: AppVShNotify.exe side-loading SspiCli.dll</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="14f4a4ce88" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts DLL search-order hijacking where a co-located malicious SspiCli.dll is delay-loaded via RPCRT4.dll into the legitimate AppVShNotify.exe. Article-specific because it names the exact abused host binary and the impersonated DLL, and provides the payload MD5.
-
-Rationale: Uses the exact abused legitimate binary (AppVShNotify.exe), the impersonated DLL (SspiCli.dll), the delay-load-via-RPCRT4 mechanism, and the payload MD5 c832ecd135781b11f59e3fffb3d2b6ac from the article; a genuine SspiCli.dll only ever loads from System32/SysWOW64, so a co-located copy is inherently malicious.
-
-Cross-checked against:
-  • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow: DLL Search Order Hijacking">T1574.001</span> <span class="ind tech" title="Hijack Execution Flow: DLL Side-Loading">T1574.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy App-V virtualized package that ships a private copy of SspiCli.dll (rare; verify signature)</li><li>Developer test build of AppVShNotify from a non-standard path</li><li>Software-packaging tools that stage system DLLs alongside binaries during install</li><li>Backup/restore tooling temporarily copying SspiCli.dll to a staging folder</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath startswith &quot;C:\\Program Files\\Microsoft Application Virtualization\\&quot; and SHA256 in~ (dynamic([])))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: hash the loaded SspiCli.dll and compare to MD5 c832ecd135781b11f59e3fffb3d2b6ac; check digital signature and whether it forwards exports to the real DLL. 2) Contain: isolate the host, quarantine the DLL and the AppVShNotify.exe copy, and kill the process to break the mutex A8215357-F99A-44FE-BC65-D8F0434B0C03. 3) Hunt: pivot on DeviceId for NightLedger C2 beacons to the four campaign domains and enumerate other hosts with AppVShNotify.exe outside its install path.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-100-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-100-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-100-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceImageLoadEvents
+    <div class="tab-content active" id="art-100-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceImageLoadEvents
 | where Timestamp &gt; ago(30d)
 | where FileName =~ &quot;SspiCli.dll&quot;
-| where FolderPath !startswith &quot;C:\\Windows\\System32&quot; and FolderPath !startswith &quot;C:\\Windows\\SysWOW64&quot; and FolderPath !startswith &quot;C:\\Windows\\WinSxS&quot;
-| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot; or MD5 == &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
+| where FolderPath !startswith @&quot;C:\Windows\System32&quot; and FolderPath !startswith @&quot;C:\Windows\SysWOW64&quot; and FolderPath !startswith @&quot;C:\Windows\WinSxS&quot;
+| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot; or MD5 =~ &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, MD5
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceImageLoadEvents
+    <div class="tab-content" id="art-100-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Event
 | where TimeGenerated &gt; ago(30d)
-| where FileName =~ &quot;SspiCli.dll&quot;
-| where FolderPath !startswith &quot;C:\\Windows\\System32&quot; and FolderPath !startswith &quot;C:\\Windows\\SysWOW64&quot; and FolderPath !startswith &quot;C:\\Windows\\WinSxS&quot;
-| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot; or MD5 == &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, FileName, FolderPath, SHA256, MD5
+| where Source == &quot;Microsoft-Windows-Sysmon&quot; and EventID == 7
+| where EventData has &quot;SspiCli.dll&quot;
+| where EventData has &quot;AppVShNotify.exe&quot; or EventData has &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
+| where EventData !has @&quot;C:\Windows\System32&quot; and EventData !has @&quot;C:\Windows\WinSxS&quot;
+| project TimeGenerated, Computer, RenderedDescription
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger SspiCli.dll Side-Load via AppVShNotify.exe (Mirage Kitten)
-id: b7e4d0a9-2c31-4f6b-9a88-5d1c3e7f204a
-description: Detects AppVShNotify.exe loading a co-located SspiCli.dll from a non-system directory - the NightLedger DLL search-order hijack.
+    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger SspiCli.dll Search-Order Hijack via AppVShNotify
+id: c40a71e8-2b6d-4d19-9f3a-7ac5e8b21d64
+description: Detects a malicious SspiCli.dll loaded from a non-Windows path by AppVShNotify.exe (Mirage Kitten NightLedger DLL hijack)
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
@@ -257,7 +196,6 @@ date: 2026/08/02
 tags:
   - attack.t1574.001
   - attack.t1574.002
-  - attack.execution
 logsource:
   category: image_load
   product: windows
@@ -272,31 +210,100 @@ detection:
       - &#x27;C:\Windows\WinSxS\&#x27;
   condition: selection and not filter_system
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\SspiCli.dll OR *\\sspicli.dll OR *\\SSPICLI.DLL) -@TargetFilename:(C:\\Windows\\System32\\* OR C:\\Windows\\SysWOW64\\* OR C:\\Windows\\WinSxS\\*)</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\SspiCli\.dll$/i | NOT TargetFileName=/\\(System32|SysWOW64|WinSxS)\\/i | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;SspiCli.dll&quot; NOT (Filesystem.file_path IN (&quot;*\\Windows\\System32\\*&quot;,&quot;*\\Windows\\SysWOW64\\*&quot;,&quot;*\\Windows\\WinSxS\\*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;SspiCli.dll&quot; NOT (Filesystem.file_path IN (&quot;*\\Windows\\System32\\*&quot;,&quot;*\\Windows\\SysWOW64\\*&quot;,&quot;*\\Windows\\WinSxS\\*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\SspiCli.dll OR *\sspicli.dll) -@TargetFilename:(*\Windows\System32\* OR *\Windows\SysWOW64\* OR *\Windows\WinSxS\*)</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\SspiCli\.dll$/i
+| NOT (TargetFileName=/\\Windows\\(System32|SysWOW64|WinSxS)\\/i)
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name=&quot;SspiCli.dll&quot; AND NOT (Endpoint.Filesystem.file_path IN (&quot;*\\Windows\\System32\\*&quot;,&quot;*\\Windows\\SysWOW64\\*&quot;,&quot;*\\Windows\\WinSxS\\*&quot;)) by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name=&quot;SspiCli.dll&quot; AND NOT (Endpoint.Filesystem.file_path IN (&quot;*\\Windows\\System32\\*&quot;,&quot;*\\Windows\\SysWOW64\\*&quot;,&quot;*\\Windows\\WinSxS\\*&quot;)) by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name | `drop_dm_object_name(Endpoint.Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="341047f9d2" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="67b71f36b6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">BridgeHead/ArcBridge tunneler DLL planted in anomalous VisualStudio / univpn paths</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">BridgeHead WebSocket tunneler C2 to smartconnect.azurewebsites.net</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="341047f9d2" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="67b71f36b6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the on-disk drop of the BridgeHead WebSocket tunneler masquerading as unbcl.dll under %LocalAppData%\Microsoft\VisualStudio and as libwinpthread-1.dll under C:\program files (x86)\univpn\promote. Article-specific because it names both exact deceptive filenames and their exact planting directories.
+    <div class="uc-desc">Hunts BridgeHead&#x27;s covert SOCKS5-over-WebSocket relay: an HTTPS WebSocket upgrade (GET /connect) to smartconnect.azurewebsites.net using a fixed, dated Edge/86 user-agent. Once upgraded, the victim becomes an operator-controlled relay node, so this is both C2 and lateral-movement staging.
 
-Rationale: The two filenames are legitimate Windows/MinGW DLL names, but the article pins them to the exact anomalous planting directories (%LocalAppData%\Microsoft\VisualStudio\unbcl.dll and C:\program files (x86)\univpn\promote\libwinpthread-1.dll), making the name+path pair specific to the BridgeHead deployment.
+Rationale: Anchored on the exact BridgeHead handshake from the article: host smartconnect.azurewebsites.net, GET /connect WebSocket upgrade, and the fixed User-Agent string ending Edg/86.0.622.38. The specific subdomain plus /connect plus dated UA make this high-fidelity.
 
 Cross-checked against:
   • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html
+  • https://research.checkpoint.com/2026/fast-and-furious-nimbus-manticore-operations-during-the-iranian-conflict/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Protocol Tunneling">T1572</span> <span class="ind tech" title="Proxy">T1090</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimately-owned Azure web app coincidentally named smartconnect (verify tenant ownership)</li><li>Vulnerability scanner probing /connect on Azure App Service endpoints</li><li>Corporate app genuinely using WebSockets to an Azure-hosted service on a different subdomain</li><li>Browser prefetch/connectivity check hitting azurewebsites.net wildcard</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the initiating process is NOT a browser — BridgeHead runs from a hijacked DLL host, so expect an unsigned/renamed process or rundll32 loading unbcl.dll / libwinpthread-1.dll. 2) Contain: block smartconnect.azurewebsites.net at the proxy, isolate the host, and treat it as a relay pivot — review inbound connections it accepted. 3) Hunt: enumerate all internal TCP sessions relayed through the host, and sweep peers for the tunneler DLLs (UC4) and NightLedger C2 (UC1).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-100-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-100-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-100-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-100-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl has &quot;smartconnect.azurewebsites.net&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where Url has &quot;smartconnect.azurewebsites.net&quot;
+| where Url endswith &quot;/connect&quot; or HttpRequestHeaderUserAgent has &quot;Edg/86.0.622.38&quot;
+| project TimeGenerated, SrcIpAddr, SrcHostname, SrcUsername, Url, HttpMethod, HttpRequestHeaderUserAgent, DstIpAddr, DstPortNumber
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: BridgeHead WebSocket Tunneler C2 Handshake
+id: 9e2c88f0-1a45-4c7b-b6d2-3f0e9a71c852
+description: Detects BridgeHead (Mirage Kitten) WebSocket upgrade to smartconnect.azurewebsites.net with the hardcoded Edge/86 user-agent
+references:
+  - https://securelist.com/mirage-kitten-new-tools/120811/
+author: SOC Detection Engineering
+date: 2026/08/02
+tags:
+  - attack.t1071.001
+  - attack.t1572
+logsource:
+  category: proxy
+detection:
+  selection:
+    cs-host: &#x27;smartconnect.azurewebsites.net&#x27;
+  selection_context:
+    - c-uri|endswith: &#x27;/connect&#x27;
+    - c-useragent|contains: &#x27;Edg/86.0.622.38&#x27;
+  condition: selection and selection_context
+level: high</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(*smartconnect.azurewebsites.net* OR *SmartConnect.azurewebsites.net*)</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/smartconnect\.azurewebsites\.net$/i
+| groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest=&quot;smartconnect.azurewebsites.net&quot; OR Web.url=&quot;*smartconnect.azurewebsites.net/connect*&quot; by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest=&quot;smartconnect.azurewebsites.net&quot; OR Web.url=&quot;*smartconnect.azurewebsites.net/connect*&quot; by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a8e26eabaf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Mirage Kitten tunneler DLL masquerade drop (unbcl.dll / libwinpthread-1.dll) in anomalous paths</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="a8e26eabaf" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts BridgeHead/ArcBridge tunneler payloads planted under legitimate DLL names in attacker-chosen directories: unbcl.dll under %LocalAppData%\Microsoft\VisualStudio and libwinpthread-1.dll under C:\Program Files (x86)\univpn\promote\. Detects the file-drop/masquerade rather than the network side.
+
+Rationale: Uses the two exact planted-DLL paths from the article (%LocalAppData%\Microsoft\VisualStudio\unbcl.dll and C:\Program Files (x86)\univpn\promote\libwinpthread-1.dll) plus the sample MD5. Legit unbcl.dll/libwinpthread-1.dll never live in these locations, making path+name a strong masquerade signal.
+
+Cross-checked against:
+  • https://securelist.com/mirage-kitten-new-tools/120811/
+  • https://thehackernews.com/2026/07/nimbus-manticore-deploys-nightledger.html
+  • https://research.checkpoint.com/2026/fast-and-furious-nimbus-manticore-operations-during-the-iranian-conflict/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Hijack Execution Flow: DLL Side-Loading">T1574.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A genuine Visual Studio extension that legitimately stages unbcl.dll (uncommon)</li><li>A real UniVPN client installer writing libwinpthread-1.dll to its own program directory</li><li>Developer copying MinGW runtime DLLs into a build output folder that happens to match the path</li><li>AV quarantine/restore relocating one of these DLLs</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether a genuine UniVPN product or VS extension is installed; hash the DLL and check signing — the tunneler is unsigned and resolves GetUserNameA for a substring gate. 2) Contain: quarantine the DLL, isolate the host, and block smartconnect.azurewebsites.net egress. 3) Hunt: correlate the drop timestamp with the initiating process (delivery vector) and search the estate for either filename in these two directory patterns.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A genuine UniVPN client install that ships libwinpthread-1.dll under its own program directory (verify vendor signature)</li><li>Visual Studio extension or MinGW toolchain caching libwinpthread-1.dll into a VisualStudio folder</li><li>Developer copying a build DLL named unbcl.dll into a VisualStudio project cache</li><li>Backup/EDR quarantine restoring a DLL with a matching name into a staging path</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;devenv.exe&quot;,&quot;vsix.exe&quot;,&quot;vs_installer.exe&quot;) and not (FileName =~ &quot;libwinpthread-1.dll&quot; and InitiatingProcessFileName =~ &quot;univpn.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check the dropped DLL&#x27;s digital signature and MD5 (c832ecd135781b11f59e3fffb3d2b6ac = confirmed); identify InitiatingProcess and the account that wrote it. 2) Contain: quarantine the DLL, isolate the host, and inspect for rundll32/side-loading host that would activate it. 3) Hunt: correlate with WebSocket C2 to smartconnect.azurewebsites.net (UC3) and NightLedger SspiCli hijack (UC2) on the same and neighboring hosts; the username-substring guard in BridgeHead implies prior internal recon.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc3-sentinel">Sentinel KQL</button>
@@ -307,21 +314,21 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (FileName =~ &quot;unbcl.dll&quot; and FolderPath has &quot;\\Microsoft\\VisualStudio\\&quot;)
-     or (FileName =~ &quot;libwinpthread-1.dll&quot; and FolderPath has &quot;\\univpn\\promote\\&quot;)
+| where (FileName =~ &quot;unbcl.dll&quot; and FolderPath has @&quot;\Microsoft\VisualStudio\&quot;)
+     or (FileName =~ &quot;libwinpthread-1.dll&quot; and FolderPath has @&quot;\univpn\promote\&quot;)
+     or MD5 =~ &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256, MD5
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where (FileName =~ &quot;unbcl.dll&quot; and FolderPath has &quot;\\Microsoft\\VisualStudio\\&quot;)
-     or (FileName =~ &quot;libwinpthread-1.dll&quot; and FolderPath has &quot;\\univpn\\promote\\&quot;)
-| project TimeGenerated, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256, MD5
+| where (TargetFileName =~ &quot;unbcl.dll&quot; and TargetFilePath has @&quot;\Microsoft\VisualStudio\&quot;)
+     or (TargetFileName =~ &quot;libwinpthread-1.dll&quot; and TargetFilePath has @&quot;\univpn\promote\&quot;)
+     or TargetFileMD5 =~ &quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetFilePath, TargetFileMD5, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Mirage Kitten Tunneler DLL Drop (unbcl.dll / libwinpthread-1.dll)
-id: 6f2c9b41-8d0a-4e73-b1c5-7a3e9f2d1088
-description: Detects the BridgeHead/ArcBridge tunneler dropped under anomalous VisualStudio or univpn\promote directories.
+    <div class="tab-content" id="art-100-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Mirage Kitten Tunneler DLL Masquerade Drop
+id: 1d7b4e63-58c9-4a02-9e11-6c4b0f2a8d70
+description: Detects BridgeHead/ArcBridge tunneler DLLs written under legitimate names in attacker-chosen paths
 references:
   - https://securelist.com/mirage-kitten-new-tools/120811/
 author: SOC Detection Engineering
@@ -329,148 +336,22 @@ date: 2026/08/02
 tags:
   - attack.t1036.005
   - attack.t1105
-  - attack.defense_evasion
+  - attack.t1574.002
 logsource:
   category: file_event
   product: windows
 detection:
-  selection_vs:
-    TargetFilename|contains: &#x27;\Microsoft\VisualStudio\&#x27;
+  selection_unbcl:
     TargetFilename|endswith: &#x27;\unbcl.dll&#x27;
-  selection_vpn:
-    TargetFilename|contains: &#x27;\univpn\promote\&#x27;
-    TargetFilename|endswith: &#x27;\libwinpthread-1.dll&#x27;
-  condition: selection_vs or selection_vpn
+    TargetFilename|contains: &#x27;\Microsoft\VisualStudio\&#x27;
+  selection_pthread:
+    TargetFilename|endswith: &#x27;\univpn\promote\libwinpthread-1.dll&#x27;
+  condition: selection_unbcl or selection_pthread
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\\Microsoft\\VisualStudio\\unbcl.dll OR *\\Microsoft\\VisualStudio\\UNBCL.DLL) OR @TargetFilename:(*\\univpn\\promote\\libwinpthread-1.dll OR *\\univpn\\promote\\LIBWINPTHREAD-1.DLL))</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten (TargetFileName=/\\Microsoft\\VisualStudio\\unbcl\.dll$/i OR TargetFileName=/\\univpn\\promote\\libwinpthread-1\.dll$/i) | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where ((Filesystem.file_name=&quot;unbcl.dll&quot; AND Filesystem.file_path=&quot;*\\Microsoft\\VisualStudio\\*&quot;) OR (Filesystem.file_name=&quot;libwinpthread-1.dll&quot; AND Filesystem.file_path=&quot;*\\univpn\\promote\\*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where ((Filesystem.file_name=&quot;unbcl.dll&quot; AND Filesystem.file_path=&quot;*\\Microsoft\\VisualStudio\\*&quot;) OR (Filesystem.file_name=&quot;libwinpthread-1.dll&quot; AND Filesystem.file_path=&quot;*\\univpn\\promote\\*&quot;)) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="a3bae47b4c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">NightLedger host recon: AppVShNotify.exe spawning discovery LOLBins</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a3bae47b4c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts NightLedger&#x27;s command-execution and discovery commands (host/user identity, process listing, directory listing) surfacing as child processes of the hijacked AppVShNotify.exe host. Article-specific because NightLedger runs inside AppVShNotify.exe and supports process/drive/directory enumeration commands.
-
-Rationale: AppVShNotify.exe (the App-V shell-notify helper) legitimately never spawns discovery shells; the article states NightLedger executes processes and enumerates processes/drives/directories from within it, so any such child is high-fidelity for hands-on-keyboard recon.
-
-Cross-checked against:
-  • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://securitydive.in/2025/09/22/unc1549-hacks-34-devices-in-11-telecom-firms-via-linkedin-job-lures-and-minibike-malware/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Process Discovery">T1057</span> <span class="ind tech" title="System Information Discovery">T1082</span> <span class="ind tech" title="System Owner/User Discovery">T1033</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate App-V package deployment scripts invoking cmd during publish (verify path is the real install dir)</li><li>SCCM/Intune App-V troubleshooting by an admin</li><li>Software-metering tools wrapping App-V launches</li><li>An EDR/AV that re-parents child processes under the App-V helper</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFolderPath startswith &quot;C:\\Program Files\\Microsoft Application Virtualization\\Client\\&quot; and FileName =~ &quot;cmd.exe&quot; and ProcessCommandLine has_any (&quot;publish&quot;,&quot;App-V&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review the child command lines for recon intent (whoami /all, net group /domain, tasklist) and confirm AppVShNotify.exe loaded a non-system SspiCli.dll. 2) Contain: isolate host, capture volatile memory, and disable the compromised account&#x27;s sessions. 3) Hunt: pivot to NightLedger C2 beacons, collection of C:\Windows\debug\NetSetup.log, and lateral movement from this host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-100-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-100-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;reg.exe&quot;,&quot;powershell.exe&quot;,&quot;wmic.exe&quot;,&quot;nltest.exe&quot;,&quot;query.exe&quot;,&quot;fsutil.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where InitiatingProcessFileName =~ &quot;AppVShNotify.exe&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;reg.exe&quot;,&quot;powershell.exe&quot;,&quot;wmic.exe&quot;,&quot;nltest.exe&quot;,&quot;query.exe&quot;,&quot;fsutil.exe&quot;)
-| project TimeGenerated, DeviceName, AccountName, FileName, ProcessCommandLine, SHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: NightLedger Discovery via AppVShNotify.exe Children (Mirage Kitten)
-id: c1a8e5f0-3d72-4b96-8e14-6b2f0d9a7c55
-description: Detects discovery LOLBins spawned by the hijacked AppVShNotify.exe host running NightLedger.
-references:
-  - https://securelist.com/mirage-kitten-new-tools/120811/
-author: SOC Detection Engineering
-date: 2026/08/02
-tags:
-  - attack.t1057
-  - attack.t1082
-  - attack.t1033
-  - attack.discovery
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection:
-    ParentImage|endswith: &#x27;\AppVShNotify.exe&#x27;
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\tasklist.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\net.exe&#x27;
-      - &#x27;\net1.exe&#x27;
-      - &#x27;\ipconfig.exe&#x27;
-      - &#x27;\systeminfo.exe&#x27;
-      - &#x27;\reg.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\wmic.exe&#x27;
-      - &#x27;\nltest.exe&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\AppVShNotify.exe OR *\\appvshnotify.exe) @Image:(*\\cmd.exe OR *\\tasklist.exe OR *\\whoami.exe OR *\\net.exe OR *\\net1.exe OR *\\ipconfig.exe OR *\\systeminfo.exe OR *\\nltest.exe OR *\\powershell.exe OR *\\wmic.exe OR *\\reg.exe)</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/AppVShNotify\.exe$/i ImageFileName=/\\(cmd|tasklist|whoami|net|net1|ipconfig|systeminfo|nltest|powershell|wmic|reg)\.exe$/i | groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;AppVShNotify.exe&quot; Processes.process_name IN (&quot;cmd.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;reg.exe&quot;,&quot;powershell.exe&quot;,&quot;wmic.exe&quot;,&quot;nltest.exe&quot;,&quot;query.exe&quot;,&quot;fsutil.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;AppVShNotify.exe&quot; Processes.process_name IN (&quot;cmd.exe&quot;,&quot;tasklist.exe&quot;,&quot;whoami.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;ipconfig.exe&quot;,&quot;systeminfo.exe&quot;,&quot;reg.exe&quot;,&quot;powershell.exe&quot;,&quot;wmic.exe&quot;,&quot;nltest.exe&quot;,&quot;query.exe&quot;,&quot;fsutil.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="58764cb44e" data-platforms="def,sent" data-targets="m365">
-  <summary>
-    <span class="uc-title">Mirage Kitten recruitment-lure phishing with file-sharing / videoconferencing redirect</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="58764cb44e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts UNC1549 recruitment-themed spear-phishing: inbound mail with hiring/interview lures carrying links to lookalike videoconferencing pages or third-party file-sharing archives, or to the campaign&#x27;s own domains. Targets the top kill-chain phase (initial access) for this actor.
-
-Rationale: Encodes the article&#x27;s initial-access tradecraft — recruitment/hiring lures impersonating hiring platforms plus lookalike videoconferencing pages redirecting to third-party file-sharing archives — combined with the campaign IOC domains, corroborated by Unit 42 / Check Point / GTIG LinkedIn-job-lure reporting.
-
-Cross-checked against:
-  • https://securelist.com/mirage-kitten-new-tools/120811/
-  • https://research.checkpoint.com/2025/nimbus-manticore-deploys-new-malware-targeting-europe/
-  • https://securitydive.in/2025/09/22/unc1549-hacks-34-devices-in-11-telecom-firms-via-linkedin-job-lures-and-minibike-malware/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate inbound recruiter emails from real hiring platforms linking to Dropbox/OneDrive for a JD or form</li><li>Internal HR forwarding candidate CVs hosted on a file-sharing service</li><li>Vendors sharing meeting invites via Google Drive</li><li>Marketing/newsletter mail containing &#x27;career opportunity&#x27; phrasing</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SenderMailFromDomain in~ (&quot;linkedin.com&quot;,&quot;indeed.com&quot;,&quot;glassdoor.com&quot;) and DeliveryAction == &quot;Delivered&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the sender domain/SPF-DKIM-DMARC and the destination URL — flag lookalike videoconferencing/hiring domains and unexpanded file-sharing archive links; check whether the recipient is in aerospace/defense/telecom. 2) Contain: quarantine the message tenant-wide via EmailPostDeliveryEvents/ZAP, block the URL domain, and warn the targeted user. 3) Hunt: if any recipient clicked, pivot to DeviceProcessEvents for archive extraction and the SspiCli.dll side-load, and search for the four C2 domains.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc5-sentinel">Sentinel KQL</button>
-    </div>
-    <div class="tab-content active" id="art-100-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let recruit = dynamic([&quot;recruit&quot;,&quot;recruitment&quot;,&quot;hiring&quot;,&quot;job offer&quot;,&quot;vacancy&quot;,&quot;position&quot;,&quot;interview&quot;,&quot;candidate&quot;,&quot;talent acquisition&quot;,&quot;career opportunity&quot;]);
-let fileshare = dynamic([&quot;dropbox&quot;,&quot;drive.google&quot;,&quot;docs.google&quot;,&quot;onedrive&quot;,&quot;1drv.ms&quot;,&quot;box.com&quot;,&quot;mediafire&quot;,&quot;mega.nz&quot;,&quot;wetransfer&quot;,&quot;we.tl&quot;,&quot;dropmefiles&quot;]);
-EmailEvents
-| where Timestamp &gt; ago(30d)
-| where EmailDirection == &quot;Inbound&quot;
-| where Subject has_any (recruit)
-| join kind=inner (DeviceInfo | distinct 1) on $left.ReportId == $left.ReportId // no-op guard removed below
-| project-away *1
-| join kind=inner (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| where UrlDomain has_any (fileshare) or UrlDomain in~ (&quot;businessmixture.com&quot;,&quot;aecert.org&quot;,&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)
-| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let recruit = dynamic([&quot;recruit&quot;,&quot;recruitment&quot;,&quot;hiring&quot;,&quot;job offer&quot;,&quot;vacancy&quot;,&quot;position&quot;,&quot;interview&quot;,&quot;candidate&quot;,&quot;talent acquisition&quot;,&quot;career opportunity&quot;]);
-let fileshare = dynamic([&quot;dropbox&quot;,&quot;drive.google&quot;,&quot;docs.google&quot;,&quot;onedrive&quot;,&quot;1drv.ms&quot;,&quot;box.com&quot;,&quot;mediafire&quot;,&quot;mega.nz&quot;,&quot;wetransfer&quot;,&quot;we.tl&quot;,&quot;dropmefiles&quot;]);
-EmailEvents
-| where TimeGenerated &gt; ago(30d)
-| where EmailDirection == &quot;Inbound&quot;
-| where Subject has_any (recruit)
-| join kind=inner (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| where UrlDomain has_any (fileshare) or UrlDomain in~ (&quot;businessmixture.com&quot;,&quot;aecert.org&quot;,&quot;realhealthshop.com&quot;,&quot;tjconsultingservices.com&quot;)
-| project TimeGenerated, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction
-| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\Microsoft\VisualStudio\*unbcl.dll OR *\Microsoft\VisualStudio\*Unbcl.dll) OR @TargetFilename:(*\univpn\promote\libwinpthread-1.dll OR *\univpn\promote\*.dll))</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten (TargetFileName=/\\Microsoft\\VisualStudio\\.*unbcl\.dll$/i OR TargetFileName=/\\univpn\\promote\\libwinpthread-1\.dll$/i)
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name=&quot;unbcl.dll&quot; AND Endpoint.Filesystem.file_path=&quot;*\\Microsoft\\VisualStudio\\*&quot;) OR (Endpoint.Filesystem.file_name=&quot;libwinpthread-1.dll&quot; AND Endpoint.Filesystem.file_path=&quot;*\\univpn\\promote\\*&quot;) by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name Endpoint.Filesystem.user | `drop_dm_object_name(Endpoint.Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name=&quot;unbcl.dll&quot; AND Endpoint.Filesystem.file_path=&quot;*\\Microsoft\\VisualStudio\\*&quot;) OR (Endpoint.Filesystem.file_name=&quot;libwinpthread-1.dll&quot; AND Endpoint.Filesystem.file_path=&quot;*\\univpn\\promote\\*&quot;) by Endpoint.Filesystem.dest Endpoint.Filesystem.file_path Endpoint.Filesystem.process_name Endpoint.Filesystem.user | `drop_dm_object_name(Endpoint.Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -488,11 +369,11 @@ EmailEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -505,7 +386,7 @@ EmailEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -515,7 +396,7 @@ EmailEvents
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -524,7 +405,7 @@ EmailEvents
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-100-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -551,17 +432,17 @@ EmailEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-100-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;realhealthshop.com&quot;, &quot;tjconsultingservices.com&quot;, &quot;businessmixture.com&quot;, &quot;aecert.org&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-100-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+    <div class="tab-content" id="art-100-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
 let BadDomains = dynamic([&quot;realhealthshop.com&quot;, &quot;tjconsultingservices.com&quot;, &quot;businessmixture.com&quot;, &quot;aecert.org&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -570,7 +451,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-100-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -600,7 +481,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc7-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -614,7 +495,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;realhealthshop.com&quot;, &quot;tjconsultingservices.com&quot;, &quot;businessmixture.com&quot;, &quot;aecert.org&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-100-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-100-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -655,11 +536,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-100-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -699,7 +580,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-100-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -724,7 +605,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-100-uc6-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -756,7 +637,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-100-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-100-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -806,11 +687,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc9-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-100-uc7-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -824,7 +705,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-100-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-100-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -847,7 +728,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-100-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -858,7 +739,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-100-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-100-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -887,18 +768,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-100-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-100-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-100-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -921,7 +802,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-100-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -965,13 +846,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -995,19 +876,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-100-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-100-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-100-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -1021,7 +902,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-100-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -1065,7 +946,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -1073,7 +954,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-100-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-100-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -1099,12 +980,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc12-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-100-uc12-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-100-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+    <div class="tab-content active" id="art-100-uc10-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
 // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
 // (Initiating only) so column-projection has to differ per side.
 union
@@ -1122,7 +1003,7 @@ union
                   Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+    <div class="tab-content" id="art-100-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
 // Defender version so the engine can push hash predicates per-side.
 let BadHashes = dynamic([&quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;]);
 union
@@ -1145,7 +1026,7 @@ union
                   Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+    <div class="tab-content" id="art-100-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
 status: experimental
 description: |
@@ -1171,7 +1052,7 @@ falsepositives:
     - None on a true-positive hash match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -1180,7 +1061,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Endpoint.Processes
         where Processes.process_hash IN (&quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-100-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-100-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;c832ecd135781b11f59e3fffb3d2b6ac&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -1207,11 +1088,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc13-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc13-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc13-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc13-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware
+    <div class="tab-content active" id="art-100-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -1231,7 +1112,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-100-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware
@@ -1254,7 +1135,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc13-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware ```
+    <div class="tab-content" id="art-100-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc11-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;sspicli.dll&quot;,&quot;appvshnotify.exe&quot;,&quot;rpcrt4.dll&quot;,&quot;unbcl.dll&quot;,&quot;libwinpthread-1.dll&quot;,&quot;advapi32.dll&quot;,&quot;iphlpapi.dll&quot;) OR Processes.process_path=&quot;*C:\Windows\debug\NetSetup.log*&quot; OR Processes.process_path=&quot;*C:\Windows\debug\*&quot; OR Processes.process_path=&quot;*%LocalAppData%\Microsoft\VisualStudio*&quot;)
@@ -1270,7 +1151,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-100-uc13-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware ```
+]</code></pre><pre class="spl-mode-body" id="art-100-uc11-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Mirage Kitten targets Middle East and Africa region with new malware ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;sspicli.dll&quot;,&quot;appvshnotify.exe&quot;,&quot;rpcrt4.dll&quot;,&quot;unbcl.dll&quot;,&quot;libwinpthread-1.dll&quot;,&quot;advapi32.dll&quot;,&quot;iphlpapi.dll&quot;) OR Processes.process_path=&quot;*C:\Windows\debug\NetSetup.log*&quot; OR Processes.process_path=&quot;*C:\Windows\debug\*&quot; OR Processes.process_path=&quot;*%LocalAppData%\Microsoft\VisualStudio*&quot;)
