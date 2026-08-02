@@ -2082,9 +2082,9 @@ DeviceFileEvents
   data-sources="The Hacker News"
   data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="9" data-llm-uc-count="3"
-  data-search="Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue CVE-2026-16812 CVE-2025-68686 CVE-2026-16723 T1190 T1566 T1566.002 [LLM] Network traffic to/from Arista VCO CVE-2026-16812 attacker IPs (Arista IOCs) [LLM] OS command-injection payload in VeloCloud Orchestrator web requests (CVE-2026-16812) [LLM] Process-attributed egress from a host to Arista VCO attacker IPs (post-exploitation C2) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
+  data-targets="azure,linux,m365,windows"
+  data-uc-count="10" data-llm-uc-count="4"
+  data-search="Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue CVE-2026-16812 CVE-2025-68686 CVE-2026-16723 T1190 T1566 T1566.002 [LLM] Network communication with Arista-published VeloCloud attacker IPs (CVE-2026-16812) [LLM] OS command-injection payload against VeloCloud Orchestrator web interface (CVE-2026-16812) [LLM] Shell / recon child process from VeloCloud Orchestrator service context [LLM] Outbound egress from VeloCloud service/shell process to public IP (C2/exfil) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-attackers-exploit-arista-velocloud-orchestrator-command-inje" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2093,9 +2093,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-28</span>
-    <span>9 use cases</span>
+    <span>10 use cases</span>
     <span>3 techniques</span>
-    <span>5 kill-chain phases detected</span>
+    <span>6 kill-chain phases detected</span>
   </div>
   <p class="summary">A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild. The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution. &quot;VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-16812</span> <span class="ind cve">CVE-2025-68686</span> <span class="ind cve">CVE-2026-16723</span></div>
@@ -2127,10 +2127,10 @@ DeviceFileEvents
   <div class="name">Exploitation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 5</div>
   <div class="name">Installation</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 6</div>
@@ -2144,33 +2144,33 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Network traffic to/from Arista VCO CVE-2026-16812 attacker IPs (Arista IOCs) · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OS command-injection payload in VeloCloud Orchestrator web requests (CVE-2026-16812) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Process-attributed egress from a host to Arista VCO attacker IPs (post-exploitation C2) · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Network communication with Arista-published VeloCloud attacker IPs (CVE-2026-16812) · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OS command-injection payload against VeloCloud Orchestrator web interface (CVE-2026-16812) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Shell / recon child process from VeloCloud Orchestrator service context</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound egress from VeloCloud service/shell process to public IP (C2/exfil) · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="adcc45163a" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="40f540dab7" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Network traffic to/from Arista VCO CVE-2026-16812 attacker IPs (Arista IOCs)</span>
+    <span class="uc-title">Network communication with Arista-published VeloCloud attacker IPs (CVE-2026-16812)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="adcc45163a" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="40f540dab7" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts any connection where the source or destination is one of the three attacker IPs Arista published as responsible for exploiting CVE-2026-16812 in VeloCloud Orchestrator. Because these are dedicated exploitation infrastructure, any hit against a VCO host or perimeter is high-fidelity evidence of exploitation attempts or successful C2.
+    <div class="uc-desc">Hunts any inbound or outbound network flow involving the three IP addresses Arista named as responsible for exploiting CVE-2026-16812 against on-prem VeloCloud Orchestrator. High-fidelity because these are vendor-attributed attack-source IOCs, not a generic technique.
 
-Rationale: Uses the three attacker IPs Arista named as responsible for the attacks (8.19.75.217, 206.72.242.124, 206.72.242.162) — dedicated exploitation infrastructure, so any bidirectional match is high-fidelity. Corroborated the campaign and CISA KEV listing against BleepingComputer and The Register.
+Rationale: Uses the exact three attacker IPs (8.19.75.217, 206.72.242.124, 206.72.242.162) Arista published in Advisory 0144 as responsible for the attacks; any match on network telemetry is high-fidelity. Corroborated by BleepingComputer and CyberSecurityNews write-ups.
 
 Cross-checked against:
+  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://www.theregister.com/security/2026/07/28/arista-patches-actively-exploited-velocloud-bug-as-cisa-puts-admins-on-the-clock/
-  • https://securityaffairs.com/196130/security/u-s-cisa-adds-arista-velocloud-orchestrator-and-fortinet-fortios-flaws-to-its-known-exploited-vulnerabilities-catalog.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized red-team/pentest engagement sourcing from one of these IPs (verify engagement scope)</li><li>A threat-intel enrichment/sandbox service actively probing the IOC IP, generating an outbound hit</li><li>Firewall already dropping the traffic (DeviceAction=deny) — attempt not success, still worth review</li><li>Reused cloud/VPS IP later re-assigned to a benign service after Arista&#x27;s snapshot</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ActionType != &quot;ConnectionFailed&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm which asset connected — is it the internet-facing VCO host or perimeter? Check DeviceAction (allowed vs denied) and direction; an allowed inbound to VCO = active exploitation attempt. 2) Contain: block all three IPs at the perimeter as Arista directs, isolate the VCO host, and preserve VCO web access logs, backend app logs, system logs and DB logs before remediation. 3) Hunt: pivot on the VCO host for outbound egress, new processes, and confirm VCO version against fixed builds (5.2.3.14 / 6.1.3.4 / 6.4.2.4 / 7.0.0.1); if compromised, rotate Edge device credentials.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security scanner or threat-intel enrichment appliance sandboxing/connecting to the IP for validation</li><li>Reused cloud IP now hosting a benign service a corporate host legitimately reaches</li><li>Internal SOC/IR tooling actively probing the attacker IP during investigation</li><li>Shared-hosting IP where only one vhost was malicious</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the internal asset in the flow; confirm whether it is the on-prem VCO host or another server, and whether the flow was inbound (exploit attempt) or outbound (C2/exfil). Step 2 (contain): Block the three IPs at the perimeter firewall in both directions; if the VCO host is involved, isolate it and preserve VCO web-access, backend application, system and database logs before remediation. Step 3 (hunt): Pull all historical VCO web logs for these source IPs, hunt for post-exploit shell/recon children (see companion UCs), and rotate VeloCloud Edge/admin credentials as Arista advises.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
@@ -2183,121 +2183,275 @@ Cross-checked against:
     <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
 | where RemoteIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| extend Direction = iff(LocalIPType == &quot;Private&quot; and RemoteIPType == &quot;Public&quot;, &quot;outbound-from-host&quot;, &quot;inbound-to-host&quot;)
+| project Timestamp, DeviceName, ActionType, Direction, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
 | where SourceIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) or DestinationIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourcePort, DestinationIP, DestinationPort, RequestMethod, RequestURL, DeviceAction, Activity
+| project TimeGenerated, DeviceVendor, DeviceProduct, DeviceAction, SourceIP, SourcePort, DestinationIP, DestinationPort, RequestURL, RequestMethod, Message
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Arista VeloCloud Orchestrator CVE-2026-16812 Attacker IP Contact
-id: b2e5c7a9-4d13-4f8e-9a26-1c7d3e0f5b48
-description: Detects network connections to IPs Arista attributed to active exploitation of CVE-2026-16812 (VeloCloud Orchestrator OS command injection).
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Network Communication with Arista VeloCloud Attacker IPs (CVE-2026-16812)
+id: 5b8c1e2a-9f4d-4c1b-8a3e-2d6f7a1b0c34
+description: Detects inbound or outbound network connections involving the three IPs Arista attributed to active exploitation of VeloCloud Orchestrator CVE-2026-16812.
 references:
+  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
   - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
-  - https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
 author: SOC Detection Engineering
 date: 2026/07/28
 tags:
   - attack.t1190
-  - attack.command_and_control
+  - attack.t1071.001
 logsource:
   category: network_connection
-  product: windows
 detection:
-  selection:
+  dst:
     DestinationIp:
       - &#x27;8.19.75.217&#x27;
       - &#x27;206.72.242.124&#x27;
       - &#x27;206.72.242.162&#x27;
-  condition: selection
+  src:
+    SourceIp:
+      - &#x27;8.19.75.217&#x27;
+      - &#x27;206.72.242.124&#x27;
+      - &#x27;206.72.242.162&#x27;
+  condition: dst or src
 level: high</code></pre></div>
     <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(8.19.75.217 OR 206.72.242.124 OR 206.72.242.162)</code></pre></div>
     <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(8\.19\.75\.217|206\.72\.242\.124|206\.72\.242\.162)$/
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
     <div class="tab-content" id="art-102-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action
+fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
 | filter srcAddr in [&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;] or dstAddr in [&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;]
 | sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action All_Traffic.transport
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action All_Traffic.transport
+| `drop_dm_object_name(&quot;All_Traffic&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="17af611a34" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="91b3e3bb40" data-platforms="sent,sigma,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">OS command-injection payload in VeloCloud Orchestrator web requests (CVE-2026-16812)</span>
+    <span class="uc-title">OS command-injection payload against VeloCloud Orchestrator web interface (CVE-2026-16812)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="17af611a34" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="91b3e3bb40" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP requests to the VCO web interface that either originate from the Arista-published attacker IPs or carry shell metacharacters / command-substitution syntax indicative of the CVE-2026-16812 OS command injection. Targets the exploitation request itself in web/WAF telemetry, surfacing the injected payload string for forensics.
+    <div class="uc-desc">Hunts HTTP requests to the on-prem VCO web interface carrying shell metacharacters / command-substitution operators, or originating from the three Arista-named attacker IPs. Targets the unauthenticated OS command-injection (CWE-78) that is the core attack vector of CVE-2026-16812.
 
-Rationale: Combines the Arista attacker IPs with the OS-command-injection metacharacter set (;, |, backtick, $(), &amp;&amp;, and URL-encoded variants) against VCO web/WAF logs — the exact HTTP GET/POST delivery vector corroborated by BleepingComputer/Rescana. Defender/Falcon/Datadog left empty because VCO is a Linux appliance whose web access logs land in WAF/CEF or Syslog, not endpoint EDR tables.
+Rationale: Combines the three vendor-named attacker IPs with the command-injection metacharacters (;, |, $(), $IFS, /bin/sh, curl, wget) inherent to the CWE-78 OS command-injection confirmed for CVE-2026-16812. Defender AH left empty because VCO is a Linux appliance whose web-request payloads are not in DeviceNetworkEvents.
 
 Cross-checked against:
-  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://www.securityweek.com/critical-arista-velocloud-orchestrator-vulnerability-exploited-as-zero-day/</div>
+  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin API calls that contain pipe/semicolon characters inside filter or query parameters</li><li>Automated monitoring/health-check tooling hitting VCO endpoints with encoded query strings</li><li>Security scanners (Nessus/Qualys) probing VCO with metacharacter fuzzing during authorized scans</li><li>URL-encoded but benign JSON/array payloads in orchestrator config POSTs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestMethod in (&quot;POST&quot;,&quot;GET&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestURL/Message and decode the payload — determine whether it invokes a shell command (e.g. embedded ;, $(...), or download tooling) versus benign parameter data; check the SourceIP against the Arista IOC list. 2) Contain: block the source IP, and if the request returned 200/command output, isolate the VCO host and preserve web + backend + DB logs. 3) Hunt: correlate the source IP and timestamp with outbound connections and new process/cron activity on the VCO host, and confirm the appliance is on a fixed build.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin API calls that legitimately contain pipe or semicolon characters in query strings</li><li>Automated config-push tooling embedding shell-like syntax in parameters</li><li>Vulnerability scanners (Nessus/Qualys) probing the VCO with fuzzing payloads</li><li>URL-encoded values (%7C, %3B) in benign multi-value parameters</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(RequestMethod == &quot;GET&quot; and RequestURL has_any (&quot;logout&quot;,&quot;/static/&quot;,&quot;/assets/&quot;) and SourceIP !in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Inspect the full RequestURL/body and source IP; determine whether the request is from one of the three attacker IPs and whether the metacharacters form a runnable command (e.g. ;id, $(curl...)). Step 2 (contain): Block the source IP, restrict the VCO web interface to trusted admin networks, and confirm the appliance is on a fixed release (5.2.3.14 / 6.1.3.4 / 6.4.2.4 / 7.0.0.1+). Step 3 (hunt): Correlate the request time against process-execution and outbound-network UCs on the VCO host to confirm code execution; preserve web/app/system/DB logs per Arista guidance.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where isnotempty(RequestURL)
 | where SourceIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-    or RequestURL has_any (&quot;;&quot;,&quot;|&quot;,&quot;`&quot;,&quot;$(&quot;,&quot;&amp;&amp;&quot;,&quot;%3b&quot;,&quot;%7c&quot;,&quot;%60&quot;,&quot;$%28&quot;)
-| project TimeGenerated, SourceIP, DestinationIP, DestinationHostName, RequestMethod, RequestURL, DeviceAction, Message
+    or (isnotempty(RequestURL) and RequestURL has_any (&quot;;&quot;, &quot;|&quot;, &quot;$(&quot;, &quot;%3B&quot;, &quot;%7C&quot;, &quot;%24%28&quot;, &quot;$IFS&quot;, &quot;%24IFS&quot;, &quot;/bin/sh&quot;, &quot;/bin/bash&quot;, &quot;curl &quot;, &quot;curl%20&quot;, &quot;wget &quot;, &quot;wget%20&quot;, &quot;nc &quot;, &quot;nc%20&quot;))
+| project TimeGenerated, SourceIP, SourcePort, DestinationIP, DestinationPort, RequestMethod, RequestURL, RequestClientApplication, DeviceVendor, DeviceProduct, Message
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR Web.uri_query IN (&quot;*;*&quot;,&quot;*|*&quot;,&quot;*`*&quot;,&quot;*$(*&quot;,&quot;*&amp;&amp;*&quot;,&quot;*%3B*&quot;,&quot;*%7C*&quot;,&quot;*%60*&quot;)) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR Web.uri_query IN (&quot;*;*&quot;,&quot;*|*&quot;,&quot;*`*&quot;,&quot;*$(*&quot;,&quot;*&amp;&amp;*&quot;,&quot;*%3B*&quot;,&quot;*%7C*&quot;,&quot;*%60*&quot;)) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: VeloCloud Orchestrator Command-Injection Request (CVE-2026-16812)
+id: 8f2a4d6c-1b3e-4a7f-9c2d-5e8b1f0a3c77
+description: Detects HTTP requests to the VeloCloud Orchestrator web interface containing shell metacharacters/command-substitution operators, or sourced from Arista-attributed attacker IPs, consistent with CVE-2026-16812 OS command injection.
+references:
+  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  - https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.t1190
+  - attack.t1059.004
+logsource:
+  category: webserver
+detection:
+  attacker_ips:
+    c-ip:
+      - &#x27;8.19.75.217&#x27;
+      - &#x27;206.72.242.124&#x27;
+      - &#x27;206.72.242.162&#x27;
+  cmd_injection:
+    c-uri|contains:
+      - &#x27;;&#x27;
+      - &#x27;|&#x27;
+      - &#x27;$(&#x27;
+      - &#x27;%3B&#x27;
+      - &#x27;%7C&#x27;
+      - &#x27;%24%28&#x27;
+      - &#x27;$IFS&#x27;
+      - &#x27;/bin/sh&#x27;
+      - &#x27;/bin/bash&#x27;
+      - &#x27;curl &#x27;
+      - &#x27;wget &#x27;
+  condition: attacker_ips or cmd_injection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR Web.uri_query=&quot;*%3B*&quot; OR Web.uri_query=&quot;*%7C*&quot; OR Web.uri_query=&quot;*$(*&quot; OR Web.uri_query=&quot;*%24%28*&quot; OR Web.uri_query=&quot;*/bin/sh*&quot; OR Web.uri_query=&quot;*/bin/bash*&quot; OR Web.uri_query=&quot;*curl*&quot; OR Web.uri_query=&quot;*wget*&quot; OR Web.uri_query=&quot;*%24IFS*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status
+| `drop_dm_object_name(&quot;Web&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.src IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) OR Web.uri_query=&quot;*%3B*&quot; OR Web.uri_query=&quot;*%7C*&quot; OR Web.uri_query=&quot;*$(*&quot; OR Web.uri_query=&quot;*%24%28*&quot; OR Web.uri_query=&quot;*/bin/sh*&quot; OR Web.uri_query=&quot;*/bin/bash*&quot; OR Web.uri_query=&quot;*curl*&quot; OR Web.uri_query=&quot;*wget*&quot; OR Web.uri_query=&quot;*%24IFS*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status
+| `drop_dm_object_name(&quot;Web&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="65e05a88ce" data-platforms="def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="9af7f20f1b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Process-attributed egress from a host to Arista VCO attacker IPs (post-exploitation C2)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">Shell / recon child process from VeloCloud Orchestrator service context</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="65e05a88ce" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="9af7f20f1b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts successful outbound connections initiated by a host process to the three CVE-2026-16812 attacker IPs, projecting the initiating process and account. Distinct from the perimeter IOC watch: this attributes the reverse shell / C2 implant to a specific process on the VCO or managed host, confirming code execution rather than just an inbound attempt.
+    <div class="uc-desc">Hunts Unix shells, network utilities, or reconnaissance binaries spawned by the VCO web/service tier (node, java, nginx, python, etc.) — the expected post-exploitation behaviour after CVE-2026-16812 OS command injection yields code execution as the orchestrator service.
 
-Rationale: Pivots on the same three Arista IOC IPs but as an outbound destination with the initiating process/account attributed — separating confirmed C2 (a shell/interpreter beaconing out) from perimeter probes. Arista explicitly advised checking for &#x27;unexpected outbound network activity from the VCO host&#x27;; the Falcon lens narrows to Unix shells and download tooling consistent with the OS command injection.
+Rationale: Grounded in the confirmed outcome of CVE-2026-16812 (privileged OS command execution on the VCO host): the web/service tier spawning shells or recon tools (whoami/id/uname) is the direct signature of that RCE. Datadog auditd variant lacks parent linkage so it should be scoped to the VCO host at rule level.
 
 Cross-checked against:
-  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/
-  • https://www.rescana.com/post/active-exploitation-alert-arista-velocloud-orchestrator-cve-2026-16812-command-injection-vulnerability-enables-remote-co</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel sandbox or vulnerability scanner on an internal host reaching out to the IOC IP for enrichment</li><li>An IOC IP later re-provisioned to a benign SaaS/CDN endpoint after Arista&#x27;s observation window</li><li>Security tooling (EDR/telemetry forwarder) egress that happens to share the destination netblock</li><li>Analyst manually curling the IP during investigation from a jump host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;,&quot;SenseIR.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process, account and integrity level on the connecting host — a shell/interpreter (bash, python, php, nc) egressing to the IOC IP from the VCO host is a confirmed reverse shell. 2) Contain: isolate the host, kill the process tree, block the IPs, and snapshot VCO web/system/DB logs and filesystem timestamps before remediation. 3) Hunt: enumerate persistence (cron, systemd units, new SSH keys) on the VCO host, rotate orchestrator and managed VeloCloud Edge credentials, and validate managed-device state per Arista guidance.</div></details>
+  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  • https://cybersecuritynews.com/arista-velocloud-orchestrator-0-day/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="System Owner/User Discovery">T1033</span> <span class="ind tech" title="System Information Discovery">T1082</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>VCO backend legitimately shelling out to run maintenance/health-check scripts</li><li>Config-management or monitoring agents invoking curl/wget from the service context</li><li>Admin troubleshooting sessions running id/uname/hostname on the appliance</li><li>Cron-driven jobs launched under the same service parent</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;/opt/vco/scripts/&quot;,&quot;healthcheck&quot;,&quot;/usr/lib/monitoring/&quot;) and FileName in~ (&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Examine the child command line and its arguments — benign health checks vs. reverse-shell/recon (e.g. `bash -i`, `nc -e`, `curl http://&lt;attacker&gt;`). Confirm the host is the VCO appliance. Step 2 (contain): Isolate the VCO host, kill the offending process tree, and snapshot the appliance and its logs for forensics before rebuild. Step 3 (hunt): Pivot to the outbound-egress UC and the attacker-IP UC to find C2, then rotate VeloCloud Edge and orchestrator admin credentials and validate managed-device state per Arista.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where ActionType == &quot;ConnectionSuccess&quot;
-| where RemoteIP in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessIntegrityLevel
+| where InitiatingProcessFileName has_any (&quot;node&quot;,&quot;java&quot;,&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;supervisord&quot;,&quot;velocloud&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;,&quot;ifconfig&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where DstIpAddr in (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;)
-| where NetworkDirection == &quot;Outbound&quot; or isempty(NetworkDirection)
-| project TimeGenerated, SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, DvcAction
+| where ParentProcessName has_any (&quot;node&quot;,&quot;java&quot;,&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;python&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;velocloud&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/ksh&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/curl&quot;,&quot;/wget&quot;,&quot;/whoami&quot;,&quot;/id&quot;,&quot;/uname&quot;,&quot;/hostname&quot;,&quot;/python&quot;,&quot;/perl&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(8\.19\.75\.217|206\.72\.242\.124|206\.72\.242\.162)$/
-| ContextImageFileName=/(\/|\\)(bash|sh|dash|zsh|python[0-9.]*|perl|php|node|nc|ncat|socat|curl|wget)$/i
+    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Shell or Recon Child Spawned by VeloCloud Orchestrator Service
+id: 3c7e9a1f-6d2b-4f8a-b1c4-9a0e5d2f7b18
+description: Detects Unix shells, netcat/curl/wget, or reconnaissance binaries spawned by VeloCloud Orchestrator web/service processes, consistent with post-exploitation of CVE-2026-16812.
+references:
+  - https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  - https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
+author: SOC Detection Engineering
+date: 2026/07/28
+tags:
+  - attack.t1059.004
+  - attack.t1033
+  - attack.t1082
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  parent:
+    ParentImage|endswith:
+      - &#x27;/node&#x27;
+      - &#x27;/java&#x27;
+      - &#x27;/nginx&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/gunicorn&#x27;
+      - &#x27;/uwsgi&#x27;
+  child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/ksh&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/whoami&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/uname&#x27;
+      - &#x27;/hostname&#x27;
+      - &#x27;/perl&#x27;
+  condition: parent and child
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash OR ksh OR nc OR ncat OR whoami OR id OR uname OR hostname OR curl OR wget OR perl)</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(node|java|nginx|httpd|apache2|python|python3|gunicorn|uwsgi)$/i
+| ImageFileName=/\/(sh|bash|dash|ksh|nc|ncat|curl|wget|whoami|id|uname|hostname|perl|python|python3)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node&quot;,&quot;java&quot;,&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;supervisord&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(&quot;Processes&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node&quot;,&quot;java&quot;,&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;gunicorn&quot;,&quot;uwsgi&quot;,&quot;supervisord&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;,&quot;hostname&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(&quot;Processes&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e96936737f" data-platforms="def,falcon,sent" data-targets="windows">
+  <summary>
+    <span class="uc-title">Outbound egress from VeloCloud service/shell process to public IP (C2/exfil)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="e96936737f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts internet-bound connections initiated by VCO service or shell/network binaries on the orchestrator host — Arista explicitly advises checking for unexpected outbound activity from the VCO host. Distinct network-attribution pivot that catches reverse shells and data exfil even if the C2 IP is not one of the three known IOCs.
+
+Rationale: Directly implements Arista&#x27;s advisory guidance to &#x27;check for unexpected outbound network activity from the VCO host&#x27;; scopes egress to shell/network binaries and flags any that touch the three known attacker IPs. Sentinel/Splunk left empty because process-attributed egress on a Linux appliance needs EDR telemetry (Defender/Falcon) rather than firewall or CIM Network_Traffic, which lack the initiating-process link.
+
+Cross-checked against:
+  • https://www.arista.com/en/support/advisories-notices/security-advisory/24364-security-advisory-0144
+  • https://www.bleepingcomputer.com/news/security/arista-patches-velocloud-orchestrator-zero-day-exploited-in-attacks/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>VCO legitimately using curl/wget for software updates, license checks, or telemetry to Arista/Broadcom cloud</li><li>Package managers or monitoring agents making outbound HTTPS calls under python/java</li><li>Proxy/NTP/DNS resolvers appearing as public destinations</li><li>Backup jobs pushing data to an approved offsite endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;vco-update&quot;,&quot;repo.velocloud&quot;,&quot;apt-get&quot;,&quot;yum&quot;,&quot;dnf&quot;,&quot;pip install&quot;) and HitsKnownAttackerIP == false)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Prioritise rows where HitsKnownAttackerIP is true, then review the destination IP/port and initiating command line for beaconing or reverse-shell patterns. Step 2 (contain): Block the destination, isolate the VCO host, and capture memory/network state before remediation. Step 3 (hunt): Correlate with the command-injection web-log UC to establish the exploitation entry point, enumerate any data staged/transferred, and follow Arista&#x27;s remediation — rotate credentials, validate managed VeloCloud Edge devices, and restore/replace the orchestrator from a trusted source.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-falcon">Falcon LogScale</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;node&quot;,&quot;java&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort, 25), Dests=make_set(RemoteIP, 50) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| extend HitsKnownAttackerIP = set_has_element(Dests, &quot;8.19.75.217&quot;) or set_has_element(Dests, &quot;206.72.242.124&quot;) or set_has_element(Dests, &quot;206.72.242.162&quot;)
+| order by HitsKnownAttackerIP desc, FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;node&quot;,&quot;java&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Conns=count(), Ports=make_set(RemotePort, 25), Dests=make_set(RemoteIP, 50) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| extend HitsKnownAttackerIP = set_has_element(Dests, &quot;8.19.75.217&quot;) or set_has_element(Dests, &quot;206.72.242.124&quot;) or set_has_element(Dests, &quot;206.72.242.162&quot;)
+| order by HitsKnownAttackerIP desc, FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\/(sh|bash|dash|nc|ncat|curl|wget|python|python3|perl|node|java)$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
 | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) AND All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (&quot;8.19.75.217&quot;,&quot;206.72.242.124&quot;,&quot;206.72.242.162&quot;) AND All_Traffic.direction=&quot;outbound&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -2315,11 +2469,11 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -2328,7 +2482,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -2340,12 +2494,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-16812&quot;, &quot;CVE-2025-68686&quot;, &quot;CVE-2026-16723&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-16812&quot;, &quot;CVE-2025-68686&quot;, &quot;CVE-2026-16723&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -2377,11 +2531,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -2421,7 +2575,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -2446,7 +2600,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -2478,7 +2632,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -2528,11 +2682,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-102-uc6-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -2546,7 +2700,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-102-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -2569,7 +2723,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-102-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -2580,7 +2734,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-102-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -2609,18 +2763,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -2643,7 +2797,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-102-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -2687,13 +2841,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-102-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-102-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -2717,19 +2871,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -2743,7 +2897,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-102-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -2787,7 +2941,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -2795,7 +2949,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -2821,17 +2975,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-102-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;8.19.75.217&quot;, &quot;206.72.242.124&quot;, &quot;206.72.242.162&quot;) or RemoteUrl has_any (&quot;&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;8.19.75.217&quot;, &quot;206.72.242.124&quot;, &quot;206.72.242.162&quot;]);
+    <div class="tab-content" id="art-102-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;8.19.75.217&quot;, &quot;206.72.242.124&quot;, &quot;206.72.242.162&quot;]);
 let BadDomains = dynamic([&quot;&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -2840,7 +2994,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-102-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -2870,7 +3024,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc8-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc9-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;8.19.75.217&quot;, &quot;206.72.242.124&quot;, &quot;206.72.242.162&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -2884,7 +3038,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-102-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-102-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;8.19.75.217&quot;, &quot;206.72.242.124&quot;, &quot;206.72.242.162&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port

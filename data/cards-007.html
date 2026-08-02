@@ -11433,14 +11433,14 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-213" data-art-slug="2026-07-13-ghsa-critical-cve-2026-47677-facturascripts-account-takeover"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application,endpoint"
+  data-platforms="datadog,def,sent,spl"
+  data-splunk-cats="application,endpoint,web"
   data-targets="linux,windows"
-  data-uc-count="2" data-llm-uc-count="0"
-  data-search="[GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-enabled user FacturaScripts: Account takeover of any 2FA-enabled user CVE-2026-47677 T1190 Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en">
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-enabled user FacturaScripts: Account takeover of any 2FA-enabled user CVE-2026-47677 T1190 [LLM] FacturaScripts CVE-2026-47677: high-volume brute-force of /login two-factor-validation endpoint [LLM] FacturaScripts &#x27;two-factor-code-invalid&#x27; application-log flood (distributed 2FA brute-force / account-lockout DoS) [LLM] FacturaScripts CVE-2026-47677: successful 2FA bypass — 302 session issuance following a brute-force burst Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-13-ghsa-critical-cve-2026-47677-facturascripts-account-takeover" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -11449,9 +11449,9 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-13</span>
-    <span>2 use cases</span>
+    <span>5 use cases</span>
     <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
+    <span>3 kill-chain phases detected</span>
   </div>
   <p class="summary">FacturaScripts: Account takeover of any 2FA-enabled user</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47677</span></div>
@@ -11492,20 +11492,147 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Command &amp; Control</div>
   <div class="marker">Likely</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 7</div>
   <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FacturaScripts CVE-2026-47677: high-volume brute-force of /login two-factor-validation endpoint · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] FacturaScripts &#x27;two-factor-code-invalid&#x27; application-log flood (distributed 2FA brute-force / account-lockout DoS) · [LLM] FacturaScripts CVE-2026-47677: successful 2FA bypass — 302 session issuance following a brute-force burst</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="242a4c0bdd" data-platforms="datadog,sent,spl" data-targets="linux" open>
+  <summary>
+    <span class="uc-title">FacturaScripts CVE-2026-47677: high-volume brute-force of /login two-factor-validation endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="242a4c0bdd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts an unauthenticated attacker hammering the FacturaScripts `/login` endpoint with `action=two-factor-validation` POSTs to guess one of the ~17 simultaneously-valid TOTP codes. A legitimate user submits 1-3 codes; the published PoC sustains ~400 requests/sec from a single source IP, so a per-IP request count on this exact endpoint is a clean, article-specific signal.
+
+Rationale: Anchors on the exact vulnerable endpoint path `/login` plus the `two-factor-validation` action string and POST method from the advisory; per-source-IP volume &gt;20 in 5m is far above any human 2FA flow but far below the PoC&#x27;s sustained rate. Cross-checked against the GitLab Advisory Database entry which confirms the endpoint and unauthenticated-POST shape.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-47677/
+  • https://github.com/advisories/GHSA-c67f-gmxw-mj93</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Brute Force">T1110</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Automated uptime/synthetic monitor probing /login on a loop</li><li>Vulnerability scanner (Nessus/Qualys) or authorized pentest replaying the CVE PoC</li><li>Load-testing tool (JMeter/k6) run against the FacturaScripts login path</li><li>Shared-NAT egress (many corporate users behind one public IP) inflating per-IP counts</li><li>Broken SSO/mobile client retrying 2FA submission in a tight loop</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;scanner_ip_allowlist&gt;&quot;)   // OPTIONAL: replace with your authorized scanner/monitoring egress IPs; omit this line if you have none</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the SourceIP is external and the RequestURL targets `/login` + `two-factor-validation`; pull the full request timeline and count 302 responses (a 302 = fsLogkey session issued = takeover). Identify which `fsNick` values were targeted (body/query param). 2) CONTAIN: Block the SourceIP at the WAF/reverse proxy, force-expire sessions (rotate fsLogkey / clear session store), and upgrade FacturaScripts to 2026.3.0 which patches the endpoint. 3) HUNT: For any nick that received a 302, review that account&#x27;s post-login activity (invoice/customer/API-key access, config changes) and check for the same brute pattern from other IPs / against other nicks.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-213-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-213-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-213-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-213-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(1h)
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL has &quot;/login&quot;
+| where RequestURL has &quot;two-factor-validation&quot;
+| summarize Attempts = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), TargetHosts = dcount(DestinationHostName) by SourceIP, bin(TimeGenerated, 5m)
+| where Attempts &gt; 20   // legit 2FA submits 1-3 codes; CVE-2026-47677 PoC sustains ~400 rps from one IP
+| order by Attempts desc</code></pre></div>
+    <div class="tab-content" id="art-213-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;/login&quot; &quot;two-factor-validation&quot;</code></pre></div>
+    <div class="tab-content" id="art-213-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-213-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-213-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-213-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as attempts, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/login*&quot; Web.url=&quot;*two-factor-validation*&quot; by Web.src Web.dest _time span=5m
+| `drop_dm_object_name(Web)`
+| where attempts &gt; 20
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - attempts</code></pre><pre class="spl-mode-body" id="art-213-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as attempts, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/login*&quot; Web.url=&quot;*two-factor-validation*&quot; by Web.src Web.dest _time span=5m
+| `drop_dm_object_name(Web)`
+| where attempts &gt; 20
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - attempts</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f064192c81" data-platforms="datadog,sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">FacturaScripts &#x27;two-factor-code-invalid&#x27; application-log flood (distributed 2FA brute-force / account-lockout DoS)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f064192c81" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the exact warning literal `two-factor-code-invalid` that `twoFactorValidationAction()` writes to the FacturaScripts log on every failed TOTP guess. Counting these per host catches the brute-force even when the attacker rotates source IPs (invisible to a per-IP web-log rule) and also surfaces the availability side-effect: 6 failures (MAX_INCIDENT_COUNT) lock the legitimate user out of loginAction for 10 minutes.
+
+Rationale: Uses the verbatim `Tools::log()-&gt;warning(&#x27;two-factor-code-invalid&#x27;)` string from the vulnerable code path, so it is essentially FP-free except for genuine failed 2FA attempts; the &gt;20/5m threshold distinguishes a brute-force flood from occasional user typos. Confirmed against the GitLab advisory&#x27;s reproduction of the handler.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-47677/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Brute Force">T1110</span> <span class="ind tech" title="Account Access Removal">T1531</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A single legitimate user repeatedly fat-fingering their TOTP code (a handful, not dozens)</li><li>Clock drift between the TOTP app and server causing genuine repeated failures for one nick</li><li>QA/staging test suite exercising the 2FA flow with bad codes</li><li>Authorized pentest replaying the PoC</li><li>Log duplication (same event shipped by two collectors) inflating counts</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Identify the targeted `fsNick`(s) and whether failures cluster on admin/company nicks (public info per the advisory); check the host&#x27;s web logs for the corresponding /login two-factor-validation POST burst and any 302. 2) CONTAIN: Patch to FacturaScripts 2026.3.0, block offending IP(s) at the edge, and notify locked-out users (10-min loginAction lockout is expected collateral). 3) HUNT: Search for a subsequent successful login (302 / new session) for the targeted nick, and pivot on the same warning across all FacturaScripts hosts to scope multi-target campaigns.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-213-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-213-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-213-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-213-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(1h)
+| where SyslogMessage has &quot;two-factor-code-invalid&quot;
+| summarize FailedCodes = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Sample = any(SyslogMessage) by Computer, HostIP, bin(TimeGenerated, 5m)
+| where FailedCodes &gt; 20   // 6 failures (MAX_INCIDENT_COUNT) already lock a nick out; sustained flood = brute-force / targeted lockout DoS
+| order by FailedCodes desc</code></pre></div>
+    <div class="tab-content" id="art-213-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;two-factor-code-invalid&quot;</code></pre></div>
+    <div class="tab-content" id="art-213-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>`comment(&quot;FacturaScripts PHP app warning — no CIM datamodel covers app-tier log strings; raw search&quot;)`
+index=* &quot;two-factor-code-invalid&quot;
+| bin _time span=5m
+| stats count as failed_codes, dc(host) as hosts, latest(_raw) as sample by _time host
+| where failed_codes &gt; 20
+| sort - failed_codes</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3ce24561aa" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">FacturaScripts CVE-2026-47677: successful 2FA bypass — 302 session issuance following a brute-force burst</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3ce24561aa" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Confirms an actual account takeover (not just an attempt): a source IP that sent many POSTs to `/login` `two-factor-validation` AND received at least one HTTP 302 — the redirect that issues the `fsNick`+`fsLogkey` session cookie pair. The per-IP burst-count qualifier separates attacker success from the identical 302 a legitimate user gets on a normal 2FA login.
+
+Rationale: Combines the exact endpoint (`/login` + `two-factor-validation` in csUriQuery, POST) with scStatus 302 — the only status the handler returns on a valid guess (updateUserAndRedirect) — gated by a brute-force attempt count so a lone legitimate 2FA 302 doesn&#x27;t fire. This is the takeover-confirmed pivot, distinct from the attempt-volume UCs.
+
+Cross-checked against:
+  • https://advisories.gitlab.com/composer/facturascripts/facturascripts/CVE-2026-47677/
+  • https://github.com/advisories/GHSA-c67f-gmxw-mj93</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Brute Force">T1110</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized pentest whose PoC actually lands a valid code (true positive by design, but expected during engagements)</li><li>Load test that both floods /login and completes a legit 2FA, producing a 302 within the same IP/window</li><li>Reverse proxy collapsing many internal users to one cIP so a legit 302 co-occurs with high attempt counts (tune with X-Forwarded-For)</li><li>Scanner that follows redirects and happens to trip a valid code during a long run</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP !in (&quot;&lt;scanner_ip_allowlist&gt;&quot;)   // OPTIONAL: exclude authorized scanner/pentest egress IPs; omit if none</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Treat as confirmed takeover — capture cIP, sSiteName, targeted `fsNick`, and the 302 timestamp; correlate with the `two-factor-code-invalid` flood (companion UC) to confirm the preceding brute-force. 2) CONTAIN: Immediately invalidate the issued session (rotate/clear fsLogkey server-side), disable/reset the affected account, block cIP, and patch to 2026.3.0. 3) HUNT: Enumerate everything the hijacked identity touched after the 302 — invoice/customer/supplier reads, record edits/deletes, API-key and plugin-config access — and check whether other nicks received a 302 from the same or related IPs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-213-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-213-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-213-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(1h)
+| where csMethod == &quot;POST&quot;
+| where csUriStem =~ &quot;/login&quot;
+| where csUriQuery has &quot;two-factor-validation&quot;
+| summarize Attempts = count(), Successes = countif(scStatus == 302), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), SampleAgent = any(csUserAgent) by cIP, sSiteName, bin(TimeGenerated, 10m)
+| where Attempts &gt; 20 and Successes &gt; 0   // 302 = fsLogkey issued; &gt;20 attempts in 10m rules out a normal human 2FA login. If Apache/Nginx: point at AppServiceHTTPLogs (ScStatus/CIp) or your reverse-proxy access-log table.
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-213-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-213-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-213-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-213-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as attempts, count(eval(&#x27;Web.status&#x27;=&quot;302&quot;)) as successes, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/login*&quot; Web.url=&quot;*two-factor-validation*&quot; by Web.src Web.dest _time span=10m
+| `drop_dm_object_name(Web)`
+| where attempts &gt; 20 AND successes &gt; 0
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - successes</code></pre><pre class="spl-mode-body" id="art-213-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as attempts, count(eval(&#x27;Web.status&#x27;=&quot;302&quot;)) as successes, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/login*&quot; Web.url=&quot;*two-factor-validation*&quot; by Web.src Web.dest _time span=10m
+| `drop_dm_object_name(Web)`
+| where attempts &gt; 20 AND successes &gt; 0
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - successes</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -11520,11 +11647,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-213-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-213-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-213-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-213-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-213-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-213-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-213-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-213-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -11533,7 +11660,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-213-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-213-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -11545,12 +11672,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-213-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-213-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-213-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-213-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-213-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-213-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-213-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-213-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-47677&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-213-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-213-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-47677&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -11573,11 +11700,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-213-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-213-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-213-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-213-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-213-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-213-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-213-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en
+    <div class="tab-content active" id="art-213-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -11597,7 +11724,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-213-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-213-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en
@@ -11620,7 +11747,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-213-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-213-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-213-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-213-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en ```
+    <div class="tab-content" id="art-213-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-213-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-213-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-213-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;poc_2fa_brute.py&quot;))
@@ -11636,7 +11763,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-213-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en ```
+]</code></pre><pre class="spl-mode-body" id="art-213-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47677: FacturaScripts: Account takeover of any 2FA-en ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;poc_2fa_brute.py&quot;))
