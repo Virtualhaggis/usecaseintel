@@ -26,10 +26,11 @@ Researcher Lee Jia Jie said artificial intelligence (AI) helped him find the bug
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1068** — Exploitation for Privilege Escalation
-- **T1546** — Event Triggered Execution
 - **T1620** — Reflective Code Loading
 - **T1611** — Escape to Host
+- **T1548** — Abuse Elevation Control Mechanism
+- **T1548.004** — Abuse Elevation Control Mechanism: Elevated Execution with Prompt
+- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
@@ -37,81 +38,65 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Linux core_pattern overwritten to memfd/pipe handler (CVE-2026-53264 privesc payoff)
+### Root process executing from a memfd/anonymous image (CVE-2026-53264 core-dump payoff)
 
-`UC_101_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="/proc/sys/kernel/core_pattern" (Filesystem.action=modified OR Filesystem.action=created OR Filesystem.action=write) by Filesystem.dest Filesystem.file_path Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT match(process_id, "^0$") | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.os="linux" AND (Processes.process_path="*memfd:*" OR Processes.process="*memfd:*") AND Processes.user="root") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FolderPath has "memfd:" or FolderPath has "/memfd" or ProcessCommandLine has "memfd:"
+| where AccountName =~ "root"
+| where FolderPath !has "snap" and InitiatingProcessFileName !in~ ("systemd","snapd","fapolicyd")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Unprivileged user+network namespace setup via /proc uid_map/setgroups (CVE-2026-53264 enabler)
+
+`UC_102_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/proc/*/uid_map" OR Filesystem.file_path="/proc/*/gid_map" OR Filesystem.file_path="/proc/*/setgroups") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("dockerd","containerd","runc","podman","conmon","bwrap","slirp4netns","systemd","snapd","fuse-overlayfs") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FolderPath has "/proc/sys/kernel" and FileName == "core_pattern"
-| where ActionType in ("FileModified","FileCreated")
-| where InitiatingProcessFileName !in~ ("systemd-sysctl","sysctl","systemd","apport","abrt-install-ccpp-hook","kdump","tuned","cloud-init")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
+| where Timestamp > ago(7d)
+| where FolderPath matches regex @"/proc/[0-9a-zA-Z]+/(uid_map|gid_map|setgroups)$" or FileName in~ ("uid_map","gid_map","setgroups")
+| where InitiatingProcessAccountName !in~ ("root")
+| where InitiatingProcessFileName !in~ ("dockerd","containerd","runc","podman","conmon","systemd","snapd","bwrap","slirp4netns","fuse-overlayfs","rootlesskit")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName
 | order by Timestamp desc
 ```
 
-### Linux root process executed from memfd (CVE-2026-53264 core-dump payload)
+### Non-root tc clsact qdisc + flower filter manipulation (CVE-2026-53264 trigger path)
 
-`UC_101_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_102_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="*memfd:*" OR Processes.process="*memfd:*") Processes.user="root" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="tc" AND (Processes.process="*clsact*" OR Processes.process="*flower*") AND (Processes.process="*qdisc*" OR Processes.process="*filter*") AND Processes.user!="root") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FolderPath has "memfd:" or FolderPath startswith "/memfd" or FileName startswith "memfd:"
-| where AccountName == "root" or ProcessTokenElevation == "TokenElevationTypeFull"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where Timestamp > ago(7d)
+| where FileName =~ "tc"
+| where ProcessCommandLine has_any ("clsact","flower")
+| where ProcessCommandLine has_any ("qdisc","filter")
+| where AccountName !in~ ("root")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
-```
-
-### Unprivileged Linux tc clsact/flower/gact traffic-control manipulation (CVE-2026-53264 trigger)
-
-`UC_101_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="tc" (Processes.process="*clsact*" OR Processes.process="*flower*" OR Processes.process="*gact*") Processes.user!="root" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName == "tc"
-| where ProcessCommandLine has_any ("clsact","flower","gact")
-| where AccountName !in~ ("root","system") and AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### CVE-2026-53264 unpatched kernel exposure (traffic-control UAF LPE)
-
-`UC_101_8` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.signature="CVE-2026-53264" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-53264"
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSDistribution, OSVersion) by DeviceId) on DeviceId
-| project DeviceName, OSPlatform, OSDistribution, OSVersion, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -300,4 +285,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

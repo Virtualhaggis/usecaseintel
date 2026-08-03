@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Active Storage direct-upload + representation abuse (CVE-2026-66066 libvips file read)
 
-`UC_67_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_68_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### libvips 'matload' / MATLAB-HDF5 unsafe loader invocation on Rails host
 
-`UC_67_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_68_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### Rails worker reads secret files after Active Storage upload (CVE-2026-66066 payoff)
 
-`UC_67_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_68_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### Exposure: unpatched Rails/libvips vulnerable to CVE-2026-66066
 
-`UC_67_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_68_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

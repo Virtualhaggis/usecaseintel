@@ -38,10 +38,15 @@ N-centr…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1543.003** — Create or Modify System Process: Windows Service
 - **T1572** — Protocol Tunneling
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090** — Proxy
+- **T1008** — Fallback Channels
+- **T1219** — Remote Access Software
+- **T1057** — Process Discovery
+- **T1078.002** — Valid Accounts: Domain Accounts
 
 ## Kill chain phases observed
 
@@ -49,60 +54,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### svchost.exe masquerade written/executed outside System32 (N-central post-compromise)
+### Cloudflared tunnel registered as a Windows service on N-central-managed endpoint
 
-`UC_1_7` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="svchost.exe" AND NOT (Filesystem.file_path IN ("*\\Windows\\System32\\*","*\\Windows\\SysWOW64\\*","*\\Windows\\WinSxS\\*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "svchost.exe"
-| where FolderPath !startswith @"C:\Windows\System32" and FolderPath !startswith @"C:\Windows\SysWOW64" and FolderPath !startswith @"C:\Windows\WinSxS"
-| project Timestamp, DeviceName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Cloudflared registered as a Windows service for reboot-persistent tunneling
-
-`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="cloudflared.exe" OR Processes.process="*cloudflared*") AND Processes.process IN ("*tunnel run*","*service install*","*--token*","*tunnel*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*cloudflared*" AND (Processes.process="*service install*" OR Processes.process="*tunnel run*" OR Processes.process="*--token*")) OR Processes.process_name="cloudflared.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "cloudflared.exe" or (ProcessCommandLine has "cloudflared" and ProcessCommandLine has_any ("tunnel run","service install","--token","tunnel"))
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, ParentProcess = InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName =~ "cloudflared.exe" or ProcessCommandLine has "cloudflared"
+| where ProcessCommandLine has_any ("service install", "tunnel run", "--token")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Endpoint C2 to N-central attacker Synology QuickConnect domains / published IPs
+### svchost.exe masquerading from a user Documents folder (N-central attacker drop)
 
-`UC_1_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("173.249.252.200","87.249.138.34","37.19.210.32","37.153.90.88","92.118.112.181","68.235.46.214") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="svchost.exe" AND Processes.process_path="*\\Users\\*\\Documents\\*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["mousears.synology.me","wagoosh.direct.quickconnect.to","who-ripped-one.direct.quickconnect.to"]);
-let c2IPs = dynamic(["173.249.252.200","87.249.138.34","37.19.210.32","37.153.90.88","92.118.112.181","68.235.46.214"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "svchost.exe"
+| where FolderPath has @"\Users\" and FolderPath has @"\Documents\"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Endpoint contact with N-able-published attacker IPs / Synology QuickConnect C2 domains
+
+`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("173.249.252.200","87.249.138.34","37.19.210.32","37.153.90.88","92.118.112.181","68.235.46.214") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badIPs = dynamic(["173.249.252.200","87.249.138.34","37.19.210.32","37.153.90.88","92.118.112.181","68.235.46.214"]);
+let badDomains = dynamic(["mousears.synology.me","wagoosh.direct.quickconnect.to","who-ripped-one.direct.quickconnect.to"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (c2IPs) or RemoteUrl in~ (c2Domains)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
+| where RemoteIP in (badIPs) or RemoteUrl in~ (badDomains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### N-able Take Control agent spawning shell / process-enumeration on managed endpoint
+
+`UC_2_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("BASupSrvc.exe","GetSupportService_N-Central.exe","AeroAdmin.exe") AND (Processes.process_name IN ("cmd.exe","powershell.exe","tasklist.exe","qprocess.exe","whoami.exe") OR Processes.process="*tasklist*" OR Processes.process="*Get-Process*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has_any ("BASupSrvc", "GetSupportService")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","tasklist.exe","qprocess.exe","whoami.exe") or ProcessCommandLine has_any ("tasklist","Get-Process","query process")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -284,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — N-able Says Attackers Take Over N-central Servers After Initial Fix Proves Incom
 
-`UC_1_6` · phase: **install** · confidence: **High**
+`UC_2_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -344,4 +370,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

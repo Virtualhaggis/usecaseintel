@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Sapphire Sleet npm supply-chain C2 egress to npmjs.store / 216.74.123.126
 
-`UC_62_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_63_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union
 
 ### Known Sapphire Sleet npm payload hashes written or executed
 
-`UC_62_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_63_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ union
 
 ### npm registry look-alike phishing domains (npmjs.help / npmjs.store) in mail & web
 
-`UC_62_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_63_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -373,7 +373,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Amazon Links Debug and Chalk npm Hijack to North Korea’s Sapphire Sleet
 
-`UC_62_9` · phase: **exploit** · confidence: **High**
+`UC_63_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
