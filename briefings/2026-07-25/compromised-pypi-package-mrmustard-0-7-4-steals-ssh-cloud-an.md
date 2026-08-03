@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### mrmustard stealer C2 exfil to metrics.femboy.energy
 
-`UC_115_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_116_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### Python interpreter reading SSH + AWS + Kube credential stores
 
-`UC_115_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_116_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceFileEvents
 
 ### mrmustard persistence artifacts: mmcompat.pth and .tf_cache/hw_probe.pyc
 
-`UC_115_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_116_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### Recurring cron/shell-rc execution of .tf_cache/hw_probe.pyc payload
 
-`UC_115_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_116_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### Malicious mrmustard 0.7.4 artifact by hash or filename
 
-`UC_115_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_116_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -273,7 +273,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised PyPI Package: mrmustard 0.7.4 Steals SSH, Cloud, and Kubernetes Cred
 
-`UC_115_6` · phase: **exploit** · confidence: **High**
+`UC_116_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### jqwik-engine 1.10.0 malicious JAR on disk (SHA256 / filename match)
 
-`UC_388_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_389_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceFileEvents
 
 ### AI coding agent bulk-deleting JUnit test files after jqwik resolution
 
-`UC_388_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_389_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### Maven/Gradle build log file containing jqwik prompt-injection directive
 
-`UC_388_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_389_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

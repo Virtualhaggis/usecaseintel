@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Shai-Hulud bundle.js postinstall payload by known SHA256 hash
 
-`UC_859_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_860_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union isfuzzy=true
 
 ### Shai-Hulud worm C2 exfiltration to webhook.site UUID bb8ca5f6
 
-`UC_859_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_860_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### TruffleHog secret-scanner executed by node/npm postinstall context
 
-`UC_859_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_860_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud persistence artifact: shai-hulud-workflow.yml file dropped on disk
 
-`UC_859_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_860_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceFileEvents
 
 ### Postinstall node child enumerating multiple developer credential stores
 
-`UC_859_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_860_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -413,7 +413,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Zero-day Extensive NPM Package Compromise - Shai Hulud Supply Chain Attack
 
-`UC_859_9` · phase: **exploit** · confidence: **High**
+`UC_860_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

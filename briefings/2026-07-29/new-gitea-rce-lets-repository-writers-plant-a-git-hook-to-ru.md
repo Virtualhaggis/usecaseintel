@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Gitea diffpatch endpoint abused twice for add/add hook-drop (CVE-2026-60004)
 
-`UC_92_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_94_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Gitea git process spawning shell / network tool via planted hook (CVE-2026-60004 RCE)
 
-`UC_92_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_94_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Git server-side hook file written (hooks/post-index-change) - CVE-2026-60004 persistence
 
-`UC_92_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_94_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Vulnerable Gitea version exposed to CVE-2026-60004 (pre-1.27.1)
 
-`UC_92_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_94_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -309,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Gitea RCE Lets Repository Writers Plant a Git Hook to Run Shell Commands
 
-`UC_92_6` · phase: **install** · confidence: **High**
+`UC_94_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### XCSSET v40 CDP hijack: Google Chrome launched with remote-debugging-port
 
-`UC_48_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_51_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 chrome_remote backdoor execution and C2 WebSocket egress
 
-`UC_48_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_51_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 build-triggered loader: Xcode build spawning osascript/curl
 
-`UC_48_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -405,7 +405,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Xcode Assassin Returns: A Deep Dive Into the Latest XCSSET Version
 
-`UC_48_8` · phase: **install** · confidence: **High**
+`UC_51_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

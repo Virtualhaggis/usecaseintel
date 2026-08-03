@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Scanning ARM templates for misconfigurations with the Snyk CLI
 
-`UC_2777_0` · phase: **exploit** · confidence: **High**
+`UC_2778_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

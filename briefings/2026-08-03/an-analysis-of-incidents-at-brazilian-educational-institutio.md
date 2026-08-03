@@ -41,16 +41,14 @@ Because of the amount of data that can be obtained and the high impact that succ
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
-- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1112** — Modify Registry
-- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1569.002** — System Services: Service Execution
+- **T1570** — Lateral Tool Transfer
 - **T1134.001** — Access Token Manipulation: Token Impersonation/Theft
 - **T1068** — Exploitation for Privilege Escalation
-- **T1570** — Lateral Tool Transfer
-- **T1105** — Ingress Tool Transfer
-- **T1056.001** — Input Capture: Keylogging
-- **T1078** — Valid Accounts
-- **T1491.001** — Defacement: Internal Defacement
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -58,112 +56,82 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### RDP enabled via fDenyTSConnections=0 in LockBit defense-disabling batch script
+### RDP re-enable + EDR/Defender disable batch script (LockBit intrusion)
 
-`UC_7_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*fDenyTSConnections*" AND (Processes.process="*/d 0*" OR Processes.process="*REG_DWORD*")) OR (Processes.process="*netsh*" AND Processes.process="*advfirewall*" AND Processes.process="*Remote Desktop*") OR (Processes.process="*netsh*" AND Processes.process="*firewall*" AND Processes.process="*3389*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Control\\Terminal Server*" Registry.registry_value_name="fDenyTSConnections" Registry.registry_value_data="0" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has @"\Control\Terminal Server"
+| where RegistryValueName =~ "fDenyTSConnections"
+| where RegistryValueData == "0"
+| where InitiatingProcessFileName !in~ ("SystemSettings.exe","ServerManager.exe","mmc.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### LockBit payload execution via PsExec service (PsExecSvc.exe → 1.exe/LBB.exe)
+
+`UC_9_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="PsExecSvc.exe" OR Processes.process_name IN ("1.exe","LBB.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("reg.exe","cmd.exe","netsh.exe","powershell.exe","pwsh.exe")
-| where (ProcessCommandLine has "fDenyTSConnections" and ProcessCommandLine has_any ("/d 0","REG_DWORD"))
-    or (ProcessCommandLine has_all ("advfirewall","Remote Desktop"))
-    or (ProcessCommandLine has_all ("netsh","firewall","3389"))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "PsExecSvc.exe"
+    or FileName in~ ("1.exe","LBB.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Potato SeImpersonate privilege-escalation tools (GodPotato/SweetPotato/BadPotato)
+### Potato privilege-escalation tooling (GodPotato / SweetPotato / BadPotato)
 
-`UC_7_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="*potato*.exe" OR Processes.process="*GodPotato*" OR Processes.process="*SweetPotato*" OR Processes.process="*BadPotato*" OR Processes.process="*JuicyPotato*" OR Processes.process="*RoguePotato*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("GodPotato.exe","SweetPotato.exe","BadPotato.exe") OR Processes.process="*GodPotato*" OR Processes.process="*SweetPotato*" OR Processes.process="*BadPotato*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_guid | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where AccountName !endswith "$"
-| where FileName matches regex @"(?i)(god|sweet|bad|juicy|rogue|rotten|remote|multi|hot|lonely)potato\d*\.exe$"
-    or ProcessCommandLine matches regex @"(?i)\b(god|sweet|bad|juicy|rogue|rotten|remote|multi)potato\b"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, ProcessIntegrityLevel, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(30d)
+| where FileName has_any ("GodPotato","SweetPotato","BadPotato")
+    or ProcessCommandLine has_any ("GodPotato","SweetPotato","BadPotato")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, ProcessIntegrityLevel
 | order by Timestamp desc
 ```
 
-### AnyDesk unattended install / password-set and AnyDesk spawning LOLBins (DragonForce delivery)
+### AnyDesk silent/unattended install used for DragonForce access
 
-`UC_7_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_9_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="anydesk.exe" AND (Processes.process="*--install*" OR Processes.process="*--set-password*" OR Processes.process="*--silent*" OR Processes.process="*--start-with-win*")) OR (Processes.parent_process_name="anydesk.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","reg.exe","net.exe","net1.exe")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="AnyDesk.exe" (Processes.process="*--install*" OR Processes.process="*--silent*" OR Processes.process="*--start-with-win*" OR Processes.process="*--set-password*") by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_guid | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where AccountName !endswith "$"
-| where (FileName =~ "AnyDesk.exe" and ProcessCommandLine has_any ("--install","--set-password","--silent","--start-with-win","--get-id"))
-    or (InitiatingProcessFileName =~ "AnyDesk.exe" and FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","reg.exe","net.exe","net1.exe"))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| where Timestamp > ago(30d)
+| where FileName =~ "AnyDesk.exe"
+| where ProcessCommandLine has_any ("--install","--silent","--start-with-win","--set-password","--get-id")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
-```
-
-### Python keylogger executed by a non-developer account (insider, Case 03)
-
-`UC_7_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","pythonw.exe","py.exe") AND (Processes.process="*pynput*" OR Processes.process="*pyautogui*" OR Processes.process="*keyboard*" OR Processes.process="*keylog*" OR Processes.process="*GetAsyncKeyState*" OR Processes.process="*SetWindowsHookEx*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let Baseline = DeviceProcessEvents
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where FileName in~ ("python.exe","pythonw.exe","py.exe")
-    | summarize by AccountName;
-DeviceProcessEvents
-| where Timestamp > ago(1d)
-| where AccountName !endswith "$"
-| where FileName in~ ("python.exe","pythonw.exe","py.exe")
-| where ProcessCommandLine has_any ("pynput","pyautogui","keyboard","keylog","GetAsyncKeyState","SetWindowsHookEx")
-| join kind=leftanti Baseline on AccountName
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### LockBit/DragonForce ransom-note fan-out across many directories (mass encryption)
-
-`UC_7_13` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(Filesystem.file_path) as noteFolders count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") AND (Filesystem.file_name="*.README.txt" OR Filesystem.file_name="*readme.txt" OR Filesystem.file_name="*RESTORE*FILES*") by Filesystem.dest Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where noteFolders >= 15 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(3d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where InitiatingProcessAccountName !endswith "$"
-| where FileName endswith ".README.txt" or FileName endswith "readme.txt" or FileName matches regex @"(?i)restore.*files.*\.(txt|hta)"
-| summarize NoteFiles = dcount(FolderPath), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleNote = any(strcat(FolderPath, "\\", FileName)) by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, FileName
-| where NoteFiles >= 15   // same-named ransom note fanned across >=15 distinct dirs = mass encryption
-| order by NoteFiles desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -462,7 +430,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An analysis of incidents at Brazilian educational institutions
 
-`UC_7_8` · phase: **exploit** · confidence: **High**
+`UC_9_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -531,4 +499,4 @@ DeviceRegistryEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

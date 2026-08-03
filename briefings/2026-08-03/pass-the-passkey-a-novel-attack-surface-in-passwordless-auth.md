@@ -46,10 +46,8 @@ This article analyzes new attack classes against passwordless authentication, fo
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1556** — Modify Authentication Process
-- **T1098** — Account Manipulation
+- **T1217** — Browser Information Discovery
+- **T1552.004** — Private Keys
 
 ## Kill chain phases observed
 
@@ -57,45 +55,59 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Non-Chrome process accessing Google Password Manager passkey Sync Data LevelDB store
+### Non-Chrome process reads Google Password Manager synced-passkey store (Sync Data\LevelDB)
 
-`UC_10_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_12_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Google\\Chrome\\User Data\\*Sync Data*" NOT Filesystem.process_name IN ("chrome.exe","GoogleUpdate.exe","updater.exe","elevation_service.exe","google_crashpad_handler.exe","software_reporter_tool.exe") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Google\\Chrome\\User Data*Sync Data\\LevelDB*" AND NOT Filesystem.process_name="chrome.exe" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | where NOT process_name IN ("MsMpEng.exe","MsSense.exe","SearchIndexer.exe","SearchProtocolHost.exe","GoogleUpdate.exe") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has @"\Google\Chrome\User Data\" and FolderPath has @"\Sync Data\"
-| where InitiatingProcessFileName !in~ ("chrome.exe","google_crashpad_handler.exe","elevation_service.exe","GoogleUpdate.exe","updater.exe","software_reporter_tool.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
+union
+( DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where ProcessCommandLine has @"\Google\Chrome\User Data" and ProcessCommandLine has @"Sync Data\LevelDB"
+  | where InitiatingProcessFileName !~ "chrome.exe" and FileName !~ "chrome.exe"
+  | project Timestamp, DeviceName, AccountName, Signal="cmdline", Actor=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine, Child=FileName, ChildCmd=ProcessCommandLine, Path=ProcessCommandLine ),
+( DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where FolderPath has @"\Google\Chrome\User Data" and FolderPath has @"Sync Data\LevelDB"
+  | where InitiatingProcessFileName !~ "chrome.exe"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Signal="filewrite", Actor=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine, Child=FileName, ChildCmd="", Path=FolderPath )
+| where AccountName !endswith "$"
+| where Actor !in~ ("MsMpEng.exe","MsSense.exe","SearchIndexer.exe","SearchProtocolHost.exe","GoogleUpdate.exe")
 | order by Timestamp desc
 ```
 
-### Non-Chrome tampering with Google passkey device-identity enclave state files
+### Non-Chrome access to Chrome passkey enclave/device-key material (passkey_enclave_state)
 
-`UC_10_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="passkey_enclave_state" OR Filesystem.file_name="wrapped_identity_private_key") Filesystem.action IN ("modified","deleted","created","renamed") NOT Filesystem.process_name IN ("chrome.exe","GoogleUpdate.exe","updater.exe","elevation_service.exe","google_crashpad_handler.exe") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="passkey_enclave_state" OR Filesystem.file_name="wrapped_identity_private_key") AND NOT Filesystem.process_name="chrome.exe" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | where NOT process_name IN ("MsMpEng.exe","MsSense.exe","SearchIndexer.exe","SearchProtocolHost.exe","GoogleUpdate.exe","elevation_service.exe") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("passkey_enclave_state","wrapped_identity_private_key")
-| where ActionType in ("FileModified","FileDeleted","FileCreated","FileRenamed")
-| where InitiatingProcessFileName !in~ ("chrome.exe","elevation_service.exe","GoogleUpdate.exe","updater.exe","google_crashpad_handler.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize Events=count(), Actions=make_set(ActionType), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName
-| order by LastSeen desc
+union
+( DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where FileName in~ ("passkey_enclave_state","wrapped_identity_private_key")
+  | where FolderPath has @"\Google\Chrome\User Data"
+  | where InitiatingProcessFileName !~ "chrome.exe"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Actor=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine, Target=FolderPath, File=FileName ),
+( DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where ProcessCommandLine has_any ("passkey_enclave_state","wrapped_identity_private_key")
+  | where InitiatingProcessFileName !~ "chrome.exe" and FileName !~ "chrome.exe"
+  | project Timestamp, DeviceName, AccountName, Actor=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine, Target=ProcessCommandLine, File=FileName )
+| where AccountName !endswith "$"
+| where Actor !in~ ("MsMpEng.exe","MsSense.exe","SearchIndexer.exe","SearchProtocolHost.exe","GoogleUpdate.exe","elevation_service.exe")
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -364,7 +376,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pass the Passkey: A Novel Attack Surface in Passwordless Authentication
 
-`UC_10_7` · phase: **install** · confidence: **High**
+`UC_12_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -414,4 +426,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

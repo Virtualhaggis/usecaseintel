@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### hacktask typosquat npm package drops postinstall payload 'package-setup.js'
 
-`UC_3233_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3234_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceFileEvents
 
 ### npm postinstall executes node package-setup.js (crossenv env-var harvester)
 
-`UC_3233_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3234_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Environment-variable exfiltration to hacktask C2 (npm.hacktask.net)
 
-`UC_3233_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_3234_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -245,7 +245,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What is typosquatting and how typosquatting attacks are responsible for maliciou
 
-`UC_3233_3` · phase: **exploit** · confidence: **High**
+`UC_3234_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

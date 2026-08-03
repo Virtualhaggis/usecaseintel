@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2601 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-03
+- [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
 - [an analysis of incidents at brazilian educational institutio](./2026-08-03/an-analysis-of-incidents-at-brazilian-educational-institutio.md)
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [chinese threat actor uses leaked darksword kit to deploy gho](./2026-08-03/chinese-threat-actor-uses-leaked-darksword-kit-to-deploy-gho.md)
+- [cisa kev cve 2026 18577 n able n central authentication bypa](./2026-08-03/cisa-kev-cve-2026-18577-n-able-n-central-authentication-bypa.md)
+- [fake roblox xeno script launcher pushes infostealer rat malw](./2026-08-03/fake-roblox-xeno-script-launcher-pushes-infostealer-rat-malw.md)
 - [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
 - [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
@@ -29,7 +32,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
-- [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
 - [arch linux disables aur package adoption to stop malware flo](./2026-07-31/arch-linux-disables-aur-package-adoption-to-stop-malware-flo.md)
 - [captivecrunch midnight blizzard targets travelers worldwide ](./2026-07-31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-.md)
@@ -95,7 +97,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)
 - [ghsa critical cve 2026 64863 goshs no delete webdav move byp](./2026-07-28/ghsa-critical-cve-2026-64863-goshs-no-delete-webdav-move-byp.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
-- [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
 - [the generator can t be the validator what openai s hugging f](./2026-07-28/the-generator-can-t-be-the-validator-what-openai-s-hugging-f.md)

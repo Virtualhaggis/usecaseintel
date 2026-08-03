@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js host process spawning OS shell (Nunjucks SSTI child_process.execSync RCE)
 
-`UC_128_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_129_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Vulnerable @prompty/core package present in node_modules (GHSA-w28w-gp39-m4p6 exposure)
 
-`UC_128_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_129_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-w28w-gp39-m4p6: Prompty: Server-Side Template Injection t
 
-`UC_128_0` · phase: **exploit** · confidence: **High**
+`UC_129_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
