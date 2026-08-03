@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### BridgeHead tunneler DLL side-load (unbcl.dll / libwinpthread-1.dll) from non-system path
 
-`UC_104_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceImageLoadEvents
 
 ### NightLedger collection of Windows domain-join diagnostic log (NetSetup.log)
 
-`UC_104_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_105_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Covert relay: SOCKS5/WebSocket tunnel fan-out from dropped tunneler process
 
-`UC_104_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,7 +320,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nimbus Manticore Deploys NightLedger and Turns Victim Systems Into Covert Relays
 
-`UC_104_5` · phase: **exploit** · confidence: **High**
+`UC_105_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,372 +1,3 @@
-<article class="card" id="art-3517" data-art-slug="2019-06-17-yet-another-malicious-package-found-in-npm-targeting-cryptoc"
-  data-phases="actions,c2,exploit,install" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="windows"
-  data-uc-count="2" data-llm-uc-count="2"
-  data-search="Yet another malicious package found in npm, targeting cryptocurrency wallets Cryptocurrency wallet developer Komodo has been in the news recently as the most recent victim of an attempted cryptocurrency attack by malicious code injection via npm dependencies.  T1190 [LLM] Agama wallet C2/exfil callback to updatecheck.herokuapp.com (electron-native-notify) [LLM] Malicious npm package electron-native-notify present in node_modules">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2019-06-17-yet-another-malicious-package-found-in-npm-targeting-cryptoc" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/yet-another-malicious-package-found-in-npm-targeting-cryptocurrency-wallets/" target="_blank" rel="noopener">Yet another malicious package found in npm, targeting cryptocurrency wallets</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2019-06-17</span>
-    <span>2 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cryptocurrency wallet developer Komodo has been in the news recently as the most recent victim of an attempted cryptocurrency attack by malicious code injection via npm dependencies.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3517-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3517"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3517-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Malicious npm package electron-native-notify present in node_modules</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Agama wallet C2/exfil callback to updatecheck.herokuapp.com (electron-native-notify)</em></div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="3ccf990532" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Agama wallet C2/exfil callback to updatecheck.herokuapp.com (electron-native-notify)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3ccf990532" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts any host resolving or connecting to the hard-coded Heroku C2 used by the malicious electron-native-notify npm package bundled into Komodo&#x27;s Agama wallet. The implant GETs https://updatecheck.herokuapp.com/check to pull a second stage and then POSTs the stolen wallet seed back to the same host, so any traffic to this FQDN is a direct compromise indicator.
-
-Rationale: updatecheck.herokuapp.com is the exact hard-coded callback string named in the article and confirmed verbatim by the official npm security blog and The Register — a single-purpose attacker FQDN with effectively zero legitimate use, making any resolution/connection a true positive.
-
-Cross-checked against:
-  • https://blog.npmjs.org/post/185397814280/plot-to-steal-cryptocurrency-foiled-by-the-npm
-  • https://www.theregister.com/2019/06/07/komodo_npm_wallets/
-  • https://security.snyk.io/vuln/SNYK-JS-ELECTRONNATIVENOTIFY-174928</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher or threat-intel analyst intentionally detonating/sandboxing the sample and beaconing the live domain</li><li>A defensive tool replaying the IOC list against the host for validation</li><li>Heroku-hosted internal tooling coincidentally sharing the apex (will NOT match — the subdomain is specific)</li><li>Proxy log replay/re-ingestion creating duplicate historical hits</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess making the request — expect an Electron/Node process (Agama wallet, electron.exe, node.exe). Confirm the host ever ran the Agama wallet or any project depending on electron-native-notify. 2) Contain: network-isolate the host and block updatecheck.herokuapp.com at proxy/DNS; treat any crypto wallet seed/private keys on that host as compromised and rotate/move funds immediately. 3) Hunt: pivot on the host for the malicious package on disk (UC2), and sweep all developer/build machines and CI for electron-native-notify &gt;=1.1.6 in node_modules.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3517-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3517-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3517-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3517-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3517-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3517-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3517-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;updatecheck.herokuapp.com&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3517-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
-| where TimeGenerated &gt; ago(30d)
-| where DnsQuery has &quot;updatecheck.herokuapp.com&quot;
-| project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery, DnsResponseName, EventVendor, EventProduct
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3517-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Komodo Agama electron-native-notify C2 domain resolution
-id: 6f3a1c2e-8b4d-4a9e-9c1f-2d7e4b5a6c10
-description: Detects DNS resolution of updatecheck.herokuapp.com, the hard-coded C2/exfil endpoint of the malicious electron-native-notify npm package.
-references:
-  - https://snyk.io/blog/yet-another-malicious-package-found-in-npm-targeting-cryptocurrency-wallets/
-  - https://blog.npmjs.org/post/185397814280/plot-to-steal-cryptocurrency-foiled-by-the-npm
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1071.001
-  - attack.t1567
-  - attack.t1195.001
-logsource:
-  category: dns
-detection:
-  selection:
-    query|contains: &#x27;updatecheck.herokuapp.com&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3517-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon (@EventID:22 OR @EventID:3) (@QueryName:*updatecheck.herokuapp.com* OR @DestinationHostname:*updatecheck.herokuapp.com*)</code></pre></div>
-    <div class="tab-content" id="art-3517-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/updatecheck\.herokuapp\.com/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3517-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3517-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3517-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3517-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;updatecheck.herokuapp.com&quot; OR DNS.query=&quot;*.updatecheck.herokuapp.com&quot; by DNS.src DNS.query DNS.answer index sourcetype | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3517-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query=&quot;updatecheck.herokuapp.com&quot; OR DNS.query=&quot;*.updatecheck.herokuapp.com&quot; by DNS.src DNS.query DNS.answer index sourcetype | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad33ac41a4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Malicious npm package electron-native-notify present in node_modules</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad33ac41a4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the filesystem footprint of the trojanised electron-native-notify package (v1.1.6 / v1.2.0) inside any node_modules tree on developer, build, or CI hosts. This is the supply-chain install artifact for the Komodo Agama wallet compromise and flags machines that pulled the dependency before npm purged it.
-
-Rationale: electron-native-notify is the exact package name disclosed in the article and tracked in Snyk&#x27;s vuln DB (SNYK-JS-ELECTRONNATIVENOTIFY-174928); a node_modules path containing that string is a precise, attacker-specific artifact with no benign equivalent since the package was fully pulled from npm.
-
-Cross-checked against:
-  • https://security.snyk.io/vuln/SNYK-JS-ELECTRONNATIVENOTIFY-174928
-  • https://blog.npmjs.org/post/185397814280/plot-to-steal-cryptocurrency-foiled-by-the-npm</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security team intentionally staging the malicious package for analysis in a sandbox/test repo</li><li>Old archived project backups or VM images being indexed by the EDR that predate the npm purge</li><li>A vulnerability-scanner test fixture deliberately containing the package name</li><li>Forensic image mounted on an analyst workstation triggering file telemetry</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the package version on disk (check package.json/version — 1.1.6 and 1.2.0 are malicious; &lt;=1.1.5 is clean) and whether the host built or ran the resulting Electron app. 2) Contain: remove/quarantine the package, rebuild the project from a clean lockfile pinning a safe version, and isolate any host that executed the built wallet binary. 3) Hunt: correlate with UC1 (C2 callback to updatecheck.herokuapp.com) on the same host, and sweep all CI/build agents and developer endpoints for the package and for any cryptocurrency wallet artifacts that may have been exfiltrated.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3517-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3517-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3517-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3517-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3517-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3517-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3517-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(90d)
-| where FolderPath has &quot;node_modules&quot; and FolderPath has &quot;electron-native-notify&quot;
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3517-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(90d)
-| where TargetFilePath has &quot;node_modules&quot; and TargetFilePath has &quot;electron-native-notify&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3517-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious electron-native-notify package written to node_modules
-id: 2b9d4e71-5c3a-49f6-8e2b-7a1c0d3f4b21
-description: Detects creation of files under a node_modules/electron-native-notify path, the install artifact of the malicious npm package used in the Komodo Agama wallet compromise.
-references:
-  - https://snyk.io/blog/yet-another-malicious-package-found-in-npm-targeting-cryptocurrency-wallets/
-  - https://security.snyk.io/vuln/SNYK-JS-ELECTRONNATIVENOTIFY-174928
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.t1195.001
-  - attack.t1059.007
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|contains|all:
-      - &#x27;node_modules&#x27;
-      - &#x27;electron-native-notify&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3517-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:*node_modules*electron-native-notify* OR @TargetFilename:*node_modules*Electron-Native-Notify*)</code></pre></div>
-    <div class="tab-content" id="art-3517-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/node_modules.*electron-native-notify/i | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3517-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3517-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3517-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3517-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*node_modules*electron-native-notify*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3517-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*node_modules*electron-native-notify*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3521" data-art-slug="2019-06-04-npm-passes-the-1-millionth-package-milestone-what-can-we-lea"
-  data-phases="actions,c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="npm passes the 1 millionth package milestone! What can we learn? June 4th is a historic date: it&#x27;s the date that the millionth package was indexed into the npm registry. npm is a package manager for JavaScript packages. The core component of npm is its public registry, hosting JavaScript packages that can be accessed by the npm client to build JavaScript applications.  T1190 Article-specific behavioural hunt — npm passes the 1 millionth package milestone! What can we learn?">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2019-06-04-npm-passes-the-1-millionth-package-milestone-what-can-we-lea" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/npm-passes-the-1-millionth-package-milestone-what-can-we-learn/" target="_blank" rel="noopener">npm passes the 1 millionth package milestone! What can we learn?</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2019-06-04</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">June 4th is a historic date: it&#x27;s the date that the millionth package was indexed into the npm registry. npm is a package manager for JavaScript packages. The core component of npm is its public registry, hosting JavaScript packages that can be accessed by the npm client to build JavaScript applications.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3521-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3521"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3521-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — npm passes the 1 millionth package milestone! What can we learn?</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="79f8403f1c" data-platforms="def,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — npm passes the 1 millionth package milestone! What can we learn?</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="79f8403f1c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3521-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3521-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3521-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3521-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — npm passes the 1 millionth package milestone! What can we learn?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3521-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — npm passes the 1 millionth package milestone! What can we learn?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3521-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3521-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3521-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3521-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — npm passes the 1 millionth package milestone! What can we learn? ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3521-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — npm passes the 1 millionth package milestone! What can we learn? ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3523" data-art-slug="2019-05-27-java-top-10-security-vulnerabilities-disclosed-2019-list"
   data-phases="actions,c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -5239,6 +4870,346 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre><pre class="spl-mode-body" id="art-3580-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk CLI drops support for Node.js 4 (Argon) ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3582" data-art-slug="2019-01-04-snyk-your-next-career-move"
+  data-phases="c2,exploit,install" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Snyk - Your Next Career Move! Last week, Business Insider posted their annual list oftop promising enterprise startups that are poised for great success in 2019, and we are greatful to have been included. While the article focusses on valuation and investment, we’d like to take this opportunity to tell you a bit more about other aspects of Snyk in case you’re considering a career move in 2019. This could be the one New Year’s resolution that will stick!  T1190 Article-specific behavioural hunt — Snyk - Your Next Career Move!">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2019-01-04-snyk-your-next-career-move" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyk-your-next-career-move/" target="_blank" rel="noopener">Snyk - Your Next Career Move!</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-01-04</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>1 kill-chain phase detected</span>
+  </div>
+  <p class="summary">Last week, Business Insider posted their annual list oftop promising enterprise startups that are poised for great success in 2019, and we are greatful to have been included. While the article focusses on valuation and investment, we’d like to take this opportunity to tell you a bit more about other aspects of Snyk in case you’re considering a career move in 2019. This could be the one New Year’s resolution that will stick!</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3582-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3582"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3582-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Snyk - Your Next Career Move!</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6783fce454" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Snyk - Your Next Career Move!</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6783fce454" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3582-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3582-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3582-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3582-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk - Your Next Career Move!
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3582-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Snyk - Your Next Career Move!
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3582-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3582-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3582-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3582-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk - Your Next Career Move! ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3582-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk - Your Next Career Move! ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3584" data-art-slug="2018-12-31-2018-year-in-review"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="2018 Year in Review Snyk&#x27;s Liran Tal looks back at the year 2018 in developer security.  T1190 Article-specific behavioural hunt — 2018 Year in Review">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2018-12-31-2018-year-in-review" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/2018-year-in-review/" target="_blank" rel="noopener">2018 Year in Review</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2018-12-31</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Snyk&#x27;s Liran Tal looks back at the year 2018 in developer security.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3584-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3584"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3584-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — 2018 Year in Review</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="a211848f4f" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — 2018 Year in Review</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a211848f4f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3584-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3584-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3584-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3584-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — 2018 Year in Review
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3584-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — 2018 Year in Review
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3584-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3584-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3584-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3584-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — 2018 Year in Review ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3584-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — 2018 Year in Review ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;node.js&quot;))

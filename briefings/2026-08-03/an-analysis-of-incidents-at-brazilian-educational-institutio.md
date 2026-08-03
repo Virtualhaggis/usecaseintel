@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### RDP enablement via fDenyTSConnections registry set to 0 (ransomware EDR-kill batch)
 
-`UC_0_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceRegistryEvents
 
 ### Potato-family privilege escalation (GodPotato/SweetPotato/BadPotato) execution
 
-`UC_0_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### LockBit payload (LBB.exe / 1.EXE) deployed via PsExec service PSEXESVC.exe
 
-`UC_0_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### AnyDesk unattended-access install abused for DragonForce remote access
 
-`UC_0_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -429,7 +429,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An analysis of incidents at Brazilian educational institutions
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_3_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

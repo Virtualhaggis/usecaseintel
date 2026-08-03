@@ -41,10 +41,10 @@ Attack surface management platform Censys said it identified the threat actor ru
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1571** — Non-Standard Port
 - **T1041** — Exfiltration Over C2 Channel
 - **T1189** — Drive-by Compromise
-- **T1203** — Exploitation for Client Execution
+- **T1608.004** — Stage Capabilities: Drive-by Target
 
 ## Kill chain phases observed
 
@@ -52,41 +52,40 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Enterprise egress to DarkSword/GHOSTBLADE exploit-kit & C2 panel infrastructure
+### Outbound connection to DarkSword/GHOSTBLADE panel & C2 infrastructure (Censys IOC set)
 
-`UC_2_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let DarkSwordInfra = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (DarkSwordInfra)
+| where RemoteIP in ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### DarkSword watering-hole staging & GHOSTBLADE exfil URIs on operator infrastructure
+### Browser access to fake Apple ID / AWS sign-in decoys on DarkSword watering-hole hosts
 
-`UC_2_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") AND (Web.url="*frame.html*" OR Web.url="*rce_loader.js*" OR Web.url="*/upload*" OR Web.url="*/stats*") by Web.src Web.dest_ip Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest in ("103.106.190.217","38.181.52.95") by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.site | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let DarkSwordInfra = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (DarkSwordInfra)
-| where RemoteUrl has_any ("frame.html","rce_loader.js","/upload","/stats")
+| where RemoteIP in ("103.106.190.217","38.181.52.95")
+| where RemotePort in (443, 80)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```

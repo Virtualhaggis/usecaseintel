@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2601 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,6 +13,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [chinese threat actor uses leaked darksword kit to deploy gho](./2026-08-03/chinese-threat-actor-uses-leaked-darksword-kit-to-deploy-gho.md)
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
+- [inside the underground business of the android btmob rat mal](./2026-08-03/inside-the-underground-business-of-the-android-btmob-rat-mal.md)
 - [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 - [pnld breach exposes u k police and government contact detail](./2026-08-03/pnld-breach-exposes-u-k-police-and-government-contact-detail.md)
@@ -46,7 +47,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-30
 - [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
-- [amazon links debug chalk npm supply chain attacks to north k](./2026-07-30/amazon-links-debug-chalk-npm-supply-chain-attacks-to-north-k.md)
 - [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
@@ -57,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
-- [jetbrains warns of critical teamcity remote code execution f](./2026-07-30/jetbrains-warns-of-critical-teamcity-remote-code-execution-f.md)
 - [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
@@ -89,7 +88,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
 - [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
-- [critical teamcity flaw could let attackers run os commands w](./2026-07-28/critical-teamcity-flaw-could-let-attackers-run-os-commands-w.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ghsa critical cve 2026 54658 hypequery clickhouse has sql in](./2026-07-28/ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in.md)
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)

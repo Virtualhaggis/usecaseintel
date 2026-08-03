@@ -30,9 +30,9 @@ The critical issue, tracked as CVE-2026-53921 and rated 9.8 on CVSS 3.1 in OpenW
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1046** — Network Service Scanning
+- **T1046** — Network Service Discovery
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
@@ -40,42 +40,46 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inbound DHCPv6 to odhcpd (UDP 547) from non-link-local source — CVE-2026-53921 exploit reach
+### Off-link unicast DHCPv6 REQUEST/SOLICIT to odhcpd UDP/547 (CVE-2026-53921)
 
-`UC_103_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count as conn_count dc(All_Traffic.dest) as target_count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_port=547 by All_Traffic.src
-| `drop_dm_object_name("All_Traffic")`
-| where NOT match(src,"(?i)^fe80")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - conn_count
-```
-
-### LuCI luci-app-commands / ddns command injection with shell metacharacters — root RCE
-
-`UC_103_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method from datamodel=Web.Web where (Web.url="*luci/command/*" OR Web.url="*admin/system/commands*" OR Web.url="*ddns_dateformat=*" OR Web.url="*keytype=*") by Web.src Web.dest
-| `drop_dm_object_name("Web")`
-| where match(url,"(?i)(%7c|\||%3b|;|%60|`|\$\(|%24%28)")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_port=547 by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| where NOT cidrmatch("fe80::/10", src_ip) AND NOT cidrmatch("ff00::/8", src_ip)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 | sort - count
 ```
 
-### cgi-io path traversal reading root files — CVE-2026-62947
+### odhcpd (root) spawning shell or network fetch — DHCPv6 RCE payload (CVE-2026-53921)
 
-`UC_103_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_104_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method from datamodel=Web.Web where Web.url="*cgi-io*" by Web.src Web.dest
-| `drop_dm_object_name("Web")`
-| where match(url,"(?i)(\.\./|%2e%2e|/etc/(shadow|passwd|config)|%2fetc%2f)")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=odhcpd by Processes.dest Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where (process_name IN ("sh","ash","bash","busybox","wget","curl","nc","telnetd")) AND match(process, "(?i)(-c|wget|curl|/tmp/|/dev/tcp|mkfifo|telnetd|nc\s)")
+| search NOT process="*odhcpd-update*" NOT process="*hotplug*"
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
+```
+
+### LuCI web daemon (uhttpd/rpcd) spawning shell with injection metacharacters
+
+`UC_104_8` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=uhttpd OR Processes.parent_process_name=rpcd OR Processes.parent_process_name=cgi-io) Processes.process_name IN ("sh","ash","bash","busybox") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(process, "[|`;]|\$\(|&&|\.\./|ddns_dateformat|keytype")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 | sort - count
 ```
 

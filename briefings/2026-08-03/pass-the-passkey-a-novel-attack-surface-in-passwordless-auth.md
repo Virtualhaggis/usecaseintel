@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Non-Chrome process reading Google passkey stores (Sync Data LevelDB / passkey_enclave_state)
 
-`UC_3_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_6_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### Chrome process memory access to extract passkey Security Domain Secret (Golden Pass-ta-key)
 
-`UC_3_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -95,7 +95,7 @@ DeviceEvents
 
 ### Deletion of Chrome passkey_enclave_state to force UV re-onboarding (Silver Pass-ta-key)
 
-`UC_3_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -383,7 +383,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pass the Passkey: A Novel Attack Surface in Passwordless Authentication
 
-`UC_3_7` · phase: **install** · confidence: **High**
+`UC_6_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

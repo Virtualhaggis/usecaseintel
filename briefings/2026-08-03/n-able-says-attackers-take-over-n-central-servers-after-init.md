@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### svchost.exe masquerading in user Documents/profile folder (N-central Cloudflared dropper)
 
-`UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Cloudflare tunnel (Cloudflared) registered as a service for N-central persistence
 
-`UC_7_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceRegistryEvents
 
 ### Endpoint connection to N-able N-central attacker IPs / Synology QuickConnect C2 domains
 
-`UC_7_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_10_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### N-central Take Control agent (BASupSrvc) spawning process-enumeration on managed endpoints
 
-`UC_7_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### Exposed / unpatched N-central build vulnerable to CVE-2026-18556 / CVE-2026-18577
 
-`UC_7_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -331,7 +331,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — N-able Says Attackers Take Over N-central Servers After Initial Fix Proves Incom
 
-`UC_7_6` · phase: **install** · confidence: **High**
+`UC_10_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
