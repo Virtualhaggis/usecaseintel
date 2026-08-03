@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Velocity.js SSTI RCE payload (constructor.constructor→child_process) in HTTP request
 
-`UC_130_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_131_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js process spawning shell / recon binary (velocityjs SSTI RCE execution)
 
-`UC_130_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_131_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-7gfh-x38p-prh3: Velocity.js: Remote Code Execution via pr
 
-`UC_130_0` · phase: **exploit** · confidence: **High**
+`UC_131_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

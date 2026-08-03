@@ -41,11 +41,12 @@ Attack surface management platform Censys said it identified the threat actor ru
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
 - **T1189** — Drive-by Compromise
 - **T1203** — Exploitation for Client Execution
-- **T1041** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1571** — Non-Standard Port
+- **T1567** — Exfiltration Over Web Service
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -53,63 +54,61 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### DarkSword exploit-kit staging page/loader fetch (frame.html + rce_loader.js) on operator hosts
+### Egress to DarkSword/GHOSTBLADE exploit-panel and C2 infrastructure IPs
 
-`UC_11_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_13_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") AND (Web.url="*frame.html*" OR Web.url="*rce_loader.js*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let DarkSwordHosts = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
+let DarkSwordIPs = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (DarkSwordHosts)
-| where RemoteUrl has_any ("frame.html","rce_loader.js")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
-```
-
-### GHOSTBLADE C2 collector exfiltration to /upload and /stats on operator hosts
-
-`UC_11_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count sum(Web.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") AND (Web.url="*/upload*" OR Web.url="*/stats*") by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - bytes_out
-```
-
-**Defender KQL:**
-```kql
-let DarkSwordHosts = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (DarkSwordHosts)
-| where RemoteUrl has_any ("/upload","/stats")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
-```
-
-### Egress to DarkSword/GHOSTBLADE panel & C2 infrastructure IP watchlist
-
-`UC_11_8` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let DarkSwordC2 = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (DarkSwordC2)
-| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort), Procs=make_set(InitiatingProcessFileName) by DeviceName, RemoteIP
+| where RemoteIP in (DarkSwordIPs)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Attempts=count(), Ports=make_set(RemotePort), Urls=make_set(RemoteUrl) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, InitiatingProcessAccountName
 | order by LastSeen desc
+```
+
+### Browser web session to fake AWS-console / Apple ID DarkSword watering-hole hosts
+
+`UC_13_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112") AND Web.http_user_agent="*Mozilla*" by Web.src Web.dest_ip Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let PhishHosts = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari","arc.exe","opera.exe")
+| where RemoteIP in (PhishHosts)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Proxy hunt for DarkSword operator Telegram contact channel t.me/YATA0000
+
+`UC_13_8` · phase: **c2** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*t.me/YATA0000*" OR Web.url="*/YATA0000*" by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "YATA0000" or RemoteUrl has_all ("t.me","YATA0000")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -333,4 +332,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

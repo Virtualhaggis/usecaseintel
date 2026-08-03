@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### IPMI v2.0 RAKP pre-auth hash disclosure exposure (CVE-2013-4786) on UDP 623
 
-`UC_106_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_107_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### Internet/internal IPMI UDP 623 scanning of BMC estate (CVE-2013-4786 recon)
 
-`UC_106_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_107_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### IPMI authentication success on BMC from unusual source (cracked factory/wordlist credential use)
 
-`UC_106_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_107_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### BMC Serial-Over-LAN / power / boot command activity after IPMI compromise
 
-`UC_106_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_107_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ sourcetype=syslog ("SOL" OR "Serial Over LAN" OR "chassis power" OR "power cycle
 
 ### BMC firmware update or admin-account modification (out-of-band persistence)
 
-`UC_106_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_107_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

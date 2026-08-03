@@ -11,38 +11,18 @@ By Bill Toulas
 August 3, 2026
 03:25 PM
 0 
-
-
 Fake Xeno Executor installers are infecting unsuspecting Roblox players with malware that provides remote access and steals sensitive information.
-
-
 Xeno Executor is a popular Roblox utility for running scripts that players can use to automate actions or run custom code on the platform, including cheats.
-
-
-The tool isn’t an official part of the game, so the Roblox client periodica…
+The tool isn’t an official part of the game, so the Roblox client periodically blocks e…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `79.110.49.15`
-- **Domain (defanged):** `powercat.dog`
-- **Domain (defanged):** `ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `alpha.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `beta.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `charlie.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `hotel.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `juliett.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `kilo.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `lima.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **Domain (defanged):** `oscar.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`
-- **SHA256:** `A9B4823A1B2C0702A1EB8A1BF18DB2D9C9604D2D2DD98A99F1D388BF7CFA71E3`
-- **SHA256:** `A33A96CBD92EEF15116C0C1DCAA8FEB6EEE28A818046AC9576054183E920EEB5`
-- **SHA256:** `C0C3A0331B57D10D23A172A79BDF13AB066255DE41774E5A19DD8A8E8446E1FA`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1005** — Data from Local System
@@ -68,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Browser-delivered fake 'Xeno' Roblox executor archive/binary written to disk
 
-`UC_0_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +69,7 @@ DeviceFileEvents
 
 ### Decoy xeno.exe spawns Java loader / decompiler.exe (Powercat first stage)
 
-`UC_0_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +89,7 @@ DeviceProcessEvents
 
 ### Powercat obfuscated Java loader invocation (java -cp jd-gui.jar IllllIIllll)
 
-`UC_0_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +109,7 @@ DeviceProcessEvents
 
 ### Powercat C2 beacon to powercat.dog and NATO-phonetic *.xyz subdomains
 
-`UC_0_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +127,7 @@ DeviceNetworkEvents
 
 ### Powercat host-fingerprint registry key HKCU\Software\Beep written by loader
 
-`UC_0_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +146,7 @@ DeviceRegistryEvents
 
 ### Powercat payload staging under %LOCALAPPDATA%\Xeno\workspace and GameDVR-masqueraded DLLs
 
-`UC_0_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +290,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Roblox Xeno script launcher pushes infostealer, RAT malware
 
-`UC_0_6` · phase: **exploit** · confidence: **High**
+`UC_2_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -357,17 +337,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `79.110.49.15`, `powercat.dog`, `ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`, `alpha.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`, `beta.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`, `charlie.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`, `hotel.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz`, `juliett.ce953a0eb08246617b7f849486c4b26a7af37e9d2e8f0e13b3ae1bf0da8a70a.xyz` _(+3 more)_
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `A9B4823A1B2C0702A1EB8A1BF18DB2D9C9604D2D2DD98A99F1D388BF7CFA71E3`, `A33A96CBD92EEF15116C0C1DCAA8FEB6EEE28A818046AC9576054183E920EEB5`, `C0C3A0331B57D10D23A172A79BDF13AB066255DE41774E5A19DD8A8E8446E1FA`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

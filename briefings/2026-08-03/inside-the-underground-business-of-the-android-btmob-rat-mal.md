@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### BTMOB Android RAT C2 beacon to server.yaarsa.com / 78.135.93.123
 
-`UC_7_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### BTMOB RAT C2 URI path /yaarsa/private/ and WebSocket /con endpoint
 
-`UC_7_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_9_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### BTMOB RAT APK sample hash observed on managed endpoint
 
-`UC_7_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_9_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -244,7 +244,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside the Underground Business of the Android BTMOB RAT malware
 
-`UC_7_3` · phase: **exploit** · confidence: **High**
+`UC_9_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

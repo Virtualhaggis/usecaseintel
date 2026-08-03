@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### HollowFrame LNK delivery: cmd.exe writes payload, certutil -decode to .cmd, PowerShell fetch
 
-`UC_39_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_41_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### HollowFrame staging server download (PowerShell fetch from 2.26.252.84)
 
-`UC_39_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_41_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### HollowFrame DLL side-load: python.exe loading rogue python311.dll from user-writable path
 
-`UC_39_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_41_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -108,7 +108,7 @@ DeviceImageLoadEvents
 
 ### Matryoshka side-load: version.dll / wtsapi32.dll loaded from outside System32
 
-`UC_39_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_41_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -123,7 +123,7 @@ DeviceImageLoadEvents
 
 ### Matryoshka HTTP C2 beacon to 45.158.196.184:8888
 
-`UC_39_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### Matryoshka GitHub C2: non-browser process polling api.github.com / raw.githubusercontent.com
 
-`UC_39_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -480,7 +480,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — HollowFrame Loader Deploys Matryoshka Backdoor in Spear-Phishing Attack on Law F
 
-`UC_39_10` · phase: **exploit** · confidence: **High**
+`UC_41_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
