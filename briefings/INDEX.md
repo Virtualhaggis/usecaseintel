@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2605 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -57,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [the attacker never sleeps neither can your testing](./2026-07-30/the-attacker-never-sleeps-neither-can-your-testing.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
-- [vmware fixes three critical flaws allowing auth bypass vm es](./2026-07-30/vmware-fixes-three-critical-flaws-allowing-auth-bypass-vm-es.md)
 - [what s new in microsoft security july 2026](./2026-07-30/what-s-new-in-microsoft-security-july-2026.md)
 - [you were onto something with it s the climb miley](./2026-07-30/you-were-onto-something-with-it-s-the-climb-miley.md)
 

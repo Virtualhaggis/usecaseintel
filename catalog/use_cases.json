@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "generated": "2026-08-02T22:25:07Z",
-  "count": 228,
+  "generated": "2026-08-03T00:32:11Z",
+  "count": 235,
   "use_cases": [
     {
       "id": "UC_BEACONING",
@@ -3950,6 +3950,42 @@
       "defender_kql": "let LookbackDays = 7d;\nlet WindowSec = 300;\nlet PkgMgr = dynamic([\"npm.exe\",\"npm\",\"pnpm.exe\",\"pnpm\",\"yarn.exe\",\"yarn\",\"pip.exe\",\"pip\",\"pip3.exe\",\"pip3\",\"uv.exe\",\"uv\",\"poetry.exe\",\"poetry\",\"nuget.exe\",\"dotnet.exe\",\"code.exe\",\"cursor.exe\"]);\nlet ScriptHosts = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3.exe\",\"python3\",\"pwsh.exe\",\"powershell.exe\",\"bash\",\"sh\",\"dash\",\"curl.exe\",\"wget.exe\",\"cmd.exe\"]);\nlet RegistryAllow = dynamic([\"registry.npmjs.org\",\"pypi.org\",\"files.pythonhosted.org\",\"registry.yarnpkg.com\",\"api.nuget.org\",\"nuget.org\",\"marketplace.visualstudio.com\",\"open-vsx.org\",\"github.com\",\"raw.githubusercontent.com\",\"ghcr.io\",\"go.dev\",\"crates.io\",\"rubygems.org\"]);\nlet Installs = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName in~ (PkgMgr)\n    | where ProcessCommandLine has_any (\"install\",\" add \",\"restore\",\"--install-extension\",\" ci \")\n    | where AccountName !endswith \"$\"\n    | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,\n              PkgMgr = FileName, PkgCmd = ProcessCommandLine;\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (ScriptHosts)\n         or InitiatingProcessParentFileName in~ (PkgMgr)\n    | extend HostOnly = tolower(tostring(split(RemoteUrl, \"/\")[0]))\n    | where not(HostOnly in~ (RegistryAllow))\n         and not(HostOnly endswith \".npmjs.org\")\n         and not(HostOnly endswith \".pypi.org\")\n         and not(HostOnly endswith \".pythonhosted.org\")\n         and not(HostOnly endswith \".yarnpkg.com\")\n         and not(HostOnly endswith \".nuget.org\")\n         and not(HostOnly endswith \".visualstudio.com\")\n         and not(HostOnly endswith \".github.com\")\n         and not(HostOnly endswith \".githubusercontent.com\")\n    | project EgressTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ChildProc = InitiatingProcessFileName,\n              ChildCmd  = InitiatingProcessCommandLine,\n              ChildParent = InitiatingProcessParentFileName,\n              RemoteUrl, RemoteIP, RemotePort;\nInstalls\n| join kind=inner Egress on DeviceId, AccountName\n| where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)\n| extend DelaySec = datetime_diff('second', EgressTime, InstallTime)\n| summarize InstallTime = min(InstallTime),\n            EgressTime = min(EgressTime),\n            DelaySec   = min(DelaySec),\n            RemoteHits = dcount(strcat(RemoteIP,\":\",tostring(RemotePort))),\n            SampleRemoteUrl = any(RemoteUrl),\n            SampleRemoteIP  = any(RemoteIP),\n            SamplePkgCmd    = any(PkgCmd),\n            SampleChildCmd  = any(ChildCmd)\n         by DeviceName, AccountName, PkgMgr, ChildProc, ChildParent\n| order by EgressTime desc"
     },
     {
+      "id": "UC_WEEKLY_DEV_CI_TOOLCHAIN_CREDENTIAL_READ_EGRESS_TO_NON_CAN",
+      "title": "[WEEKLY] Dev/CI Toolchain Credential Read + Egress to Non-Canonical Registry",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Detects a developer/CI toolchain process (node, npm, npx, yarn, pnpm, cosign, skopeo, docker, oras) reading or writing a registry-credential file (~/.docker/config.json, ~/.config/containers/auth.json, ~/.npmrc, ~/.aws/credentials) and, within a five-minute window on the same host, opening a TLS/registry connection to an OCI/artifact registry that is NOT on the canonical-registry allowlist. This fortnight it is driven by CVE-2026-59891 (\"Credential confusion in @sigstore/oci can leak registry credentials to an attacker-controlled registry\"), where getRegistryCredentials() substring-matches Docker auth keys and hands credentials to a lookalike registry host, and by the broader dev-supply-chain exposure theme in \"The Attacker Never Sleeps, Neither Can Your Testing,\" \"The Generator Can't Be the Validator (OpenAI/Hugging Face)\" and the Gitea token-scope bypass CVE-2026-58443. It spans the credential-access and exfiltration kill-chain stages: read secret material from disk, then ship it (or authenticate with it) to attacker infrastructure over an alternative protocol. It FIRES when a build/attestation tool touches a credential store and then egresses to a registry host outside the maintained canonical set (private ECR/GCR/GHCR/Harbor/Nexus/Artifactory endpoints that don't match your allowlist land here as first-seen). It does NOT fire on normal pushes/pulls to canonical registries (docker.io, ghcr.io, registry.npmjs.org, gcr.io, quay.io, *.dkr.ecr.<region>.amazonaws.com allowlisted, mcr.microsoft.com), nor on a credential read with no subsequent non-canonical egress inside the window.\n\nRationale: Every article in scope converges on dev/CI trust abuse; the sharpest shared, multi-platform-detectable signal is the CVE-2026-59891 chain of a build tool reading a registry-credential store then egressing to a registry host outside the canonical set \u2014 a technique-level pattern that survives IOC rotation because it keys on tool+cred-file+non-canonical-destination, not on any specific attacker registry.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1552.001",
+          "name": "Unsecured Credentials: Credentials In Files"
+        },
+        {
+          "id": "T1048",
+          "name": "Exfiltration Over Alternative Protocol"
+        },
+        {
+          "id": "T1195.001",
+          "name": "Supply Chain Compromise: Compromise Software Dependencies and Development Tools"
+        },
+        {
+          "id": "T1550.001",
+          "name": "Use Alternate Authentication Material: Application Access Token"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Filesystem",
+        "Network_Traffic.All_Traffic",
+        "Endpoint.Processes"
+      ],
+      "splunk_spl": "| tstats `summariesonly` min(_time) as cred_time values(Filesystem.file_path) as cred_files from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (\"config.json\",\"auth.json\",\".npmrc\",\"credentials\") OR Filesystem.file_path IN (\"*/.docker/config.json\",\"*\\\\.docker\\\\config.json\",\"*/.config/containers/auth.json\",\"*/.npmrc\",\"*/.aws/credentials\")) by Filesystem.dest, Filesystem.user\n| `drop_dm_object_name(Filesystem)`\n| rename dest as host\n| join type=inner host [\n    | tstats `summariesonly` min(_time) as egress_time from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (443,5000) All_Traffic.app IN (\"node\",\"npm\",\"npx\",\"yarn\",\"pnpm\",\"cosign\",\"skopeo\",\"docker\",\"oras\",\"containerd\",\"buildkitd\") by All_Traffic.src, All_Traffic.dest, All_Traffic.app\n    | `drop_dm_object_name(All_Traffic)`\n    | regex dest=\"(?i)(registry|ghcr|\\.cr\\.|dkr\\.ecr|azurecr|pkg\\.dev|harbor|nexus|artifactory)\"\n    | search NOT dest IN (\"ghcr.io\",\"docker.io\",\"index.docker.io\",\"registry-1.docker.io\",\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"gcr.io\",\"quay.io\",\"registry.k8s.io\",\"mcr.microsoft.com\",\"public.ecr.aws\")\n    | rename src as host, dest as registry, app as tool\n  ]\n| where egress_time >= cred_time AND (egress_time - cred_time) <= 300\n| eval delay_sec = egress_time - cred_time\n| convert ctime(cred_time) ctime(egress_time)\n| table host, user, cred_files, tool, registry, cred_time, egress_time, delay_sec\n| sort - egress_time",
+      "defender_kql": "let CanonicalReg = dynamic([\"ghcr.io\",\"docker.io\",\"index.docker.io\",\"registry-1.docker.io\",\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"gcr.io\",\"quay.io\",\"registry.k8s.io\",\"mcr.microsoft.com\",\"public.ecr.aws\"]);\nlet CredWrites = DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where FileName in~ (\"config.json\",\"auth.json\",\".npmrc\",\"credentials\")\n    | where FolderPath has_any (@\"\\.docker\", \"/.docker\", @\"\\.aws\", \"/.aws\", \".config/containers\", \".npmrc\")\n    | project CredTime = Timestamp, DeviceId, DeviceName, CredFile = FolderPath, CredUser = InitiatingProcessAccountName;\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemotePort in (443, 5000)\n| where InitiatingProcessFileName has_any (\"node.exe\",\"node\",\"npm.cmd\",\"npm\",\"npx.cmd\",\"yarn.exe\",\"pnpm.exe\",\"cosign.exe\",\"skopeo\",\"docker.exe\",\"oras.exe\")\n| where isnotempty(RemoteUrl)\n| where RemoteUrl matches regex @\"(?i)(registry|ghcr|\\.cr\\.|dkr\\.ecr|azurecr|pkg\\.dev|harbor|nexus|artifactory)\"\n| where not(RemoteUrl in~ (CanonicalReg))\n| join kind=inner CredWrites on DeviceId\n| where Timestamp between (CredTime .. CredTime + 5m)\n| project CredTime, EgressTime = Timestamp,\n          DelaySec = datetime_diff('second', Timestamp, CredTime),\n          DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,\n          RemoteUrl, CredFile, InitiatingProcessCommandLine\n| order by EgressTime desc"
+    },
+    {
       "id": "UC_WEEKLY_EDGE_SERVICE_POST_EXPLOITATION_CHAIN_INTERNET_FACI",
       "title": "[WEEKLY] Edge-service post-exploitation chain: internet-facing daemon \u2192 child shell or token redemption within 10 min of external request",
       "kill_chain": "actions",
@@ -4002,6 +4038,46 @@
       ],
       "splunk_spl": "| tstats summariesonly=t count as web_hits min(_time) as stage1_time max(_time) as stage1_end values(Web.uri_path) as endpoint values(Web.status) as http_status from datamodel=Web where Web.http_method IN (\"POST\",\"GET\") AND Web.status IN (200,201,202,204) by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as src_ip, dest as edge_host | where match(src_ip, \"^(?!10\\.|172\\.(1[6-9]|2[0-9]|3[01])\\.|192\\.168\\.|127\\.|169\\.254\\.).*\") | join type=inner edge_host [ | tstats summariesonly=t count as child_spawns min(_time) as stage2_time values(Processes.process) as downstream_cmd values(Processes.process_name) as downstream_proc values(Processes.parent_process_name) as edge_daemon values(Processes.user) as runas_user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"node.exe\",\"node\",\"coderd\",\"gunicorn\",\"nginx\",\"httpd\",\"panvpnd\",\"globalprotect\",\"openvpn\",\"sshd\",\"java.exe\",\"java\",\"dotnet.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"bash\",\"sh\",\"dash\",\"zsh\",\"ash\",\"wmic.exe\",\"wscript.exe\",\"cscript.exe\")) OR Processes.process IN (\"*AssumeRoleWithWebIdentity*\",\"*gitsshkey*\",\"*external-auth*\",\"*azure-instance-identity*\",\"*child_process*\",\"*execSync*\",\"*whoami*\",\"*/etc/passwd*\",\"*net user*\",\"*ipconfig*\") by Processes.dest | `drop_dm_object_name(Processes)` | rename dest as edge_host ] | where stage2_time>=stage1_time AND (stage2_time-stage1_time)<=600 | eval delay_sec=stage2_time-stage1_time, firstTime=stage1_time, lastTime=stage2_time | stats min(firstTime) as firstTime max(lastTime) as lastTime values(endpoint) as endpoints values(http_status) as http_status values(downstream_cmd) as downstream_cmds values(downstream_proc) as downstream_procs values(edge_daemon) as edge_daemons values(runas_user) as runas_user min(delay_sec) as min_delay_sec by src_ip edge_host | convert ctime(firstTime) ctime(lastTime) | sort 0 - firstTime",
       "defender_kql": "let LookbackDays = 14d;\nlet CorrelationWindow = 10m;\nlet EdgeDaemons = dynamic([\"node.exe\",\"node\",\"coderd\",\"gunicorn\",\"nginx\",\"nginx.exe\",\"httpd\",\"httpd.exe\",\"panvpnd\",\"globalprotect\",\"openvpn\",\"openvpn.exe\",\"sshd\",\"java.exe\",\"java\",\"dotnet.exe\"]);\nlet DownstreamShells = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"bash\",\"sh\",\"dash\",\"zsh\",\"ash\",\"wmic.exe\",\"wscript.exe\",\"cscript.exe\"]);\nlet DownstreamTokens = dynamic([\"AssumeRoleWithWebIdentity\",\"gitsshkey\",\"external-auth\",\"azure-instance-identity\",\"child_process\",\"execSync\"]);\nlet ReconTokens = dynamic([\"whoami\",\"/etc/passwd\",\"net user\",\"ipconfig\",\"hostname\",\"uname -a\",\"cat /etc\"]);\nlet EdgeContact =\n    DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where ActionType in~ (\"InboundConnectionAccepted\",\"ConnectionSuccess\",\"InboundConnectionEstablished\")\n    | where InitiatingProcessFileName has_any (EdgeDaemons)\n    | project Stage1Time = Timestamp, DeviceName, SourceIP = RemoteIP,\n              RemotePort, EdgeProc = InitiatingProcessFileName, EdgeCmd = InitiatingProcessCommandLine;\nlet DownstreamAction =\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName has_any (EdgeDaemons)\n    | where FileName has_any (DownstreamShells)\n        or ProcessCommandLine has_any (DownstreamTokens)\n        or ProcessCommandLine has_any (ReconTokens)\n    | where AccountName !endswith \"$\"\n    | where AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project Stage2Time = Timestamp, DeviceName, ChildImage = FileName,\n              ChildCmd = ProcessCommandLine, EdgeDaemon = InitiatingProcessFileName,\n              EdgeDaemonCmd = InitiatingProcessCommandLine, RunAs = AccountName, SHA256;\nEdgeContact\n| join kind=inner DownstreamAction on DeviceName\n| where Stage2Time between (Stage1Time .. Stage1Time + CorrelationWindow)\n| extend DelaySec = datetime_diff('second', Stage2Time, Stage1Time)\n| summarize arg_min(Stage1Time, *), MinDelaySec = min(DelaySec),\n            Endpoints = make_set(RemotePort, 10), Children = make_set(ChildImage, 10),\n            ChildCmds = make_set(ChildCmd, 10)\n            by DeviceName, SourceIP, EdgeDaemon, RunAs\n| project Stage1Time, Stage2Time, MinDelaySec, DeviceName, SourceIP, RemotePort,\n          EdgeDaemon, EdgeDaemonCmd, Children, ChildCmds, RunAs, SHA256\n| order by Stage1Time desc"
+    },
+    {
+      "id": "UC_WEEKLY_GITEA_SERVICE_ACCOUNT_POST_EXPLOITATION_GIT_GITEA_",
+      "title": "[WEEKLY] Gitea Service Account Post-Exploitation: git/gitea Spawning Interpreters or Egressing to Cloud Metadata",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Detects the host-side second stage of Gitea application exploitation: the `gitea` (or child `git`) service process spawning an interactive shell / scripting interpreter / network LOLBin, or the `gitea` process making outbound connections to cloud metadata and link-local IMDS endpoints \u2014 optionally correlated with a burst of POSTs to Gitea's sensitive HTTP API surface (diffpatch, PR-update, webhook/migration, Actions artifact signed URLs). This matters this fortnight because six critical Gitea advisories landed together: the git-hook RCE `New Gitea RCE Lets Repository Writers Plant a Git Hook to Run Shell Commands` (CVE-2026-60004) turns repo write into code execution as the service account, `CVE-2026-22874 Incomplete SSRF Protection` lets webhook/migration reach IMDS, and `CVE-2026-20896` (X-WEBAUTH-USER impersonation), `CVE-2026-56750` (remember-me token replay), `CVE-2026-58426` (artifact HMAC ambiguity) and `CVE-2026-58443` (cross-repo PR update) all abuse the same public-facing HTTP surface (T1190). It spans exploit \u2192 execution/install and actions-on-objective (SSRF credential theft / C2), because the marquee outcome is service-account command execution or metadata-credential exfiltration. It fires when the Gitea binary parents a shell or reaches 169.254.169.254-class hosts; it does NOT fire on ordinary web-UI PR/merge/clone traffic, since the alert anchors on the post-exploitation host behavior, not the (noisy) API request alone.\n\nRationale: All six advisories exploit the same public-facing Gitea HTTP surface (T1190); rather than chase each rotating endpoint/IOC, this anchors on the invariant post-exploitation outcome shared by the batch \u2014 the gitea/git service account running an interpreter (RCE, CVE-2026-60004) or the gitea process reaching cloud metadata (SSRF, CVE-2026-22874) \u2014 corroborated by anomalous access to the sensitive endpoints the other four CVEs abuse.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter"
+        },
+        {
+          "id": "T1059.004",
+          "name": "Command and Scripting Interpreter: Unix Shell"
+        },
+        {
+          "id": "T1552.005",
+          "name": "Unsecured Credentials: Cloud Instance Metadata API"
+        },
+        {
+          "id": "T1071",
+          "name": "Application Layer Protocol"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "Web",
+        "Network_Traffic.All_Traffic"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"gitea\" OR Processes.parent_process_name=\"gitea.exe\" OR Processes.parent_process_name=\"git\" OR Processes.parent_process_name=\"git.exe\") AND (Processes.process_name IN (\"sh\",\"bash\",\"dash\",\"zsh\",\"powershell.exe\",\"pwsh\",\"cmd.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"python\",\"python3\",\"perl\",\"ruby\")) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | rename dest as host | join type=left host [ | tstats `summariesonly` count as gitea_web_posts values(Web.url) as web_urls values(Web.src) as web_src from datamodel=Web where Web.http_method=POST AND (Web.url=\"*/diffpatch*\" OR Web.url=\"*/pulls/*/update*\" OR Web.url=\"*/settings/hooks*\" OR Web.url=\"*DownloadArtifact*\" OR Web.url=\"*UploadArtifact*\" OR Web.url=\"*/migrate*\") by Web.dest | `drop_dm_object_name(Web)` | rename dest as host ] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
+      "defender_kql": "let Lookback = 7d;\nlet ShellChildren = dynamic([\"sh\",\"bash\",\"dash\",\"zsh\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"python\",\"python3\",\"perl\",\"ruby\"]);\nlet MetadataIPs = dynamic([\"169.254.169.254\",\"168.63.129.16\",\"100.100.100.200\",\"64:ff9b::a9fe:a9fe\"]);\nlet ProcChain = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (\"gitea\",\"gitea.exe\",\"git\",\"git.exe\")\n    | where FileName in~ (ShellChildren)\n    | project Timestamp, DeviceName, AccountName, Signal=\"gitea_spawned_interpreter\",\n              ParentProc=InitiatingProcessFileName, ChildProc=FileName,\n              ProcessCommandLine, InitiatingProcessCommandLine, RemoteHint=\"\";\nlet SsrfEgress = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (\"gitea\",\"gitea.exe\")\n    | where RemoteIP in (MetadataIPs)\n    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Signal=\"gitea_metadata_ssrf\",\n              ParentProc=InitiatingProcessFileName, ChildProc=\"\",\n              ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessCommandLine, RemoteHint=strcat(RemoteIP,\":\",tostring(RemotePort));\nunion ProcChain, SsrfEgress\n| where AccountName !endswith \"$\"\n| order by Timestamp desc"
     },
     {
       "id": "UC_WEEKLY_INSTALL_TIME_NPM_BUN_LIFECYCLE_EXECUTION_BEACONING",
@@ -4153,6 +4229,45 @@
       ],
       "splunk_spl": "| tstats summariesonly=true count min(_time) as proc_time from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"nginx.exe\",\"nginx\",\"java.exe\",\"java\",\"node.exe\",\"node\",\"tomcat.exe\",\"EmsService.exe\",\"fmsd\",\"jboss.exe\",\"confluence\",\"atlassian-confluence\",\"forticlient.exe\")) AND (Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"bash\",\"sh\",\"python.exe\",\"python\",\"python3\",\"perl\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name(\"Processes\")` | join type=inner host [ | tstats summariesonly=true min(_time) as net_time values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest) as remote_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category=\"external\" by All_Traffic.src | `drop_dm_object_name(\"All_Traffic\")` | rename src as host ] | eval delay_sec = net_time - proc_time | where delay_sec>=0 AND delay_sec<=300 | join type=left remote_host [ | tstats summariesonly=true dc(All_Traffic.src) as baseline_hosts from datamodel=Network_Traffic.All_Traffic where earliest=-30d@d latest=-1d@d by All_Traffic.dest | rename All_Traffic.dest as remote_host ] | where isnull(baseline_hosts) OR baseline_hosts<3 | table proc_time net_time delay_sec host user parent_process_name process_name process remote_ip remote_host | sort - proc_time",
       "defender_kql": "let Lookback = 7d;\nlet WindowSec = 300;\nlet Baseline = DeviceNetworkEvents\n    | where Timestamp between (ago(30d) .. ago(1d))\n    | where RemoteIPType == \"Public\" and isnotempty(RemoteUrl)\n    | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl\n    | where BaselineHosts >= 3;     // 3 = empirical: drops one-off vendor blips while keeping novel infra\nlet ServerSpawns = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"nginx.exe\",\"nginx\",\"java.exe\",\"java\",\"node.exe\",\"node\",\"tomcat.exe\",\"emsservice.exe\",\"fmsd\",\"jboss.exe\",\"confluence\",\"forticlient.exe\",\"f5-bigip.exe\")\n    | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"bash\",\"sh\",\"python.exe\",\"python\",\"python3\",\"perl\",\"curl.exe\",\"wget.exe\")\n    | where AccountName !endswith \"$\"           // exclude machine accounts\n    | where AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFileName,\n              ChildImage = FileName,\n              ChildCmd = ProcessCommandLine,\n              ChildPGUID = tostring(ProcessUniqueId);\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId,\n              InitPGUID = tostring(InitiatingProcessId),\n              RemoteIP, RemoteUrl, RemotePort;\nServerSpawns\n| join kind=inner Egress on DeviceId, $left.ChildPGUID == $right.InitPGUID\n| extend DelaySec = datetime_diff('second', NetTime, SpawnTime)\n| where DelaySec between (0 .. WindowSec)\n| join kind=leftanti Baseline on RemoteUrl\n| project SpawnTime, NetTime, DelaySec, DeviceName, AccountName,\n          ParentImage, ChildImage, ChildCmd, RemoteIP, RemoteUrl, RemotePort\n| order by SpawnTime desc"
+    },
+    {
+      "id": "UC_WEEKLY_INTERNET_FACING_SERVICE_DAEMON_SPAWNS_SHELL_OR_ING",
+      "title": "[WEEKLY] Internet-Facing Service Daemon Spawns Shell or Ingress Tool Then Beacons Out",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Detects a long-running, internet-exposed service daemon (java/TeamCity agent, node/MCP-bridge, gitea/git, uhttpd/LuCI, nginx/php, python) spawning an OS command interpreter or ingress-transfer binary (sh/bash/cmd/powershell/curl/wget/certutil/bitsadmin/nc) and then making an outbound connection to a public IP within a 5-minute window \u2014 the post-exploitation signature shared by this fortnight's unauthenticated-RCE wave. It matters now because six critical (CVSS 9.8-10.0) flaws all landed together: CVE-2026-53921 OpenWrt DHCPv6/LuCI root RCE ('Critical OpenWrt DHCPv6 Flaw\u2026'), CVE-2026-63077 TeamCity unauth OS command exec ('Critical TeamCity Flaw\u2026'), CVE-2026-60004 Gitea git-hook RCE ('New Gitea RCE Lets Repository Writers Plant a Git Hook\u2026'), CVE-2026-59726 Ruflo MCP RufRoot RCE ('Ruflo MCP Flaw Lets Unauthenticated Attackers Run Commands\u2026'), the DEV#POPPER @joyfill npm RAT ('Two Compromised joyfill npm Packages\u2026'), and CVE-2026-67426 Flyto2 SSRF ('Flyto2 Core\u2026 callback_url SSRF'). Every IOC in those advisories rotates, but the daemon\u2192shell\u2192egress chain persists, so the UC keys on the process-lineage TTP rather than any hash or C2 host. It spans the exploit \u2192 execution \u2192 command-and-control kill-chain stages by requiring the server-parent/shell-child pairing AND a subsequent public egress. It FIRES when a web/app service account's process tree pivots to an interactive shell or downloader that then dials out; it does NOT fire on developer or CI shells launched by a human logon, on daemon-to-daemon internal traffic with no shell spawn, or on a shell spawn with no outbound follow-through.\n\nRationale: Every article describes a different unauthenticated RCE, but the shared observable is an internet-exposed service process pivoting to an OS shell/downloader and then reaching out \u2014 this UC keys on that parent-daemon\u2192shell-child\u2192public-egress lineage instead of the per-CVE IOCs that rotate weekly.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059.004",
+          "name": "Command and Scripting Interpreter: Unix Shell"
+        },
+        {
+          "id": "T1059.003",
+          "name": "Command and Scripting Interpreter: Windows Command Shell"
+        },
+        {
+          "id": "T1505.003",
+          "name": "Server Software Component: Web Shell"
+        },
+        {
+          "id": "T1105",
+          "name": "Ingress Tool Transfer"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "Network_Traffic.All_Traffic"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as command values(Processes.process_name) as child_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"java\",\"java.exe\",\"node\",\"node.exe\",\"gitea\",\"git\",\"uhttpd\",\"httpd\",\"nginx\",\"php-fpm\",\"php\",\"php-cgi.exe\",\"python\",\"python3\",\"tomcat*\",\"w3wp.exe\",\"dnsmasq\",\"odhcpd\")) AND (Processes.process_name IN (\"sh\",\"bash\",\"dash\",\"zsh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"curl\",\"curl.exe\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"nc\",\"ncat\",\"socat\",\"perl\")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.user _time span=5m\n| `drop_dm_object_name(\"Processes\")`\n| join type=inner dest [\n    | tstats `summariesonly` count as egress_conn dc(All_Traffic.dest) as egress_targets min(_time) as egress_firstTime max(_time) as egress_lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.action=allowed by All_Traffic.src\n    | `drop_dm_object_name(\"All_Traffic\")`\n    | rename src as dest\n  ]\n| where egress_lastTime >= firstTime AND egress_firstTime <= (lastTime + 300)\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`\n| table firstTime lastTime dest user parent_process_name child_process command egress_conn egress_targets\n| sort - lastTime",
+      "defender_kql": "let Window = 5m;\nlet Daemons = dynamic([\"java.exe\",\"java\",\"node.exe\",\"node\",\"gitea\",\"git.exe\",\"git\",\"httpd.exe\",\"nginx.exe\",\"w3wp.exe\",\"php-cgi.exe\",\"php.exe\",\"python.exe\",\"python3\",\"uhttpd\",\"dnsmasq\",\"tomcat.exe\"]);\nlet Shells = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"sh\",\"bash\",\"dash\",\"zsh\",\"curl.exe\",\"wget.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"nc.exe\",\"ncat.exe\"]);\nlet SpawnEvents = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName has_any (Daemons)\n    | where FileName has_any (Shells)\n    | where AccountName !endswith \"$\"           // exclude machine accounts\n    | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentProc = InitiatingProcessFileName, ChildProc = FileName,\n              ChildCmd = ProcessCommandLine;\nSpawnEvents\n| join kind=inner (\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort,\n              NetProc = InitiatingProcessFileName\n  ) on DeviceId\n| where NetTime between (SpawnTime .. SpawnTime + Window)   // egress within 5 min of shell spawn\n| project SpawnTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, SpawnTime),\n          DeviceName, AccountName, ParentProc, ChildProc, ChildCmd,\n          RemoteIP, RemotePort, NetProc\n| order by SpawnTime desc"
     },
     {
       "id": "UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL",
@@ -5290,6 +5405,80 @@
       "defender_kql": "// Best-effort hunt \u2014 DeviceNetworkEvents only sees URLs on inspected HTTP traffic; HTTPS surfaces SNI only. Pair with web-access logs in Sentinel for full coverage.\nlet WindowMin = 10m;\nlet LowPrivPatterns = dynamic([\"user_register\",\"/register\",\"onboard-customer\",\"/peering\",\"/auth/login\",\"/login.action\",\"/api/v1/auth\",\"/sessions/new\"]);\nlet AdminPatterns   = dynamic([\"/admin\",\"/api/admin\",\"data[access][admin]\",\"data%5Baccess%5D%5Badmin%5D\",\"data[groups]\",\"data%5Bgroups%5D\",\"/configuration\",\"authorized_keys\",\"/installer\",\"/vmanage\",\"/system/setting\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"ConnectionSuccess\",\"HttpConnectionInspected\")\n| where isnotempty(RemoteUrl)\n| extend stage = case(\n    RemoteUrl has_any (LowPrivPatterns), \"low_priv\",\n    RemoteUrl has_any (AdminPatterns),   \"admin\",\n    \"other\")\n| where stage in (\"low_priv\",\"admin\")\n| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, stage\n| order by RemoteIP asc, Timestamp asc\n| serialize\n| extend PrevStage=prev(stage), PrevTime=prev(Timestamp), PrevUrl=prev(RemoteUrl), PrevIP=prev(RemoteIP)\n| where stage == \"admin\" and PrevStage == \"low_priv\" and RemoteIP == PrevIP\n| where datetime_diff('minute', Timestamp, PrevTime) <= 10\n| project AdminEventTime=Timestamp, LowPrivEventTime=PrevTime,\n          DeltaMinutes=datetime_diff('minute', Timestamp, PrevTime),\n          DeviceName, RemoteIP, RemotePort, LowPrivUrl=PrevUrl, AdminUrl=RemoteUrl, InitiatingProcessFileName\n| order by AdminEventTime desc"
     },
     {
+      "id": "UC_WEEKLY_PUBLIC_FACING_APP_AUTH_AUTHZ_BYPASS_INTO_SERVER_SI",
+      "title": "[WEEKLY] Public-facing app auth/authz bypass into server-side code execution (patch-bypass wave)",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Detects the two-stage chain where an attacker abuses a public-facing web/app framework to defeat an authentication or authorization gate and then reaches server-side code execution \u2014 an anomalous shell, interpreter, or recon binary spawned by the web/app-server process (java, node, php, w3wp, httpd, nginx) within minutes of a suspicious write-verb or gadget-bearing HTTP request. This fortnight is dominated by 'incomplete-fix / patch-bypass' auth-bypass and RCE advisories: ApostropheCMS SSPP authorization bypass (CVE-2026-53609), Check Point SmartConsole auth bypass (CVE-2026-16232), VMware vCenter auth bypass + traversal RCE (CVE-2026-59309/59310), goshs empty-password SFTP bypass (CVE-2026-62325) and WebDAV MOVE bypass (CVE-2026-64863), OpenAM WebAuthn Java deserialization RCE (CVE-2026-62263), Velocity.js Function-constructor RCE, Pheditor forced-password-change bypass, kin-openapi fail-open NoopAuthenticationFunc, and Auth.js homoglyph normalization bypass. It spans the exploit \u2192 install/execution kill-chain: the HTTP stage carries the auth/authz-bypass or deserialization/SSTI marker, the endpoint stage is the framework process spawning an unexpected child or dropping a webshell. It FIRES when a server-tier process (not a browser/user shell) launches cmd/powershell/bash/curl/whoami-class children, or drops a new script under webroot, correlated to a preceding anomalous request; it does NOT fire on ordinary authenticated CRUD, on developer shells launched by IDEs, or on framework processes running their own bundled tooling under a service account with no post-request child spawn.\n\nRationale: Every article in the batch is a T1190 public-facing-app auth/authz-bypass or bypass-driven RCE (mostly 'incomplete-fix' patch bypasses); the invariant they share is a framework/app-server process transitioning from serving a request to executing an unexpected shell/interpreter/recon binary, which this UC correlates against the preceding anomalous HTTP write-verb/gadget request rather than any one rotating IOC.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1505.003",
+          "name": "Server Software Component: Web Shell"
+        },
+        {
+          "id": "T1059.004",
+          "name": "Command and Scripting Interpreter: Unix Shell"
+        },
+        {
+          "id": "T1059.001",
+          "name": "Command and Scripting Interpreter: PowerShell"
+        },
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        },
+        {
+          "id": "T1548",
+          "name": "Abuse Elevation Control Mechanism"
+        }
+      ],
+      "data_models": [
+        "Web",
+        "Endpoint.Processes",
+        "Endpoint.Filesystem"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as webTime max(_time) as webLast from datamodel=Web where Web.status IN (200,201,204,500) (Web.http_method IN (\"POST\",\"PUT\",\"PATCH\",\"MOVE\",\"COPY\") OR Web.url IN (\"*__proto__*\",\"*$pullAll*\",\"*constructor.constructor*\",\"*child_process*\",\"*process.mainModule*\",\"*rO0AB*\",\"*/json/authenticate*\")) by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent\n| `drop_dm_object_name(Web)`\n| join type=inner dest [\n    | tstats `summariesonly` count min(_time) as procTime max(_time) as procLast from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"java.exe\",\"java\",\"javaw.exe\",\"node.exe\",\"node\",\"php.exe\",\"php-cgi.exe\",\"php-fpm\",\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"nginx.exe\",\"nginx\",\"tomcat.exe\")) (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"bash\",\"sh\",\"dash\",\"ash\",\"zsh\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"whoami\",\"whoami.exe\",\"python\",\"python3\",\"perl\",\"nc\",\"ncat\",\"certutil.exe\",\"bitsadmin.exe\")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process\n    | `drop_dm_object_name(Processes)`\n  ]\n| where procTime >= webTime AND procTime <= (webTime + 300)\n| eval delaySec = procTime - webTime\n| convert ctime(webTime) ctime(procTime)\n| table webTime procTime delaySec src dest user http_method url status parent_process_name process_name process\n| sort - procTime",
+      "defender_kql": "let Lookback = 7d;\nDeviceProcessEvents\n| where Timestamp > ago(Lookback)\n| where InitiatingProcessFileName in~ (\"java.exe\",\"javaw.exe\",\"node.exe\",\"php.exe\",\"php-cgi.exe\",\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"tomcat.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"bash.exe\",\"sh.exe\",\"wsl.exe\",\"curl.exe\",\"wget.exe\",\"whoami.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"python.exe\",\"python3.exe\",\"nc.exe\",\"ncat.exe\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          SHA256,\n          InitiatingProcessTokenElevation\n| order by Timestamp desc"
+    },
+    {
+      "id": "UC_WEEKLY_PUBLIC_FACING_APP_AUTH_BYPASS_TO_SERVER_SIDE_CODE_",
+      "title": "[WEEKLY] Public-Facing App Auth-Bypass to Server-Side Code Execution (web-server process spawning a shell/interpreter)",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Detects a web-application or appliance service process (httpd, nginx, php-fpm, w3wp, java/tomcat, node, or VMware vpxd) directly spawning an OS shell, scripting interpreter, or download/recon LOLBin \u2014 the universal post-exploitation tell after a pre-auth or auth-bypass flaw is turned into code execution. This matters this fortnight because a cluster of critical public-facing-app bypass and RCE disclosures landed together: vBulletin pre-auth eval() RCE (CVE-2026-61511) now has a public exploit, VMware vCenter auth-bypass + directory-traversal RCE and ESX VM-escape (CVE-2026-59309/59310/47876), plus a wave of GHSA auth-bypass advisories (LightRAG hardcoded DEFAULT_TOKEN_SECRET CVE-2026-61740, Auth.js fail-open GHSA-8fpg-xm3f-6cx3, Budibase cross-origin credential leak GHSA-mqhr-6j6h-74p5, @better-auth/scim provider-id collision GHSA-rjg6-39jm-rgg4) \u2014 all sharing the T1190 \u2192 code-execution/destructive-action chain. It spans the exploit and execution kill-chain stages: the auth check is defeated (exploit) and the server process is coerced into running attacker code (install/actions). It FIRES when an internet-facing service binary is the parent of an interactive shell or interpreter it never legitimately launches; it does NOT fire on normal application workers, CI/build agents, or admin-initiated maintenance scripts whose parent is a login shell or scheduler rather than the network-facing daemon. Reference IOCs (<c2_domain_list>, <sha256_list>) are substitution slots only \u2014 the parent/child process relationship is the durable signal.\n\nRationale: Every article in the batch is a public-facing auth/authorization defeat whose payoff is server-side execution or destructive action; the one endpoint signal common to the RCE-capable members (vBulletin eval(), VMware vCenter traversal RCE, and any bypass chained to shell/webshell) is the internet-facing service process becoming the parent of a shell/interpreter \u2014 a relationship that survives IOC rotation.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter"
+        },
+        {
+          "id": "T1505.003",
+          "name": "Server Software Component: Web Shell"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes"
+      ],
+      "splunk_spl": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"httpd\",\"apache2\",\"nginx\",\"php-fpm\",\"php-cgi\",\"php\",\"w3wp.exe\",\"java\",\"java.exe\",\"node\",\"node.exe\",\"tomcat.exe\",\"catalina.sh\",\"vmware-vpxd\",\"vpxd\",\"vmdird\")) AND (Processes.process_name IN (\"sh\",\"bash\",\"dash\",\"zsh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"python\",\"python3\",\"perl\",\"ruby\",\"curl\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami\",\"id\",\"uname\")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path\n| `drop_dm_object_name(Processes)`\n| where NOT match(user,\"(?i)\\$$\")\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"httpd\",\"apache2\",\"nginx\",\"php-fpm\",\"php-cgi\",\"php\",\"w3wp.exe\",\"java\",\"java.exe\",\"node\",\"node.exe\",\"tomcat.exe\",\"vmware-vpxd\",\"vpxd\",\"vmdird\")\n| where FileName in~ (\"sh\",\"bash\",\"dash\",\"zsh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"python\",\"python3\",\"perl\",\"ruby\",\"curl\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami\",\"id\",\"uname\")\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256, InitiatingProcessTokenElevation\n| order by Timestamp desc"
+    },
+    {
       "id": "UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C",
       "title": "[WEEKLY] Public-Facing App Runtime Spawns Shell, LOLBin, or Container-Control Tool",
       "kill_chain": "exploit",
@@ -5523,6 +5712,41 @@
       ],
       "splunk_spl": "| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process_path) as child_paths, values(Processes.parent_process) as parent_cmds from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"php-fpm\",\"php-cgi\",\"php-cgi.exe\",\"php.exe\",\"php\",\"httpd\",\"httpd.exe\",\"apache2\",\"nginx\",\"nginx.exe\",\"node\",\"node.exe\",\"n8n\",\"n8n.exe\",\"python\",\"python3\",\"python.exe\",\"ruby\",\"ruby.exe\",\"java\",\"java.exe\",\"kopia\",\"kopia.exe\",\"kopia-ui\",\"kopia-ui.exe\",\"deepseek-tui\",\"deepseek-tui.exe\",\"utcp\",\"utcp.exe\",\"strapi\",\"ghost\",\"drupal\",\"yeswiki\") AND Processes.process_name IN (\"ssh\",\"ssh.exe\",\"git\",\"git.exe\",\"bash\",\"sh\",\"dash\",\"zsh\",\"ksh\",\"powershell.exe\",\"pwsh.exe\",\"pwsh\",\"cmd.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"socat\",\"python\",\"python3\",\"perl\",\"ruby\") by host, Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | eval injection_class = case(match(process,\"(?i)(-oProxyCommand|-o\\s+ProxyCommand|-oIdentityFile=|ProxyJump=)\"),\"ssh-argv-injection\", match(process,\"(?i)(--upload-pack=|--receive-pack=|-c\\s+core\\.sshCommand|--exec=)\"),\"git-argv-injection\", match(process,\"(?i)(-EncodedCommand|\\s-enc\\s|\\s-ec\\s)\"),\"powershell-encoded\", match(process,\"(?i)(\\$\\(|`[^`]{2,}`|;\\s*(curl|wget|nc|bash|sh|python|powershell|base64|chmod)|\\|\\s*(sh|bash|nc|base64|tee)|&&\\s*(curl|wget|nc|bash|sh|python|powershell))\"),\"shell-metachars\", match(process,\"(?i)(/dev/tcp/|bash\\s+-i|nc\\s+-e|base64\\s+-d|python\\S*\\s+-c\\s+['\\\"]\\s*(import|exec|os\\.system))\"),\"reverse-shell-pattern\", match(process,\"(?i)(--config\\s|\\s-K\\s|--upload-file|\\s-T\\s+[A-Za-z/])\"),\"curl-argv-injection\", \"\") | where injection_class!=\"\" | search NOT user IN (\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\",\"root\") AND NOT match(user,\"\\\\$$\") | sort 0 - lastTime",
       "defender_kql": "let ServiceParents = dynamic([\"w3wp.exe\",\"php-fpm\",\"php-cgi\",\"php-cgi.exe\",\"php.exe\",\"php\",\"httpd\",\"httpd.exe\",\"apache2\",\"nginx\",\"nginx.exe\",\"node\",\"node.exe\",\"n8n\",\"n8n.exe\",\"python\",\"python3\",\"python.exe\",\"ruby\",\"ruby.exe\",\"java\",\"java.exe\",\"kopia\",\"kopia.exe\",\"kopia-ui\",\"kopia-ui.exe\",\"deepseek-tui\",\"deepseek-tui.exe\",\"utcp\",\"utcp.exe\",\"strapi\",\"ghost\",\"drupal\",\"yeswiki\"]);\nlet InterpreterChildren = dynamic([\"ssh\",\"ssh.exe\",\"git\",\"git.exe\",\"bash\",\"sh\",\"dash\",\"zsh\",\"ksh\",\"powershell.exe\",\"pwsh.exe\",\"pwsh\",\"cmd.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"socat\",\"python\",\"python3\",\"perl\",\"ruby\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (ServiceParents)\n| where FileName in~ (InterpreterChildren)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\",\"root\")\n| extend SshArg   = ProcessCommandLine matches regex @\"(?i)(-oProxyCommand|-o\\s+ProxyCommand|-oIdentityFile=|ProxyJump=)\"\n| extend GitArg   = ProcessCommandLine matches regex @\"(?i)(--upload-pack=|--receive-pack=|-c\\s+core\\.sshCommand|--exec=)\"\n| extend PsEnc    = ProcessCommandLine matches regex @\"(?i)(-EncodedCommand|\\s-enc\\s|\\s-ec\\s)\"\n| extend ShellMet = ProcessCommandLine matches regex @\"(?i)(\\$\\(|`[^`]{2,}`|;\\s*(curl|wget|nc|bash|sh|python|powershell|base64|chmod)|\\|\\s*(sh|bash|nc|base64|tee)|&&\\s*(curl|wget|nc|bash|sh|python|powershell))\"\n| extend RevSh    = ProcessCommandLine matches regex @\"(?i)(/dev/tcp/|bash\\s+-i|nc\\s+-e|base64\\s+-d|python\\S*\\s+-c\\s+['\"\"]\\s*(import|exec|os\\.system))\"\n| extend CurlArg  = ProcessCommandLine matches regex @\"(?i)(--config\\s|\\s-K\\s|--upload-file|\\s-T\\s+[A-Za-z/])\"\n| where SshArg or GitArg or PsEnc or ShellMet or RevSh or CurlArg\n| extend InjectionClass = case(SshArg,\"ssh-argv-injection\", GitArg,\"git-argv-injection\", PsEnc,\"powershell-encoded\", ShellMet,\"shell-metachars\", RevSh,\"reverse-shell-pattern\", CurlArg,\"curl-argv-injection\", \"unknown\")\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          InjectionClass, SHA256\n| order by Timestamp desc"
+    },
+    {
+      "id": "UC_WEEKLY_SSRF_DRIVEN_SECRET_EGRESS_PUBLIC_FACING_APP_REACHE",
+      "title": "[WEEKLY] SSRF-Driven Secret Egress: Public-Facing App Reaches Cloud Metadata/Attacker Host",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Detects an unauthenticated public-facing application that, shortly after receiving an inbound request, makes a server-side outbound connection to the cloud instance-metadata endpoint (169.254.169.254 / fd00:ec2::254) or an attacker-named callback host \u2014 the tell-tale of a server-side request forgery being used to steal secrets. This matters this fortnight because a cluster of maximum-severity advisories all share this exact primitive: OpenDJ's DSMLv2 gateway dereferences attacker-supplied xsd:anyURI values (GHSA-68r5-9hpg-7qw9), Flyto2 Core's unauthenticated /run reflects callback_url and attaches X-Internal-Key: $FLYTO_RUNNER_SECRET (CVE-2026-67426), and Budibase forwards stored REST-datasource credentials to any host a query names (GHSA-mqhr-6j6h-74p5) \u2014 with OpenAM (CVE-2026-62379) and Ruflo MCP (CVE-2026-59726) providing the unauthenticated RCE that reaches the same egress. It spans the exploit (T1190) \u2192 credential-access (IMDS/secret read) \u2192 exfiltration (secret leaves over the app's own socket) kill-chain stages. It FIRES when a server runtime (java, node, ruby, python, w3wp, nginx) egresses to a metadata IP or listed C2 host within the correlation window of an inbound public request, and when EC2 instance-role credentials appear off-instance; it does NOT fire on normal user browsing, on SDK-driven IMDS calls that never follow an inbound public request, or on internal-only service-to-service traffic.\n\nRationale: Every article in scope terminates in the same behaviour \u2014 an unauthenticated public-facing app is coerced into making a server-side outbound request that carries a secret (IMDS role creds, runner secret, or stored datasource token) \u2014 so keying on server-runtime egress-to-metadata/attacker-host correlated with a preceding inbound request catches the shared primitive rather than any one CVE's IOCs.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1552.005",
+          "name": "Unsecured Credentials: Cloud Instance Metadata API"
+        },
+        {
+          "id": "T1552",
+          "name": "Unsecured Credentials"
+        },
+        {
+          "id": "T1567",
+          "name": "Exfiltration Over Web Service"
+        }
+      ],
+      "data_models": [
+        "Web",
+        "Network_Traffic.All_Traffic"
+      ],
+      "splunk_spl": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=\"169.254.169.254\" OR All_Traffic.dest=\"fd00:ec2::254\" OR All_Traffic.dest IN (<c2_ip_list>)) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.user\n| `drop_dm_object_name(All_Traffic)`\n| rename src as server_host\n| join type=inner server_host [\n    | tstats summariesonly=t count as inbound_count min(_time) as inboundFirst values(Web.http_user_agent) as inbound_ua from datamodel=Web where Web.http_method=POST (Web.url IN (\"*/run*\",\"*/mcp*\",\"*/authservice*\",\"*/dsml*\",\"*/api/*/query*\",\"*/rails/active_storage/*\")) by Web.dest\n    | `drop_dm_object_name(Web)`\n    | rename dest as server_host\n  ]\n| where firstTime >= inboundFirst\n| eval delay_sec = firstTime - inboundFirst\n| where delay_sec <= 600\n| convert ctime(firstTime) ctime(lastTime) ctime(inboundFirst)\n| sort - count",
+      "defender_kql": "let LookbackDays = 7d;\nlet Window = 10m;\nlet MetadataIps = dynamic([\"169.254.169.254\",\"fd00:ec2::254\"]);\nlet C2 = dynamic([<c2_ip_list>]);\nlet ServerRuntimes = dynamic([\"java.exe\",\"javaw.exe\",\"node.exe\",\"ruby.exe\",\"python.exe\",\"python3\",\"php-fpm\",\"w3wp.exe\",\"nginx.exe\",\"httpd\"]);\nlet Inbound = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType == \"InboundConnectionAccepted\"\n    | where RemoteIPType == \"Public\"\n    | project InboundTime = Timestamp, DeviceId, DeviceName, LocalPort;\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType == \"ConnectionSuccess\"\n| where RemoteIP in (MetadataIps) or RemoteIP in (C2)\n| where InitiatingProcessFileName in~ (ServerRuntimes)\n| join kind=inner Inbound on DeviceId\n| where Timestamp between (InboundTime .. InboundTime + Window)   // egress within 10m of an inbound public hit\n| project Timestamp, DeviceName, ServerProcess = InitiatingProcessFileName,\n          InitiatingProcessCommandLine, RemoteIP, RemotePort,\n          InboundTime, DelaySec = datetime_diff('second', Timestamp, InboundTime)\n| order by Timestamp desc"
     },
     {
       "id": "UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA",
@@ -5793,6 +6017,46 @@
       ],
       "splunk_spl": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"apache2\",\"nginx.exe\",\"nginx\",\"php-fpm\",\"php-cgi.exe\",\"php.exe\",\"java.exe\",\"javaw.exe\",\"tomcat.exe\",\"node.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"sh\",\"bash\",\"dash\",\"zsh\",\"python\",\"python3\",\"python.exe\",\"perl\",\"perl.exe\",\"ruby\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami.exe\",\"whoami\",\"id\",\"uname\",\"nc\",\"ncat.exe\") by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | eval signal=\"webserver_spawned_shell_or_utility\" | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.process_name) as parent_proc from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"apache2\",\"nginx.exe\",\"nginx\",\"php.exe\",\"php-cgi.exe\",\"php-fpm\",\"java.exe\",\"tomcat.exe\",\"node.exe\") AND (Filesystem.file_path=\"*\\\\inetpub\\\\wwwroot\\\\*\" OR Filesystem.file_path=\"*\\\\htdocs\\\\*\" OR Filesystem.file_path=\"*\\\\webapps\\\\*\" OR Filesystem.file_path=\"*/var/www/*\" OR Filesystem.file_path=\"*/usr/share/nginx/*\" OR Filesystem.file_path=\"*/srv/http/*\" OR Filesystem.file_path=\"*/user/plugins/*\" OR Filesystem.file_path=\"*/wp-content/plugins/*\" OR Filesystem.file_path=\"*/sites/default/files/*\") AND (Filesystem.file_name=\"*.php\" OR Filesystem.file_name=\"*.phtml\" OR Filesystem.file_name=\"*.php5\" OR Filesystem.file_name=\"*.php7\" OR Filesystem.file_name=\"*.jsp\" OR Filesystem.file_name=\"*.jspx\" OR Filesystem.file_name=\"*.aspx\" OR Filesystem.file_name=\"*.asp\" OR Filesystem.file_name=\"*.cfm\" OR Filesystem.file_name=\"*.cgi\") by Filesystem.dest Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | eval signal=\"webserver_wrote_script_to_webroot\" ] | eval risk_message=\"Web-server process post-exploit anchor \u2014 likely plugin/extension RCE chain (Grav/Portainer/WordPress/Jenkins/cPanel UCs in scope)\" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
       "defender_kql": "let WebProcs = dynamic([\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"php-fpm\",\"php-cgi.exe\",\"php.exe\",\"java.exe\",\"javaw.exe\",\"tomcat.exe\",\"node.exe\",\"apache2\"]);\nlet ShellProcs = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"sh\",\"bash\",\"dash\",\"zsh\",\"python\",\"python3\",\"python.exe\",\"perl\",\"perl.exe\",\"ruby\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami.exe\",\"whoami\",\"id\",\"uname\",\"nc\",\"ncat.exe\"]);\nlet WebShellExt = dynamic([\".php\",\".phtml\",\".php5\",\".php7\",\".jsp\",\".jspx\",\".aspx\",\".asp\",\".cfm\",\".cgi\"]);\nlet WebrootPaths = dynamic([@\"\\inetpub\\wwwroot\",@\"\\htdocs\\\",@\"\\webapps\\\",@\"\\xampp\\htdocs\\\",\"/var/www\",\"/usr/share/nginx\",\"/srv/http\",\"/user/plugins/\",\"/wp-content/plugins/\",\"/sites/default/files/\"]);\nlet Spawn = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFileName in~ (WebProcs)\n    | where FileName in~ (ShellProcs)\n    | project Timestamp, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FileName,\n              ChildCmd = ProcessCommandLine,\n              EventKind = \"WebServerSpawnsShellOrUtility\";\nlet Drop = DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\")\n    | where InitiatingProcessFileName in~ (WebProcs)\n    | where FolderPath has_any (WebrootPaths)\n    | where FileName has_any (WebShellExt)\n    | project Timestamp, DeviceName,\n              AccountName = InitiatingProcessAccountName,\n              ParentImage = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FileName,\n              ChildCmd = FolderPath,\n              EventKind = \"WebServerWritesScriptToWebroot\";\nunion Spawn, Drop\n| order by Timestamp desc"
+    },
+    {
+      "id": "UC_WEEKLY_WEB_TIER_INTERPRETER_POST_EXPLOITATION_SHELL_NET_T",
+      "title": "[WEEKLY] Web-tier interpreter post-exploitation: shell/net-tool spawn, secret-file read, or cloud IMDS reach",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Detects the post-exploitation convergence point shared by this fortnight's wave of critical public-facing-app injection CVEs: a long-lived web application interpreter (ruby/puma/unicorn, node, python, php-fpm, or the fluentd config renderer) that \u2014 as a direct result of attacker-controlled input reaching a dangerous sink \u2014 either spawns an OS shell / network utility, reads process-environment or application-secret files (/proc/self/environ, .env, config/master.key, credentials.yml.enc), or connects to the cloud instance-metadata endpoint 169.254.169.254. This matters now because six GHSA criticals published 2026-07-28\u219207-31 all exploit input-validation flaws in web frameworks and pivot the same way: 'Logging operator Fluentd configuration injection RCE (CVE-2026-54680)' drives shell spawn + IMDS credential theft, 'Active Storage arbitrary file read/RCE (CVE-2026-66066)' reads /proc/self/environ and secret_key_base then escalates, and the Poweradmin (CVE-2026-54588), @hypequery/clickhouse SQLi (CVE-2026-54658), Amplify Studio (CVE-2025-4318) and ApostropheCMS SSPP (CVE-2026-53609) advisories describe the exploit primitive whose payoff is exactly this credential/RCE stage. It spans exploit \u2192 install \u2192 credential-access/actions on the kill chain, catching the technique-invariant behaviour rather than any rotating CVE payload. It FIRES when a web interpreter parents a shell/curl/wget/nc or touches those secret paths or IMDS; it does NOT fire on the raw malicious HTTP request alone, nor on shells spawned by SSH/cron/CI runners/systemd whose parent is not a web interpreter, keeping it alert-grade rather than a per-request hunch.\n\nRationale: Every article in the batch is an input-validation flaw in a public-facing web framework whose exploitation converges on the same host-level payoff \u2014 the interpreter shelling out, reading its own secret store, or stealing cloud credentials via IMDS \u2014 so anchoring on that interpreter-parented behaviour catches the joint TTP without depending on any single CVE's rotating request signature.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059.004",
+          "name": "Command and Scripting Interpreter: Unix Shell"
+        },
+        {
+          "id": "T1552.005",
+          "name": "Unsecured Credentials: Cloud Instance Metadata API"
+        },
+        {
+          "id": "T1552.001",
+          "name": "Unsecured Credentials: Credentials In Files"
+        },
+        {
+          "id": "T1505.003",
+          "name": "Server Software Component: Web Shell"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "Endpoint.Filesystem",
+        "Network_Traffic.All_Traffic"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"ruby\",\"ruby3.2\",\"ruby3.3\",\"puma\",\"unicorn\",\"node\",\"nodejs\",\"python\",\"python3\",\"php-fpm\",\"php\",\"fluentd\",\"fluent\",\"gunicorn\",\"w3wp.exe\")) AND (Processes.process_name IN (\"sh\",\"bash\",\"dash\",\"zsh\",\"ksh\",\"curl\",\"wget\",\"nc\",\"ncat\",\"socat\",\"perl\",\"cmd.exe\",\"powershell.exe\")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "defender_kql": "let Lookback = 14d;\nlet WebInterp = dynamic([\"ruby\",\"ruby3.2\",\"ruby3.3\",\"puma\",\"unicorn\",\"node\",\"nodejs\",\"python\",\"python3\",\"php-fpm\",\"php\",\"fluentd\",\"fluent\",\"gunicorn\",\"w3wp.exe\"]);\nlet SuspChild = dynamic([\"sh\",\"bash\",\"dash\",\"zsh\",\"ksh\",\"curl\",\"wget\",\"nc\",\"ncat\",\"socat\",\"perl\",\"cmd.exe\",\"powershell.exe\"]);\nlet SecretPaths = dynamic([\"/proc/self/environ\",\"/config/master.key\",\"credentials.yml.enc\",\"/.env\"]);\nlet SpawnLeg = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (WebInterp)\n    | where FileName in~ (SuspChild)\n    | project Timestamp, DeviceName, AccountName, Leg = \"child_spawn\",\n              Parent = InitiatingProcessFileName, Detail = ProcessCommandLine, RemoteIP = \"\";\nlet FileLeg = DeviceFileEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (WebInterp)\n    | where FolderPath has_any (SecretPaths)\n    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Leg = \"secret_read\",\n              Parent = InitiatingProcessFileName, Detail = FolderPath, RemoteIP = \"\";\nlet ImdsLeg = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where RemoteIP == \"169.254.169.254\"\n    | where InitiatingProcessFileName in~ (WebInterp)\n    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Leg = \"imds_reach\",\n              Parent = InitiatingProcessFileName, Detail = InitiatingProcessCommandLine, RemoteIP;\nunion SpawnLeg, FileLeg, ImdsLeg\n| where AccountName !endswith \"$\"\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count(), Legs = make_set(Leg), Samples = make_set(Detail, 5) by DeviceName, AccountName, Parent\n| order by LastSeen desc"
     }
   ]
 }

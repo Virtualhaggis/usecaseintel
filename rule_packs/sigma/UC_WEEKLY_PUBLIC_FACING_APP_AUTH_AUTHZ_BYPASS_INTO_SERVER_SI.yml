@@ -1,0 +1,42 @@
+title: "[WEEKLY] Public-facing app auth/authz bypass into server-side code execution (patch-bypass wave)"
+id: c1028cd8-40b0-577f-9ac2-46af596f6fad
+status: experimental
+description: "Detects the two-stage chain where an attacker abuses a public-facing web/app framework to defeat an authentication or authorization gate and then reaches server-side code execution \u2014 an anomalous shell, interpreter, or recon binary spawned by the web/app-server process (java, node, php, w3wp, httpd, nginx) within minutes of a suspicious write-verb or gadget-bearing HTTP request. This fortnight is dominated by 'incomplete-fix / patch-bypass' auth-bypass and RCE advisories: ApostropheCMS SSPP authorization bypass (CVE-2026-53609), Check Point SmartConsole auth bypass (CVE-2026-16232), VMware vCenter auth bypass + traversal RCE (CVE-2026-59309/59310), goshs empty-password SFTP bypass (CVE-2026-62325) and WebDAV MOVE bypass (CVE-2026-64863), OpenAM WebAuthn Java deserialization RCE (CVE-2026-62263), Velocity.js Function-constructor RCE, Pheditor forced-password-change bypass, kin-openapi fail-open NoopAuthenticationFunc, and Auth.js homoglyph normalization bypass. It spans the exploit \u2192 install/execution kill-chain: the HTTP stage carries the auth/authz-bypass or deserialization/SSTI marker, the endpoint stage is the framework process spawning an unexpected child or dropping a webshell. It FIRES when a server-tier process (not a browser/user shell) launches cmd/powershell/bash/curl/whoami-class children, or drops a new script under webroot, correlated to a preceding anomalous request; it does NOT fire on ordinary authenticated CRUD, on developer shells launched by IDEs, or on framework processes running their own bundled tooling under a service account with no post-request child spawn."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_PUBLIC_FACING_APP_AUTH_AUTHZ_BYPASS_INTO_SERVER_SI.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1505_003
+  - attack.t1059_004
+  - attack.t1059_001
+  - attack.t1556
+  - attack.t1548
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'POST'
+      - 'PUT'
+      - 'PATCH'
+      - 'MOVE'
+      - 'COPY'
+      - 'java.exe'
+      - 'java'
+      - 'javaw.exe'
+      - 'node.exe'
+      - 'node'
+      - 'php.exe'
+      - 'php-cgi.exe'
+      - 'php-fpm'
+      - 'w3wp.exe'
+      - 'httpd.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Sapphire Sleet npm supply-chain C2 egress to npmjs.store / 216.74.123.126
 
-`UC_42_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_43_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union
 
 ### Sapphire Sleet trojanized npm payload hashes on disk / in-execution
 
-`UC_42_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_43_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

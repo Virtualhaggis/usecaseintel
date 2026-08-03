@@ -1,173 +1,3 @@
-<article class="card" id="art-3249" data-art-slug="2020-12-09-command-line-tools-for-containers-using-snyk-with-buildah-po"
-  data-phases="c2,exploit,install,recon" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
-  data-targets="linux,windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo In this blog post, we’ll look at how the use of open standards allows Snyk’s container scanning to work with open source command line tools.  T1190 Article-specific behavioural hunt — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2020-12-09-command-line-tools-for-containers-using-snyk-with-buildah-po" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/command-line-tools-for-containers/" target="_blank" rel="noopener">Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-12-09</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">In this blog post, we’ll look at how the use of open standards allows Snyk’s container scanning to work with open source command line tools.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3249-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3249"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3249-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="edf8baf4f0" data-platforms="def,sent,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="edf8baf4f0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3249-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3249-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3249-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3249-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;single-stage.sh&quot;, &quot;host-mount.sh&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/opt/hello&quot;, &quot;/usr/local/bin/hello&quot;, &quot;/usr/bin/env&quot;, &quot;/var/run/podman/podman.sock&quot;, &quot;/var/run/docker.sock&quot;, &quot;/home/matt/podman.sock&quot;, &quot;/etc/containers/registries.conf&quot;, &quot;/usr/bin/podman&quot;) or FileName in~ (&quot;single-stage.sh&quot;, &quot;host-mount.sh&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3249-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;single-stage.sh&quot;, &quot;host-mount.sh&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/opt/hello&quot;, &quot;/usr/local/bin/hello&quot;, &quot;/usr/bin/env&quot;, &quot;/var/run/podman/podman.sock&quot;, &quot;/var/run/docker.sock&quot;, &quot;/home/matt/podman.sock&quot;, &quot;/etc/containers/registries.conf&quot;, &quot;/usr/bin/podman&quot;) or FileName in~ (&quot;single-stage.sh&quot;, &quot;host-mount.sh&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3249-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3249-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3249-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3249-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;single-stage.sh&quot;,&quot;host-mount.sh&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/opt/hello*&quot; OR Filesystem.file_path=&quot;*/usr/local/bin/hello*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/var/run/podman/podman.sock*&quot; OR Filesystem.file_path=&quot;*/var/run/docker.sock*&quot; OR Filesystem.file_path=&quot;*/home/matt/podman.sock*&quot; OR Filesystem.file_path=&quot;*/etc/containers/registries.conf*&quot; OR Filesystem.file_path=&quot;*/usr/bin/podman*&quot; OR Filesystem.file_name IN (&quot;single-stage.sh&quot;,&quot;host-mount.sh&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3249-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Command line tools for containers—using Snyk with Buildah, Podman, and Skopeo ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;single-stage.sh&quot;,&quot;host-mount.sh&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/opt/hello*&quot; OR Filesystem.file_path=&quot;*/usr/local/bin/hello*&quot; OR Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/var/run/podman/podman.sock*&quot; OR Filesystem.file_path=&quot;*/var/run/docker.sock*&quot; OR Filesystem.file_path=&quot;*/home/matt/podman.sock*&quot; OR Filesystem.file_path=&quot;*/etc/containers/registries.conf*&quot; OR Filesystem.file_path=&quot;*/usr/bin/podman*&quot; OR Filesystem.file_name IN (&quot;single-stage.sh&quot;,&quot;host-mount.sh&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-3252" data-art-slug="2020-12-03-kernel-privilege-escalation-how-kubernetes-container-isolati"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -5841,6 +5671,565 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3329" data-art-slug="2020-08-05-breaking-out-of-message-brokers"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="7" data-llm-uc-count="4"
+  data-search="Breaking out of message brokers This blog post outlines why message brokers can’t be trusted, and how to exploit Apache Airflow in order to gain privileges to machines that are supposed to be protected. CVE-2020-11982 CVE-2020-11981 T1190 [LLM] Celery task injected into Apache Airflow message broker (unacked queue / execute_command) [LLM] Apache Airflow Celery worker spawns non-airflow child (command-injection RCE, CVE-2020-11981) [LLM] Apache Airflow task run with --pickle flag (pickle deserialization, CVE-2020-11982) [LLM] Hosts exposed to Apache Airflow Celery broker RCE (CVE-2020-11981 / CVE-2020-11982) Asset exposure — vulnerability matches article CVE(s) Scheduled task created with suspicious image / encoded args Article-specific behavioural hunt — Breaking out of message brokers">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2020-08-05-breaking-out-of-message-brokers" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/message-brokers/" target="_blank" rel="noopener">Breaking out of message brokers</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2020-08-05</span>
+    <span>7 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">This blog post outlines why message brokers can’t be trusted, and how to exploit Apache Airflow in order to gain privileges to machines that are supposed to be protected.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2020-11982</span> <span class="ind cve">CVE-2020-11981</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3329-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3329"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3329-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Hosts exposed to Apache Airflow Celery broker RCE (CVE-2020-11981 / CVE-2020-11982) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Celery task injected into Apache Airflow message broker (unacked queue / execute_command)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Apache Airflow Celery worker spawns non-airflow child (command-injection RCE, CVE-2020-11981) · [LLM] Apache Airflow task run with --pickle flag (pickle deserialization, CVE-2020-11982)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Scheduled task created with suspicious image / encoded args · Article-specific behavioural hunt — Breaking out of message brokers</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="ebf8276ca1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <summary>
+    <span class="uc-title">Celery task injected into Apache Airflow message broker (unacked queue / execute_command)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ebf8276ca1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a process pushing a forged Celery task into the Airflow message broker (Redis unacked hash or AMQP) to trigger worker RCE per CVE-2020-11981/11982. Anchors on broker write verbs (LPUSH/HSET) combined with Airflow Celery task markers (celery_executor.execute_command, unacked) that a legitimate operator would never type by hand.
+
+Rationale: Anchors on the article&#x27;s exact broker artifacts (unacked Redis hash, airflow.executors.celery_executor.execute_command task name) paired with Redis/AMQP write verbs; a human running redis-cli LPUSH with a Celery task payload is the documented exploit primitive for both CVEs. Cross-checked NVD CVE-2020-11981 and GitHub Advisory GHSA-9g2w-5f3v-mfmm.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/cve-2020-11981
+  • https://github.com/advisories/GHSA-9g2w-5f3v-mfmm
+  • https://security.snyk.io/vuln/SNYK-PYTHON-APACHEAIRFLOW-570291</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Airflow/Celery admin manually inspecting the broker with redis-cli HGETALL unacked during troubleshooting (read verb, not LPUSH/HSET)</li><li>Infrastructure automation that seeds test Celery tasks via redis-cli in a CI/staging pipeline</li><li>Custom monitoring scripts that publish health-check messages to the celery queue</li><li>Backup/migration tooling dumping or restoring the broker keyspace</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;hgetall&quot;,&quot;hget &quot;,&quot;keys &quot;,&quot;--scan&quot;) and not ProcessCommandLine has_any (&quot;lpush&quot;,&quot;rpush&quot;,&quot;hset&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and decode any base64 &#x27;body&#x27; payload — confirm it carries an airflow task list (e.g. [&#x27;airflow&#x27;,&#x27;run&#x27;,...]); identify the source host/user and whether it is an authorized broker client. 2) Contain: rotate/lock the broker (Redis/RabbitMQ) credentials, restrict the broker port to worker subnet only, and isolate the injecting host. 3) Hunt: on every Celery worker that consumed from that queue, pivot to UC &#x27;Airflow Celery worker spawns non-airflow child&#x27; to find resulting RCE, and confirm Airflow is upgraded to &gt;=1.10.11 with pickle disabled.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3329-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3329-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3329-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where AccountName !endswith &quot;$&quot;
+| where ProcessCommandLine has_any (&quot;lpush&quot;,&quot;rpush&quot;,&quot;hset&quot;,&quot;hmset&quot;,&quot;amqp-publish&quot;,&quot;basic_publish&quot;)
+| where ProcessCommandLine has_any (&quot;celery&quot;,&quot;unacked&quot;,&quot;celery_executor.execute_command&quot;,&quot;execute_command&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessCommandLine has_any (&quot;lpush&quot;,&quot;rpush&quot;,&quot;hset&quot;,&quot;hmset&quot;,&quot;amqp-publish&quot;,&quot;basic_publish&quot;)
+| where TargetProcessCommandLine has_any (&quot;celery&quot;,&quot;unacked&quot;,&quot;celery_executor.execute_command&quot;,&quot;execute_command&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Celery Task Injection Into Airflow Message Broker
+id: 8b1d2c3a-4e5f-4a6b-9c7d-1e2f3a4b5c6d
+description: Detects a process writing a forged Celery task to the Airflow message broker (Redis unacked hash / AMQP) to trigger worker RCE per CVE-2020-11981/11982.
+references:
+  - https://snyk.io/blog/message-brokers/
+  - https://nvd.nist.gov/vuln/detail/cve-2020-11981
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_verb:
+    CommandLine|contains:
+      - &#x27;lpush&#x27;
+      - &#x27;rpush&#x27;
+      - &#x27;hset&#x27;
+      - &#x27;hmset&#x27;
+      - &#x27;amqp-publish&#x27;
+      - &#x27;basic_publish&#x27;
+  selection_marker:
+    CommandLine|contains:
+      - &#x27;celery&#x27;
+      - &#x27;unacked&#x27;
+      - &#x27;execute_command&#x27;
+  condition: selection_verb and selection_marker
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3329-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:(*lpush* OR *LPUSH* OR *rpush* OR *RPUSH* OR *hset* OR *HSET* OR *hmset*)) (@process.command_line:(*celery* OR *unacked* OR *execute_command*))</code></pre></div>
+    <div class="tab-content" id="art-3329-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| CommandLine=/(lpush|rpush|hset|hmset|amqp-publish|basic_publish)/i
+| CommandLine=/(celery|unacked|execute_command)/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3329-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*lpush*&quot; OR Processes.process=&quot;*rpush*&quot; OR Processes.process=&quot;*hset*&quot; OR Processes.process=&quot;*hmset*&quot; OR Processes.process=&quot;*amqp-publish*&quot; OR Processes.process=&quot;*basic_publish*&quot;) (Processes.process=&quot;*celery*&quot; OR Processes.process=&quot;*unacked*&quot; OR Processes.process=&quot;*execute_command*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3329-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*lpush*&quot; OR Processes.process=&quot;*rpush*&quot; OR Processes.process=&quot;*hset*&quot; OR Processes.process=&quot;*hmset*&quot; OR Processes.process=&quot;*amqp-publish*&quot; OR Processes.process=&quot;*basic_publish*&quot;) (Processes.process=&quot;*celery*&quot; OR Processes.process=&quot;*unacked*&quot; OR Processes.process=&quot;*execute_command*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="d7e0cad44c" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Apache Airflow Celery worker spawns non-airflow child (command-injection RCE, CVE-2020-11981)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d7e0cad44c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the post-exploitation signal of CVE-2020-11981: an Airflow Celery worker directly executing a broker-supplied command that is NOT an &#x27;airflow tasks run&#x27; subprocess. Legit workers always fork into &#x27;airflow ... run&#x27;; a direct shell/LOLBin child of the worker is the injected command running.
+
+Rationale: Uses the article&#x27;s documented exec path: the Celery worker (airflow worker -q test) normally forks into &#x27;airflow tasks run&#x27;, so a direct shell/LOLBin child of the worker is the injected broker command from CVE-2020-11981. The airflow-subprocess exclusion is the discriminator that strips BashOperator noise. Corroborated by NVD CVE-2020-11981.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/cve-2020-11981
+  • https://security.snyk.io/vuln/SNYK-PYTHON-APACHEAIRFLOW-570291</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Airflow BashOperator DAGs whose &#x27;airflow tasks run&#x27; subprocess legitimately spawns bash (excluded by the airflow-run filter, but a misconfigured worker forking bash directly could still hit)</li><li>Worker container entrypoint/health-check scripts (sh -c) wrapping the celery worker launch</li><li>Sidecar log-shipping or metrics agents (curl/wget) spawned under the worker cgroup</li><li>Operators using PythonVirtualenvOperator that shells out to pip/python -c</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has &quot;airflow tasks run&quot; and FileName in~ (&quot;bash&quot;,&quot;sh&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the child ProcessCommandLine and the worker&#x27;s InitiatingProcessCommandLine; determine if the command maps to any scheduled DAG/operator or is unsanctioned (reverse shell, curl|sh, recon). 2) Contain: kill the child process, isolate the worker host, and revoke broker credentials so no further queued payloads execute. 3) Hunt: correlate back to UC &#x27;Celery task injected into broker&#x27; for the injection source, sweep all workers consuming the same queue for identical children, and check outbound connections from the worker for C2.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3329-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3329-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (InitiatingProcessCommandLine has_all (&quot;celery&quot;,&quot;worker&quot;)) or (InitiatingProcessCommandLine has_all (&quot;airflow&quot;,&quot;worker&quot;))
+| where (FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;socat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;perl&quot;,&quot;ruby&quot;))
+     or (FileName in~ (&quot;python&quot;,&quot;python3&quot;) and ProcessCommandLine has &quot;-c&quot;)
+| where not (ProcessCommandLine has &quot;airflow tasks run&quot; or ProcessCommandLine has &quot;airflow run&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where (ActingProcessCommandLine has_all (&quot;celery&quot;,&quot;worker&quot;)) or (ActingProcessCommandLine has_all (&quot;airflow&quot;,&quot;worker&quot;))
+| where (TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;socat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;perl&quot;,&quot;ruby&quot;))
+     or (TargetProcessName in~ (&quot;python&quot;,&quot;python3&quot;) and TargetProcessCommandLine has &quot;-c&quot;)
+| where not (TargetProcessCommandLine has &quot;airflow tasks run&quot; or TargetProcessCommandLine has &quot;airflow run&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Airflow Celery Worker Spawns Non-Airflow Child Process
+id: 2c9e7f10-3b4a-4d5e-8f6a-7b8c9d0e1f2a
+description: Detects an Airflow Celery worker directly executing a shell/LOLBin child instead of an &#x27;airflow ... run&#x27; subprocess, the post-exploitation signal of CVE-2020-11981 command injection.
+references:
+  - https://snyk.io/blog/message-brokers/
+  - https://nvd.nist.gov/vuln/detail/cve-2020-11981
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1059.004
+  - attack.t1190
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentCommandLine|contains|all:
+      - &#x27;celery&#x27;
+      - &#x27;worker&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/perl&#x27;
+  filter_airflow:
+    CommandLine|contains:
+      - &#x27;airflow tasks run&#x27;
+      - &#x27;airflow run&#x27;
+  condition: selection_parent and selection_child and not filter_airflow
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3329-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(airflow|python[0-9.]*|celery)$/i
+| ImageFileName=/\/(sh|bash|dash|zsh|nc|ncat|netcat|socat|curl|wget|perl|ruby)$/i
+| NOT (CommandLine=/airflow (tasks )?run/i)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3329-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process=&quot;*celery*&quot; Processes.parent_process=&quot;*worker*&quot;) OR (Processes.parent_process=&quot;*airflow*&quot; Processes.parent_process=&quot;*worker*&quot;)) (Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;zsh&quot; OR Processes.process_name=&quot;nc&quot; OR Processes.process_name=&quot;ncat&quot; OR Processes.process_name=&quot;netcat&quot; OR Processes.process_name=&quot;socat&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;perl&quot; OR Processes.process_name=&quot;ruby&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT (process=&quot;*airflow tasks run*&quot; OR process=&quot;*airflow run*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3329-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process=&quot;*celery*&quot; Processes.parent_process=&quot;*worker*&quot;) OR (Processes.parent_process=&quot;*airflow*&quot; Processes.parent_process=&quot;*worker*&quot;)) (Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;zsh&quot; OR Processes.process_name=&quot;nc&quot; OR Processes.process_name=&quot;ncat&quot; OR Processes.process_name=&quot;netcat&quot; OR Processes.process_name=&quot;socat&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;perl&quot; OR Processes.process_name=&quot;ruby&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT (process=&quot;*airflow tasks run*&quot; OR process=&quot;*airflow run*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bd931b0a34" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Apache Airflow task run with --pickle flag (pickle deserialization, CVE-2020-11982)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bd931b0a34" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts execution of an Airflow task via the --pickle code path, the deserialization vector behind CVE-2020-11982 where Celery workers unpickle broker data. Post-fix (&gt;=1.10.11) pickle is disabled by default, so an &#x27;airflow run ... --pickle &lt;id&gt;&#x27; invocation is anomalous and worth surfacing.
+
+Rationale: Anchors on the article&#x27;s verbatim task command [&#x27;airflow&#x27;,&#x27;run&#x27;,&#x27;exp&#x27;,&#x27;sleep&#x27;,...,&#x27;--pickle&#x27;,&#x27;15&#x27;,...] (the base64 unacked body decodes to exactly this), making --pickle the high-fidelity deserialization marker for CVE-2020-11982. Confirmed via GitHub Advisory GHSA-9g2w-5f3v-mfmm (insecure accept_content [json,pickle] default).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-9g2w-5f3v-mfmm
+  • https://www.miggo.io/vulnerability-database/cve/CVE-2020-11982</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy Airflow deployments (&lt;1.10.11) intentionally running with donot_pickle=False where --pickle is the normal scheduler-to-worker mechanism</li><li>Operators that explicitly set &#x27;airflow run --pickle&#x27; during DAG debugging</li><li>Backfill/test harnesses invoking tasks with pickled DAG IDs in non-prod</li><li>Custom Airflow plugins that pass --pickle for serialized DAG transport</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Airflow version on the host (&gt;=1.10.11 means pickle should be off — treat as suspicious) and identify whether the --pickle id maps to a known DAG run or an unscheduled task. 2) Contain: if unsanctioned, isolate the worker, set core.donot_pickle=True / restrict Celery accept_content to json, and rotate broker credentials. 3) Hunt: correlate to broker-injection and worker-child UCs on the same host, and review the worker for unexpected child processes spawned immediately after the --pickle task.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3329-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3329-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3329-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where ProcessCommandLine has &quot;airflow&quot;
+| where ProcessCommandLine has &quot;--pickle&quot;
+| where ProcessCommandLine has_any (&quot;run&quot;,&quot;tasks run&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessCommandLine has &quot;airflow&quot;
+| where TargetProcessCommandLine has &quot;--pickle&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Apache Airflow Task Execution With --pickle Flag
+id: 3d0a8b21-5c6d-4e7f-9a0b-2c3d4e5f6a7b
+description: Detects &#x27;airflow run ... --pickle&#x27; execution, the pickle deserialization code path behind CVE-2020-11982. Anomalous on patched (&gt;=1.10.11) deployments where pickle is disabled by default.
+references:
+  - https://snyk.io/blog/message-brokers/
+  - https://github.com/advisories/GHSA-9g2w-5f3v-mfmm
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+  - attack.t1059.006
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    CommandLine|contains|all:
+      - &#x27;airflow&#x27;
+      - &#x27;--pickle&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3329-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*airflow* @process.command_line:*run* @process.command_line:*pickle*</code></pre></div>
+    <div class="tab-content" id="art-3329-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| CommandLine=/airflow/i
+| CommandLine=/--pickle/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3329-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*airflow*&quot; Processes.process=&quot;*--pickle*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3329-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*airflow*&quot; Processes.process=&quot;*--pickle*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1874883bca" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Hosts exposed to Apache Airflow Celery broker RCE (CVE-2020-11981 / CVE-2020-11982)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="1874883bca" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Exposure hunt that lists assets running a vulnerable Apache Airflow (&lt;1.10.11) carrying CVE-2020-11981 (command injection) or CVE-2020-11982 (pickle deserialization), the precondition for the broker-to-worker RCE described in the article. Drives prioritised patching to 1.10.11+.
+
+Rationale: Uses the two exact CVE IDs the article disclosed (CVE-2020-11981, CVE-2020-11982, both fixed in Airflow 1.10.11) to enumerate exploitable Celery-executor hosts before an attacker reaches the broker. Deterministic vendor-vuln lookup, not behavioural, so FP is essentially zero.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/cve-2020-11981
+  • https://github.com/advisories/GHSA-9g2w-5f3v-mfmm</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/isolated Airflow instances where the broker is unreachable (vulnerable but not exploitable)</li><li>Hosts already mid-patch where the scanner inventory lags the actual 1.10.11 upgrade</li><li>Containers with the vulnerable package present but the CeleryExecutor not in use (LocalExecutor/KubernetesExecutor)</li><li>Decommissioned dev images still listed in the asset inventory</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each returned host confirm the executor is CeleryExecutor and the broker (Redis/RabbitMQ) is network-reachable from untrusted segments — those are the real targets. 2) Contain: prioritise upgrade to Airflow &gt;=1.10.11, set core.donot_pickle=True, and firewall the broker port to the worker subnet with authentication enabled. 3) Hunt: on each exposed host, run the broker-injection, worker-child, and --pickle UCs over the last 90 days to rule out prior exploitation before patching.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId in (&quot;CVE-2020-11981&quot;,&quot;CVE-2020-11982&quot;)
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in (&quot;CVE-2020-11981&quot;,&quot;CVE-2020-11982&quot;)
+| project TimeGenerated, DeviceName, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2020-11981&quot; OR Vulnerabilities.cve=&quot;CVE-2020-11982&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3329-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2020-11981&quot; OR Vulnerabilities.cve=&quot;CVE-2020-11982&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-11982&quot;, &quot;CVE-2020-11981&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3329-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2020-11982&quot;, &quot;CVE-2020-11981&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3329-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-11982&quot;, &quot;CVE-2020-11981&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3329-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2020-11982&quot;, &quot;CVE-2020-11981&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="32899168e0" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Scheduled task created with suspicious image / encoded args</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="32899168e0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task">T1053.005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3329-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName =~ &quot;schtasks.exe&quot;
+| where ProcessCommandLine has &quot;/create&quot;
+| where ProcessCommandLine has_any (&quot;powershell&quot;,&quot;cmd.exe&quot;,&quot;rundll32&quot;,&quot;-enc&quot;,&quot;FromBase64&quot;,&quot;\Users\Public&quot;,&quot;\AppData\&quot;)
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName</code></pre></div>
+    <div class="tab-content" id="art-3329-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\schtasks.exe&quot;
+| where CommandLine has &quot;/create&quot;
+| where CommandLine has_any (&quot;powershell&quot;,&quot;cmd.exe&quot;,&quot;rundll32&quot;,&quot;-enc&quot;,&quot;FromBase64&quot;,
+                              &quot;\Users\Public&quot;, &quot;\AppData\&quot;)
+| project TimeGenerated, Computer, Account, CommandLine,
+          ParentProcessName, NewProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3329-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Scheduled Task Creation with Suspicious Image / Encoded Args
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0d
+status: experimental
+description: |
+    schtasks.exe /create with payload-shaped action — points at
+    powershell, cmd, rundll32, encoded-base64, or user-writable paths.
+references:
+    - https://attack.mitre.org/techniques/T1053/005/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1053.005
+    - attack.persistence
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_schtasks:
+        Image|endswith: &#x27;\schtasks.exe&#x27;
+        CommandLine|contains: &#x27;/create&#x27;
+    selection_payload:
+        CommandLine|contains:
+            - &#x27;powershell&#x27;
+            - &#x27;cmd.exe&#x27;
+            - &#x27;rundll32&#x27;
+            - &#x27;-enc&#x27;
+            - &#x27;FromBase64&#x27;
+            - &#x27;\Users\Public&#x27;
+            - &#x27;\AppData\&#x27;
+    condition: selection_schtasks and selection_payload
+falsepositives:
+    - GPO-driven scheduled tasks, MDT/SCCM imaging
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-3329-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*/create*&quot;
+      AND (Processes.process=&quot;*powershell*&quot; OR Processes.process=&quot;*cmd.exe*&quot;
+        OR Processes.process=&quot;*rundll32*&quot; OR Processes.process=&quot;*-enc*&quot;
+        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*\Users\Public*&quot;
+        OR Processes.process=&quot;*\AppData\*&quot;)
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-3329-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name=&quot;schtasks.exe&quot; AND Processes.process=&quot;*/create*&quot;
+      AND (Processes.process=&quot;*powershell*&quot; OR Processes.process=&quot;*cmd.exe*&quot;
+        OR Processes.process=&quot;*rundll32*&quot; OR Processes.process=&quot;*-enc*&quot;
+        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*\Users\Public*&quot;
+        OR Processes.process=&quot;*\AppData\*&quot;)
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ac17c1933f" data-platforms="def,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Breaking out of message brokers</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ac17c1933f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3329-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3329-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3329-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Breaking out of message brokers
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/passwd&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Breaking out of message brokers
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/passwd&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3329-uc6-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3329-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3329-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3329-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Breaking out of message brokers ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-3329-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Breaking out of message brokers ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

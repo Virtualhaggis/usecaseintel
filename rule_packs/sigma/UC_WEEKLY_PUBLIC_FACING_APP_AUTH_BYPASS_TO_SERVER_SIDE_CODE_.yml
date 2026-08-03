@@ -1,0 +1,39 @@
+title: "[WEEKLY] Public-Facing App Auth-Bypass to Server-Side Code Execution (web-server process spawning a shell/interpreter)"
+id: 53c4bffb-0f3f-58d3-964b-76ed896b93cb
+status: experimental
+description: "Detects a web-application or appliance service process (httpd, nginx, php-fpm, w3wp, java/tomcat, node, or VMware vpxd) directly spawning an OS shell, scripting interpreter, or download/recon LOLBin \u2014 the universal post-exploitation tell after a pre-auth or auth-bypass flaw is turned into code execution. This matters this fortnight because a cluster of critical public-facing-app bypass and RCE disclosures landed together: vBulletin pre-auth eval() RCE (CVE-2026-61511) now has a public exploit, VMware vCenter auth-bypass + directory-traversal RCE and ESX VM-escape (CVE-2026-59309/59310/47876), plus a wave of GHSA auth-bypass advisories (LightRAG hardcoded DEFAULT_TOKEN_SECRET CVE-2026-61740, Auth.js fail-open GHSA-8fpg-xm3f-6cx3, Budibase cross-origin credential leak GHSA-mqhr-6j6h-74p5, @better-auth/scim provider-id collision GHSA-rjg6-39jm-rgg4) \u2014 all sharing the T1190 \u2192 code-execution/destructive-action chain. It spans the exploit and execution kill-chain stages: the auth check is defeated (exploit) and the server process is coerced into running attacker code (install/actions). It FIRES when an internet-facing service binary is the parent of an interactive shell or interpreter it never legitimately launches; it does NOT fire on normal application workers, CI/build agents, or admin-initiated maintenance scripts whose parent is a login shell or scheduler rather than the network-facing daemon. Reference IOCs (<c2_domain_list>, <sha256_list>) are substitution slots only \u2014 the parent/child process relationship is the durable signal."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_PUBLIC_FACING_APP_AUTH_BYPASS_TO_SERVER_SIDE_CODE_.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059
+  - attack.t1505_003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'httpd'
+      - 'apache2'
+      - 'nginx'
+      - 'php-fpm'
+      - 'php-cgi'
+      - 'php'
+      - 'w3wp.exe'
+      - 'java'
+      - 'java.exe'
+      - 'node'
+      - 'node.exe'
+      - 'tomcat.exe'
+      - 'catalina.sh'
+      - 'vmware-vpxd'
+      - 'vpxd'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

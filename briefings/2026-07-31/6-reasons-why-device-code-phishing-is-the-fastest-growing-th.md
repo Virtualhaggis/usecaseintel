@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Device code phishing token redemption via Microsoft Authentication Broker sign-in
 
-`UC_29_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_30_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ AADSignInEventsBeta
 
 ### ARToken post-token abuse: inbox rules & SharePoint exfil from device-code sign-in IP
 
-`UC_29_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_30_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

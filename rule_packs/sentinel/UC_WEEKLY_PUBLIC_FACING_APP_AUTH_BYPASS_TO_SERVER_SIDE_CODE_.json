@@ -1,0 +1,40 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PUBLIC_FACING_APP_AUTH_BYPASS_TO_SERVER_SIDE_CODE_')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Public-Facing App Auth-Bypass to Server-Side Code Execution (web-server process spawning a shell/interpreter)",
+        "description": "Detects a web-application or appliance service process (httpd, nginx, php-fpm, w3wp, java/tomcat, node, or VMware vpxd) directly spawning an OS shell, scripting interpreter, or download/recon LOLBin \u2014 the universal post-exploitation tell after a pre-auth or auth-bypass flaw is turned into code execution. This matters this fortnight because a cluster of critical public-facing-app bypass and RCE disclosures landed together: vBulletin pre-auth eval() RCE (CVE-2026-61511) now has a public exploit, VMware vCenter auth-bypass + directory-traversal RCE and ESX VM-escape (CVE-2026-59309/59310/47876), plus a wave of GHSA auth-bypass advisories (LightRAG hardcoded DEFAULT_TOKEN_SECRET CVE-2026-61740, Auth.js fail-open GHSA-8fpg-xm3f-6cx3, Budibase cross-origin credential leak GHSA-mqhr-6j6h-74p5, @better-auth/scim provider-id collision GHSA-rjg6-39jm-rgg4) \u2014 all sharing the T1190 \u2192 code-execution/destructive-action chain. It spans the exploit and execution kill-chain stages: the auth check is defeated (exploit) and the server process is coerced into running attacker code (install/actions). It FIRES when an internet-facing service binary is the parent of an interactive shell or interpreter it never legitimately launches; it does NOT fire on normal application workers, CI/build agents, or admin-initiated maintenance scripts whose parent is a login shell or scheduler rather than the network-facing daemon. Reference IOCs (<c2_domain_list>, <sha256_list>) are substitution slots only \u2014 the parent/child process relationship is the durable signal.\n\nRationale: Every article in the batch is a public-facing auth/authorization defeat whose payoff is server-side execution or destructive action; the one endpoint signal common to the RCE-capable members (vBulletin eval(), VMware vCenter traversal RCE, and any bypass chained to shell/webshell) is the internet-facing service process becoming the parent of a shell/interpreter \u2014 a relationship that survives IOC rotation.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"httpd\",\"apache2\",\"nginx\",\"php-fpm\",\"php-cgi\",\"php\",\"w3wp.exe\",\"java\",\"java.exe\",\"node\",\"node.exe\",\"tomcat.exe\",\"vmware-vpxd\",\"vpxd\",\"vmdird\")\n| where FileName in~ (\"sh\",\"bash\",\"dash\",\"zsh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"python\",\"python3\",\"perl\",\"ruby\",\"curl\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami\",\"id\",\"uname\")\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256\n| order by Timestamp desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1505.003"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PUBLIC_FACING_APP_AUTH_BYPASS_TO_SERVER_SIDE_CODE_",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_PUBLIC_FACING_APP_AUTH_BYPASS_TO_SERVER_SIDE_CODE_.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}
