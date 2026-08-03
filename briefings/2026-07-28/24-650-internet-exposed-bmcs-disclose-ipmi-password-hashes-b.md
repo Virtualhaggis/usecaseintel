@@ -37,12 +37,12 @@ Of the 36,872 internet-exposed server-management interfaces running IPMI, 24,650
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1046** — Network Service Discovery
 - **T1589.001** — Gather Victim Identity Information: Credentials
 - **T1110.002** — Brute Force: Password Cracking
-- **T1046** — Network Service Discovery
-- **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1078.001** — Valid Accounts: Default Accounts
 - **T1021** — Remote Services
+- **T1078** — Valid Accounts
 - **T1542.001** — Pre-OS Boot: System Firmware
 - **T1098** — Account Manipulation
 
@@ -52,32 +52,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Internet-exposed BMC IPMI RAKP hash disclosure exposure (UDP/623)
+### Internet-exposed BMC: inbound IPMI/RMCP UDP 623 fan-out scan reaching internal controllers
 
-`UC_101_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 (All_Traffic.transport=udp OR All_Traffic.protocol=udp) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action | `drop_dm_object_name(All_Traffic)` | rename src as attacker_or_client dest as bmc_host | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort == 623
-| where Protocol =~ "Udp"
-| project Timestamp, DeviceName, LocalIP, RemoteIP, RemoteIPType, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### IPMI/BMC service discovery scan across many hosts (UDP/623)
-
-`UC_101_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_104_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(All_Traffic.dest) as target_count count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 by All_Traffic.src _time span=10m | `drop_dm_object_name(All_Traffic)` | where target_count >= 20 | rename src as scanner | sort - target_count
+| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp All_Traffic.action=allowed by All_Traffic.src All_Traffic.dest
+| `drop_dm_object_name("All_Traffic")`
+| where (NOT cidrmatch("10.0.0.0/8",src)) AND (NOT cidrmatch("172.16.0.0/12",src)) AND (NOT cidrmatch("192.168.0.0/16",src))
+| where cidrmatch("10.0.0.0/8",dest) OR cidrmatch("172.16.0.0/12",dest) OR cidrmatch("192.168.0.0/16",dest)
+| stats sum(count) as connections dc(dest) as bmc_targets values(dest) as targets by src
+| where bmc_targets >= 5
+| sort - bmc_targets
+```
+
+### IPMI RAKP pre-auth hash disclosure: BMC returns auth material to external source (CVE-2013-4786)
+
+`UC_104_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(All_Traffic.bytes_in) as bytes_returned from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp All_Traffic.action=allowed by All_Traffic.src All_Traffic.dest
+| `drop_dm_object_name("All_Traffic")`
+| where (NOT cidrmatch("10.0.0.0/8",src)) AND (NOT cidrmatch("172.16.0.0/12",src)) AND (NOT cidrmatch("192.168.0.0/16",src))
+| where cidrmatch("10.0.0.0/8",dest) OR cidrmatch("172.16.0.0/12",dest) OR cidrmatch("192.168.0.0/16",dest)
+| where bytes_returned > 0
+| stats sum(count) as exchanges dc(dest) as bmcs_that_responded values(dest) as responding_bmcs by src
+| sort - bmcs_that_responded
+```
+
+### Internal host enumerating BMCs over IPMI UDP 623 (ipmitool/RAKP sweep from a workstation)
+
+`UC_104_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=623 All_Traffic.transport=udp by All_Traffic.src All_Traffic.dest
+| `drop_dm_object_name("All_Traffic")`
+| where cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src)
+| stats dc(dest) as bmc_targets values(dest) as targets sum(count) as connections by src
+| where bmc_targets >= 5
+| sort - bmc_targets
 ```
 
 **Defender KQL:**
@@ -85,27 +101,34 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(24h)
 | where RemotePort == 623
-| summarize TargetCount=dcount(RemoteIP), Targets=make_set(RemoteIP,100) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, bin(Timestamp, 10m)
-| where TargetCount >= 20   // 20+ distinct BMCs probed in 10m from one host = IPMI sweep
-| order by TargetCount desc
+| where InitiatingProcessAccountName !endswith "$"
+| summarize BmcTargets = dcount(RemoteIP), Targets = make_set(RemoteIP, 100), SampleCmd = any(InitiatingProcessCommandLine), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| where BmcTargets >= 5   // one host probing many BMCs on 623 = management-plane enumeration, not a single admin session
+| order by BmcTargets desc
 ```
 
-### Successful IPMI/BMC login from unexpected source using default ADMIN/root accounts
+### Successful IPMI/BMC authentication or SOL session from anomalous source (harvested-credential reuse)
 
-`UC_101_12` · phase: **actions** · confidence: **Low** · AI-generated for this article
+`UC_104_13` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success Authentication.app=ipmi (Authentication.user=ADMIN OR Authentication.user=root OR Authentication.user=admin OR Authentication.user="") by Authentication.src Authentication.dest Authentication.user | `drop_dm_object_name(Authentication)` | sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success (Authentication.app=ipmi OR Authentication.app=ilo OR Authentication.app=idrac OR Authentication.app=bmc OR Authentication.app=redfish) by Authentication.src Authentication.dest Authentication.user
+| `drop_dm_object_name("Authentication")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
-### BMC firmware flash / rogue admin account creation (iLOBleed-style persistence)
+### BMC persistence: firmware flash, new admin account, or config reset in controller audit log
 
-`UC_101_13` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_104_14` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object_category=firmware OR All_Changes.object_category=user) All_Changes.dvc=*ipmi* OR All_Changes.dvc=*ilo* OR All_Changes.dvc=*bmc* by All_Changes.dvc All_Changes.action All_Changes.object All_Changes.user | `drop_dm_object_name(All_Changes)` | sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object_category=firmware OR All_Changes.object_category=user OR All_Changes.object_category=account OR All_Changes.object_category=directory) (All_Changes.action=created OR All_Changes.action=modified OR All_Changes.action=updated OR All_Changes.action=deleted) by All_Changes.dest All_Changes.user All_Changes.object All_Changes.object_category All_Changes.action
+| `drop_dm_object_name("All_Changes")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -408,4 +431,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

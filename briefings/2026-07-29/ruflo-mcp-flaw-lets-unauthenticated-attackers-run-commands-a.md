@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated POST /mcp tools/call to Ruflo MCP bridge (CVE-2026-59726 RufRoot)
 
-`UC_78_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_81_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Ruflo MCP bridge (node) spawns a shell — terminal_execute RCE
 
-`UC_78_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_81_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Backdoor payload written to /app by shell or downloader in Ruflo container
 
-`UC_78_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_81_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceFileEvents
 
 ### Non-loopback inbound to Ruflo MCP bridge (3001) or MongoDB (27017)
 
-`UC_78_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_81_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

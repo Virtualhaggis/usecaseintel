@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Pheditor forced-password-change auth bypass — POST to pheditor.php
 
-`UC_116_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_117_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Web-server / PHP process writes new .php file under webroot (post-Pheditor webshell drop)
 
-`UC_116_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_117_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f25v-x6vr-962g: Pheditor: Authentication Bypass in Forced
 
-`UC_116_0` · phase: **install** · confidence: **High**
+`UC_117_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

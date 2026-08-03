@@ -11,42 +11,13 @@ Sponsored by Flare
 August 3, 2026
 10:45 AM
 0 
-
-
 The Android RAT’s official operation is surrounded by cheaper resellers, alleged source-code vendors, independent server owners, and possible impersonators. 
-
-
 BTMOB has been  covered by several cybersecurity publications, primarily through technical analyses of the malware and its capabilities, but much less has been reported about the ecosystem that has developed around it.
-
-…
+Activity o…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `78.135.93.123`
-- **Domain (defanged):** `tvipguncelpro.com`
-- **Domain (defanged):** `server.yaarsa.com`
-- **SHA256:** `8dbfcf6b67ee6c5821564bf4228099beaf5f40e4a87118cbb1e52d8f01312f40`
-- **SHA256:** `c522a752519580c37574684d86abfe3c4666ac72d837825ac21d6cfe937d7817`
-- **SHA256:** `13341c5171c34d846f6d0859e8c45d8a898eb332da41ab62bcae7519368d2248`
-- **SHA256:** `b053a3d68abb27e91c2caf5412de7868fe50c7506e1f9314fee4c26285db7f59`
-- **SHA256:** `bb20f2bfb78fd5a2ff4693939d061368949cd717b8033b6facba82df26b31a1a`
-- **SHA256:** `a4c15afd6cb79b66fce3532907e65ccd13c8140a3cb26cc334138775f7a6aebd`
-- **SHA256:** `061fdbf0c61a29d31406887a40b4f6a551600f7366a711ecce6063f61965308d`
-- **SHA256:** `937e77d2a910a1452f951d2de6f614a6219e707c40b6789ccf31cac0d82868cc`
-- **SHA256:** `9141e25b93d315843399a757cddb63af55bdbdd4094fba4a6b2bbea89bf9ecf9`
-- **SHA256:** `b724ca474c2bca77573e071524bd5500f0355c8b6b8bb432dcc2d8664ed2d073`
-- **SHA256:** `6ce41ee43a5d5f773203cfcf810c0208246f0b27505d49b270288751a747f5a3`
-- **SHA256:** `8548600b4e461580fe32fea6c1e233a5862483ca9a617d79fdea001ebf5556cc`
-- **SHA256:** `8df615fa33dcd7aa81adc640ac42a6a9a4a2bebbb5308f1d8a35afa169e99229`
-- **SHA256:** `186cd8d9998d6c4e2d12a1370056ba910a6f8a2176c8b0c9362a868830fcfb07`
-- **SHA256:** `071d3ad980ea77a9041c580015b2796d3d5d471c2fc1039c8f381501efb3cda0`
-- **SHA256:** `04241bc4ce9cece5644cd7f8f86ede7def5cb6122b2f3b5760c2c3556da34a7d`
-- **SHA256:** `2b725322f9a019b0106a084694c18fbb8604cf64c65182153c4d67ff3adf4e48`
-- **SHA256:** `2b307f11ae418931674156425c47ff1c0645fb0b160290cd358599708ff62668`
-- **SHA1:** `d7b115003784ac2a595083795abffe68d834cdf0`
-- **SHA1:** `23e6d0fd3bbc71c0138acab43d454c39fa56d206`
-- **MD5:** `cb801ef4d92394f984f726c9fc4f8315`
-- **MD5:** `e54490097af9746e375b87477b1ffd2d`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -57,8 +28,6 @@ BTMOB has been  covered by several cybersecurity publications, primarily throug
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
 - **T1437.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
 - **T1521** — Encrypted Channel
@@ -73,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### BTMOB Android RAT C2 beacon to server.yaarsa.com / 78.135.93.123
 
-`UC_1_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +60,7 @@ DeviceNetworkEvents
 
 ### BTMOB RAT C2 URI path /yaarsa/private/ and WebSocket /con endpoint
 
-`UC_1_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +78,7 @@ DeviceNetworkEvents
 
 ### BTMOB RAT APK sample hash observed on managed endpoint
 
-`UC_1_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -275,7 +244,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside the Underground Business of the Android BTMOB RAT malware
 
-`UC_1_5` · phase: **exploit** · confidence: **High**
+`UC_5_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -322,17 +291,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `78.135.93.123`, `tvipguncelpro.com`, `server.yaarsa.com`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `8dbfcf6b67ee6c5821564bf4228099beaf5f40e4a87118cbb1e52d8f01312f40`, `c522a752519580c37574684d86abfe3c4666ac72d837825ac21d6cfe937d7817`, `13341c5171c34d846f6d0859e8c45d8a898eb332da41ab62bcae7519368d2248`, `b053a3d68abb27e91c2caf5412de7868fe50c7506e1f9314fee4c26285db7f59`, `bb20f2bfb78fd5a2ff4693939d061368949cd717b8033b6facba82df26b31a1a`, `a4c15afd6cb79b66fce3532907e65ccd13c8140a3cb26cc334138775f7a6aebd`, `061fdbf0c61a29d31406887a40b4f6a551600f7366a711ecce6063f61965308d`, `937e77d2a910a1452f951d2de6f614a6219e707c40b6789ccf31cac0d82868cc` _(+14 more)_
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

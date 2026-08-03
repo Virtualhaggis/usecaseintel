@@ -12,9 +12,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [an analysis of incidents at brazilian educational institutio](./2026-08-03/an-analysis-of-incidents-at-brazilian-educational-institutio.md)
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [chinese threat actor uses leaked darksword kit to deploy gho](./2026-08-03/chinese-threat-actor-uses-leaked-darksword-kit-to-deploy-gho.md)
+- [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
+- [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
 - [inside the underground business of the android btmob rat mal](./2026-08-03/inside-the-underground-business-of-the-android-btmob-rat-mal.md)
 - [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
+- [n able warns of n central auth bypass flaw exploited in atta](./2026-08-03/n-able-warns-of-n-central-auth-bypass-flaw-exploited-in-atta.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 - [pnld breach exposes u k police and government contact detail](./2026-08-03/pnld-breach-exposes-u-k-police-and-government-contact-detail.md)
 
@@ -87,7 +90,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-28
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
 - [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
-- [critical openwrt dhcpv6 flaw could let unauthenticated attac](./2026-07-28/critical-openwrt-dhcpv6-flaw-could-let-unauthenticated-attac.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ghsa critical cve 2026 54658 hypequery clickhouse has sql in](./2026-07-28/ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in.md)
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)
@@ -95,7 +97,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
 - [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
-- [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
 - [the generator can t be the validator what openai s hugging f](./2026-07-28/the-generator-can-t-be-the-validator-what-openai-s-hugging-f.md)
 
@@ -261,7 +262,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
-- [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06

@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound email from 9i6pokerdepot.com malware-delivery campaign sender
 
-`UC_136_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_137_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ EmailEvents
 
 ### Endpoint resolution/connection to ClickUp stage-2 BAT dropper subdomain
 
-`UC_136_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_137_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### Financial_report.bat hidden PowerShell pulling installer.exe from pixeldrain.com
 
-`UC_136_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_137_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceProcessEvents
 
 ### Inbound message bundling nested .eml (voicemail lure) plus calendar invite
 
-`UC_136_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_137_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -437,7 +437,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Email threat landscape: Q2 2026 trends and insights
 
-`UC_136_9` · phase: **exploit** · confidence: **High**
+`UC_137_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### TuxBot/Akiru IoT botnet C2 connection to known infrastructure
 
-`UC_195_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_196_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### TuxBot Telnet/ADB scanner fan-out (credential brute-force propagation)
 
-`UC_195_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_196_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### TuxBot fallback C2 via digikalas.online DGA subdomains and DNS TXT queries
 
-`UC_195_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_196_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceNetworkEvents
 
 ### TuxBot/Akiru known ELF sample execution and drop (SHA256 pivot)
 
-`UC_195_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_196_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -448,7 +448,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TuxBot v3: Inside an IoT Botnet Framework With LLM-Assisted Development
 
-`UC_195_10` · phase: **install** · confidence: **High**
+`UC_196_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
