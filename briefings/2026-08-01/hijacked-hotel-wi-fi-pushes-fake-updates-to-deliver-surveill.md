@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### CornFlake RAT self-copy to %APPDATA%\svchost32\svchost32.exe
 
-`UC_11_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### CornFlake service registration 'svchost32' / 'Cloud Sync Service'
 
-`UC_11_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceRegistryEvents
 
 ### ChocoShell token theft from TokenBroker .tbres cache
 
-`UC_11_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_14_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceFileEvents
 
 ### Microsoft device code authentication flow phishing sign-in
 
-`UC_11_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_14_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ AADSignInEventsBeta
 
 ### CaptiveCrunch C2 / phishing infrastructure network callback
 
-`UC_11_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_14_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceNetworkEvents
 
 ### ClickFix fake-update command referencing CaptiveCrunch infrastructure
 
-`UC_11_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -439,7 +439,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hijacked Hotel Wi-Fi Pushes Fake Updates to Deliver Surveillance Malware
 
-`UC_11_8` · phase: **exploit** · confidence: **High**
+`UC_14_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

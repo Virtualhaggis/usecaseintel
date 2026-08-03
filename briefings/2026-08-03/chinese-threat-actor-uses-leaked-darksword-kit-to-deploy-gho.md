@@ -1,29 +1,38 @@
-# [CRIT] Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw
+# [CRIT] Chinese Threat Actor Uses Leaked DarkSword Kit to Deploy GHOSTBLADE on iOS
 
 **Source:** The Hacker News
-**Published:** 2026-07-28
-**Article:** https://thehackernews.com/2026/07/attackers-exploit-arista-velocloud.html
+**Published:** 2026-08-03
+**Article:** https://thehackernews.com/2026/08/chinese-threat-actor-uses-leaked.html
 
 ## Threat Profile
 
-Attackers Exploit Arista VeloCloud Orchestrator Command Injection Flaw 
- Ravie Lakshmanan  Jul 28, 2026 Vulnerability / Threat Intelligence 
-A maximum-severity security flaw impacting on-premises versions of Arista VeloCloud Orchestrator (VCO) has come under active exploitation in the wild.
-The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of operating system command injection that could pave the way for arbitrary code execution.
-"VeloCloud Orchestrator (VCO) on-prem h…
+Chinese Threat Actor Uses Leaked DarkSword Kit to Deploy GHOSTBLADE on iOS 
+ Ravie Lakshmanan  Aug 03, 2026 Mobile Security / Vulnerability 
+An unknown Chinese-threat actor has been observed running a campaign targeting Apple iOS devices by leveraging a publicly leaked version of the DarkSword exploit kit.
+Attack surface management platform Censys said it identified the threat actor running more than 100 web properties, most of which are fake Amazon Web Services (AWS) sign-in pages on a domain…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-16812`
-- **CVE:** `CVE-2025-68686`
-- **CVE:** `CVE-2026-16723`
-- **IPv4 (defanged):** `8.19.75.217`
-- **IPv4 (defanged):** `206.72.242.124`
-- **IPv4 (defanged):** `206.72.242.162`
+- **IPv4 (defanged):** `38.181.52.95`
+- **IPv4 (defanged):** `103.106.190.217`
+- **IPv4 (defanged):** `38.22.89.117`
+- **IPv4 (defanged):** `103.97.128.67`
+- **IPv4 (defanged):** `162.4.136.30`
+- **IPv4 (defanged):** `223.26.63.56`
+- **IPv4 (defanged):** `151.243.126.191`
+- **IPv4 (defanged):** `107.175.49.181`
+- **IPv4 (defanged):** `103.238.129.112`
+- **IPv4 (defanged):** `103.226.155.200`
+- **IPv4 (defanged):** `103.226.155.201`
+- **IPv4 (defanged):** `202.8.120.249`
+- **IPv4 (defanged):** `93.152.221.37`
+- **Domain (defanged):** `t.me/YATA0000`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -32,12 +41,10 @@ The vulnerability, tracked as CVE-2026-16812 (CVSS score: 10.0), is a case of op
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1071** — Application Layer Protocol
-- **T1059** — Command and Scripting Interpreter
+- **T1189** — Drive-by Compromise
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1059.004** — Unix Shell
-- **T1595** — Active Scanning
-- **T1046** — Network Service Discovery
 
 ## Kill chain phases observed
 
@@ -45,79 +52,79 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Network communication with Arista-confirmed VeloCloud Orchestrator attacker IPs
+### Managed device egress to DarkSword/GHOSTBLADE watering-hole & Apple-ID decoy hosts
 
-`UC_105_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_0_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN ("8.19.75.217","206.72.242.124","206.72.242.162") OR All_Traffic.dest IN ("8.19.75.217","206.72.242.124","206.72.242.162")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("38.181.52.95","103.106.190.217") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let DeliveryIPs = dynamic(["38.181.52.95","103.106.190.217"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("8.19.75.217","206.72.242.124","206.72.242.162")
-| project Timestamp, DeviceName, ActionType, LocalIP, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where RemoteIP in (DeliveryIPs)
+| join kind=leftouter (DeviceInfo | where Timestamp > ago(30d) | summarize arg_max(Timestamp, OSPlatform, OSVersion) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, LocalIP
 | order by Timestamp desc
 ```
 
-### OS command-injection payload in VeloCloud Orchestrator web request (CVE-2026-16812)
+### Device beaconing to DarkSword operator panels (DarkSword Admin / Decode Dashboard / C2) on 8888,3000
 
-`UC_105_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_0_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*;*" OR Web.url="*|*" OR Web.url="*%3B*" OR Web.url="*%7C*" OR Web.url="*$(*" OR Web.url="*%24%28*" OR Web.url="*`*" OR Web.url="*%60*" OR Web.url="*&&*") by Web.src Web.dest Web.http_method Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","103.106.190.217","93.152.221.37") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | eval panel_port=if(dest_port==8888 OR dest_port==3000,"yes","no") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
-### VeloCloud Orchestrator host post-exploitation shell / egress activity
+**Defender KQL:**
+```kql
+let OperatorPanelIPs = dynamic(["38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","103.106.190.217","93.152.221.37"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (OperatorPanelIPs)
+| extend PanelPort = iff(RemotePort in (8888, 3000), "observed-panel-port", "other")
+| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, PanelPort, RemoteUrl, InitiatingProcessFileName, LocalIP, ActionType
+| order by Timestamp desc
+```
 
-`UC_105_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+### Beaconing — periodic outbound to small set of destinations
+
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN ("java","nginx","httpd","node","sh","bash","curl","wget","python","python3","perl","nc","ncat") AND All_Traffic.direction="outbound" AND NOT (All_Traffic.dest IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16"))) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIPType == "Public"
-| where InitiatingProcessFileName in~ ("sh","bash","dash","nc","ncat","curl","wget","python","python3","perl")
-| where InitiatingProcessFolderPath has_any ("/opt/vc","/opt/velocloud","velocloud") or InitiatingProcessParentFileName in~ ("java","nginx","httpd","node")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
-```
-
-### Child shell / recon process spawned by VeloCloud Orchestrator service
-
-`UC_105_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("java","nginx","httpd","apache2","node") AND Processes.process_name IN ("sh","bash","dash","whoami","id","uname","hostname","curl","wget","nc","ncat","python","python3","perl")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("java","nginx","httpd","apache2","node")
-| where FileName in~ ("sh","bash","dash","whoami","id","uname","hostname","ifconfig","ip","curl","wget","nc","ncat","python","python3","perl")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
-| order by Timestamp desc
-```
-
-### Rapid endpoint enumeration / scanning of VeloCloud Orchestrator web interface
-
-`UC_105_10` · phase: **recon** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count dc(Web.url) as distinct_urls values(Web.status) as statuses from datamodel=Web where (Web.url="*/portal*" OR Web.url="*/api/*" OR Web.url="*/login*" OR Web.url="*/orchestrator*") by Web.src Web.dest span=5m | `drop_dm_object_name(Web)` | where distinct_urls > 30 | sort - count
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -300,13 +307,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-16812`, `CVE-2025-68686`, `CVE-2026-16723`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `8.19.75.217`, `206.72.242.124`, `206.72.242.162`
+  - IP / domain IOC(s): `38.181.52.95`, `103.106.190.217`, `38.22.89.117`, `103.97.128.67`, `162.4.136.30`, `223.26.63.56`, `151.243.126.191`, `107.175.49.181` _(+6 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

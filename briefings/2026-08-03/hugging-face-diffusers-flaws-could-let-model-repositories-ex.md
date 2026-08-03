@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Unexpected Python file staged in Hugging Face model cache/snapshot (FaceHugger)
 
-`UC_3_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### Python process spawns shell/LOLBin child in Diffusers/Hugging Face context
 
-`UC_3_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Outbound network from Python/Diffusers process to non-Hugging-Face host
 
-`UC_3_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### Vulnerable Hugging Face Diffusers (< 0.38.0) exposure inventory (FaceHugger)
 
-`UC_3_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -327,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hugging Face Diffusers Flaws Could Let Model Repositories Execute Arbitrary Code
 
-`UC_3_7` · phase: **exploit** · confidence: **High**
+`UC_6_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Root process executing from a memfd/anonymous image (CVE-2026-53264 core-dump payoff)
 
-`UC_102_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Unprivileged user+network namespace setup via /proc uid_map/setgroups (CVE-2026-53264 enabler)
 
-`UC_102_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_105_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Non-root tc clsact qdisc + flower filter manipulation (CVE-2026-53264 trigger path)
 
-`UC_102_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_105_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

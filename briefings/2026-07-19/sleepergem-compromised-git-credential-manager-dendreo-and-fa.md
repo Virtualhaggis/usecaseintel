@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### SleeperGem: ruby process C2 contact to Forgejo host git.disroot.org
 
-`UC_166_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_167_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### SleeperGem loader: ruby install script spawns shell running deploy.sh
 
-`UC_166_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### SleeperGem payload drop: native binary written to hidden ~/.local/share/gcm/
 
-`UC_166_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceFileEvents
 
 ### SleeperGem persistence: git-credential-manager daemon installs systemd + cron
 
-`UC_166_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### SleeperGem privilege escalation: setuid-root shell planted as /usr/local/sbin/ping6
 
-`UC_166_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_167_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SleeperGem: Compromised git_credential_manager, Dendreo, and fastlane RubyGems D
 
-`UC_166_3` · phase: **exploit** · confidence: **High**
+`UC_167_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

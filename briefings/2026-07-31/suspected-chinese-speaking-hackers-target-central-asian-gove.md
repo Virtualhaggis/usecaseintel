@@ -95,7 +95,7 @@ _(none detected from narrative keywords)_
 
 ### OctLurk/LurkProxy/SilkLurk C2 beacon to campaign-specific domains & VPS IPs
 
-`UC_20_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_23_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceNetworkEvents
 
 ### OctLurk/SilkLurk/LurkProxy/PlugX known sample hash execution or drop
 
-`UC_20_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_23_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ union
 
 ### Impacket secretsdump domain-controller hash extraction
 
-`UC_20_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceProcessEvents
 
 ### AnyDesk-masquerading keylogger execution from non-standard path
 
-`UC_20_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_23_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### Fscan internal/public port scan using 'pp.txt' credential file
 
-`UC_20_15` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_23_15` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -195,7 +195,7 @@ DeviceProcessEvents
 
 ### SilkLurk collection: admin-share doc staging archived with WinRAR/7-Zip
 
-`UC_20_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_23_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -515,7 +515,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Suspected Chinese-Speaking Hackers Target Central Asian Governments With OctLurk
 
-`UC_20_10` · phase: **exploit** · confidence: **High**
+`UC_23_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Fuyao Android TV-box botnet C2/backdoor egress to fwgcloud.com
 
-`UC_27_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_30_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

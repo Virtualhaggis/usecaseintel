@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### npm maintainer credential-phish lookalike domain npmjs.help (chalk/debug ATO)
 
-`UC_217_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_218_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### plain-crypto-js postinstall RAT dropper spawns downloader (axios/Sapphire Sleet)
 
-`UC_217_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_218_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### axios RAT dropped artifacts: renamed PowerShell wt.exe + campaign 6202033 files
 
-`UC_217_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_218_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceFileEvents
 
 ### axios RAT persistence: HKCU Run value MicrosoftUpdate pointing to system.bat
 
-`UC_217_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_218_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceRegistryEvents
 
 ### axios RAT C2 beacon to sfrclak[.]com / 142.11.206.73:8000
 
-`UC_217_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_218_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### Malicious postmark-mcp BCC email exfiltration to phan@giftshop[.]club
 
-`UC_217_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_218_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -237,7 +237,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What is a dependency firewall?
 
-`UC_217_4` · phase: **exploit** · confidence: **High**
+`UC_218_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

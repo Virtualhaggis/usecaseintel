@@ -1,3 +1,492 @@
+<article class="card" id="art-3161" data-art-slug="2021-05-26-snyk-uncovers-supply-chain-security-vulnerabilities-in-visua"
+  data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
+  data-techs="T1190,T1195.002"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="windows"
+  data-uc-count="5" data-llm-uc-count="2"
+  data-search="Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extensions This new VS Code extensions supply chain security threat has the potential to become a new attack playground, potentially impacting over 2,000,000 developers. Let’s take a deeper look. CVE-2018-12120 CVE-2019-13567 T1190 T1195.002 [LLM] Node.js debugger/inspector launched bound to all network interfaces (CVE-2018-12120/-13567) [LLM] Remote (non-loopback) connection to an exposed Node.js debug/inspect port 5858/9229 Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2021-05-26-snyk-uncovers-supply-chain-security-vulnerabilities-in-visua" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/vulnerable-visual-studio-code-extensions-marketplace/" target="_blank" rel="noopener">Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extensions</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2021-05-26</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">This new VS Code extensions supply chain security threat has the potential to become a new attack playground, potentially impacting over 2,000,000 developers. Let’s take a deeper look.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2018-12120</span> <span class="ind cve">CVE-2019-13567</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3161-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3161"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3161-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Node.js debugger/inspector launched bound to all network interfaces (CVE-2018-12120/-13567) · [LLM] Remote (non-loopback) connection to an exposed Node.js debug/inspect port 5858/9229 · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="0a69706bbc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Node.js debugger/inspector launched bound to all network interfaces (CVE-2018-12120/-13567)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="0a69706bbc" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts node.exe started with --debug or --inspect bound to 0.0.0.0 (all interfaces), the misconfiguration that exposes an arbitrary-JavaScript remote-code-execution surface called out in the Snyk VS Code research. Surfaces the launch event so an analyst can confirm whether the debug/inspect port is network-reachable.
+
+Rationale: Anchored on the article&#x27;s explicit CVE-2018-12120 reference (Node debug port on all interfaces) plus the concrete `node --debug` code block; cross-checked NVD and the Node.js 6.15.0 release notes confirming bare --debug binds 0.0.0.0:5858. The 0.0.0.0 / legacy---debug combination with node.exe is the high-fidelity signal.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2018-12120
+  • https://nodejs.org/en/blog/release/v6.15.0
+  • https://www.cvedetails.com/cve/CVE-2018-12120/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer deliberately exposing the inspector for remote IDE attach to a container/VM with --inspect=0.0.0.0</li><li>CI/CD test runners launching node --inspect=0.0.0.0 for debug or coverage in a build agent</li><li>Docker/devcontainer entrypoints binding the inspector to 0.0.0.0 so the host IDE can attach</li><li>Legacy Node 6 services still invoked with --debug</li><li>Electron-based tooling (including VS Code itself) spawning helper node processes with inspect flags</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;com.docker.backend.exe&quot;,&quot;dockerd.exe&quot;,&quot;docker.exe&quot;,&quot;node.exe&quot;) and ProcessCommandLine has &quot;--inspect=0.0.0.0&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the bind is genuinely network-reachable (0.0.0.0 or a routable IP, not localhost) and identify the user/parent process — interactive dev launch vs service/CI account. 2) Contain: if unexpected, kill the exposed node process and block inbound to 5858/9229 at the host firewall; rotate any secrets reachable from that workspace (SSH keys, .env). 3) Hunt: pivot to UC2 to check for any non-loopback inbound connection to the debug port, and review the host for child processes spawned by node after the listener opened.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3161-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3161-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3161-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3161-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3161-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;node.exe&quot;
+| extend Cmd = tolower(ProcessCommandLine)
+| where Cmd has_any (&quot;--inspect&quot;,&quot;--debug&quot;)
+| where (Cmd has &quot;0.0.0.0&quot;) or (Cmd matches regex @&quot;--debug(-brk)?(=|\s|$)&quot;)   // 0.0.0.0 = explicit all-interface bind; bare --debug defaults to 0.0.0.0:5858 (CVE-2018-12120)
+| where not (Cmd matches regex @&quot;--(inspect|debug)(-brk)?=(localhost|127\.0\.0\.1)&quot;)  // drop explicit loopback binds (safe)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3161-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where NewProcessName endswith @&quot;\node.exe&quot;
+| extend Cmd = tolower(CommandLine)
+| where Cmd has_any (&quot;--inspect&quot;,&quot;--debug&quot;)
+| where (Cmd has &quot;0.0.0.0&quot;) or (Cmd matches regex @&quot;--debug(-brk)?(=|\s|$)&quot;)
+| where not (Cmd matches regex @&quot;--(inspect|debug)(-brk)?=(localhost|127\.0\.0\.1)&quot;)
+| where SubjectUserName !endswith &quot;$&quot;
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3161-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js Debugger or Inspector Exposed on All Network Interfaces
+id: 6f2a1d3e-9c84-4b21-8f7a-2e1c0b5d7a91
+status: experimental
+description: Detects node.exe started with --debug/--inspect bound to all interfaces (0.0.0.0) or the legacy --debug flag, exposing a remote arbitrary-JavaScript execution surface (CVE-2018-12120, CVE-2019-13567).
+references:
+  - https://snyk.io/blog/vulnerable-visual-studio-code-extensions-marketplace/
+  - https://nvd.nist.gov/vuln/detail/CVE-2018-12120
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1059.007
+  - attack.t1133
+  - attack.execution
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_node:
+    Image|endswith: &#x27;\node.exe&#x27;
+  selection_flag:
+    CommandLine|contains:
+      - &#x27;--inspect&#x27;
+      - &#x27;--debug&#x27;
+  selection_exposed:
+    CommandLine|contains:
+      - &#x27;0.0.0.0&#x27;
+  selection_legacy:
+    CommandLine|contains:
+      - &#x27;--debug &#x27;
+      - &#x27;--debug-brk&#x27;
+  filter_localhost:
+    CommandLine|contains:
+      - &#x27;--inspect=localhost&#x27;
+      - &#x27;--inspect=127.0.0.1&#x27;
+      - &#x27;--debug=localhost&#x27;
+      - &#x27;--debug=127.0.0.1&#x27;
+  condition: selection_node and selection_flag and (selection_exposed or selection_legacy) and not filter_localhost
+level: high</code></pre></div>
+    <div class="tab-content" id="art-3161-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE) (@CommandLine:*--inspect* OR @CommandLine:*--debug*) (@CommandLine:*0.0.0.0* OR @CommandLine:*--debug* OR @CommandLine:*--debug-brk*) -@CommandLine:*--inspect=localhost* -@CommandLine:*--inspect=127.0.0.1* -@CommandLine:*--debug=localhost* -@CommandLine:*--debug=127.0.0.1*</code></pre></div>
+    <div class="tab-content" id="art-3161-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ImageFileName=/\\node\.exe$/i
+| CommandLine=/--(inspect|debug)/i
+| (CommandLine=/0\.0\.0\.0/ OR CommandLine=/--debug(\s|-brk|$)/i)
+| NOT CommandLine=/--(inspect|debug)(-brk)?=(localhost|127\.0\.0\.1)/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3161-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3161-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3161-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3161-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=node.exe (Processes.process=&quot;*--inspect*&quot; OR Processes.process=&quot;*--debug*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| search (process=&quot;*0.0.0.0*&quot; OR process=&quot;*--debug *&quot; OR process=&quot;*--debug&quot; OR process=&quot;*--debug-brk*&quot;)
+| search NOT (process=&quot;*--debug=localhost*&quot; OR process=&quot;*--debug=127.0.0.1*&quot; OR process=&quot;*--inspect=localhost*&quot; OR process=&quot;*--inspect=127.0.0.1*&quot;)
+| `ctime(firstTime)` | `ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3161-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=node.exe (Processes.process=&quot;*--inspect*&quot; OR Processes.process=&quot;*--debug*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| search (process=&quot;*0.0.0.0*&quot; OR process=&quot;*--debug *&quot; OR process=&quot;*--debug&quot; OR process=&quot;*--debug-brk*&quot;)
+| search NOT (process=&quot;*--debug=localhost*&quot; OR process=&quot;*--debug=127.0.0.1*&quot; OR process=&quot;*--inspect=localhost*&quot; OR process=&quot;*--inspect=127.0.0.1*&quot;)
+| `ctime(firstTime)` | `ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="af408154ce" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Remote (non-loopback) connection to an exposed Node.js debug/inspect port 5858/9229</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="af408154ce" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound connections from a non-loopback host to a developer machine&#x27;s Node.js debug (5858) or inspector (9229) listener — the actual remote-attach exploitation of CVE-2018-12120/-13567 referenced in the Snyk research, where a remote computer attaches to the debug port and evaluates arbitrary JavaScript. Distinct network pivot from the launch-config detection in UC1.
+
+Rationale: Uses the debug port 5858 (CVE-2018-12120, confirmed by NVD: &quot;debugger port 5858 listens on any interface&quot;) and inspector default 9229, restricting to non-loopback inbound — the exploitable remote-attach path the article and second sources describe. The instant-markdown 8090 vector is loopback-only so deliberately excluded here. Sentinel uses ASIM ImNetworkSession which requires firewall/network telemetry normalized into the tenant.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2018-12120
+  • https://github.com/snyk-labs/VSCode-Instant-markdown-vuln
+  • https://www.cvedetails.com/cve/CVE-2018-12120/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="External Remote Services">T1133</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A teammate legitimately remote-attaching a debugger to a shared dev/staging host</li><li>VS Code Remote-SSH or devcontainer port-forwarding the inspector across hosts</li><li>Vulnerability scanner (Nessus/Qualys) probing 5858/9229 during an authorized scan</li><li>Kubernetes/Docker port-forward exposing the inspector to a colleague&#x27;s workstation</li><li>Internal QA/performance automation attaching to a long-running node service for profiling</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP !in (&quot;&lt;approved-scanner-ip-placeholder&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the remote source IP and whether it maps to a known developer/scanner; check if the listening node process was launched with the all-interface flags from UC1 on the same host. 2) Contain: if the source is unexpected, block inbound 5858/9229 at the host firewall, terminate the exposed node process, and isolate if arbitrary JS execution is suspected. 3) Hunt: review DeviceProcessEvents on the target for child processes spawned by node after the inbound connection (debugger-driven RCE) and rotate SSH keys / repo tokens accessible from that workspace.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3161-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-3161-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-3161-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3161-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where LocalPort in (5858, 9229)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;Code.exe&quot;)
+| where RemoteIPType != &quot;Loopback&quot; and RemoteIP !startswith &quot;127.&quot; and RemoteIP != &quot;::1&quot;
+| project Timestamp, DeviceName, RemoteIP, RemoteIPType, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3161-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(30d)
+| where DstPortNumber in (5858, 9229)
+| where NetworkDirection =~ &quot;Inbound&quot;
+| where SrcIpAddr !startswith &quot;127.&quot; and SrcIpAddr != &quot;::1&quot; and SrcIpAddr != DstIpAddr
+| project TimeGenerated, DvcHostname, SrcIpAddr, SrcPortNumber, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, DvcAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3161-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationPort:(5858 OR 9229) OR @SourcePort:(5858 OR 9229)) @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE OR *\Code.exe) -@SourceIp:127.* -@DestinationIp:127.*</code></pre></div>
+    <div class="tab-content" id="art-3161-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/\\node\.exe$/i
+| LocalPort=/^(5858|9229)$/
+| NOT RemoteAddressIP4=/^(127\.|::1)/
+| groupBy([aid, ComputerName, RemoteAddressIP4, LocalPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-3161-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3161-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3161-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3161-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (5858, 9229) All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| search src!=&quot;127.0.0.1&quot; AND src!=&quot;::1&quot; AND src!=dest
+| `ctime(firstTime)` | `ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3161-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (5858, 9229) All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| search src!=&quot;127.0.0.1&quot; AND src!=&quot;::1&quot; AND src!=dest
+| `ctime(firstTime)` | `ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3161-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3161-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2018-12120&quot;, &quot;CVE-2019-13567&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3161-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2018-12120&quot;, &quot;CVE-2019-13567&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3161-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3161-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3161-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3161-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2018-12120&quot;, &quot;CVE-2019-13567&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3161-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2018-12120&quot;, &quot;CVE-2019-13567&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3161-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3161-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3161-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-3161-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-3161-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-3161-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3161-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3161-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3161-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-3161-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a30ed89655" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a30ed89655" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3161-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3161-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3161-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3161-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3161-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3161-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3161-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3161-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3161-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Snyk uncovers supply chain security vulnerabilities in Visual Studio Code extens ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3162" data-art-slug="2021-05-25-snyk-takes-on-responsibility-for-node-js-ecosystem-vulnerabi"
   data-phases="c2,delivery,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -6149,277 +6638,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3252" data-art-slug="2020-12-03-kernel-privilege-escalation-how-kubernetes-container-isolati"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="linux,windows"
-  data-uc-count="3" data-llm-uc-count="1"
-  data-search="Kernel privilege escalation: how Kubernetes container isolation impacts privilege escalation attacks In this post, we will explore how Kubernetes container isolation impacts privilege escalation attacks. We will use common kernel exploitation techniques to figure out how container abstractions layers can hinder our path to that precious root shell. CVE-2017-7308 T1190 [LLM] Unprivileged user-namespace creation (unshare CLONE_NEWUSER) preceding Linux privilege escalation Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Kernel privilege escalation: how Kubernetes container isolation impacts privileg">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2020-12-03-kernel-privilege-escalation-how-kubernetes-container-isolati" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/kernel-privilege-escalation/" target="_blank" rel="noopener">Kernel privilege escalation: how Kubernetes container isolation impacts privilege escalation attacks</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-12-03</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">In this post, we will explore how Kubernetes container isolation impacts privilege escalation attacks. We will use common kernel exploitation techniques to figure out how container abstractions layers can hinder our path to that precious root shell.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2017-7308</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3252-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3252"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3252-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unprivileged user-namespace creation (unshare CLONE_NEWUSER) preceding Linux privilege escalation</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — Kernel privilege escalation: how Kubernetes container isolation impacts privileg</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="b631e629c5" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">Unprivileged user-namespace creation (unshare CLONE_NEWUSER) preceding Linux privilege escalation</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b631e629c5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the enabling primitive of the article&#x27;s chain: a non-root process creating a new user namespace to acquire CAP_NET_RAW (and other namespaced capabilities) before exploiting a kernel bug. Article-specific because the whole attack hinges on unprivileged user namespaces being unrestricted (kernel.unprivileged_userns_clone=1) and the exploit issuing unshare(CLONE_NEWUSER) to reach the AF_PACKET attack surface.
-
-Rationale: Anchored on the article&#x27;s explicit unshare(CLONE_NEWUSER) call and its stated dependency on unprivileged user namespaces (CONFIG_USER_NS=y, kernel.unprivileged_userns_clone=1). The Sentinel auditd path keys on x86_64 syscall=272 with a0=10000000 (exactly CLONE_NEWUSER alone), which catches the article&#x27;s compiled PoC; the process-CLI variants (Defender/Splunk/Falcon/Datadog) catch operator/tooling usage of the unshare utility. Cross-checked against Project Zero&#x27;s CVE-2017-7308 write-up and Elastic&#x27;s unshare/namespace-manipulation rules to confirm the syscall flag value and CAP_NET_RAW-via-userns mechanism.
-
-Cross-checked against:
-  • https://projectzero.google/2017/05/exploiting-linux-kernel-via-packet.html
-  • https://www.elastic.co/guide/en/security/8.19/potential-privilege-escalation-via-unshare-and-uid-change.html
-  • https://www.systemshardening.com/articles/linux/linux-unprivileged-namespace-restriction/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Escape to Host">T1611</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Rootless container runtimes (Podman/Docker rootless, containerd, crun/runc) legitimately creating user namespaces</li><li>Application sandboxes using unshare under the hood: bubblewrap/bwrap, Flatpak, Firejail, Chromium/Electron sandbox</li><li>systemd-nspawn and systemd unit sandboxing (PrivateUsers=)</li><li>CI/CD build tooling running unprivileged builds (buildah, GitLab/GitHub runners, nix sandbox)</li><li>Developer/admin manual testing of namespaces (unshare -r bash) on workstations</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;containerd-shim&quot;,&quot;containerd-shim-runc-v2&quot;,&quot;runc&quot;,&quot;crun&quot;,&quot;dockerd&quot;,&quot;podman&quot;,&quot;bwrap&quot;,&quot;firejail&quot;,&quot;flatpak&quot;,&quot;systemd-nspawn&quot;,&quot;systemd&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree and initiating parent for the unshare event; on the auditd path, grab the same PID&#x27;s subsequent SYSCALL records looking for socket(AF_PACKET) (syscall=41, a0=11) and any euid transition to 0. Benign if parent is a container runtime/sandbox (runc, bwrap, podman). 2) Contain: if the namespace creator is an unexpected binary in an unexpected path (e.g. /tmp, /home) or a non-runtime parent, isolate the host/pod and snapshot memory before reboot; capture the binary for hashing. 3) Hunt: across the fleet, search for kernel oops referencing packet_set_ring/af_packet (UC2), other non-root user-namespace creators, and set kernel.unprivileged_userns_clone=0 / patch kernels &lt;4.10.6 as remediation.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3252-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3252-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3252-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3252-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-3252-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3252-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3252-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where FileName =~ &quot;unshare&quot;
-| where ProcessCommandLine has_any (&quot;--user&quot;,&quot;--map-root-user&quot;,&quot;CLONE_NEWUSER&quot;) or ProcessCommandLine matches regex @&quot;(^|\s)-(?:r|U)(\s|$)&quot;
-| where AccountName !in~ (&quot;root&quot;,&quot;system&quot;) and AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3252-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where SyslogMessage has &quot;type=SYSCALL&quot;
-| where SyslogMessage has &quot;syscall=272&quot;        // unshare() on x86_64
-| where SyslogMessage has &quot;a0=10000000&quot;         // CLONE_NEWUSER (0x10000000) == the article&#x27;s unshare(CLONE_NEWUSER)
-| where SyslogMessage has &quot;success=yes&quot;
-| project TimeGenerated, Computer, ProcessName, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3252-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unprivileged User Namespace Creation via unshare (CVE-2017-7308 enabling primitive)
-id: 3f9c1e7a-2b6d-4c8e-9a1f-7d2e5b9c4a10
-status: experimental
-description: Detects creation of a new user namespace via the unshare utility by a non-root user, the primitive that grants CAP_NET_RAW used to reach the CVE-2017-7308 AF_PACKET vulnerability described by Snyk.
-references:
-  - https://snyk.io/blog/kernel-privilege-escalation/
-  - https://projectzero.google/2017/05/exploiting-linux-kernel-via-packet.html
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.privilege_escalation
-  - attack.t1068
-  - attack.t1611
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Image|endswith: &#x27;/unshare&#x27;
-    CommandLine|contains:
-      - &#x27;--user&#x27;
-      - &#x27;--map-root-user&#x27;
-      - &#x27;CLONE_NEWUSER&#x27;
-  condition: selection
-falsepositives:
-  - Container runtimes and sandboxing tools that legitimately create user namespaces
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-3252-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*unshare* (@process.command_line:*--user* OR @process.command_line:*--map-root-user* OR @process.command_line:*-r* OR @process.command_line:*-U* OR @process.command_line:*CLONE_NEWUSER*) -@user.name:root</code></pre></div>
-    <div class="tab-content" id="art-3252-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/unshare$/i
-| CommandLine=/(--user|--map-root-user|\s-r\b|\s-U\b|CLONE_NEWUSER)/i
-| UserName!=root
-| groupBy([aid, ComputerName, UserName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3252-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3252-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3252-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3252-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=unshare AND (Processes.process=&quot;*--user*&quot; OR Processes.process=&quot;*--map-root-user*&quot; OR Processes.process=&quot;* -r*&quot; OR Processes.process=&quot;* -U*&quot; OR Processes.process=&quot;*CLONE_NEWUSER*&quot;) AND Processes.user!=root by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-3252-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=unshare AND (Processes.process=&quot;*--user*&quot; OR Processes.process=&quot;*--map-root-user*&quot; OR Processes.process=&quot;* -r*&quot; OR Processes.process=&quot;* -U*&quot; OR Processes.process=&quot;*CLONE_NEWUSER*&quot;) AND Processes.user!=root by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3252-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3252-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3252-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3252-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-7308&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3252-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2017-7308&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3252-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3252-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3252-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3252-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-7308&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3252-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2017-7308&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7aa7d5c22b" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Kernel privilege escalation: how Kubernetes container isolation impacts privileg</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7aa7d5c22b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3252-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3252-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3252-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3252-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Kernel privilege escalation: how Kubernetes container isolation impacts privileg
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/home/dev/exploit&quot;, &quot;/etc/shadow&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3252-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Kernel privilege escalation: how Kubernetes container isolation impacts privileg
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/home/dev/exploit&quot;, &quot;/etc/shadow&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3252-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3252-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3252-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3252-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Kernel privilege escalation: how Kubernetes container isolation impacts privileg ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/home/dev/exploit*&quot; OR Filesystem.file_path=&quot;*/etc/shadow*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-3252-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Kernel privilege escalation: how Kubernetes container isolation impacts privileg ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/home/dev/exploit*&quot; OR Filesystem.file_path=&quot;*/etc/shadow*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

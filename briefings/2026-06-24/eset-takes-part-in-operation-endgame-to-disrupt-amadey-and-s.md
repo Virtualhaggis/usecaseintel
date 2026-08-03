@@ -225,7 +225,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ESET takes part in Operation Endgame to disrupt Amadey and Stealc
 
-`UC_316_7` · phase: **exploit** · confidence: **High**
+`UC_317_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

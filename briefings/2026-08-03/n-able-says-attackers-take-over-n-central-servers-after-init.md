@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Cloudflared tunnel registered as a Windows service on N-central-managed endpoint
 
-`UC_2_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### svchost.exe masquerading from a user Documents folder (N-central attacker drop)
 
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Endpoint contact with N-able-published attacker IPs / Synology QuickConnect C2 domains
 
-`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceNetworkEvents
 
 ### N-able Take Control agent spawning shell / process-enumeration on managed endpoint
 
-`UC_2_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_5_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — N-able Says Attackers Take Over N-central Servers After Initial Fix Proves Incom
 
-`UC_2_6` · phase: **install** · confidence: **High**
+`UC_5_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
