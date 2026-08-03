@@ -8,6 +8,11 @@ _2604 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-08-03
+- [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
+- [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
+- [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
+
 ## 2026-08-01
 - [coldcard hardware wallet flaw linked to 70 million bitcoin t](./2026-08-01/coldcard-hardware-wallet-flaw-linked-to-70-million-bitcoin-t.md)
 - [hackers poison adform script to swap crypto wallet addresses](./2026-08-01/hackers-poison-adform-script-to-swap-crypto-wallet-addresses.md)
@@ -16,7 +21,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
-- [anthropic incident an ai agent published a malicious package](./2026-07-31/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [anthropic s claude breached 3 orgs uploaded pypi malware dur](./2026-07-31/anthropic-s-claude-breached-3-orgs-uploaded-pypi-malware-dur.md)
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
 - [arch linux disables aur package adoption to stop malware flo](./2026-07-31/arch-linux-disables-aur-package-adoption-to-stop-malware-flo.md)
@@ -98,9 +102,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-27
 - [cisa kev cve 2025 68686 fortinet fortios exposure of sensiti](./2026-07-27/cisa-kev-cve-2025-68686-fortinet-fortios-exposure-of-sensiti.md)
 - [cisa kev cve 2026 16812 arista velocloud orchestrator on pre](./2026-07-27/cisa-kev-cve-2026-16812-arista-velocloud-orchestrator-on-pre.md)
-- [dysphoria iot botnet adds blockchain c2 and victim relays af](./2026-07-27/dysphoria-iot-botnet-adds-blockchain-c2-and-victim-relays-af.md)
 - [nvidia forms 37 member open secure ai alliance and open sour](./2026-07-27/nvidia-forms-37-member-open-secure-ai-alliance-and-open-sour.md)
-- [public exploit released for patched vbulletin pre auth code ](./2026-07-27/public-exploit-released-for-patched-vbulletin-pre-auth-code-.md)
 - [what is ai pentesting and how does it work](./2026-07-27/what-is-ai-pentesting-and-how-does-it-work.md)
 
 ## 2026-07-25
