@@ -39,7 +39,7 @@ Anyone who visited a site carrying the aff…
 - **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1189** — Drive-by Compromise
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -47,13 +47,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Poisoned Adform trackpoint-async.js C2 beacon to 84.32.102.230:7744
+### Adform clipper C2 beacon to 84.32.102.230:7744 on page load
 
 `UC_5_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -61,31 +64,43 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "84.32.102.230" and RemotePort == 7744
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
 | order by Timestamp desc
 ```
 
-### Adform supply-chain confirmation: trackpoint-async.js load correlated with C2 beacon
+### Adform supply-chain exposure: s2.adform.net trackpoint-async.js fetch then C2 beacon
 
 `UC_5_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as script_loads min(_time) as loadFirst max(_time) as loadLast from datamodel=Web.Web where Web.url="*s2.adform.net/banners/scripts/st/trackpoint-async.js*" by Web.src Web.url | `drop_dm_object_name(Web)` | join type=inner src [ | tstats summariesonly=true count as beacon_hits from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src | `drop_dm_object_name(All_Traffic)` ] | convert ctime(loadFirst) ctime(loadLast) | table src url script_loads beacon_hits loadFirst loadLast | sort - beacon_hits
+| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src _time span=1s
+| `drop_dm_object_name(All_Traffic)`
+| rename src as host_src, _time as beacon_time
+| join type=inner host_src [
+    | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*trackpoint-async.js*" Web.dest="s2.adform.net" by Web.src _time span=1s
+    | `drop_dm_object_name(Web)`
+    | rename src as host_src, _time as fetch_time ]
+| where beacon_time>=fetch_time AND beacon_time<=fetch_time+600
+| eval delay_sec=beacon_time-fetch_time
+| table host_src fetch_time beacon_time delay_sec dest dest_port
+| sort - beacon_time
 ```
 
 **Defender KQL:**
 ```kql
-let Beacon = DeviceNetworkEvents
+let win = 10m;
+let ScriptFetch = DeviceNetworkEvents
     | where Timestamp > ago(30d)
-    | where RemoteIP == "84.32.102.230" and RemotePort == 7744
-    | project BeaconTime = Timestamp, DeviceId, BeaconProc = InitiatingProcessFileName;
+    | where RemoteUrl has "s2.adform.net"
+    | project DeviceId, DeviceName, FetchTime = Timestamp, RemoteUrl, InitiatingProcessFileName;
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "s2.adform.net"
-| join kind=inner Beacon on DeviceId
-| where BeaconTime between (Timestamp - 1h .. Timestamp + 1h)
-| project ScriptLoadTime = Timestamp, BeaconTime, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, BeaconProc
+| where RemoteIP == "84.32.102.230" and RemotePort == 7744
+| project DeviceId, DeviceName, BeaconTime = Timestamp, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort
+| join kind=inner ScriptFetch on DeviceId
+| where BeaconTime between (FetchTime .. FetchTime + win)
+| project DeviceName, DeviceId, InitiatingProcessAccountName, FetchTime, BeaconTime, DelaySec = datetime_diff('second', BeaconTime, FetchTime), RemoteUrl, InitiatingProcessFileName, RemoteIP, RemotePort
 | order by BeaconTime desc
 ```
 

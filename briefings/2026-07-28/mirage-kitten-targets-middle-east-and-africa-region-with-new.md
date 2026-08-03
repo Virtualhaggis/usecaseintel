@@ -45,19 +45,13 @@ Mirage Kitten – also known as UNC1549, Smoke Sandstorm, and Nimbus Manticore�
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
+- **T1105** — Ingress Tool Transfer
+- **T1574.001** — DLL Search Order Hijacking
+- **T1574.002** — DLL Side-Loading
 - **T1572** — Protocol Tunneling
 - **T1090** — Proxy
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1057** — Process Discovery
-- **T1033** — System Owner/User Discovery
-- **T1082** — System Information Discovery
-- **T1059** — Command and Scripting Interpreter
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1566.003** — Phishing: Spearphishing via Service
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -65,52 +59,71 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NightLedger DLL search-order hijack: malicious SspiCli.dll loaded by AppVShNotify.exe
+### NightLedger C2 beacon to realhealthshop/tjconsultingservices with unique URI paths
 
-`UC_100_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="sspicli.dll" NOT (Filesystem.file_path IN ("*\\Windows\\System32\\*","*\\Windows\\SysWOW64\\*","*\\Windows\\WinSxS\\*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "sspicli.dll"
-| where InitiatingProcessFileName =~ "appvshnotify.exe"
-| where not(FolderPath startswith @"C:\Windows\System32\" or FolderPath startswith @"C:\Windows\SysWOW64\" or FolderPath startswith @"C:\Windows\WinSxS\")
-| project Timestamp, DeviceName, FolderPath, SHA256, MD5, InitiatingProcessFolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### NightLedger C2 beacon: unique HTTPS URIs to realhealthshop.com / tjconsultingservices.com
-
-`UC_100_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_100_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN ("*edfcvfgbhnjmkqwasderfgg*","*qasxcdfvgbhnmyuioplkhnj*","*wsdefvvbnhyuijkplmbgfrtt*") OR Web.dest IN ("realhealthshop.com","tjconsultingservices.com")) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest has "realhealthshop.com" OR All_Traffic.dest has "tjconsultingservices.com" OR All_Traffic.url IN ("*edfcvfgbhnjmkqwasderfgg*","*qasxcdfvgbhnmyuioplkhnj*","*wsdefvvbnhyuijkplmbgfrtt*")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any ("/edfcvfgbhnjmkqwasderfgg","/qasxcdfvgbhnmyuioplkhnj","/wsdefvvbnhyuijkplmbgfrtt")
-    or RemoteUrl has_any ("realhealthshop.com","tjconsultingservices.com")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has_any ("realhealthshop.com","tjconsultingservices.com")
+    or RemoteUrl has_any ("edfcvfgbhnjmkqwasderfgg","qasxcdfvgbhnmyuioplkhnj","wsdefvvbnhyuijkplmbgfrtt")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### BridgeHead/ArcBridge WebSocket tunneler C2 to smartconnect.azurewebsites.net
+### SspiCli.dll search-order hijack side-loaded by AppVShNotify.exe (NightLedger)
+
+`UC_100_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`sysmon` EventCode=7 ImageLoaded="*\\SspiCli.dll" Image="*\\AppVShNotify.exe" NOT (ImageLoaded IN ("C:\\Windows\\System32\\SspiCli.dll","C:\\Windows\\SysWOW64\\SspiCli.dll","C:\\Windows\\WinSxS\\*")) | stats count min(_time) as firstTime max(_time) as lastTime by Computer Image ImageLoaded Signed SignatureStatus | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "SspiCli.dll"
+| where InitiatingProcessFileName =~ "AppVShNotify.exe"
+| where not(FolderPath startswith @"C:\Windows\System32") and not(FolderPath startswith @"C:\Windows\SysWOW64") and not(FolderPath startswith @"C:\Windows\WinSxS")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### AppVShNotify.exe initiating outbound public network connections (NightLedger host)
 
 `UC_100_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest="smartconnect.azurewebsites.net" OR Web.url="*smartconnect.azurewebsites.net*" by Web.src Web.dest Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="appvshnotify.exe" All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "AppVShNotify.exe"
+| where RemoteIPType == "Public"
+| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort,10), Dsts=make_set(coalesce(RemoteUrl, tostring(RemoteIP)),10) by DeviceName, InitiatingProcessFolderPath
+| order by FirstSeen desc
+```
+
+### BridgeHead/ArcBridge WebSocket tunnel to smartconnect.azurewebsites.net
+
+`UC_100_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest has "smartconnect.azurewebsites.net" OR Web.url="*/connect*") Web.http_user_agent="*Chrome/86.0.4240.75*Edg/86.0.622.38*" by Web.src Web.dest Web.url Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -122,68 +135,24 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### BridgeHead tunneler DLL masquerade at anomalous paths (unbcl.dll / libwinpthread-1.dll)
+### Mirage Kitten tunneler/backdoor DLL drop in known staging paths (BridgeHead/NightLedger)
 
-`UC_100_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_100_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="unbcl.dll" AND Filesystem.file_path="*\\AppData\\Local\\Microsoft\\VisualStudio*") OR (Filesystem.file_name="libwinpthread-1.dll" AND Filesystem.file_path="*\\univpn\\promote*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where ((Filesystem.file_name="unbcl.dll" AND Filesystem.file_path="*\\Microsoft\\VisualStudio\\*") OR (Filesystem.file_name="libwinpthread-1.dll" AND Filesystem.file_path="*\\univpn\\promote\\*") OR (Filesystem.file_name="SspiCli.dll" AND NOT Filesystem.file_path="C:\\Windows\\*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where (FileName =~ "unbcl.dll" and FolderPath has @"\AppData\Local\Microsoft\VisualStudio")
+| where (FileName =~ "unbcl.dll" and FolderPath has @"\Microsoft\VisualStudio")
     or (FileName =~ "libwinpthread-1.dll" and FolderPath has @"\univpn\promote")
-    or MD5 =~ "c832ecd135781b11f59e3fffb3d2b6ac"
-| project Timestamp, DeviceName, FolderPath, FileName, MD5, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### NightLedger post-exploitation: AppVShNotify.exe spawning discovery/execution children
-
-`UC_100_12` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="appvshnotify.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","whoami.exe","tasklist.exe","net.exe","net1.exe","systeminfo.exe","ipconfig.exe","nltest.exe","quser.exe","reg.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "appvshnotify.exe"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","tasklist.exe","net.exe","net1.exe","systeminfo.exe","ipconfig.exe","nltest.exe","quser.exe","reg.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, FileName, ProcessCommandLine
-| order by Timestamp desc
-```
-
-### Mirage Kitten staging/phishing domain contact (businessmixture.com, aecert.org)
-
-`UC_100_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN ("businessmixture.com","aecert.org") OR Web.url IN ("*businessmixture.com*","*aecert.org*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let dom = dynamic(["businessmixture.com","aecert.org"]);
-let mail = EmailEvents
-    | where Timestamp > ago(30d) and EmailDirection == "Inbound"
-    | join kind=inner (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-    | where UrlDomain in~ (dom) or SenderFromDomain in~ (dom)
-    | project Timestamp, Source="Email", DeviceName="", SenderFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain;
-let net = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (dom)
-    | project Timestamp, Source="Network", DeviceName, SenderFromAddress="", RecipientEmailAddress="", Subject="", Url=RemoteUrl, UrlDomain=RemoteUrl;
-union mail, net
+    or (FileName =~ "SspiCli.dll" and not(FolderPath startswith @"C:\Windows"))
+    or MD5 == "c832ecd135781b11f59e3fffb3d2b6ac"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, MD5, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -460,4 +429,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

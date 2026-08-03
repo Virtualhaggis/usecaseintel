@@ -40,16 +40,16 @@ Researchers track the operation as CaptiveCrunch and attribute it to Storm-2945 
 - **T1071** — Application Layer Protocol
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1543.003** — Create or Modify System Process: Windows Service
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1543.003** — Create or Modify System Process: Windows Service
 - **T1547.001** — Registry Run Keys / Startup Folder
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
 - **T1528** — Steal Application Access Token
+- **T1566.002** — Phishing: Spearphishing Link
 - **T1621** — Multi-Factor Authentication Request Generation
-- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1189** — Drive-by Compromise
+- **T1036.004** — Masquerading: Masquerade Task or Service
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1557** — Adversary-in-the-Middle
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1573** — Encrypted Channel
 
 ## Kill chain phases observed
 
@@ -57,160 +57,120 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### CornFlake implant drop to %APPDATA%\svchost32\svchost32.exe + service registration
+### CornFlake RAT masquerading as svchost32.exe in %APPDATA%
 
 `UC_7_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name="svchost32.exe" AND Filesystem.file_path="*\\AppData\\Roaming\\svchost32\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="svchost32.exe" OR Processes.process_path="*\\AppData\\Roaming\\svchost32\\*" OR Processes.process_hash="918fa52ae45ed60ba7cc8bdc99c3cbe9ab92e0375ec31fc05d0d4513be11c593") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
+| where AccountName !endswith "$"
 | where FileName =~ "svchost32.exe"
-| where FolderPath has @"\AppData\Roaming\svchost32\"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+   or FolderPath has @"\AppData\Roaming\svchost32\"
+   or SHA256 == "918fa52ae45ed60ba7cc8bdc99c3cbe9ab92e0375ec31fc05d0d4513be11c593"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### CornFlake persistence: Run key / service / scheduled task referencing svchost32
+### CornFlake 'Cloud Sync Service' (svchost32) service persistence
 
 `UC_7_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*" OR Registry.registry_path="*\\Services\\svchost32*") AND Registry.registry_value_data="*svchost32*" by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Services\\svchost32*" OR (Registry.registry_value_name="ImagePath" AND Registry.registry_value_data="*\\AppData\\Roaming\\svchost32\\*") OR Registry.registry_value_data="Cloud Sync Service") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(30d)
-| where RegistryValueData has "svchost32"
-| where RegistryKey has_any (@"\CurrentVersion\Run", @"\Services\svchost32")
+| where RegistryKey has @"\Services\svchost32"
+   or (RegistryValueName in~ ("ImagePath") and RegistryValueData has @"\AppData\Roaming\svchost32\")
+   or (RegistryValueName in~ ("DisplayName") and RegistryValueData =~ "Cloud Sync Service")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### ChocoShell in-memory stealer accessing Token Broker .tbres WAM cache
+### ChocoShell token theft from Token Broker .tbres cache
 
 `UC_7_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*TokenBroker\\Cache*" OR Processes.process="*.tbres*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Microsoft\\TokenBroker\\Cache\\*" Filesystem.file_name="*.tbres" NOT Filesystem.process_name IN ("backgroundTaskHost.exe","svchost.exe","RuntimeBroker.exe","taskhostw.exe") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_any (@"TokenBroker\Cache", ".tbres")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FolderPath has @"\Microsoft\TokenBroker\Cache"
+| where FileName endswith ".tbres"
+| where InitiatingProcessFileName !in~ ("backgroundtaskhost.exe","svchost.exe","taskhostw.exe","runtimebroker.exe","tokenbrokercookies.exe")
+| where InitiatingProcessFolderPath !startswith @"C:\Windows"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### CaptiveCrunch device-code auth phishing from actor IP infrastructure
+### Entra device code authentication flow phishing (CaptiveCrunch)
 
-`UC_7_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98") AND Authentication.action=success by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
+`UC_7_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
 | where Timestamp > ago(30d)
-| extend AuthProc = tostring(AuthenticationProcessingDetails)
-| where AuthProc has "Device Code" or ClientAppUsed == "Mobile Apps and Desktop clients"
-| where IPAddress in ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98")
-| project Timestamp, AccountUpn, IPAddress, Application, ResourceDisplayName, Country, ErrorCode, ClientAppUsed
+| extend Details = tostring(AuthenticationProcessingDetails)
+| where Details has "Device Code"
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, Application, ApplicationId, ResourceDisplayName, IPAddress, Country, City, ClientAppUsed, UserAgent, ConditionalAccessStatus
 | order by Timestamp desc
 ```
 
-### C2 / AiTM traffic to CaptiveCrunch Microsoft-impersonating domains and IPs
+### Fake update payload downloaded from CaptiveCrunch doppelganger domains
 
-`UC_7_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*ms365-device.com*" OR Web.url="*ms365-live.com*" OR Web.url="*m365-owa.com*" OR Web.url="*owa-ms365.com*") by Web.dest Web.src Web.url Web.http_user_agent Web.dest_ip | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com","deltaode.com"]);
-let c2IPs = dynamic(["31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98"]);
-DeviceNetworkEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (c2IPs) or RemoteUrl has_any (c2Domains)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
+| where FileName endswith ".exe" or FileName endswith ".msi"
+| where FileOriginUrl has_any ("ms365-device.com","ms365-live.com","m365-owa.com","owa-ms365.com")
+   or SHA256 == "918fa52ae45ed60ba7cc8bdc99c3cbe9ab92e0375ec31fc05d0d4513be11c593"
+| project Timestamp, DeviceName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### ClickFix fake-update execution: shell/download utility invoking CaptiveCrunch C2 domain
+### CornFlake/ChocoShell C2 to CaptiveCrunch infrastructure
 
-`UC_7_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","mshta.exe","certutil.exe","bitsadmin.exe") AND (Processes.process="*m365-owa.com*" OR Processes.process="*owa-ms365.com*" OR Processes.process="*ms365-device.com*" OR Processes.process="*ms365-live.com*" OR Processes.process="*deltaode.com*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","mshta.exe","certutil.exe","bitsadmin.exe")
-| where ProcessCommandLine has_any ("m365-owa.com","owa-ms365.com","ms365-device.com","ms365-live.com","deltaode.com")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-| order by Timestamp desc
-```
-
-### CornFlake svchost32 masqueraded implant beaconing to the internet
-
-`UC_7_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.process_name="svchost32.exe" AND All_Traffic.direction=outbound AND All_Traffic.dest_category!=internal by All_Traffic.src All_Traffic.process_name All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="31.57.243.154" OR All_Traffic.dest_ip="104.194.159.150" OR All_Traffic.dest_ip="38.146.28.75") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "svchost32.exe" or InitiatingProcessFolderPath has @"\AppData\Roaming\svchost32\"
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Captive-portal DNS hijack: Windows connectivity check resolving to CaptiveCrunch C2 IP
-
-`UC_7_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("www.msftconnecttest.com","dns.msftncsi.com","www.msftncsi.com") AND DNS.answer IN ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl in~ ("www.msftconnecttest.com","dns.msftncsi.com","www.msftncsi.com")
-| where RemoteIP in ("31.57.243.154","104.194.159.150","38.146.28.75","89.124.79.98")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessAccountName
+| where RemoteUrl has_any ("ms365-device.com","ms365-live.com","m365-owa.com","owa-ms365.com")
+   or RemoteIP in ("31.57.243.154","104.194.159.150","38.146.28.75")
+   or (InitiatingProcessFileName =~ "svchost32.exe" and RemoteIPType == "Public")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
@@ -535,4 +495,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
