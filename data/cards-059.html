@@ -1,177 +1,3 @@
-<article class="card" id="art-1943" data-art-slug="2022-11-04-a-day-in-the-life-of-a-ciso-chris-hughes-of-aquia"
-  data-phases="c2,delivery,exploit,install" data-sev="med"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="A day in the life of a CISO: Chris Hughes of Aquia Find out what a day in the life of a CISO and co-founder is like with this discussion between Chris Hughes (CIS &amp; Co-Founder) of Aquia and Vandana Verma of Snyk.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2022-11-04-a-day-in-the-life-of-a-ciso-chris-hughes-of-aquia" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/day-in-the-life-ciso-chris-hughes-aquia/" target="_blank" rel="noopener">A day in the life of a CISO: Chris Hughes of Aquia</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2022-11-04</span>
-    <span>1 use case</span>
-    <span>2 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Find out what a day in the life of a CISO and co-founder is like with this discussion between Chris Hughes (CIS &amp; Co-Founder) of Aquia and Vandana Verma of Snyk.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1943-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1943"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1943-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1943-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1943-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1943-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1943-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1943-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-1943-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-1943-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-1943-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1943-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1943-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1943-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1943-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-1944" data-art-slug="2022-11-04-secure-python-url-validation"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1486,T1566"
@@ -7143,6 +6969,268 @@ level: high
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1995" data-art-slug="2022-10-03-command-injection-vulnerability-in-snyk-cli-released-prior-t"
+  data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Command injection vulnerability in Snyk CLI released prior to September 1, 2022 (older than v1.996.0) As a Snyk user, we want to let you know about a medium severity vulnerability (CVSSv3 6.4) in our CLI that you should be aware of: CVE-2022-40764. CVE-2022-40764 T1190 [LLM] Vulnerable Snyk CLI (&lt; v1.996.0) present — CVE-2022-40764 command injection exposure [LLM] Snyk CLI spawning a shell — CVE-2022-40764 command injection via go-plugin vendor.json Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2022-10-03-command-injection-vulnerability-in-snyk-cli-released-prior-t" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/command-injection-vulnerability-cve-2022-40764/" target="_blank" rel="noopener">Command injection vulnerability in Snyk CLI released prior to September 1, 2022 (older than v1.996.0)</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2022-10-03</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">As a Snyk user, we want to let you know about a medium severity vulnerability (CVSSv3 6.4) in our CLI that you should be aware of: CVE-2022-40764.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2022-40764</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1995-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1995"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1995-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable Snyk CLI (&lt; v1.996.0) present — CVE-2022-40764 command injection exposure</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Snyk CLI spawning a shell — CVE-2022-40764 command injection via go-plugin vendor.json</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="96fa11f0e2" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Vulnerable Snyk CLI (&lt; v1.996.0) present — CVE-2022-40764 command injection exposure</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="96fa11f0e2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts carrying a Snyk CLI / snyk-go-plugin build released before September 1, 2022 (older than v1.996.0 / snyk-go-plugin &lt; 1.19.1) that is exposed to CVE-2022-40764 command injection. Article-specific because it pins the exact CVE and the exact fixed version Snyk shipped.
+
+Rationale: Pins the article&#x27;s exact CVE-2022-40764 and the fixed version boundary (Snyk CLI v1.996.0 / snyk-go-plugin 1.19.1) so the match is the specific advisory, not a generic outdated-software hunt.
+
+Cross-checked against:
+  • https://security.snyk.io/vuln/SNYK-JS-SNYKGOPLUGIN-3037316
+  • https://nvd.nist.gov/vuln/detail/CVE-2022-40764
+  • https://www.acunetix.com/vulnerabilities/sca/cve-2022-40764-vulnerability-in-npm-package-snyk-go-plugin/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A pinned old Snyk CLI baked into a container image layer that is never actually executed at runtime</li><li>snyk bundled transitively inside another tool&#x27;s node_modules but not invoked</li><li>Air-gapped/offline dev hosts that opted out of the weekly auto-update and have no exposure to untrusted projects</li><li>TVM reporting a stale software-inventory snapshot after the CLI was already upgraded</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the installed Snyk CLI version on the host (snyk --version) and whether snyk-go-plugin &lt; 1.19.1 is present; verify it is actually executed (CI agent, IDE plugin, developer workstation) vs dormant. Step 2 (contain): Upgrade Snyk CLI to &gt;= 1.996.0 or re-enable the IDE plugin&#x27;s weekly auto-update; for CI, pin the patched version in the pipeline image. Step 3 (hunt): Pivot to UC2 to check whether any vulnerable host already spawned shell children from snyk during a scan of an untrusted repository.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1995-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1995-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1995-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1995-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2022-40764&quot;
+| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1995-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2022-40764&quot;
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1995-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1995-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1995-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1995-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2022-40764&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve 
+| `drop_dm_object_name(Vulnerabilities)` 
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1995-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2022-40764&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve 
+| `drop_dm_object_name(Vulnerabilities)` 
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f3c79c1142" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Snyk CLI spawning a shell — CVE-2022-40764 command injection via go-plugin vendor.json</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f3c79c1142" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the Snyk CLI (snyk.exe or node executing snyk) spawning a command interpreter child while scanning a project — the exploitation behaviour of CVE-2022-40764, where shell metacharacters in a Go vendor.json/govendor ignore field break out of snyk-go-plugin&#x27;s intended `go` invocation into arbitrary commands. Benign go-plugin shell-outs (go list/go env) are filtered so the residual signal is injected commands.
+
+Rationale: Targets the article&#x27;s exact tool (Snyk CLI / snyk-go-plugin) and the Imperva-confirmed exploit primitive — shell metacharacters in vendor.json breaking go-plugin&#x27;s `go` shell-out — so a shell child of snyk that is NOT a benign `go list/env/mod` invocation is high-fidelity for CVE-2022-40764 exploitation.
+
+Cross-checked against:
+  • https://security.snyk.io/vuln/SNYK-JS-SNYKGOPLUGIN-3037316
+  • https://www.acunetix.com/vulnerabilities/sca/cve-2022-40764-vulnerability-in-npm-package-snyk-go-plugin/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/CD build agents running &#x27;snyk test&#x27; that legitimately shell out to package managers (npm/pip/gradle) during dependency resolution</li><li>Developer wrapper scripts that invoke snyk via cmd.exe and chain follow-on shell commands</li><li>snyk monitor/snyk test on Windows invoking cmd.exe to drive a non-Go package manager</li><li>Custom remediation hooks configured to run a shell after a snyk scan</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and ProcessCommandLine !has &quot;go list&quot; and ProcessCommandLine !has &quot;go env&quot; and ProcessCommandLine !has &quot;go mod&quot; and ProcessCommandLine !has &quot;npm &quot; and ProcessCommandLine !has &quot;gradle&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Inspect the child process command line — injected payloads will contain attacker-supplied tokens (e.g. ;, &amp;&amp;, |, nc, curl, whoami) rather than a package-manager invocation; identify the scanned repository/path. Step 2 (contain): Isolate the host if the child command is clearly malicious, kill the process tree, and upgrade Snyk CLI to &gt;= 1.996.0; quarantine the offending repo/vendor.json. Step 3 (hunt): Sweep all snyk-running hosts (UC1) for the same parent→shell pattern, review any outbound connections or files written by the spawned shell, and check source-control history for who introduced the malicious vendor.json.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1995-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1995-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1995-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1995-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1995-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1995-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1995-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName has &quot;snyk&quot; or (InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;) and InitiatingProcessCommandLine has &quot;snyk&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;sh.exe&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| where ProcessCommandLine !has &quot;go list&quot; and ProcessCommandLine !has &quot;go env&quot; and ProcessCommandLine !has &quot;go mod&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1995-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where (ParentProcessName has &quot;snyk&quot;) or (ParentProcessName has &quot;node&quot; and CommandLine has &quot;snyk&quot;)
+| where NewProcessName has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\sh.exe&quot;,&quot;\\bash.exe&quot;,&quot;\\wscript.exe&quot;,&quot;\\cscript.exe&quot;)
+| where not(SubjectUserName endswith &quot;$&quot;)
+| where CommandLine !has &quot;go list&quot; and CommandLine !has &quot;go env&quot; and CommandLine !has &quot;go mod&quot;
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1995-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Snyk CLI Spawning Shell Interpreter (CVE-2022-40764)
+id: 5c9f2d8e-4b3a-4f1c-9a2e-7d6b1f8c0a44
+description: Snyk CLI or node-hosted snyk spawning a command interpreter, consistent with command injection via snyk-go-plugin vendor.json (CVE-2022-40764).
+references:
+  - https://snyk.io/blog/command-injection-vulnerability-cve-2022-40764/
+  - https://security.snyk.io/vuln/SNYK-JS-SNYKGOPLUGIN-3037316
+author: SOC Detection Engineering
+date: 2026/06/27
+tags:
+  - attack.t1059
+  - attack.t1203
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\snyk.exe&#x27;
+      - &#x27;\snyk-win.exe&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\bash.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+  filter_benign_go:
+    CommandLine|contains:
+      - &#x27;go list&#x27;
+      - &#x27;go env&#x27;
+      - &#x27;go mod&#x27;
+  condition: selection_parent and selection_child and not filter_benign_go
+level: high</code></pre></div>
+    <div class="tab-content" id="art-1995-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\snyk.exe OR *\Snyk.exe OR *\snyk-win.exe) @Image:(*\cmd.exe OR *\CMD.EXE OR *\powershell.exe OR *\PowerShell.exe OR *\pwsh.exe OR *\bash.exe OR *\wscript.exe OR *\cscript.exe) -@CommandLine:(*&quot;go list&quot;* OR *&quot;go env&quot;* OR *&quot;go mod&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-1995-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/snyk(-win)?\.exe$/i
+| ImageFileName=/\\(cmd|powershell|pwsh|bash|wscript|cscript)\.exe$/i
+| NOT (CommandLine=/go (list|env|mod)/i)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-1995-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1995-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1995-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1995-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;snyk*&quot; OR (Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;node&quot;) AND Processes.parent_process=&quot;*snyk*&quot;)) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| where NOT (process LIKE &quot;%go list%&quot; OR process LIKE &quot;%go env%&quot; OR process LIKE &quot;%go mod%&quot;) 
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1995-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;snyk*&quot; OR (Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;node&quot;) AND Processes.parent_process=&quot;*snyk*&quot;)) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;bash.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| where NOT (process LIKE &quot;%go list%&quot; OR process LIKE &quot;%go env%&quot; OR process LIKE &quot;%go mod%&quot;) 
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1995-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1995-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1995-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1995-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2022-40764&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1995-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2022-40764&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1995-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1995-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1995-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1995-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2022-40764&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1995-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2022-40764&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

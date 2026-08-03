@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### TeamCity On-Premises server (java/Tomcat) spawning OS command interpreter — CVE-2026-63077 RCE
 
-`UC_43_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Unpatched internet-facing TeamCity On-Premises exposed to CVE-2026-63077
 
-`UC_43_5` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_45_5` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

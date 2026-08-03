@@ -31,9 +31,10 @@ Three high-severity security flaws have been disclosed in Hugging Face's Diffuse
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1059.006** — Python
-- **T1059.003** — Windows Command Shell
+- **T1195.001** — Supply Chain Compromise: Compromised Software Dependencies and Development Tools
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
 
@@ -43,86 +44,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unexpected Python file staged in Hugging Face model cache/snapshot (FaceHugger)
+### Untrusted custom-pipeline .py (incl. None.py) staged in Hugging Face cache — FaceHugger
 
-`UC_6_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\huggingface\\hub\\*","*/.cache/huggingface/*","*models--*")) Filesystem.file_name IN ("*.py") by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where (like(file_path,"%snapshots%") OR like(file_path,"%unet%") OR like(file_path,"%scheduler%") OR like(file_path,"%vae%") OR like(file_path,"%text_encoder%") OR file_name="None.py" OR file_name="pipeline.py") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.cache/huggingface/*" OR Filesystem.file_path="*\\.cache\\huggingface\\*" OR Filesystem.file_path="*diffusers_modules*" OR Filesystem.file_path="*/huggingface/hub/*") Filesystem.file_name="*.py" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where (file_name=="None.py" OR like(file_path,"%unet%") OR like(file_path,"%scheduler%") OR like(file_path,"%vae%") OR like(file_path,"%text_encoder%") OR like(file_path,"%tokenizer%") OR like(file_path,"%safety_checker%") OR like(file_path,"%feature_extractor%")) | `ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
 | where FileName endswith ".py"
-| where FolderPath has_any (@"\.cache\huggingface\", "/.cache/huggingface/", @"\huggingface\hub\", "/huggingface/hub/", "models--")
-| where FolderPath has_any ("snapshots", @"\unet\", "/unet/", @"\scheduler\", "/scheduler/", @"\vae\", "/vae/", @"\text_encoder\", "/text_encoder/") or FileName in~ ("None.py","pipeline.py")
-| where InitiatingProcessFileName has_any ("python.exe","pythonw.exe","python3.exe","python","python3","huggingface-cli.exe","huggingface-cli")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FolderPath has_any (@"\.cache\huggingface\", "/.cache/huggingface/", "diffusers_modules", @"\huggingface\hub\", "/huggingface/hub/")
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python","python3")
+| where FileName =~ "None.py" or FolderPath has_any ("unet","scheduler","vae","text_encoder","tokenizer","feature_extractor","safety_checker")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Python process spawns shell/LOLBin child in Diffusers/Hugging Face context
+### Python/Diffusers process spawning shell or download utility (FaceHugger RCE execution)
 
-`UC_6_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe","python","python3") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","bash","sh") by Processes.dest, Processes.user, Processes.parent_process, Processes.process, Processes.process_name | `drop_dm_object_name(Processes)` | where match(parent_process,"(?i)diffusers|DiffusionPipeline|from_pretrained|custom_pipeline|huggingface") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python.exe","pythonw.exe","python","python3")) (Processes.process_name IN ("bash","sh","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","curl","wget","nc","ncat")) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,"(?i)(curl|wget|/dev/tcp|base64|-enc |Invoke-WebRequest|IEX|ncat|socket|bash -i)") | `ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","python","python3")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","bash.exe","sh.exe","bash","sh")
-| where InitiatingProcessCommandLine has_any ("diffusers","DiffusionPipeline","from_pretrained","custom_pipeline","huggingface")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python","python3")
+| where FileName in~ ("bash","sh","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","curl","wget","nc","ncat")
+| where ProcessCommandLine has_any ("curl","wget","/dev/tcp","base64","-enc","Invoke-WebRequest","IEX","ncat","nc ","bash -i","socket.socket","python -c")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Outbound network from Python/Diffusers process to non-Hugging-Face host
+### Outbound C2/exfil from Python after Diffusers model load (non-Hugging-Face egress)
 
-`UC_6_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("python.exe","pythonw.exe","python","python3") All_Traffic.direction="outbound" NOT All_Traffic.dest_host IN ("*huggingface.co","*hf.co","*.pythonhosted.org","*pypi.org","*githubusercontent.com") by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_host, All_Traffic.app, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN ("python.exe","pythonw.exe","python","python3") OR All_Traffic.process_name IN ("python.exe","pythonw.exe","python","python3")) All_Traffic.direction="outbound" by All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.src All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | search NOT (dest="*huggingface.co" OR dest="*hf.co" OR dest="*pythonhosted.org" OR dest="*pypi.org" OR dest="*cloudfront.net") | `ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","python","python3")
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python","python3")
 | where RemoteIPType == "Public"
 | where isnotempty(RemoteUrl)
-| where not (RemoteUrl has_any ("huggingface.co","hf.co","cdn-lfs.huggingface.co","cdn-lfs.hf.co","xethub.hf.co","cas-bridge.xethub.hf.co","pythonhosted.org","pypi.org","githubusercontent.com"))
-| where InitiatingProcessCommandLine has_any ("diffusers","DiffusionPipeline","from_pretrained","custom_pipeline","huggingface")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Vulnerable Hugging Face Diffusers (< 0.38.0) exposure inventory (FaceHugger)
-
-`UC_6_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-44827","CVE-2026-45804","CVE-2026-44513") OR Vulnerabilities.signature="*diffusers*") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.signature, Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2026-44827","CVE-2026-45804","CVE-2026-44513")
-    or (SoftwareName =~ "diffusers" and parse_version(SoftwareVersion) < parse_version("0.38.0"))
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
+| where not(RemoteUrl has_any ("huggingface.co","hf.co","pythonhosted.org","pypi.org","cloudfront.net","githubusercontent.com","pytorch.org","anaconda.com"))
+| summarize FirstSeen=min(Timestamp), Count=count(), Ports=make_set(RemotePort,10) by DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessCommandLine
+| order by FirstSeen desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -327,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hugging Face Diffusers Flaws Could Let Model Repositories Execute Arbitrary Code
 
-`UC_6_7` · phase: **exploit** · confidence: **High**
+`UC_8_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -387,4 +370,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

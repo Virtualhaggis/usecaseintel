@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### CVE-2026-3055 NetScaler SAML IdP memory-overread scrape (rapid /saml/login loop)
 
-`UC_25_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

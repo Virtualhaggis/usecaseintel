@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2604 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-03
+- [an analysis of incidents at brazilian educational institutio](./2026-08-03/an-analysis-of-incidents-at-brazilian-educational-institutio.md)
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [chinese threat actor uses leaked darksword kit to deploy gho](./2026-08-03/chinese-threat-actor-uses-leaked-darksword-kit-to-deploy-gho.md)
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
@@ -97,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [jfrog confirms openai models exploited artifactory zero day ](./2026-07-28/jfrog-confirms-openai-models-exploited-artifactory-zero-day-.md)
 - [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [nimbus manticore deploys nightledger and turns victim system](./2026-07-28/nimbus-manticore-deploys-nightledger-and-turns-victim-system.md)
-- [researcher says ai helped develop linux traffic control race](./2026-07-28/researcher-says-ai-helped-develop-linux-traffic-control-race.md)
 - [tengu botnet reboots compromised linux devices when defender](./2026-07-28/tengu-botnet-reboots-compromised-linux-devices-when-defender.md)
 - [the generator can t be the validator what openai s hugging f](./2026-07-28/the-generator-can-t-be-the-validator-what-openai-s-hugging-f.md)
 
@@ -263,7 +263,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
 - [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
 - [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
-- [threat landscape for industrial automation systems q1 2026](./2026-07-07/threat-landscape-for-industrial-automation-systems-q1-2026.md)
 - [uat 7810 continues building orb networks using new malware](./2026-07-07/uat-7810-continues-building-orb-networks-using-new-malware.md)
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-exposed TeamCity On-Premises receiving external requests to REST/login surface (CVE-2026-63077)
 
-`UC_104_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_106_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Vulnerable JetBrains TeamCity On-Premises version exposed (CVE-2026-63077)
 
-`UC_104_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_106_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### TeamCity server process spawning OS command interpreter (CVE-2026-63077 RCE)
 
-`UC_104_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_106_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### TeamCity server writing webshell or script/executable to webapps/data dirs (CVE-2026-63077 payload drop)
 
-`UC_104_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_106_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### Outbound C2/reverse-shell egress from TeamCity server process (CVE-2026-63077 post-exploit)
 
-`UC_104_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_106_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
