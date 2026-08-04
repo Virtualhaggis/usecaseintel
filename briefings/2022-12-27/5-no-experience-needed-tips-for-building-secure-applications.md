@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 5 "no experience needed" tips for building secure applications
 
-`UC_1891_0` · phase: **exploit** · confidence: **High**
+`UC_1890_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

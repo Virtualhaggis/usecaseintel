@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Implementing TLS in Kubernetes
 
-`UC_1636_0` · phase: **exploit** · confidence: **High**
+`UC_1635_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

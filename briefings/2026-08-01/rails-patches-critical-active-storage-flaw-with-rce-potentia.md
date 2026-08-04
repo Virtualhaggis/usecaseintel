@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Active Storage crafted image upload to libvips variant endpoints (CVE-2026-66066)
 
-`UC_54_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_60_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Rails/Ruby worker reading secret_key_base and credential files post-upload (CVE-2026-66066)
 
-`UC_54_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_60_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### Rails app worker spawning shell or network child (KindaRails2Shell RCE)
 
-`UC_54_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_60_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Exposure hunt: hosts with vulnerable libvips / Rails Active Storage (CVE-2026-66066)
 
-`UC_54_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_60_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

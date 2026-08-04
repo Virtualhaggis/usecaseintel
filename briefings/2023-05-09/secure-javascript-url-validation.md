@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Secure JavaScript URL validation
 
-`UC_1749_1` · phase: **exploit** · confidence: **High**
+`UC_1748_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

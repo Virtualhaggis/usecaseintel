@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Connection to code.newcli.com — anti-attribution AI-coding-tool proxy (knaithe/KnYuan)
 
-`UC_94_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_98_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### Server/non-browser process calling native Chinese LLM APIs (api.deepseek.com / dashscope.aliyuncs.com)
 
-`UC_94_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_98_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### Claude Code / Codex anti-attribution and skip-permission config (knaithe AI tooling)
 
-`UC_94_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_98_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Hermes Agent Langflow exploit + FOFA enumeration tooling (langflow_poc.py / fofoapi.py, CVE-2026-33017)
 
-`UC_94_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_98_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese-Speaking Threat Actor Harnesses AI Models for Autonomous Cyberattacks
 
-`UC_94_5` · phase: **exploit** · confidence: **High**
+`UC_98_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

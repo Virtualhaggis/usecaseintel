@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Node.js multithreading with worker threads: pros and cons
 
-`UC_1841_0` · phase: **exploit** · confidence: **High**
+`UC_1840_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

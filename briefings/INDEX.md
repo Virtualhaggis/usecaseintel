@@ -9,6 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-04
+- [128 seconds to disruption microsoft defender stops ransomwar](./2026-08-04/128-seconds-to-disruption-microsoft-defender-stops-ransomwar.md)
+- [77 open vsx extensions found harvesting developer info](./2026-08-04/77-open-vsx-extensions-found-harvesting-developer-info.md)
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
 - [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [cisa kev cve 2026 18556 n able n central authentication bypa](./2026-08-04/cisa-kev-cve-2026-18556-n-able-n-central-authentication-bypa.md)
@@ -20,8 +22,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 69251 flowise rce via typeorm datasou](./2026-08-04/ghsa-critical-cve-2026-69251-flowise-rce-via-typeorm-datasou.md)
 - [ghsa critical cve 2026 69254 flowise rce via nodevm sandbox ](./2026-08-04/ghsa-critical-cve-2026-69254-flowise-rce-via-nodevm-sandbox-.md)
 - [ghsa critical cve 2026 69255 flowise csv agent remote code e](./2026-08-04/ghsa-critical-cve-2026-69255-flowise-csv-agent-remote-code-e.md)
-- [ghsa critical cve 2026 69256 remote code execution vulnerabi](./2026-08-04/ghsa-critical-cve-2026-69256-remote-code-execution-vulnerabi.md)
 - [ghsa critical cve 2026 69259 flowise rce via sqlite record m](./2026-08-04/ghsa-critical-cve-2026-69259-flowise-rce-via-sqlite-record-m.md)
+- [ghsa critical cve 2026 69264 flowise rce via csvagent csvfil](./2026-08-04/ghsa-critical-cve-2026-69264-flowise-rce-via-csvagent-csvfil.md)
+- [ghsa critical cve 2026 70470 flowise pyodide validator unico](./2026-08-04/ghsa-critical-cve-2026-70470-flowise-pyodide-validator-unico.md)
+- [ghsa critical cve 2026 70477 flowise csv agent prompt inject](./2026-08-04/ghsa-critical-cve-2026-70477-flowise-csv-agent-prompt-inject.md)
 - [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
 - [greatness phaas adds device code phishing to bypass mfa and ](./2026-08-04/greatness-phaas-adds-device-code-phishing-to-bypass-mfa-and-.md)
 - [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
@@ -30,6 +34,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
 - [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
 - [massive chaindrop npm supply chain attack infects hundreds o](./2026-08-04/massive-chaindrop-npm-supply-chain-attack-infects-hundreds-o.md)
+- [new xcsset variant targets macos devs via compromised xcode ](./2026-08-04/new-xcsset-variant-targets-macos-devs-via-compromised-xcode-.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 
 ## 2026-08-03
@@ -60,7 +65,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
-- [arch linux disables aur package adoption to stop malware flo](./2026-07-31/arch-linux-disables-aur-package-adoption-to-stop-malware-flo.md)
 - [captivecrunch midnight blizzard targets travelers worldwide ](./2026-07-31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-.md)
 - [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
 - [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
@@ -191,7 +195,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [unauthenticated rce in wordpress core wp2shell via sql injec](./2026-07-17/unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec.md)
 
 ## 2026-07-16
-- [acr stealer two observed intrusion chains amid increased thr](./2026-07-16/acr-stealer-two-observed-intrusion-chains-amid-increased-thr.md)
 - [ai automation and attacks unpacking the unit 42 2026 global ](./2026-07-16/ai-automation-and-attacks-unpacking-the-unit-42-2026-global-.md)
 - [begun the patch wars have](./2026-07-16/begun-the-patch-wars-have.md)
 - [cisa kev cve 2026 25089 fortinet fortisandbox os command inj](./2026-07-16/cisa-kev-cve-2026-25089-fortinet-fortisandbox-os-command-inj.md)
@@ -299,9 +302,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-02
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
-- [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
-- [ghsa critical cve 2026 52830 fast mcp telegram bearer token ](./2026-07-02/ghsa-critical-cve-2026-52830-fast-mcp-telegram-bearer-token-.md)
-- [ghsa critical cve 2026 54617 launchserver fileserverhandler ](./2026-07-02/ghsa-critical-cve-2026-54617-launchserver-fileserverhandler-.md)
 - [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 

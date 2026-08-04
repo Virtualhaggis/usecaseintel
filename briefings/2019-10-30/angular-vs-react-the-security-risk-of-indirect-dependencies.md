@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Form-skimmer exfil to js-metrics.com (malicious angular-bmap / ng-ui-library npm versions)
 
-`UC_3477_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3476_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### Install of malicious npm package versions angular-bmap@0.0.9 / ng-ui-library@1.0.987
 
-`UC_3477_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_3476_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Angular vs React: the security risk of indirect dependencies
 
-`UC_3477_0` · phase: **exploit** · confidence: **High**
+`UC_3476_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

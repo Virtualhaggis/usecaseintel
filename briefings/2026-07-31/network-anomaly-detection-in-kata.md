@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Kerberoasting: single account/host requesting TGS tickets for many unique non-system SPNs
 
-`UC_76_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_80_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### DNS tunneling: host issuing many long unique subdomain queries under one parent domain
 
-`UC_76_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_80_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

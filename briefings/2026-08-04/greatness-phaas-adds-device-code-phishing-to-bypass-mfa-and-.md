@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### M365 device-code grant sign-in abused for MFA-bypass token theft (Greatness PhaaS)
 
-`UC_0_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_8_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -73,7 +73,7 @@ AADSignInEventsBeta
 
 ### RingCentral voicemail lure delivered to Inbox despite SPF/DKIM/DMARC failure (safe-sender bypass)
 
-`UC_0_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -91,7 +91,7 @@ EmailEvents
 
 ### Greatness phishing redirect-chain domains resolved/contacted by endpoints
 
-`UC_0_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ union
 
 ### Stolen-token replay: non-interactive M365 auth from new IP minutes after interactive login
 
-`UC_0_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ AADSignInEventsBeta
 
 ### New device registration / PRT minting minutes after an Entra sign-in (post-token persistence)
 
-`UC_0_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -164,7 +164,7 @@ CloudAppEvents
 
 ### Replayed token fan-out: single identity enumerating many M365 resources in a short window
 
-`UC_0_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

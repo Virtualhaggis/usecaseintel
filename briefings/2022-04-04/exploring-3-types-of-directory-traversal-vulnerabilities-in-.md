@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Web path-traversal arbitrary file read via '../' in static-file URL (Crow CVE-2021-23514)
 
-`UC_2349_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2348_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Arbitrary file write via '../' in upload 'name' parameter (Mongoose CVE-2022-25299)
 
-`UC_2349_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2348_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Exploring 3 types of directory traversal vulnerabilities in C/C++
 
-`UC_2349_1` · phase: **install** · confidence: **High**
+`UC_2348_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
