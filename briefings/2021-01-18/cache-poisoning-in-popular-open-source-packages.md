@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Semicolon GET parameter cloaking in web/proxy logs (cache poisoning, CVE-2021-23336 / CVE-2020-28473)
 
-`UC_3235_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3238_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Assets exposed to cache-poisoning CVEs (Python parse_qsl CVE-2021-23336 / Bottle CVE-2020-28473)
 
-`UC_3235_2` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_3238_2` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

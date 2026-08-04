@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Python interpreter relaunching itself to execute a NamedTemporaryFile stager
 
-`UC_1934_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1937_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Python child-of-python making download-and-exec egress to non-PyPI host
 
-`UC_1934_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1937_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fetch the Flag CTF 2022 writeup: Treasure Trove
 
-`UC_1934_2` · phase: **exploit** · confidence: **High**
+`UC_1937_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

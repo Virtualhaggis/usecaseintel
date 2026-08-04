@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### SourMint/Mintegral SDK data exfiltration to n.systemlog.me endpoint
 
-`UC_3290_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3293_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### Mintegral SourMint SDK config & analytics beacon to rayjump.com
 
-`UC_3290_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3293_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SourMint malicious SDK research write up
 
-`UC_3290_1` · phase: **install** · confidence: **High**
+`UC_3293_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

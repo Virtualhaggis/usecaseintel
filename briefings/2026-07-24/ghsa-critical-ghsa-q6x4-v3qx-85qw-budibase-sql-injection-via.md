@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Stacked SQL-injection payload against Budibase datasource query API (multipleStatements)
 
-`UC_136_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_142_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### MySQL server (mysqld) writes exfil file via SELECT INTO OUTFILE on Budibase DB host
 
-`UC_136_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_142_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

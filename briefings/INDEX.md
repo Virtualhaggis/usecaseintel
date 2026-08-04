@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,12 +11,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-08-04
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
 - [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
+- [cisa kev cve 2026 18556 n able n central authentication bypa](./2026-08-04/cisa-kev-cve-2026-18556-n-able-n-central-authentication-bypa.md)
+- [cisa kev cve 2026 34486 apache tomcat missing encryption of ](./2026-08-04/cisa-kev-cve-2026-34486-apache-tomcat-missing-encryption-of-.md)
+- [cisa kev cve 2026 9198 ibm langflow code injection vulnerabi](./2026-08-04/cisa-kev-cve-2026-9198-ibm-langflow-code-injection-vulnerabi.md)
 - [doublecup uses clickfix and cached pngs to deliver countload](./2026-08-04/doublecup-uses-clickfix-and-cached-pngs-to-deliver-countload.md)
 - [evo continuous offensive security is here pentesting grade c](./2026-08-04/evo-continuous-offensive-security-is-here-pentesting-grade-c.md)
 - [fake adobe and zoom updates install screenconnect for persis](./2026-08-04/fake-adobe-and-zoom-updates-install-screenconnect-for-persis.md)
 - [ghsa critical cve 2026 69251 flowise rce via typeorm datasou](./2026-08-04/ghsa-critical-cve-2026-69251-flowise-rce-via-typeorm-datasou.md)
 - [ghsa critical cve 2026 69254 flowise rce via nodevm sandbox ](./2026-08-04/ghsa-critical-cve-2026-69254-flowise-rce-via-nodevm-sandbox-.md)
+- [ghsa critical cve 2026 69255 flowise csv agent remote code e](./2026-08-04/ghsa-critical-cve-2026-69255-flowise-csv-agent-remote-code-e.md)
+- [ghsa critical cve 2026 69256 remote code execution vulnerabi](./2026-08-04/ghsa-critical-cve-2026-69256-remote-code-execution-vulnerabi.md)
+- [ghsa critical cve 2026 69259 flowise rce via sqlite record m](./2026-08-04/ghsa-critical-cve-2026-69259-flowise-rce-via-sqlite-record-m.md)
 - [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
+- [greatness phaas adds device code phishing to bypass mfa and ](./2026-08-04/greatness-phaas-adds-device-code-phishing-to-bypass-mfa-and-.md)
 - [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
 - [how legitimate cloud platforms enable phishers to bypass mfa](./2026-08-04/how-legitimate-cloud-platforms-enable-phishers-to-bypass-mfa.md)
 - [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
@@ -96,7 +103,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
-- [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
 - [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
@@ -296,9 +302,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
 - [ghsa critical cve 2026 52830 fast mcp telegram bearer token ](./2026-07-02/ghsa-critical-cve-2026-52830-fast-mcp-telegram-bearer-token-.md)
 - [ghsa critical cve 2026 54617 launchserver fileserverhandler ](./2026-07-02/ghsa-critical-cve-2026-54617-launchserver-fileserverhandler-.md)
-- [ghsa critical cve 2026 59800 9router missing authorization a](./2026-07-02/ghsa-critical-cve-2026-59800-9router-missing-authorization-a.md)
-- [ghsa critical cve 2026 9558 mautic has server side template ](./2026-07-02/ghsa-critical-cve-2026-9558-mautic-has-server-side-template-.md)
-- [ghsa critical cve 2026 9559 mautic vulnerable to path traver](./2026-07-02/ghsa-critical-cve-2026-9559-mautic-vulnerable-to-path-traver.md)
 - [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 

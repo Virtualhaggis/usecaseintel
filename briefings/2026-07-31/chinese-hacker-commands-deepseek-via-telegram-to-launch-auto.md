@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Hermes/DeepSeek autonomous AI agent artifact: python3 -m http.server 8888 from /home/worker
 
-`UC_68_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_75_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### Marimo CVE-2026-39987 pre-auth RCE: marimo notebook process spawning a shell
 
-`UC_68_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_75_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### NetScaler CVE-2026-3055 SAML IdP memory overread: high-volume /saml/login scraping
 
-`UC_68_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_75_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -273,7 +273,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 
-`UC_68_6` · phase: **install** · confidence: **High**
+`UC_75_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

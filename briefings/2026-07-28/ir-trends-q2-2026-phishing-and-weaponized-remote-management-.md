@@ -47,14 +47,14 @@ Phishing was the primary means of gaining initial access this quarter, appearing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
-- **T1598.002** — Spearphishing Attachment (Information)
-- **T1598.003** — Spearphishing Link (Information)
+- **T1204.001** — Malicious Link
 - **T1564.008** — Email Hiding Rules
-- **T1114.002** — Remote Email Collection
+- **T1114.003** — Email Forwarding Rule
+- **T1078.004** — Cloud Accounts
 - **T1543.003** — Windows Service
-- **T1484.001** — Group Policy Modification
+- **T1102** — Web Service
 - **T1567.002** — Exfiltration to Cloud Storage
-- **T1074.001** — Local Data Staging
+- **T1048** — Exfiltration Over Alternative Protocol
 
 ## Kill chain phases observed
 
@@ -62,192 +62,163 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inbound QR-code PDF phishing lure delivery (UAT-11764 Australian campaign)
+### QR-code PDF phishing attachment resolving to workers.dev / pamconj M365 harvesting page (UAT-11764)
 
-`UC_120_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_126_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-EmailAttachmentInfo
-| where Timestamp > ago(14d)
-| where FileType =~ "pdf" or FileName endswith ".pdf"
+let LookbackDays = 14d;
+let HarvestDomains = dynamic(["clear90489058903-document.workers.dev","dashboard-bl.pamconj.com","spx.pamconj.com"]);
+EmailEvents
+| where Timestamp > ago(LookbackDays)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
 | join kind=inner (
-    EmailEvents
-    | where Timestamp > ago(14d)
-    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
-    | where AttachmentCount == 1 and UrlCount == 0
+    EmailAttachmentInfo
+    | where Timestamp > ago(LookbackDays)
+    | where FileType =~ "pdf" or FileName endswith ".pdf"
+    | project NetworkMessageId, PdfName = FileName, PdfSHA256 = SHA256, FileSize
   ) on NetworkMessageId
-| where SenderFromDomain != tostring(split(RecipientEmailAddress,"@")[1])
-| summarize Recipients = dcount(RecipientEmailAddress), Subjects = make_set(Subject, 5), FirstSeen = min(Timestamp)
-          by SenderFromAddress, SenderFromDomain, FileName
-| where Recipients >= 1
-| order by Recipients desc
-```
-
-### Contact with UAT-11764 / ARToken credential-harvesting infrastructure
-
-`UC_120_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="dashboard-bl.pamconj.com" OR DNS.query="spx.pamconj.com" OR DNS.query="clear90489058903-document.workers.dev" OR DNS.query="*.pamconj.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let iocDomains = dynamic(["dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (iocDomains) or RemoteUrl endswith "pamconj.com"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### OAuth device-code authentication anomaly (ARToken/EvilTokens MFA bypass)
-
-`UC_120_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| extend Details = tostring(AuthenticationProcessingDetails)
-| where Details has "Device Code" or Details has "deviceCode"
-| where ErrorCode == 0
-| summarize SignIns = count(), IPs = make_set(IPAddress, 10), Countries = make_set(Country, 10), Apps = make_set(Application, 10), FirstSeen = min(Timestamp)
-          by AccountUpn, bin(Timestamp, 1h)
-| where array_length(Countries) >= 1
-| order by FirstSeen desc
-```
-
-### Post-compromise M365 inbox-rule evasion + SharePoint lure staging (UAT-11764)
-
-`UC_120_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let RuleActors = CloudAppEvents
-    | where Timestamp > ago(14d)
-    | where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules")
-    | where tostring(RawEventData) has_any ("Deleted Items","Junk Email","Archive","MarkAsRead","MoveToFolder")
-    | project RuleTime = Timestamp, AccountObjectId, AccountDisplayName, IPAddress, RuleData = tostring(RawEventData);
-RuleActors
 | join kind=inner (
-    CloudAppEvents
-    | where Timestamp > ago(14d)
-    | where Application has "SharePoint" or Application has "OneDrive"
-    | where ActionType in ("FileUploaded","FileModified","SharingInvitationCreated","AnonymousLinkCreated")
-    | project StageTime = Timestamp, AccountObjectId, ObjectName, StageAction = ActionType
-  ) on AccountObjectId
-| where abs(datetime_diff('hour', StageTime, RuleTime)) <= 24
-| project RuleTime, StageTime, AccountDisplayName, IPAddress, RuleData, ObjectName, StageAction
-| order by RuleTime desc
-```
-
-### Trojanized MeshAgent SYSTEM-service backdoor (Sinobi ransomware)
-
-`UC_120_19` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="meshagent.exe" OR Processes.process="*meshcentral*" OR Processes.process="*--meshServiceName*" OR Processes.process="*msh=*") AND (Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\ProgramData\\*" OR Processes.process_path="*\\Public\\*" OR Processes.parent_process_name="services.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName has "meshagent"
-   or ProcessVersionInfoProductName has "MeshCentral"
-   or ProcessCommandLine has_any ("meshcentral","--meshServiceName","msh=","--installPath")
-| where FolderPath has_any (@"\Temp\", @"\ProgramData\", @"\Public\", @"\AppData\", @"\Users\")
-   or InitiatingProcessFileName in~ ("services.exe","cmd.exe","powershell.exe","msiexec.exe")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+    EmailUrlInfo
+    | where Timestamp > ago(LookbackDays)
+    | project NetworkMessageId, Url, UrlDomain
+  ) on NetworkMessageId
+| where UrlDomain in~ (HarvestDomains) or UrlDomain endswith "pamconj.com" or UrlDomain endswith ".workers.dev"
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, PdfName, PdfSHA256, Url, UrlDomain
 | order by Timestamp desc
 ```
 
-### Zoho Assist Unattended Agent deployment (Warlock / Storm-2603)
+### Post-compromise M365 defense-evasion inbox rule creation (UAT-11764 mailbox takeover)
 
-`UC_120_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("ZA_Access.exe","ZA_Connect.exe","ZohoURSService.exe","ZMAgent.exe","Zaservice.exe") OR Processes.process="*Zoho Assist*" OR Processes.process="*Unattended*") AND Processes.parent_process_name IN ("cmd.exe","powershell.exe","msiexec.exe","explorer.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
+`UC_126_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName has_any ("ZA_Access","ZA_Connect","ZohoURS","ZMAgent","Zaservice")
-   or ProcessVersionInfoCompanyName has "ZOHO"
-   or ProcessCommandLine has "Zoho Assist"
-   or (ProcessCommandLine has "Unattended" and ProcessCommandLine has "install")
-| where InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","msiexec.exe","explorer.exe","pwsh.exe")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+let LookbackDays = 14d;
+CloudAppEvents
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("DeleteMessage","MoveToFolder","Junk Email","Deleted Items","MarkAsRead","ForwardTo","RedirectTo","ForwardAsAttachmentTo")
+| project Timestamp, AccountDisplayName, AccountId, ActionType, IPAddress, CountryCode, ISP, UserAgent, Raw
 | order by Timestamp desc
 ```
 
-### GPO logon-script execution delivering domain-wide ransomware (Sinobi)
+### OAuth device-code authorization flow sign-in (ARToken/EvilTokens MFA bypass)
 
-`UC_120_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Processes.process) as cmds dc(Processes.dest) as hostCount min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="gpscript.exe" AND (Processes.process_name IN ("powershell.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe") OR Processes.process="*.SINOBI*" OR Processes.process="*rclone*") by Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where hostCount >= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
+`UC_126_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "gpscript.exe"
-| where FileName in~ ("powershell.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
-   or ProcessCommandLine has_any (".ps1",".bat",".vbs",".SINOBI","rclone")
-| summarize HostCount = dcount(DeviceName), Hosts = make_set(DeviceName, 25), Cmds = make_set(ProcessCommandLine, 10), FirstSeen = min(Timestamp)
-          by FileName
-| where HostCount >= 3
-| order by HostCount desc
+let LookbackDays = 14d;
+AADSignInEventsBeta
+| where Timestamp > ago(LookbackDays)
+| where ErrorCode == 0
+| where tostring(AuthenticationProcessingDetails) has "deviceCodeFlow" or tostring(AuthenticationProcessingDetails) has "Device Code"
+| summarize SignIns = count(),
+            Apps = make_set(Application, 10),
+            IPs = make_set(IPAddress, 15),
+            Countries = make_set(Country, 10),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+  by AccountUpn
+| order by SignIns desc
 ```
 
-### rclone data exfiltration staging (Sinobi pre-encryption)
+### Trojanized MeshAgent installed as SYSTEM auto-start service (Sinobi covert C2)
 
-`UC_120_22` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="rclone.exe" OR Processes.process="*--multi-thread-streams*" OR Processes.process="*--transfers *" OR Processes.process="*--config *" OR Processes.process="*rclone*") AND (Processes.process="* copy *" OR Processes.process="* sync *" OR Processes.process="* lsjson *" OR Processes.process="*--multi-thread-streams*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
+`UC_126_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let LookbackDays = 14d;
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "rclone.exe"
-   or ProcessCommandLine has_any ("--multi-thread-streams","--transfers ","--config "," lsjson ")
-| where ProcessCommandLine has_any (" copy "," sync "," lsjson ","--multi-thread-streams")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName
+| where Timestamp > ago(LookbackDays)
+| where FileName =~ "meshagent.exe" or FileName =~ "meshagent64.exe"
+     or ProcessVersionInfoProductName has "MeshCentral"
+     or ProcessVersionInfoOriginalFileName has "MeshAgent"
+     or ProcessVersionInfoFileDescription has "Mesh Agent"
+| where InitiatingProcessFileName =~ "services.exe"
+| where AccountName in~ ("system","local system") or InitiatingProcessAccountName =~ "system"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, ProcessVersionInfoProductName,
+          InitiatingProcessFileName, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Mass .SINOBI file encryption (Sinobi ransomware impact)
+### Endpoint egress/DNS to UAT-11764 / ARToken IOC infrastructure
 
-`UC_120_23` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.SINOBI" by Filesystem.dest Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where count > 20 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
+`UC_126_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let LookbackDays = 30d;
+let IOCDomains = dynamic(["dashboard-bl.pamconj.com","spx.pamconj.com","clear90489058903-document.workers.dev"]);
+DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where RemoteUrl in~ (IOCDomains) or RemoteUrl endswith "pamconj.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Zoho Assist Unattended Agent deployment for headless remote access (Warlock / Storm-2603)
+
+`UC_126_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 14d;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where ProcessVersionInfoProductName has "Zoho Assist"
+     or ProcessVersionInfoCompanyName has "ZOHO"
+     or FileName has_any ("ZohoMeeting.exe","ZA_Access.exe","ZA_Connect.exe","ZMAgent.exe","ZohoURSService.exe")
+     or ProcessCommandLine has "Zoho Assist"
+| where ProcessCommandLine has_any ("Unattended","install","-install","UnAttended","ZA_Access","urs")
+     or FileName has_any ("ZA_Access.exe","ZohoURSService.exe","ZMAgent.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### rclone data-exfiltration staging prior to Sinobi encryption
+
+`UC_126_21` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 14d;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where AccountName !endswith "$"
+| where FileName =~ "rclone.exe" or ProcessVersionInfoOriginalFileName =~ "rclone.exe"
+| where ProcessCommandLine has_any ("copy","sync","move","lsd","--config","--transfers","--no-check-certificate","--multi-thread-streams","--ignore-existing","mega:","b2:")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Mass .SINOBI file-extension writes indicating domain-wide encryption
+
+`UC_126_22` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 14d;
 DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName endswith ".SINOBI" or PreviousFileName endswith ".SINOBI"
-| summarize FileCount = count(), Sample = make_set(FileName, 10), Folders = make_set(FolderPath, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-          by DeviceName, InitiatingProcessFileName, InitiatingProcessId
-| where FileCount > 20     // 20 = burst threshold separating mass-encryption from a stray test file
-| order by FileCount desc
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("FileRenamed","FileCreated","FileModified")
+| where FileName endswith ".SINOBI"
+| summarize EncryptedFiles = dcount(FolderPath),
+            SampleFiles = make_set(FolderPath, 5),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            Actor = any(InitiatingProcessFileName),
+            ActorCmd = any(InitiatingProcessCommandLine),
+            ActorSHA256 = any(InitiatingProcessSHA256)
+  by DeviceName
+| where EncryptedFiles > 25
+| order by EncryptedFiles desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -679,7 +650,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q2 2026: Phishing and weaponized remote management tools drive attack
 
-`UC_120_14` · phase: **exploit** · confidence: **High**
+`UC_126_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -736,4 +707,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 24 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 23 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

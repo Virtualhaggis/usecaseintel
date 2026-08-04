@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Prototype pollution attempt via __proto__ in URL query string (CVE-2021-23682, litespeed.js/appwrite)
 
-`UC_2303_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2306_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Modernizing SAST rules maintenance to catch vulnerabilities faster
 
-`UC_2303_1` · phase: **exploit** · confidence: **High**
+`UC_2306_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

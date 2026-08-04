@@ -11,15 +11,9 @@ By Bill Toulas
 August 4, 2026
 11:24 AM
 0 
-
-
 Self-propagating malware named 'ChainDrop' has compromised more than 1,300 packages with a combined 2 billion monthly downloads on the Node Package Manager (npm) registry.
-
-
 Infected packages include very popular ones such as Keyv and Cacheable, flat-cache and file-entry-cache, all caching utilities from the same maintainer. 
-
-
-The supply-chain attack started after the threa…
+The supply-chain attack started after the threat actor comp…
 
 ## Indicators of Compromise (high-fidelity only)
 
