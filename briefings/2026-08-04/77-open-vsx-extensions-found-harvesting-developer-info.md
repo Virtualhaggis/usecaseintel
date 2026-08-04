@@ -11,12 +11,8 @@ By Lawrence Abrams
 August 4, 2026
 02:50 PM
 0 
-
-
 77 extensions on the Open VSX marketplace impersonated legitimate developer tools while transmitting information about the systems and development environments where they were installed.
-
-
-The so-called "evil twin" campaign was discovered by Manifold Security , which detected the extensions between July 26 and August 1, 2026. Researchers linked all 77 extensions to the same activity throu…
+The so-called "evil twin" campaign was discovered by Manifold Security , which detected the extensions between July 26 and August 1, 2026. Researchers linked all 77 extensions to the same activity through a sha…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -47,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Open VSX evil-twin extension exfiltration to mangorbit[.]com C2 infrastructure
 
-`UC_3_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +65,7 @@ DeviceNetworkEvents
 
 ### Code editor / node extension-host resolving mangorbit[.]com (evil-twin attribution)
 
-`UC_3_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +144,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — 77 Open VSX extensions found harvesting developer info
 
-`UC_3_3` · phase: **exploit** · confidence: **High**
+`UC_4_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

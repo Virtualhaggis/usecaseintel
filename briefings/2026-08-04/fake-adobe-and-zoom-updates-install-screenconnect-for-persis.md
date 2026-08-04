@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### SMOKE#SCREEN ScreenConnect relay C2 beacon to attacker IPs / port 8041
 
-`UC_15_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_17_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### SMOKE#SCREEN security-product registry tamper (SmartScreen/Defender) by script host
 
-`UC_15_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceRegistryEvents
 
 ### SMOKE#SCREEN Cloudflare Quick Tunnel C2 (trycloudflare.com staging subdomain)
 
-`UC_15_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_17_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### SMOKE#SCREEN silent msiexec install of ScreenConnect / ConnectWise Control
 
-`UC_15_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### Powercat fake Xeno loader chain (xeno.exe → AppData javaw.exe → decompiler.exe)
 
-`UC_15_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_17_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### Powercat stage-2 C2 to solthere.net redeem endpoint
 
-`UC_15_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_17_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceNetworkEvents
 
 ### Powercat stage-3 persistence via HKCU Run 'Display Calibration' → GameDVR payload
 
-`UC_15_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -507,7 +507,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Adobe and Zoom Updates Install ScreenConnect for Persistent Remote Access
 
-`UC_15_10` · phase: **exploit** · confidence: **High**
+`UC_17_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

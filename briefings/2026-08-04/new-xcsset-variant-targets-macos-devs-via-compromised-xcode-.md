@@ -11,15 +11,9 @@ By Bill Toulas
 August 4, 2026
 03:03 PM
 0 
-
-
 A new version of the XCSSET malware is targeting thousands of macOS users through compromised Xcode projects and GitHub repositories.
-
-
 Xcode is the official software development kit (SDK) for creating, testing, and publishing software for all Apple's platforms.
-
-
-After months of inactivity, XCSSET has resurfaced with an updated version, v40, that features enhanced evasion tec…
+After months of inactivity, XCSSET has resurfaced with an updated version, v40, that features enhanced evasion techniques and …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,26 +33,26 @@ After months of inactivity, XCSSET has resurfaced with an updated version, v40, 
 - **Domain (defanged):** `accapple.ru`
 - **Domain (defanged):** `adschecks.ru`
 - **Domain (defanged):** `adsmobi.ru`
-- **Domain (defanged):** `adsmorein.in`
-- **Domain (defanged):** `adsmoreme.in`
 - **Domain (defanged):** `amdcdn.ru`
 - **Domain (defanged):** `amznprod.in`
 - **Domain (defanged):** `applecdn.ru`
 - **Domain (defanged):** `appledisk.ru`
 - **Domain (defanged):** `appledns.ru`
 - **Domain (defanged):** `applehosts.ru`
-- **Domain (defanged):** `appletime.in`
 - **Domain (defanged):** `bulksec.ru`
 - **Domain (defanged):** `cdnamz.in`
 - **Domain (defanged):** `cdnamz.ru`
 - **Domain (defanged):** `cdnapple.in`
-- **Domain (defanged):** `cdnatapple.ru`
 - **Domain (defanged):** `cdnroute.ru`
 - **Domain (defanged):** `checkcdn.ru`
 - **Domain (defanged):** `chromeads.ru`
+- **Domain (defanged):** `devnetaps.ru`
 - **Domain (defanged):** `dnsapple.ru`
 - **Domain (defanged):** `dnsrelays.ru`
-- **Domain (defanged):** `figmacat.ru`
+- **Domain (defanged):** `explorecdn.ru`
+- **Domain (defanged):** `icloudsnet.ru`
+- **Domain (defanged):** `netcdnamz.ru`
+- **Domain (defanged):** `networkads.in`
 - **Domain (defanged):** `windsecure.ru`
 - **SHA1:** `6e480d648fa1b70612f5d198a66875e28847547d`
 
@@ -88,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### Chrome launched with DevTools/remote-debugging port by shell launcher (XCSSET v40 browser hijack)
 
-`UC_2_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +104,7 @@ DeviceProcessEvents
 
 ### macOS security tooling sabotage: tccutil reset + CloudTelemetryService kill + XProtect/softwareupdate tamper (XCSSET v40)
 
-`UC_2_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +126,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 C2 beacon to Unit 42 IOC domains / IPs
 
-`UC_2_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +146,7 @@ DeviceNetworkEvents
 
 ### XCSSET v40 Telegram trojanizer: /Applications/Telegram.app replacement + ~/.tr config drop
 
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +167,7 @@ DeviceFileEvents
 
 ### XCSSET v40 build-time execution: Xcode-spawned osascript loader / /tmp/r payload
 
-`UC_2_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

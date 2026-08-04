@@ -40,15 +40,15 @@ The commercial phishing-as-a-service (PhaaS) toolkit known as Greatness has beco
 - **T1071** — Application Layer Protocol
 - **T1621** — Multi-Factor Authentication Request Generation
 - **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1656** — Impersonation
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1090** — Proxy
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1556.006** — Modify Authentication Process: MFA
+- **T1598.003** — Phishing for Information: Spearphishing Link
 - **T1526** — Cloud Service Discovery
 - **T1087.004** — Account Discovery: Cloud Account
-- **T1213.002** — Data from Information Repositories: SharePoint
 
 ## Kill chain phases observed
 
@@ -56,24 +56,101 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### M365 device-code grant sign-in abused for MFA-bypass token theft (Greatness PhaaS)
+### Entra ID device-code flow authentication (Greatness device-code phishing redemption)
 
-`UC_8_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="deviceCode" by Authentication.user Authentication.src Authentication.app Authentication.dest
+| `drop_dm_object_name(Authentication)`
+| where count > 0
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
 | where Timestamp > ago(14d)
+| where AuthenticationProcessingDetails has "Device Code"
 | where ErrorCode == 0
-| where AuthenticationProcessingDetails has_any ("deviceCode", "Device Code Flow", "Device Code")
-| where AppDisplayName !in~ ("Microsoft Azure CLI","Microsoft Azure PowerShell","Microsoft Graph Command Line Tools","Microsoft Authentication Broker","Azure Active Directory PowerShell","Visual Studio Code","Microsoft Docs")
-| project Timestamp, AccountUpn, AccountObjectId, AppDisplayName, ApplicationId, ResourceDisplayName, IPAddress, Country, City, DeviceName, DeviceTrustType, UserAgent, ClientAppUsed
+| where AccountUpn !endswith "$"
+| project Timestamp, AccountUpn, IPAddress, Country, City, Application, AppDisplayName, ResourceDisplayName, ClientAppUsed, UserAgent, DeviceTrustType, IsInteractive
 | order by Timestamp desc
 ```
 
-### RingCentral voicemail lure delivered to Inbox despite SPF/DKIM/DMARC failure (safe-sender bypass)
+### M365 authentication from known Greatness AiTM proxy IP 38.248.95.214
 
-`UC_8_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_9_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src="38.248.95.214" by Authentication.user Authentication.app Authentication.src Authentication.action
+| `drop_dm_object_name(Authentication)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress == "38.248.95.214"
+| project Timestamp, AccountUpn, IPAddress, Country, Application, AppDisplayName, ResourceDisplayName, ClientAppUsed, UserAgent, ErrorCode, ConditionalAccessStatus
+| order by Timestamp desc
+```
+
+### New device registration / PRT generation minutes after a device-code sign-in
+
+`UC_9_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="deviceCode" by Authentication.user Authentication.src _time
+| `drop_dm_object_name(Authentication)`
+| rename user as signin_user, _time as signin_time
+| join type=inner signin_user [ search index=azuread (operationName="Add registered device" OR operationName="Register device" OR operationName="Add device") | rename properties.targetResources{}.userPrincipalName as signin_user, _time as reg_time ]
+| eval delay_min=round((reg_time-signin_time)/60,1)
+| where delay_min>=0 AND delay_min<=60
+| table signin_time reg_time delay_min signin_user src
+```
+
+### Malicious inbox rule created hours after anomalous M365 sign-in
+
+`UC_9_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="deviceCode" by Authentication.user _time
+| `drop_dm_object_name(Authentication)`
+| rename user as rule_user, _time as signin_time
+| join type=inner rule_user [ search index=o365 Operation IN ("New-InboxRule","Set-InboxRule","UpdateInboxRules") (Parameters="*ForwardTo*" OR Parameters="*RedirectTo*" OR Parameters="*Delete*" OR Parameters="*Junk*") | rename UserId as rule_user, _time as rule_time ]
+| eval delay_hr=round((rule_time-signin_time)/3600,1)
+| where delay_hr>=0 AND delay_hr<=24
+| table signin_time rule_time delay_hr rule_user Operation Parameters
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules")
+| where RawEventData has_any ("ForwardTo", "RedirectTo", "DeleteMessage", "MoveToFolder", "Junk", "Deleted Items")
+| project Timestamp, AccountDisplayName, AccountId, IPAddress, ActionType, ObjectName, UserAgent, RawEventData
+| order by Timestamp desc
+```
+
+### RingCentral voicemail phishing lure delivered despite SPF/DKIM/DMARC failure (safe-sender bypass)
+
+`UC_9_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Email where All_Email.direction="inbound" (All_Email.subject="*voicemail*" OR All_Email.subject="*voice message*" OR All_Email.subject="*RingCentral*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.message_id
+| `drop_dm_object_name(All_Email)`
+| sort - count
+```
 
 **Defender KQL:**
 ```kql
@@ -81,100 +158,78 @@ EmailEvents
 | where Timestamp > ago(14d)
 | where EmailDirection == "Inbound"
 | where DeliveryAction == "Delivered" and DeliveryLocation == "Inbox"
-| where SenderDisplayName has "RingCentral" or SenderFromDomain has "ringcentral" or Subject has_any ("voicemail","voice message","new voicemail","missed call")
-| extend Auth = tostring(AuthenticationDetails)
-| where Auth has_any ("'SPF':'fail'","'DKIM':'fail'","'DMARC':'fail'","spf=fail","dkim=fail","dmarc=fail","compauth: fail","fail (")
-| join kind=leftouter (EmailUrlInfo | where Timestamp > ago(14d) | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderDisplayName, RecipientEmailAddress, Subject, DeliveryLocation, AuthenticationDetails, Url, UrlDomain
+| where SenderFromDomain has "ringcentral" or SenderDisplayName has "RingCentral" or Subject has_any ("voicemail", "voice message", "new voice")
+| where AuthenticationDetails has "fail"
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromDomain, SenderDisplayName, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, AuthenticationDetails
 | order by Timestamp desc
 ```
 
-### Greatness phishing redirect-chain domains resolved/contacted by endpoints
+### Navigation / DNS to Greatness PhaaS phishing infrastructure domains
 
-`UC_8_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_9_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("hashmashryshl.cfd","hashmashryly.cfd","onlineyoutlook.one","addtorimez.gba","willgranttblesssecondflier.cfd","lookatcreatilcense.one","pleasebeatwithlllocliad.gbs","wbajp.feelingfor.com") by DNS.src DNS.query
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS DNS.query IN ("hashmashryshl.cfd","hashmashryly.cfd","onlineyoutlook.one","willgranttblesssecondflier.cfd","lookatcreatilcense.one","wbajp.feelingfor.com","addtorimez.gba","pleasebeatwithlllocliad.gbs") by DNS.src DNS.query
 | `drop_dm_object_name(DNS)`
-| convert ctime(firstTime) ctime(lastTime)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let phishDomains = dynamic(["hashmashryshl.cfd","hashmashryly.cfd","onlineyoutlook.one","addtorimez.gba","willgranttblesssecondflier.cfd","lookatcreatilcense.one","pleasebeatwithlllocliad.gbs","wbajp.feelingfor.com"]);
+let iocDomains = dynamic(["hashmashryshl.cfd","hashmashryly.cfd","onlineyoutlook.one","willgranttblesssecondflier.cfd","lookatcreatilcense.one","wbajp.feelingfor.com","addtorimez.gba","pleasebeatwithlllocliad.gbs"]);
 union
-  (EmailUrlInfo | where Timestamp > ago(30d) | where UrlDomain in~ (phishDomains) | project Timestamp, Source="EmailUrlInfo", Account="", Detail=Url, Domain=UrlDomain, NetworkMessageId),
-  (UrlClickEvents | where Timestamp > ago(30d) | where Url has_any (phishDomains) | project Timestamp, Source="UrlClick", Account=AccountUpn, Detail=Url, Domain="", NetworkMessageId),
-  (DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (phishDomains) | project Timestamp, Source="DeviceNetwork", Account=InitiatingProcessAccountUpn, Detail=RemoteUrl, Domain="", NetworkMessageId="")
+( DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (iocDomains) | project Timestamp, Source="Network", DeviceName, AccountName=InitiatingProcessAccountName, Indicator=RemoteUrl, InitiatingProcessFileName ),
+( DeviceEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (iocDomains) | project Timestamp, Source="DeviceEvent", DeviceName, AccountName, Indicator=RemoteUrl, InitiatingProcessFileName )
 | order by Timestamp desc
 ```
 
-### Stolen-token replay: non-interactive M365 auth from new IP minutes after interactive login
+### Post-compromise Microsoft Graph enumeration across many M365 resources in minutes
 
-`UC_8_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success Authentication.src="38.248.95.214" by Authentication.user Authentication.src Authentication.app
+| tstats `summariesonly` dc(Authentication.dest) as ResourceCount values(Authentication.dest) as Resources min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" by Authentication.user Authentication.src _time span=10m
 | `drop_dm_object_name(Authentication)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| where ResourceCount >= 5
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - ResourceCount
 ```
-
-**Defender KQL:**
-```kql
-let win = 30m;
-let interactiveSignins = AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where IsInteractive == true and ErrorCode == 0
-| project IntTime = Timestamp, AccountObjectId, AccountUpn, IntIP = IPAddress, IntCountry = Country;
-AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where IsInteractive == false and ErrorCode == 0
-| project Timestamp, AccountObjectId, AccountUpn, IPAddress, Country, AppDisplayName, ResourceDisplayName
-| join kind=inner interactiveSignins on AccountObjectId
-| where Timestamp between (IntTime .. IntTime + win)
-| where IPAddress != IntIP
-| where IPAddress == "38.248.95.214" or Country != IntCountry
-| project IntTime, ReplayTime = Timestamp, AccountUpn, IntIP, IntCountry, ReplayIP = IPAddress, ReplayCountry = Country, AppDisplayName, ResourceDisplayName
-| order by ReplayTime desc
-```
-
-### New device registration / PRT minting minutes after an Entra sign-in (post-token persistence)
-
-`UC_8_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let win = 60m;
-let signins = AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where ErrorCode == 0
-| project SignInTime = Timestamp, AccountObjectId, AccountUpn, SignInIP = IPAddress, SignInCountry = Country;
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where ActionType in~ ("Add device","Register device","Add registered owner to device")
-| join kind=inner signins on AccountObjectId
-| where Timestamp between (SignInTime .. SignInTime + win)
-| project SignInTime, DeviceRegTime = Timestamp, AccountUpn = AccountDisplayName, AccountObjectId, SignInIP, SignInCountry, RegIP = IPAddress, ActionType, ObjectName
-| order by DeviceRegTime desc
-```
-
-### Replayed token fan-out: single identity enumerating many M365 resources in a short window
-
-`UC_8_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
 | where Timestamp > ago(14d)
 | where ErrorCode == 0
-| summarize Resources = make_set(ResourceDisplayName), ResourceCount = dcount(ResourceDisplayName), IPs = make_set(IPAddress), Apps = make_set(AppDisplayName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn, bin(Timestamp, 15m)
-| where ResourceCount >= 5   // 5+ distinct M365 resources in 15m = broad enumeration
-| where Resources has_any ("Microsoft Graph","Office 365 Exchange Online","Office 365 SharePoint Online","Microsoft Teams","Skype and Teams Tenant Admin API","OneDrive")
-| order by LastSeen desc
+| where AccountUpn !endswith "$"
+| summarize ResourceCount = dcount(ResourceDisplayName), Resources = make_set(ResourceDisplayName, 20), IPs = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn, bin(Timestamp, 10m)
+| where ResourceCount >= 5   // 5+ distinct M365 resources touched by one user in 10m = enumeration fan-out (baseline P95 ~= 3)
+| where Resources has_any ("Office 365 Exchange Online", "Microsoft Teams", "Office 365 SharePoint Online", "Microsoft Graph", "OneDrive")
+| order by ResourceCount desc
+```
+
+### Inbound email containing Microsoft device-code / devicelogin URL from external phishing context
+
+`UC_9_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Email where All_Email.direction="inbound" (All_Email.url="*microsoft.com/devicelogin*" OR All_Email.url="*aka.ms/devicelogin*" OR All_Email.url="*oauth2/v2.0/devicecode*" OR All_Email.url="*oauth2/deviceauth*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.url
+| `drop_dm_object_name(All_Email)`
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+let devUrls = dynamic(["microsoft.com/devicelogin","aka.ms/devicelogin","oauth2/v2.0/devicecode","oauth2/deviceauth"]);
+EmailUrlInfo
+| where Timestamp > ago(14d)
+| where Url has_any (devUrls)
+| join kind=inner ( EmailEvents | where Timestamp > ago(14d) | where EmailDirection == "Inbound" and DeliveryAction == "Delivered" | project NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject ) on NetworkMessageId
+| project Timestamp, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, Url
+| order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -419,4 +474,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

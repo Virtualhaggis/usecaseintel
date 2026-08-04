@@ -73,14 +73,17 @@ Fedor Si…
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1480.001** — Execution Guardrails: Environmental Keying
-- **T1529** — System Shutdown/Reboot
-- **T1090** — Proxy
-- **T1572** — Protocol Tunneling
-- **T1071.001** — Application Layer Protocol
+- **T1078** — Valid Accounts
+- **T1199** — Trusted Relationship
 - **T1046** — Network Service Discovery
+- **T1018** — Remote System Discovery
 - **T1003.001** — OS Credential Dumping: LSASS Memory
 - **T1555.005** — Credentials from Password Stores: Password Managers
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1555** — Credentials from Password Stores
+- **T1572** — Protocol Tunneling
+- **T1090** — Proxy
+- **T1021.004** — Remote Services: SSH
+- **T1490** — Inhibit System Recovery
 
 ## Kill chain phases observed
 
@@ -88,96 +91,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### GenieLocker Windows PE encryptor: secret hex arg + genie_encrypt --percent/--recursive flags
+### GenieLocker Windows ransomware execution via secret-argument hex + --percent/--recursive flags
 
-`UC_101_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_104_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="*5d62c1349b8981c396c9a23f4f8f053c*" OR (Processes.process="*--percent*" AND Processes.process="*--recursive*") OR (Processes.process="*--percent*" AND Processes.process="*--log*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="5d62c1349b8981c396c9a23f4f8f053c" OR (Processes.process="*--percent*" AND Processes.process="*--recursive*") OR (Processes.process="*--percent*" AND Processes.process="*--log*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where AccountName !endswith "$"
 | where MD5 == "5d62c1349b8981c396c9a23f4f8f053c"
    or (ProcessCommandLine has "--percent" and ProcessCommandLine has "--recursive")
    or (ProcessCommandLine has "--percent" and ProcessCommandLine has "--log")
-   or ProcessCommandLine matches regex @"(?i)\b[0-9a-f]{32,}\b\s+(-p|--percent)\s+\d"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, MD5, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### GenieLocker ELF encryptor on Linux/ESXi: genie_encrypt CLI execution
-
-`UC_101_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*genie_encrypt*" OR (Processes.process="*--percent*" AND Processes.process="*--recursive*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has "genie_encrypt"
-   or (ProcessCommandLine has "--percent" and ProcessCommandLine has "--recursive")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Toy Ghouls C2: egress to 89.125.66.101, socks5.exe proxy, reverse SSH tunnel
-
-`UC_101_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="89.125.66.101" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "89.125.66.101"
-   or InitiatingProcessFileName =~ "socks5.exe"
-   or (InitiatingProcessFileName =~ "ssh.exe" and InitiatingProcessCommandLine has "-R")
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Toy Ghouls toolset staging: SoftPerfect netscan, socks5.exe proxy, Mimikatz
-
-`UC_101_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("netscan.exe","socks5.exe") OR Processes.process="*sekurlsa::*" OR Processes.process="*privilege::debug*" OR Processes.process="*lsadump::*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where FileName in~ ("netscan.exe","socks5.exe")
-   or ProcessVersionInfoOriginalFileName =~ "mimikatz.exe"
-   or ProcessVersionInfoCompanyName has "gentilkiwi"
-   or ProcessCommandLine has_any ("sekurlsa::","privilege::debug","lsadump::")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, MD5, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### KeePassXC credential-vault access by non-KeePass process (.kdbx theft)
+### External-partner VPN logon with valid credentials (trusted-relationship abuse)
 
-`UC_101_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.kdbx" AND NOT Filesystem.process_name IN ("keepassxc.exe","keepass.exe","keepassxc-cli.exe") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action="success" (Authentication.authentication_method="NTLM" OR Authentication.authentication_method="Kerberos" OR nodename=Authentication) by Authentication.src Authentication.user Authentication.dest Authentication.app | `drop_dm_object_name(Authentication)` | where user!="*$" AND NOT (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src)) | iplocation src | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceLogonEvents
+| where Timestamp > ago(30d)
+| where ActionType == "LogonSuccess"
+| where LogonType in ("Network","RemoteInteractive")
+| where RemoteIPType == "Public"
+| where AccountName !endswith "$"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hosts=make_set(DeviceName,20), Count=count() by AccountName, RemoteIP, LogonType
+| order by FirstSeen desc
+```
+
+### SoftPerfect Network Scanner (netscan.exe) execution for internal discovery
+
+`UC_104_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="netscan.exe" OR Processes.original_file_name="netscan.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "netscan.exe"
+   or ProcessVersionInfoOriginalFileName =~ "netscan.exe"
+   or ProcessVersionInfoProductName has "Network Scanner"
+   or ProcessVersionInfoCompanyName has "SoftPerfect"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### Mimikatz credential dumping via command-line/module signature
+
+`UC_104_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*sekurlsa::*" OR Processes.process="*lsadump::*" OR Processes.process="*privilege::debug*" OR Processes.process="*kerberos::*" OR Processes.process="*mimikatz*" OR Processes.process_name="mimikatz.exe" OR Processes.original_file_name="mimikatz.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("sekurlsa::","lsadump::","privilege::debug","kerberos::","crypto::","mimikatz")
+   or FileName =~ "mimikatz.exe"
+   or ProcessVersionInfoOriginalFileName =~ "mimikatz.exe"
+   or ProcessVersionInfoFileDescription has "mimikatz"
+   or ProcessVersionInfoCompanyName has "gentilkiwi"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### KeePassXC .kdbx vault access/copy by non-KeePass process
+
+`UC_104_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.kdbx" AND Filesystem.action="created" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT process_name IN ("keepassxc.exe","keepass.exe") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -185,10 +192,69 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FileName endswith ".kdbx"
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
 | where InitiatingProcessFileName !in~ ("keepassxc.exe","keepass.exe","keepassxc-cli.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, PreviousFolderPath, ActionType
+| order by Timestamp desc
+```
+
+### socks5.exe / anomalous Windows OpenSSH server for pivot tunneling
+
+`UC_104_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="socks5.exe" OR Processes.process_name="sshd.exe" OR (Processes.process_name="ssh.exe" AND Processes.process="*-D *")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where user!="*$" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "socks5.exe"
+   or FileName =~ "sshd.exe"
+   or (FileName =~ "ssh.exe" and ProcessCommandLine has "-D")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Reverse SSH tunnel and C2 beacon to GenieLocker C2 89.125.66.101
+
+`UC_104_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="89.125.66.101" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "89.125.66.101"
+   or (InitiatingProcessFileName in~ ("ssh.exe","plink.exe") and InitiatingProcessCommandLine has "-R" and RemoteIPType == "Public")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### GenieLocker ELF encryptor on Linux/ESXi via --percent/--recursive flags
+
+`UC_104_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process="*--percent*" AND Processes.process="*--recursive*") OR (Processes.process="*--percent*" AND Processes.process="*--log*")) AND Processes.os="Linux" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (ProcessCommandLine has "--percent" and ProcessCommandLine has "--recursive")
+     or (ProcessCommandLine has "--percent" and ProcessCommandLine has "--log")
+| where FolderPath startswith "/" or FolderPath has "/tmp/" or FolderPath has "/var/"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -340,7 +406,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Toy Ghouls’ new toy: the GenieLocker ransomware
 
-`UC_101_7` · phase: **exploit** · confidence: **High**
+`UC_104_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -400,4 +466,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

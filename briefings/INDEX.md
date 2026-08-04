@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2606 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2608 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-08-04
 - [128 seconds to disruption microsoft defender stops ransomwar](./2026-08-04/128-seconds-to-disruption-microsoft-defender-stops-ransomwar.md)
 - [77 open vsx extensions found harvesting developer info](./2026-08-04/77-open-vsx-extensions-found-harvesting-developer-info.md)
+- [a first look at evo agentic appsec agentic remediation and m](./2026-08-04/a-first-look-at-evo-agentic-appsec-agentic-remediation-and-m.md)
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
+- [chaindrop npm worm bun loaded ci cd credential harvester wit](./2026-08-04/chaindrop-npm-worm-bun-loaded-ci-cd-credential-harvester-wit.md)
 - [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [cisa kev cve 2026 18556 n able n central authentication bypa](./2026-08-04/cisa-kev-cve-2026-18556-n-able-n-central-authentication-bypa.md)
 - [cisa kev cve 2026 34486 apache tomcat missing encryption of ](./2026-08-04/cisa-kev-cve-2026-34486-apache-tomcat-missing-encryption-of-.md)
@@ -26,6 +28,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 69264 flowise rce via csvagent csvfil](./2026-08-04/ghsa-critical-cve-2026-69264-flowise-rce-via-csvagent-csvfil.md)
 - [ghsa critical cve 2026 70470 flowise pyodide validator unico](./2026-08-04/ghsa-critical-cve-2026-70470-flowise-pyodide-validator-unico.md)
 - [ghsa critical cve 2026 70477 flowise csv agent prompt inject](./2026-08-04/ghsa-critical-cve-2026-70477-flowise-csv-agent-prompt-inject.md)
+- [ghsa critical cve 2026 70478 flowise unauthenticated oauth2 ](./2026-08-04/ghsa-critical-cve-2026-70478-flowise-unauthenticated-oauth2-.md)
 - [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
 - [greatness phaas adds device code phishing to bypass mfa and ](./2026-08-04/greatness-phaas-adds-device-code-phishing-to-bypass-mfa-and-.md)
 - [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
@@ -283,7 +286,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06
-- [ghsa critical cve 2026 48204 apache camel camel mongodb grid](./2026-07-06/ghsa-critical-cve-2026-48204-apache-camel-camel-mongodb-grid.md)
 - [ghsa critical cve 2026 48205 apache camel dns has improper i](./2026-07-06/ghsa-critical-cve-2026-48205-apache-camel-dns-has-improper-i.md)
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)

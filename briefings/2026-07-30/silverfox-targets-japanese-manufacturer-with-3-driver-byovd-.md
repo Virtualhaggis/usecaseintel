@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### SilverFox DLL side-loading: PDFCORE8.dll loaded by ConvertToPDF.exe / PDFDirect.exe
 
-`UC_97_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_100_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceImageLoadEvents
 
 ### SilverFox 3-driver BYOVD: BootRepair.sys / EnPortv.sys / wsftprm.sys dropped to disk
 
-`UC_97_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_100_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceFileEvents
 
 ### SilverFox ValleyRAT C2 / shellcode fetch to 43.128.26.132
 
-`UC_97_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_100_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceNetworkEvents
 
 ### ValleyRAT thread-context-hijack svchost.exe spawned by non-services.exe parent
 
-`UC_97_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_100_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -376,7 +376,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SilverFox Targets Japanese Manufacturer with 3-Driver BYOVD Chain and ValleyRAT
 
-`UC_97_8` · phase: **exploit** · confidence: **High**
+`UC_100_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

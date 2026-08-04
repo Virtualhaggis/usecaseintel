@@ -1,6 +1,6 @@
 # [HIGH] Massive ChainDrop npm supply-chain attack infects hundreds of packages
 
-**Source:** BleepingComputer, StepSecurity
+**Source:** BleepingComputer
 **Published:** 2026-08-04
 **Article:** https://www.bleepingcomputer.com/news/security/massive-chaindrop-npm-supply-chain-attack-infects-hundreds-of-packages/
 
@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### npm 'preinstall' hook auto-executing ChainDrop setup.mjs dropper
 
-`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_13_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### ChainDrop Bun runtime executing Math_Symbol.js / math_init.js infostealer
 
-`UC_1_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_13_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### ChainDrop exfiltration to npm-cache[.]com domain
 
-`UC_1_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_13_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceNetworkEvents
 
 ### ChainDrop payload files (setup.mjs / Math_Symbol.js / math_init.js) written to node_modules
 
-`UC_1_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_13_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Massive ChainDrop npm supply-chain attack infects hundreds of packages
 
-`UC_1_5` · phase: **exploit** · confidence: **High**
+`UC_13_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
