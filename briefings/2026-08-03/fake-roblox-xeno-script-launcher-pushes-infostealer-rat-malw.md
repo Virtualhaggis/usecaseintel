@@ -30,13 +30,13 @@ The tool isn’t an official part of the game, so the Roblox client periodically
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1059** — Command and Scripting Interpreter
 - **T1140** — Deobfuscate/Decode Files or Information
+- **T1082** — System Information Discovery
+- **T1119** — Automated Collection
+- **T1554** — Compromise Host Software Binary
 - **T1547.001** — Registry Run Keys / Startup Folder
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1555** — Credentials from Password Stores
-- **T1119** — Automated Collection
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -44,13 +44,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Fake Xeno loader (xeno.exe) executed from archive-extract / non-official path
+### Fake Xeno loader (xeno.exe) executed from archive/Downloads/Temp staging
 
-`UC_4_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="xeno.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | where like(lower(process_path),"%\\appdata\\local\\temp\\%") OR like(lower(process_path),"%\\downloads\\%") OR like(lower(process_path),"%\\appdata\\local\\xeno\\workspace\\%") OR match(lower(process_hash),"2ead73ed62f1c2beb9043ce92e774e0b") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="xeno.exe" AND (Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.parent_process_name IN ("winrar.exe","7zfm.exe","7zg.exe","7z.exe","explorer.exe","winzip32.exe")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -58,61 +58,111 @@ _(none detected from narrative keywords)_
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "xeno.exe"
+| where FolderPath has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\Temp\")
+   or InitiatingProcessFileName in~ ("winrar.exe","7zfm.exe","7zg.exe","7z.exe","explorer.exe","winzip32.exe")
 | where AccountName !endswith "$"
-| where FolderPath has_any (@"\AppData\Local\Temp\", @"\Downloads\", @"\AppData\Local\Xeno\workspace\") or MD5 =~ "2ead73ed62f1c2beb9043ce92e774e0b"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Fake Xeno Java loader chain: xeno.exe spawning javaw.exe / decompiler.exe
+### Java runtime (javaw.exe/jvm.dll) dropped to AppData by non-installer process
 
-`UC_4_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="xeno.exe" OR Processes.parent_process_name="instance.exe") (Processes.process_name="javaw.exe" OR Processes.process_name="java.exe" OR Processes.process_name="decompiler.exe" OR Processes.process_name="instance.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | eval susp=if(like(lower(process_path),"%\\appdata\\local\\java\\jre\\bin\\%") OR match(lower(process_hash),"d123dbb5c5980bfeb22586197d2cc403"),1,1) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("xeno.exe","instance.exe")
-| where FileName in~ ("javaw.exe","java.exe","decompiler.exe","instance.exe")
-     or (FileName in~ ("javaw.exe","java.exe") and FolderPath has @"\AppData\Local\Java\jre\bin\")
-     or MD5 =~ "d123dbb5c5980bfeb22586197d2cc403"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, MD5
-| order by Timestamp desc
-```
-
-### Portable JRE (instance.exe) extracted to %LOCALAPPDATA%\Java\jre by fake Xeno
-
-`UC_4_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="javaw.exe" OR Filesystem.file_name="java.exe" OR Filesystem.file_name="jvm.dll" OR Filesystem.file_name="instance.exe") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where like(lower(file_path),"%\\appdata\\local\\java\\jre\\%") OR like(lower(file_path),"%\\appdata\\local\\xeno\\workspace\\%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("javaw.exe","java.exe","jvm.dll") AND (Filesystem.file_path="*\\AppData\\Local\\Java\\*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*\\AppData\\Local\\Xeno\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("msiexec.exe","jdk-*installer*.exe","javasetup.exe","setup.exe") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("javaw.exe","java.exe","jvm.dll","instance.exe")
-| where FolderPath has_any (@"\AppData\Local\Java\jre\", @"\AppData\Local\Xeno\workspace\")
-| where InitiatingProcessFileName !in~ ("msiexec.exe","trustedinstaller.exe") and InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName in~ ("javaw.exe","java.exe","jvm.dll")
+| where FolderPath has_any (@"\AppData\Local\Java\", @"\AppData\Local\Temp\", @"\AppData\Local\Xeno\")
+| where InitiatingProcessFileName !in~ ("msiexec.exe","setup.exe","javasetup.exe","jdk-installer.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Fake Xeno persistence via 'Display Calibration' Run key
+### Obfuscated decompiler.exe spawned by xeno.exe / javaw (second-stage masquerade)
 
-`UC_4_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | where lower(registry_value_name)="display calibration" OR like(lower(registry_value_data),"%\\appdata\\local\\java\\jre\\bin\\javaw%") OR like(lower(registry_value_data),"%\\appdata\\local\\microsoft\\gamedvr%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="decompiler.exe" AND (Processes.parent_process_name IN ("xeno.exe","javaw.exe","java.exe") OR Processes.process_path="*\\AppData\\Local\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "decompiler.exe"
+| where InitiatingProcessFileName in~ ("xeno.exe","javaw.exe","java.exe") or FolderPath has @"\AppData\Local\"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Single process reading credential stores across 3+ browsers (stealer sweep)
+
+`UC_4_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("Login Data","Cookies","Web Data","Local State") by Filesystem.dest Filesystem.process_id Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | eval browser=case(match(file_path,"(?i)\\\\Google\\\\Chrome\\\\"),"Chrome",match(file_path,"(?i)\\\\Microsoft\\\\Edge\\\\"),"Edge",match(file_path,"(?i)BraveSoftware"),"Brave",match(file_path,"(?i)Opera Software"),"Opera",match(file_path,"(?i)\\\\Vivaldi\\\\"),"Vivaldi") | where isnotnull(browser) | search NOT process_name IN ("chrome.exe","msedge.exe","brave.exe","opera.exe","vivaldi.exe","msedgewebview2.exe") | stats dc(browser) as browser_count values(browser) as browsers values(file_path) as paths by dest process_name process_id | where browser_count>=3
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("Login Data","Cookies","Web Data","Local State")
+| extend Browser = case(
+    FolderPath has @"\Google\Chrome\", "Chrome",
+    FolderPath has @"\Microsoft\Edge\", "Edge",
+    FolderPath has @"\BraveSoftware\", "Brave",
+    FolderPath has @"\Opera Software\", "Opera",
+    FolderPath has @"\Vivaldi\", "Vivaldi",
+    "Other")
+| where Browser != "Other"
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","vivaldi.exe","msedgewebview2.exe","explorer.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize BrowserFamilies = make_set(Browser), BrowserCount = dcount(Browser), FilesTouched = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where BrowserCount >= 3   // 3+ distinct browser credential stores by one non-browser process = stealer sweep
+| order by LastSeen desc
+```
+
+### Exodus wallet app.asar tamper / SquirrelInteractive.bin drop by non-Exodus process
+
+`UC_4_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where ((Filesystem.file_name="app.asar" AND Filesystem.file_path="*\\exodus\\*") OR Filesystem.file_name="SquirrelInteractive.bin") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("Exodus.exe","Update.exe","msiexec.exe") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "app.asar" and FolderPath has @"\exodus\") or FileName =~ "SquirrelInteractive.bin"
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessFileName !in~ ("Exodus.exe","Update.exe","msiexec.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### 'Display Calibration' Run key persistence pointing to AppData javaw/GameDVR
+
+`UC_4_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND (Registry.registry_value_name="Display Calibration" OR Registry.registry_value_data="*\\AppData\\Local\\Java\\jre\\bin\\javaw.exe*" OR Registry.registry_value_data="*\\Microsoft\\GameDVR\\*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -122,66 +172,29 @@ DeviceRegistryEvents
 | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
 | where RegistryKey has @"\CurrentVersion\Run"
 | where RegistryValueName =~ "Display Calibration"
-     or RegistryValueData has_any (@"\AppData\Local\Java\jre\bin\javaw", @"\AppData\Local\Microsoft\GameDVR")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
+   or RegistryValueData has_any (@"\AppData\Local\Java\jre\bin\javaw.exe", @"\Microsoft\GameDVR\", "decompiler")
+| where InitiatingProcessFileName !in~ ("dccw.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Fake Xeno C2 to solthere[.]net registration and redeem endpoints
+### Xeno RAT C2 egress to solthere.net / dynamic .xyz WebSocket from AppData Java
 
-`UC_4_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*solthere.net*" OR Web.dest="solthere.net") by Web.src Web.dest Web.url Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | eval reg=if(like(lower(url),"%/justacoolkat10%") OR like(lower(url),"%/api/v1/redeem%"),"yes","no") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*solthere.net*" OR (All_Traffic.app IN ("javaw.exe","java.exe","decompiler.exe") AND All_Traffic.dest="*.xyz")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "solthere.net" or RemoteUrl has_any ("/justacoolkat10", "/api/v1/redeem")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### javaw.exe reading multiple browser credential stores (Chrome/Edge/Brave/Opera/Vivaldi)
-
-`UC_4_10` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Filesystem.file_path) as file_paths dc(Filesystem.file_path) as distinct_stores min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="Login Data" OR Filesystem.file_name="Cookies" OR Filesystem.file_name="Local State" OR Filesystem.file_name="Web Data") (Filesystem.file_path="*\\Google\\Chrome\\*" OR Filesystem.file_path="*\\Microsoft\\Edge\\*" OR Filesystem.file_path="*\\BraveSoftware\\*" OR Filesystem.file_path="*\\Opera Software\\*" OR Filesystem.file_path="*\\Vivaldi\\*") by Filesystem.dest Filesystem.user Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | where distinct_stores >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("Login Data","Cookies","Local State","Web Data")
-| where FolderPath has_any (@"\Google\Chrome\", @"\Microsoft\Edge\", @"\BraveSoftware\", @"\Opera Software\", @"\Vivaldi\")
-| where InitiatingProcessFileName in~ ("javaw.exe","java.exe")
-| summarize StoresTouched = dcount(FolderPath), Browsers = make_set(FolderPath), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId
-| where StoresTouched >= 2   // >=2 distinct browser cred stores by one java process
-| order by LastSeen desc
-```
-
-### Exodus wallet theft via SquirrelInteractive.bin log by javaw.exe
-
-`UC_4_11` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="SquirrelInteractive.bin" OR Filesystem.file_path="*\\Exodus\\exodus.wallet\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "SquirrelInteractive.bin"
-     or (FolderPath has @"\Exodus\exodus.wallet\" and InitiatingProcessFileName in~ ("javaw.exe","java.exe"))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where RemoteUrl has "solthere.net"
+    or (InitiatingProcessFileName in~ ("javaw.exe","java.exe","decompiler.exe") and InitiatingProcessFolderPath has @"\AppData\Local\" and RemoteUrl endswith ".xyz")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 

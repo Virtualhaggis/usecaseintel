@@ -18628,14 +18628,14 @@ level: critical
 </details></div>
 </article>
 <article class="card" id="art-101" data-art-slug="2026-07-28-ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in"
-  data-phases="c2,delivery,exploit,install,recon,weapon" data-sev="crit"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="GitHub Security Advisories"
-  data-platforms="cloudwatch,datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,web"
-  data-targets="linux,vcs,web-app"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-54658: @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution CVE-2026-54658  [LLM] Vulnerable @hypequery/clickhouse (&lt; 2.0.2, CVE-2026-54658) present in software inventory [LLM] ClickHouse query-log backslash-quote escape breakout (CVE-2026-54658 SQLi) [LLM] Web/API request parameter carrying trailing-backslash SQLi payload against ClickHouse layer Asset exposure — vulnerability matches article CVE(s)">
+  data-platforms="def,falcon,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="2" data-llm-uc-count="1"
+  data-search="[GHSA / CRITICAL] CVE-2026-54658: @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution CVE-2026-54658  [LLM] Vulnerable @hypequery/clickhouse (&lt; 2.0.2, CVE-2026-54658) on managed hosts Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -18644,9 +18644,9 @@ level: critical
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-28</span>
-    <span>4 use cases</span>
+    <span>2 use cases</span>
     <span>0 techniques</span>
-    <span>4 kill-chain phases detected</span>
+    <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">@hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54658</span></div>
@@ -18661,15 +18661,15 @@ level: critical
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
@@ -18691,169 +18691,58 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">—</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable @hypequery/clickhouse (&lt; 2.0.2, CVE-2026-54658) present in software inventory</em></div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Web/API request parameter carrying trailing-backslash SQLi payload against ClickHouse layer</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] ClickHouse query-log backslash-quote escape breakout (CVE-2026-54658 SQLi)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable @hypequery/clickhouse (&lt; 2.0.2, CVE-2026-54658) on managed hosts · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="72e6f36347" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="80e904becb" data-platforms="def,falcon,sent" data-targets="" open>
   <summary>
-    <span class="uc-title">Vulnerable @hypequery/clickhouse (&lt; 2.0.2, CVE-2026-54658) present in software inventory</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-title">Vulnerable @hypequery/clickhouse (&lt; 2.0.2, CVE-2026-54658) on managed hosts</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="72e6f36347" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="80e904becb" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts/services carrying the vulnerable @hypequery/clickhouse npm dependency below the patched 2.0.2 release. This is the pre-exploitation exposure pivot for the escapeValue() SQL-injection flaw so teams can prioritise upgrade before the wire/DB detections ever fire.
+    <div class="uc-desc">Inventories endpoints/servers running @hypequery/clickhouse below the patched 2.0.2 build, the version threshold called out in GHSA-6wcc-39rp-hh9p for the escapeValue() SQL-injection sink. This is the pre-exploitation attack-surface pivot: fix or virtually-patch these before the WAF/DB detections ever fire.
 
-Rationale: Pivots on the exact advisory identifiers — CveId CVE-2026-54658 and the @hypequery/clickhouse package name — so it flags only the affected dependency below 2.0.2, no behavioural noise.
+Rationale: Uses the exact package name (@hypequery/clickhouse) and patched version (2.0.2) plus the assigned CVE from the advisory; the Falcon clause surfaces installs by node_modules path where TVM has no npm coverage. Version threshold is the article&#x27;s own &lt;2.0.2.
 
 Cross-checked against:
   • https://nvd.nist.gov/vuln/detail/CVE-2026-54658
   • https://cve.threatint.com/CVE/CVE-2026-54658
   • https://github.com/advisories/GHSA-6wcc-39rp-hh9p</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Dev/test hosts that legitimately pin the old version in a sandbox with no user-controlled input</li><li>Vendored copy inside a container image scheduled for rebuild but not yet exposed</li><li>TVM mis-attributing a transitively bundled 2.0.2+ copy while an old lockfile entry lingers</li><li>Package present but the app never passes user input to query parameters (not actually exploitable)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm SoftwareVersion is genuinely &lt; 2.0.2 and whether the host serves user-facing input into @hypequery/clickhouse query parameters. 2) Contain: prioritise `npm i @hypequery/clickhouse@2.0.2` (or later) on internet-exposed services first; no code-level workaround exists per the advisory. 3) Hunt: on any exposed host, pivot to the web-request and ClickHouse query-log detections in this set for the backslash-quote signature to determine if exploitation was already attempted.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Dev/build agents that pin 2.0.2+ but retain a transitively-resolved older copy under a nested node_modules</li><li>Container base images cached before the 2.0.2 bump still showing in inventory until rebuilt</li><li>Test fixtures or vendored sample repos that intentionally hold the vulnerable version for regression tests</li><li>Lexical version compare edge-case if a future 2.0.10 build ships (does not exist at time of writing)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the flagged version is actually loaded at runtime (not just a stale nested node_modules copy) and whether the service passes user-controlled values as query parameters. 2) Contain: bump @hypequery/clickhouse to &gt;=2.0.2 in the affected service, redeploy, and put the app behind a WAF rule for backslash-quote parameter payloads until patched. 3) Hunt: pivot to the WAF/proxy and ClickHouse query-log detections (UC2/UC3) on the same host for the exploitation window prior to patch.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn" data-target="art-101-uc0-falcon">Falcon LogScale</button>
     </div>
-    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-54658&quot;
-| join kind=leftouter (DeviceTvmSoftwareInventory | where SoftwareName has &quot;hypequery&quot; | project DeviceId, SoftwareName, SoftwareVersion) on DeviceId
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>union
+(DeviceTvmSoftwareVulnerabilities
+ | where CveId == &quot;CVE-2026-54658&quot;
+ | project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, RecommendedSecurityUpdate),
+(DeviceTvmSoftwareInventory
+ | where SoftwareName has &quot;hypequery&quot;
+ | where SoftwareVersion &lt; &quot;2.0.2&quot;   // lexical compare; hypequery lives on 2.0.x so this cleanly flags pre-patch builds
+ | extend CveId = &quot;CVE-2026-54658&quot;, RecommendedSecurityUpdate = &quot;Upgrade @hypequery/clickhouse to 2.0.2 or later&quot;
+ | project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, RecommendedSecurityUpdate)
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2026-54658&quot; or (SoftwareName has &quot;hypequery&quot; and SoftwareName has &quot;clickhouse&quot;)
-| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId == &quot;CVE-2026-54658&quot; or (SoftwareName has &quot;hypequery&quot; and SoftwareVersion &lt; &quot;2.0.2&quot;)
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, RecommendedSecurityUpdate
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54658&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54658&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d7b5576423" data-platforms="cloudwatch,datadog,sent,spl" data-targets="linux">
-  <summary>
-    <span class="uc-title">ClickHouse query-log backslash-quote escape breakout (CVE-2026-54658 SQLi)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d7b5576423" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts ClickHouse server/query logs for the escapeValue() bypass signature: a parameter string literal terminated by a backslash-quote (\&#x27;) that breaks out of the quoted value into attacker SQL, paired with injection keywords or a resulting syntax error. This is where actual exploitation of CVE-2026-54658 is visible on the backend.
-
-Rationale: Targets the exact mechanism named in the advisory — a trailing backslash escaping the closing single quote (\&#x27;) in escapeValue() — and gates on SQLi tokens / ClickHouse parse errors so benign escaped literals don&#x27;t fire alone.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-54658
-  • https://github.com/advisories/GHSA-6wcc-39rp-hh9p</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate values that genuinely contain a backslash before a quote (Windows paths, regex, JSON blobs) stored in ClickHouse</li><li>Analytics queries that legitimately use UNION across shards</li><li>Application-level escaping that emits \&#x27; correctly on patched 2.0.2+ where breakout doesn&#x27;t occur</li><li>Load/pen-test tooling replaying SQLi corpora against a staging cluster</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SyslogMessage has @&quot;C:\\&quot; or SyslogMessage has &quot;file:///&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full query text — confirm the \&#x27; sits at a parameter boundary and is followed by attacker-controlled SQL (not a legitimate literal). Note the source IP/user from the surrounding request. 2) Contain: block the offending source, rotate any ClickHouse credentials the app used, and confirm the app is upgraded to @hypequery/clickhouse 2.0.2+. 3) Hunt: enumerate all queries from the same session/IP for data-exfil (SELECT … INTO OUTFILE, large result sets) and correlate to the web-request UC to recover the injected parameter.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-101-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(1d)
-| where ProcessName has &quot;clickhouse&quot; or SyslogMessage has &quot;clickhouse-server&quot;
-| where SyslogMessage has @&quot;\&#x27;&quot;
-| where SyslogMessage has_any (&quot;UNION&quot;,&quot;OR 1=1&quot;,&quot;; DROP&quot;,&quot;; DELETE&quot;,&quot;; INSERT&quot;,&quot;; ALTER&quot;,&quot;INTO OUTFILE&quot;,&quot;Syntax error&quot;,&quot;Cannot parse&quot;)
-| project TimeGenerated, Computer, HostIP, ProcessName, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog (@process.name:clickhouse-server OR @process.name:clickhouse) @message:*\\&#x27;* AND (@message:*UNION* OR @message:*&quot;OR 1=1&quot;* OR @message:*&quot;; DROP&quot;* OR @message:*&quot;INTO OUTFILE&quot;* OR @message:*&quot;Syntax error&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /clickhouse/query-log
-fields @timestamp, @logStream, @message
-| filter @message like /\\&#x27;/ and (@message like /UNION/i or @message like /OR 1=1/i or @message like / DROP /i or @message like /INTO OUTFILE/i or @message like /Syntax error/i or @message like /Cannot parse/i)
-| sort @timestamp desc
-| limit 200</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=&quot;clickhouse:query_log&quot; OR sourcetype=&quot;clickhouse:server&quot; OR source=&quot;*clickhouse-server*&quot;)
-| where match(_raw, &quot;\\\\&#x27;&quot;)
-| search (&quot;UNION&quot; OR &quot;OR 1=1&quot; OR &quot;; DROP&quot; OR &quot;; DELETE&quot; OR &quot;; INSERT&quot; OR &quot;; ALTER&quot; OR &quot;INTO OUTFILE&quot; OR &quot;Syntax error&quot; OR &quot;Cannot parse&quot;)
-| table _time host source query exception
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e938ec24e8" data-platforms="sent,sigma,spl" data-targets="vcs,web-app">
-  <summary>
-    <span class="uc-title">Web/API request parameter carrying trailing-backslash SQLi payload against ClickHouse layer</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="e938ec24e8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects inbound HTTP requests whose parameter values contain a backslash immediately before a quote (raw \&#x27; or URL-encoded %5C%27 / %5C&#x27;), the delivery form of the CVE-2026-54658 escapeValue() breakout, optionally chained to SQL keywords. Catches the payload on the wire before it reaches the ClickHouse query builder.
-
-Rationale: Keys on the encoded/raw backslash-quote (%5C%27 / \&#x27;) that is the on-the-wire form of the trailing-backslash escape described in the advisory, plus sqlmap UA, so it flags the delivery of the CVE-2026-54658 payload rather than any generic SQLi.
-
-Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-54658
-  • https://cve.threatint.com/CVE/CVE-2026-54658</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Users legitimately submitting Windows file paths or regex containing a backslash before a quote in a form field</li><li>Security scanners / DAST (Burp, sqlmap) running authorised assessments against the app</li><li>API clients sending JSON bodies where \&#x27; appears inside legitimately escaped strings</li><li>WAF already blocking the request (DeviceAction=blocked) — exposure but not a breach</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserAgent !has &quot;sqlmap&quot; and scStatus !in (&quot;403&quot;,&quot;406&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: decode the parameter and confirm the backslash sits at a value boundary followed by SQL syntax; check scStatus/DeviceAction to see if the request was served (2xx) or blocked. 2) Contain: block the source IP at the WAF, add a virtual-patch rule for %5C%27 / \&#x27; on ClickHouse-backed endpoints, and verify the backend is on @hypequery/clickhouse 2.0.2+. 3) Hunt: correlate the src IP and timestamp to the ClickHouse query-log UC to confirm the payload reached the DB and whether data was returned; sweep other endpoints from the same IP for reconnaissance.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(W3CIISLog
-| where TimeGenerated &gt; ago(1d)
-| where csUriQuery has_any (&quot;%5C%27&quot;,&quot;%5C&#x27;&quot;,&quot;%5C--&quot;,&quot;%5CUNION&quot;) or csUriQuery has @&quot;\&#x27;&quot;
-| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, scStatus, csUserAgent),
-(CommonSecurityLog
-| where TimeGenerated &gt; ago(1d)
-| where DeviceProduct has_any (&quot;WAF&quot;,&quot;ModSecurity&quot;,&quot;AppGw&quot;) 
-| where RequestURL has_any (&quot;%5C%27&quot;,&quot;%5C&#x27;&quot;) or RequestURL has @&quot;\&#x27;&quot;
-| project TimeGenerated, SourceIP, RequestMethod, RequestURL, DeviceProduct, DeviceAction)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trailing-Backslash Quote-Escape SQLi Payload in Web Request (CVE-2026-54658)
-id: 3b7e4c1a-9f2d-4a6e-8c1b-2f5a7d9e0c44
-description: Detects HTTP requests whose parameters carry a backslash immediately before a single quote (raw or URL-encoded), the escapeValue() breakout form used to exploit @hypequery/clickhouse CVE-2026-54658.
-references:
-  - https://github.com/advisories/GHSA-6wcc-39rp-hh9p
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-54658
-author: SOC Detection Engineering
-date: 2026/08/04
-tags:
-  - attack.t1190
-  - attack.initial_access
-logsource:
-  category: webserver
-detection:
-  selection_encoded:
-    cs-uri-query|contains:
-      - &#x27;%5C%27&#x27;
-      - &quot;%5C&#x27;&quot;
-      - &#x27;%5C--&#x27;
-  selection_raw:
-    cs-uri-query|contains: &quot;\\&#x27;&quot;
-  condition: selection_encoded or selection_raw
-level: high</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%5C%27*&quot; OR Web.url=&quot;*%5C&#x27;*&quot; OR Web.url=&quot;*\\&#x27;*&quot; OR Web.http_user_agent=&quot;*sqlmap*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%5C%27*&quot; OR Web.url=&quot;*%5C&#x27;*&quot; OR Web.url=&quot;*\\&#x27;*&quot; OR Web.http_user_agent=&quot;*sqlmap*&quot;) by Web.src Web.dest Web.http_method Web.url Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-101-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/node_modules[\\\/]@hypequery[\\\/]clickhouse[\\\/]/i
+| groupBy([aid, ComputerName, TargetFileName], function=count())</code></pre></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -18871,11 +18760,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -18884,7 +18773,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -18896,12 +18785,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54658&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54658&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
