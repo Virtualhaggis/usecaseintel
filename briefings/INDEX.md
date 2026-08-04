@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-04
+- [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
 
 ## 2026-08-03
@@ -94,7 +95,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-28
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
-- [24 650 internet exposed bmcs disclose ipmi password hashes b](./2026-07-28/24-650-internet-exposed-bmcs-disclose-ipmi-password-hashes-b.md)
 - [ghsa critical cve 2026 54588 poweradmin has host header inje](./2026-07-28/ghsa-critical-cve-2026-54588-poweradmin-has-host-header-inje.md)
 - [ghsa critical cve 2026 54658 hypequery clickhouse has sql in](./2026-07-28/ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in.md)
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)

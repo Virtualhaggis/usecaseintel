@@ -13,8 +13,9 @@ The Chinese cybercrime group known as Silver Fox has been observed using new dri
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-50522`
+- **CVE:** `CVE-2023-52271`
 - **IPv4 (defanged):** `43.128.26.132`
+- **Domain (defanged):** `hrefbfdhfhgre-1422102728.cos.ap-hongkong.myqcloud.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -49,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### SilverFox DLL side-loading: PDFCORE8.dll loaded by ConvertToPDF.exe / PDFDirect.exe
 
-`UC_68_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_69_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +72,7 @@ DeviceImageLoadEvents
 
 ### SilverFox 3-driver BYOVD: BootRepair.sys / EnPortv.sys / wsftprm.sys dropped to disk
 
-`UC_68_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_69_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +93,7 @@ DeviceFileEvents
 
 ### SilverFox ValleyRAT C2 / shellcode fetch to 43.128.26.132
 
-`UC_68_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_69_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +113,7 @@ DeviceNetworkEvents
 
 ### ValleyRAT thread-context-hijack svchost.exe spawned by non-services.exe parent
 
-`UC_68_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_69_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -375,7 +376,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SilverFox Targets Japanese Manufacturer with 3-Driver BYOVD Chain and ValleyRAT
 
-`UC_68_8` · phase: **exploit** · confidence: **High**
+`UC_69_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -427,10 +428,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `43.128.26.132`
+  - IP / domain IOC(s): `43.128.26.132`, `hrefbfdhfhgre-1422102728.cos.ap-hongkong.myqcloud.com`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50522`
+  - CVE(s): `CVE-2023-52271`
 
 
 ## Why this matters

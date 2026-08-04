@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### svchost.exe masquerading in user Documents folder (N-able N-central compromise)
 
-`UC_20_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_21_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### Cloudflared tunnel installed as a Windows service (N-central persistence)
 
-`UC_20_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_21_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceEvents
 
 ### Cloudflare tunnel outbound egress on TCP/7844 from managed endpoints
 
-`UC_20_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### Endpoint connections to N-able published attacker IPs (N-central takeover)
 
-`UC_20_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceNetworkEvents
 
 ### DNS resolution of N-central campaign attacker DDNS domains
 
-`UC_20_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_21_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceNetworkEvents
 
 ### N-able Take Control agent (BASupSrvc) spawning process enumeration on managed endpoints
 
-`UC_20_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_21_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -357,7 +357,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — N-able Says Attackers Take Over N-central Servers After Initial Fix Proves Incom
 
-`UC_20_6` · phase: **install** · confidence: **High**
+`UC_21_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
