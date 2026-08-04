@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — URL confusion vulnerabilities in the wild: Exploring parser inconsistencies
 
-`UC_2700_1` · phase: **exploit** · confidence: **High**
+`UC_2699_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

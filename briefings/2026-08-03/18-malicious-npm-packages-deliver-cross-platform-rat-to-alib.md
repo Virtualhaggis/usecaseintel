@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious @ali-impersonating npm packages installed into node_modules (Alibaba RAT cluster)
 
-`UC_6_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_10_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceFileEvents
 
 ### npm/node loader spawning curl to fetch remote JavaScript from decoy Alibaba domains
 
-`UC_6_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Network callback to decoy Alibaba OSS / Aliyun Function Compute RAT C2 hosts
 
-`UC_6_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_10_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceNetworkEvents
 
 ### Linux RAT payload dropped to /tmp then self-deleted after in-memory load
 
-`UC_6_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceFileEvents
 
 ### macOS RAT persistence via ~/.zshrc injection and 10-minute LaunchAgent
 
-`UC_6_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceFileEvents
 
 ### mrmustard PyPI stealer exfil to metrics.femboy.energy / webhook.site
 
-`UC_6_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

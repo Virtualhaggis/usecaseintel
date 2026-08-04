@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma worm index.js SHA256 IOC hit (Mini Shai-Hulud variant)
 
-`UC_393_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_394_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ union
 
 ### npm preinstall hook spawns node index.js under @redhat-cloud-services package path
 
-`UC_393_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_394_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### node child of npm/yarn/pnpm reading cloud and CI credential files (Miasma sweep)
 
-`UC_393_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_394_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### node child of npm install initiating outbound network to non-registry destination
 
-`UC_393_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_394_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceNetworkEvents
 
 ### Install or update of @redhat-cloud-services npm package post-2026-06-01 (IOC version watchlist)
 
-`UC_393_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_394_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -290,7 +290,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Red Hat npm Packages Compromised to Spread a Credential-Stealing Worm
 
-`UC_393_5` · phase: **exploit** · confidence: **High**
+`UC_394_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

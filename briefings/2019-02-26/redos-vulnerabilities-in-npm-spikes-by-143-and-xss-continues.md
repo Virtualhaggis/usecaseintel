@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ReDoS vulnerabilities in npm spikes by 143% and XSS continues to grow
 
-`UC_3562_2` · phase: **exploit** · confidence: **High**
+`UC_3561_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

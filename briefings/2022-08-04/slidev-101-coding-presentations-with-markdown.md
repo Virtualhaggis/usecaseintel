@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Slidev 101: Coding presentations with Markdown
 
-`UC_2091_0` · phase: **exploit** · confidence: **High**
+`UC_2090_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
