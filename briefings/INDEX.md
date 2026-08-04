@@ -13,11 +13,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [doublecup uses clickfix and cached pngs to deliver countload](./2026-08-04/doublecup-uses-clickfix-and-cached-pngs-to-deliver-countload.md)
 - [evo continuous offensive security is here pentesting grade c](./2026-08-04/evo-continuous-offensive-security-is-here-pentesting-grade-c.md)
+- [fake adobe and zoom updates install screenconnect for persis](./2026-08-04/fake-adobe-and-zoom-updates-install-screenconnect-for-persis.md)
+- [ghsa critical cve 2026 69251 flowise rce via typeorm datasou](./2026-08-04/ghsa-critical-cve-2026-69251-flowise-rce-via-typeorm-datasou.md)
+- [ghsa critical cve 2026 69254 flowise rce via nodevm sandbox ](./2026-08-04/ghsa-critical-cve-2026-69254-flowise-rce-via-nodevm-sandbox-.md)
 - [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
 - [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
 - [how legitimate cloud platforms enable phishers to bypass mfa](./2026-08-04/how-legitimate-cloud-platforms-enable-phishers-to-bypass-mfa.md)
 - [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
+- [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
+- [massive chaindrop npm supply chain attack infects hundreds o](./2026-08-04/massive-chaindrop-npm-supply-chain-attack-infects-hundreds-o.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 
 ## 2026-08-03
@@ -58,7 +63,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54725 vault addr annotation ssrf webh](./2026-07-31/ghsa-critical-cve-2026-54725-vault-addr-annotation-ssrf-webh.md)
 - [hollowframe loader deploys matryoshka backdoor in spear phis](./2026-07-31/hollowframe-loader-deploys-matryoshka-backdoor-in-spear-phis.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
-- [online ad firm adform s script compromised to steal cryptocu](./2026-07-31/online-ad-firm-adform-s-script-compromised-to-steal-cryptocu.md)
 - [suspected chinese speaking hackers target central asian gove](./2026-07-31/suspected-chinese-speaking-hackers-target-central-asian-gove.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
@@ -91,9 +95,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [four incident response decisions from the hugging face breac](./2026-07-29/four-incident-response-decisions-from-the-hugging-face-breac.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
-- [new gitea rce lets repository writers plant a git hook to ru](./2026-07-29/new-gitea-rce-lets-repository-writers-plant-a-git-hook-to-ru.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
-- [openai agent used exposed credentials across four services d](./2026-07-29/openai-agent-used-exposed-credentials-across-four-services-d.md)
 - [public poc released for exploited check point smartconsole a](./2026-07-29/public-poc-released-for-exploited-check-point-smartconsole-a.md)
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
@@ -292,8 +294,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-02
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
 - [ghsa critical cve 2026 49352 9router s hardcoded default fal](./2026-07-02/ghsa-critical-cve-2026-49352-9router-s-hardcoded-default-fal.md)
-- [ghsa critical cve 2026 50027 mcp memory service missing auth](./2026-07-02/ghsa-critical-cve-2026-50027-mcp-memory-service-missing-auth.md)
-- [ghsa critical cve 2026 52735 zebrad has consensus divergence](./2026-07-02/ghsa-critical-cve-2026-52735-zebrad-has-consensus-divergence.md)
 - [ghsa critical cve 2026 52830 fast mcp telegram bearer token ](./2026-07-02/ghsa-critical-cve-2026-52830-fast-mcp-telegram-bearer-token-.md)
 - [ghsa critical cve 2026 54617 launchserver fileserverhandler ](./2026-07-02/ghsa-critical-cve-2026-54617-launchserver-fileserverhandler-.md)
 - [ghsa critical cve 2026 59800 9router missing authorization a](./2026-07-02/ghsa-critical-cve-2026-59800-9router-missing-authorization-a.md)

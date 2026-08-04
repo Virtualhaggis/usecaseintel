@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Fake Xeno loader (xeno.exe) executed from archive/Downloads or Xeno cache path
 
-`UC_18_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Java runtime (javaw.exe) extracted to %LOCALAPPDATA%\Java by fake Xeno loader
 
-`UC_18_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### decompiler.exe (masqueraded Java JAR) spawned by javaw.exe / xeno.exe
 
-`UC_18_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### Single non-browser process reads credential stores across 3+ browsers (Chrome/Edge/Brave/Opera/Vivaldi)
 
-`UC_18_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_24_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceFileEvents
 
 ### Exodus wallet tamper (app.asar) / multi-wallet enumeration by non-wallet process
 
-`UC_18_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_24_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceFileEvents
 
 ### 'Display Calibration' Run key persistence pointing to LocalAppData Java/GameDVR payload
 
-`UC_18_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceRegistryEvents
 
 ### Fake Xeno C2 beacon to solthere.net / LocalAppData javaw.exe public egress
 
-`UC_18_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_24_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -329,7 +329,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Roblox Xeno script launcher pushes infostealer, RAT malware
 
-`UC_18_4` · phase: **exploit** · confidence: **High**
+`UC_24_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

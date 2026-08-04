@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### ClickFix rundll32 ordinal (#1) execution of non-DLL payload over WebDAV @SSL
 
-`UC_72_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_76_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### MacSync fake-Claude Terminal one-liner: curl piped to zsh via base64 -D
 
-`UC_72_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_76_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### MacSync server-side AppleScript stealer: osascript, dscl authonly, keychain, ditto to /tmp/osalogging.zip
 
-`UC_72_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_76_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### MacSync RAT C2 / wallet-exfil to 85.206.161.241 and agenticsora/malwareaudit infrastructure
 
-`UC_72_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_76_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceNetworkEvents
 
 ### MacSync wallet trojanization: app.asar swap + ad-hoc codesign of Ledger/Trezor apps
 
-`UC_72_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_76_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

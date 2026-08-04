@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### TidGi Desktop wiki worker spawning a command interpreter (TiddlyWiki startup-module RCE)
 
-`UC_212_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_214_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Malicious startup-module tiddler (.js.tid) written into a TiddlyWiki tiddlers/ directory
 
-`UC_212_3` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_214_3` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-9hc2-hjx8-q6pv: TidGi Desktop Remote Code Execution via M
 
-`UC_212_1` · phase: **exploit** · confidence: **High**
+`UC_214_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

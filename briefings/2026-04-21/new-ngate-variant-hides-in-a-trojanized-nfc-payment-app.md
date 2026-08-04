@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
 
-`UC_510_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_509_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
 
-`UC_510_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_509_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ union isfuzzy=true
 
 ### Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
 
-`UC_510_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_509_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

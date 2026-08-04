@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious 'anthropickit' PyPI package installed via pip (supply-chain cred stealer)
 
-`UC_57_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### anthropickit loot file '/tmp/runner_exfil.json' written to disk
 
-`UC_57_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_61_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### anthropickit exfiltration POST to Pipedream endpoint (enqqnvvtgrnyl.x.pipedream.net)
 
-`UC_57_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_61_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Anthropic's Fever Dream: Claude's package that stole real keys
 
-`UC_57_3` · phase: **exploit** · confidence: **High**
+`UC_61_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

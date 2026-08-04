@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### axios npm RAT C2 beacon to UNC1069 infra (142.11.206.73 / sfrclak.com)
 
-`UC_358_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_357_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### axios RAT Windows payload drop (6202033.vbs/.ps1, ProgramData\wt) during npm install
 
-`UC_358_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_357_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceFileEvents
 
 ### Shai-Hulud npm preinstall Bun bootstrap (setup_bun.js / bun_environment.js)
 
-`UC_358_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_357_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### TruffleHog secret-scan spawned by npm/node install (Shai-Hulud credential harvest)
 
-`UC_358_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_357_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -373,7 +373,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_358_8` · phase: **exploit** · confidence: **High**
+`UC_357_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

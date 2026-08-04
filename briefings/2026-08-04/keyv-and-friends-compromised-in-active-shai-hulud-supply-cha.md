@@ -1,6 +1,6 @@
 # [HIGH] Keyv and friends compromised in active Shai-Hulud supply chain attack
 
-**Source:** Aikido, StepSecurity
+**Source:** Aikido
 **Published:** 2026-08-04
 **Article:** https://www.aikido.dev/blog/keyv-and-friends-compromised-in-npm-supply-chain-attack
 
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall hook executing node setup.mjs (Shai-Hulud dropper)
 
-`UC_1_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud payload files setup.mjs / Math_Symbol.js written into node_modules
 
-`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceFileEvents
 
 ### Bun runtime fetched from oven-sh GitHub releases during npm install
 
-`UC_1_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_11_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### Bun runtime executing Shai-Hulud Math_Symbol.js credential stealer
 
-`UC_1_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +227,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Keyv and friends compromised in active Shai-Hulud supply chain attack
 
-`UC_1_4` · phase: **exploit** · confidence: **High**
+`UC_11_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
