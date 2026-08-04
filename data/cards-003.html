@@ -18852,14 +18852,14 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-102" data-art-slug="2026-07-28-ghsa-critical-cve-2026-64863-goshs-no-delete-webdav-move-byp"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
-  data-targets="linux,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-64863: goshs --no-delete WebDAV MOVE bypass allows file deletion/overwrite goshs --no-delete WebDAV MOVE bypass allows file deletion/overwrite CVE-2026-64863 CVE-2026-50138 T1190 [LLM] goshs WebDAV --no-delete bypass: blocked DELETE followed by successful MOVE on same path [LLM] WebDAV MOVE/COPY write-verb succeeds against goshs artifact server (Overwrite:T destination clobber) [LLM] goshs process deletes or renames served files while launched with --no-delete (impact confirmation) Asset exposure — vulnerability matches article CVE(s)">
+  data-targets="linux,vcs,windows"
+  data-uc-count="6" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] CVE-2026-64863: goshs --no-delete WebDAV MOVE bypass allows file deletion/overwrite goshs --no-delete WebDAV MOVE bypass allows file deletion/overwrite CVE-2026-64863 CVE-2026-50138 T1190 [LLM] goshs running --no-delete deletes/renames files on disk (CVE-2026-64863 MOVE bypass) [LLM] WebDAV MOVE succeeds (201/204) against goshs --no-delete server [LLM] WebDAV --no-delete probe: 403 DELETE then successful MOVE on same path [LLM] WebDAV MOVE with Overwrite:T header (destructive RemoveAll on destination) [LLM] Vulnerable goshs exposure: process launched with --webdav and --no-delete (&lt;= v2.1.3) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-ghsa-critical-cve-2026-64863-goshs-no-delete-webdav-move-byp" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -18868,9 +18868,9 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-28</span>
-    <span>4 use cases</span>
+    <span>6 use cases</span>
     <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">goshs --no-delete WebDAV MOVE bypass allows file deletion/overwrite</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-64863</span> <span class="ind cve">CVE-2026-50138</span></div>
@@ -18886,10 +18886,10 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell ">
   <div class="num">Phase 3</div>
@@ -18917,198 +18917,286 @@ DeviceTvmSoftwareVulnerabilities
   <div class="marker">Detected</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable goshs exposure: process launched with --webdav and --no-delete (&lt;= v2.1.3)</em></div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] goshs WebDAV --no-delete bypass: blocked DELETE followed by successful MOVE on same path · [LLM] WebDAV MOVE/COPY write-verb succeeds against goshs artifact server (Overwrite:T destination clobber)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] WebDAV MOVE succeeds (201/204) against goshs --no-delete server · [LLM] WebDAV --no-delete probe: 403 DELETE then successful MOVE on same path · [LLM] WebDAV MOVE with Overwrite:T header (destructive RemoveAll on destination)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] goshs process deletes or renames served files while launched with --no-delete (impact confirmation)</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] goshs running --no-delete deletes/renames files on disk (CVE-2026-64863 MOVE bypass)</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="524ffb9373" data-platforms="sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="c41e98f0bc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
   <summary>
-    <span class="uc-title">goshs WebDAV --no-delete bypass: blocked DELETE followed by successful MOVE on same path</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">goshs running --no-delete deletes/renames files on disk (CVE-2026-64863 MOVE bypass)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="524ffb9373" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c41e98f0bc" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-64863 exploit signature where an attacker probes the --no-delete restriction (DELETE returns 403) and then destroys the same resource via the WebDAV MOVE verb (201 Created / 204 No Content). The 403-then-2xx pairing on an identical URL within a short window is the bypass fingerprint, not generic WebDAV usage.
+    <div class="uc-desc">Hunts the actual data-loss primitive: a goshs process launched with the --no-delete guard that nonetheless performs file rename/delete operations on disk. Under the CVE, a WebDAV MOVE renames (deletes) the source and, with Overwrite:T, RemoveAll&#x27;s the destination — so any FileDeleted/FileRenamed initiated by a goshs &#x27;--no-delete&#x27; instance is the bypass executing.
 
-Rationale: Uses the article&#x27;s exact control-vs-bypass pairing: DELETE=403 (blocked by --no-delete) then MOVE=201/204 (RemoveAll/rename succeeds). Correlating both on the same URL from the same source removes benign WebDAV MOVE traffic, which never co-occurs with a just-refused DELETE on the identical path.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/goshs.de/goshs/v2/CVE-2026-64863/
-  • https://cve.threatint.com/CVE/CVE-2026-64863</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A WebDAV sync client (Finder/Explorer) that retries a delete as a rename after a transient 403 for reasons unrelated to policy</li><li>Automated backup tooling that first attempts DELETE, is denied, and falls back to MOVE-to-archive on the same object</li><li>Load/security scanners (e.g. Nessus WebDAV checks) exercising both verbs against the same test path</li><li>Reverse proxy that rewrites and duplicates request lines, double-logging one client action as two verbs</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the target server is goshs (&lt;= v2.1.3) — check the response Server header &#x27;goshs/...&#x27; and whether it was launched with &#x27;-w --no-delete&#x27;; pull the full request sequence for the src IP against the affected URL. 2) Contain: block the src IP at the WAF/proxy and stop/upgrade the goshs instance to v2.1.4 (or drop WebDAV write verbs MOVE/COPY at the proxy) so the --no-delete boundary is actually enforced. 3) Hunt: enumerate every MOVE 201/204 from that src across all served paths to scope which artefacts were renamed away or overwritten, and check file integrity of the served directory against a known-good manifest.</div></details>
+Rationale: Binds the two article-specific strings that together prove exploitation: the process image &#x27;goshs&#x27; AND the &#x27;--no-delete&#x27; flag it was launched with, correlated to an actual FileDeleted/FileRenamed. A no-delete instance deleting files is the CVE by definition — near-zero benign overlap.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Indicator Removal: File Deletion">T1070.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Operator legitimately using the goshs UPLOAD or unrestricted mode (no --no-delete flag) — excluded by the cmdline filter</li><li>goshs writing/overwriting freshly uploaded files in an allowed upload dir (FileWritten, not delete)</li><li>Antivirus/EDR quarantining a file goshs just wrote, showing as a delete on the same path</li><li>Log-rotation or temp-file cleanup by a wrapper script that happens to share the goshs working dir</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;--upload-only&quot;,&quot;-uo&quot;) and ActionType == &quot;FileCreated&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the goshs cmdline actually contains --no-delete and identify the deleted/renamed FolderPath+PreviousFolderPath — a rename to an unrelated name or a delete of a served artifact confirms abuse. 2) Contain: stop the goshs service and block its listening WebDAV port at the host firewall; snapshot the served directory for recovery. 3) Hunt: pull the WebDAV access log for MOVE requests around the file event, extract source IPs, and search for the same client issuing PROPFIND enumeration or repeated MOVE calls across other goshs hosts.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(24h)
-| where csMethod in (&quot;DELETE&quot;,&quot;MOVE&quot;)
-| extend DeleteBlocked = iff(csMethod == &quot;DELETE&quot; and scStatus == 403, 1, 0)
-| extend MoveSuccess = iff(csMethod == &quot;MOVE&quot; and scStatus in (201, 204), 1, 0)
-| where DeleteBlocked == 1 or MoveSuccess == 1
-| summarize DeleteBlocked = sum(DeleteBlocked), MoveSuccess = sum(MoveSuccess), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Statuses = make_set(scStatus) by cIP, csUriStem, Computer, sSiteName
-| where DeleteBlocked &gt; 0 and MoveSuccess &gt; 0
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where (Web.http_method=&quot;DELETE&quot; AND Web.status=403) OR (Web.http_method=&quot;MOVE&quot; AND Web.status IN (201,204)) by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, _time span=1m
-| `drop_dm_object_name(Web)`
-| eval delete_blocked=if(http_method==&quot;DELETE&quot; AND status==&quot;403&quot;,1,0)
-| eval move_success=if(http_method==&quot;MOVE&quot; AND (status==&quot;201&quot; OR status==&quot;204&quot;),1,0)
-| stats sum(delete_blocked) as delete_blocked, sum(move_success) as move_success, min(_time) as firstTime, max(_time) as lastTime, values(status) as statuses by src, dest, dest_port, url
-| where delete_blocked&gt;0 AND move_success&gt;0
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where (Web.http_method=&quot;DELETE&quot; AND Web.status=403) OR (Web.http_method=&quot;MOVE&quot; AND Web.status IN (201,204)) by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, _time span=1m
-| `drop_dm_object_name(Web)`
-| eval delete_blocked=if(http_method==&quot;DELETE&quot; AND status==&quot;403&quot;,1,0)
-| eval move_success=if(http_method==&quot;MOVE&quot; AND (status==&quot;201&quot; OR status==&quot;204&quot;),1,0)
-| stats sum(delete_blocked) as delete_blocked, sum(move_success) as move_success, min(_time) as firstTime, max(_time) as lastTime, values(status) as statuses by src, dest, dest_port, url
-| where delete_blocked&gt;0 AND move_success&gt;0
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;goshs&quot;
+| where InitiatingProcessCommandLine has &quot;--no-delete&quot;
+| where ActionType in (&quot;FileRenamed&quot;,&quot;FileDeleted&quot;)
+| project Timestamp, DeviceName, ActionType, FolderPath, PreviousFolderPath, FileName, PreviousFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessId
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName has &quot;goshs&quot;
+| where ActingProcessCommandLine has &quot;--no-delete&quot;
+| where EventType in (&quot;FileDeleted&quot;,&quot;FileRenamed&quot;,&quot;FileModified&quot;)
+| project TimeGenerated, DvcHostname, EventType, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine, ActorUsername
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs --no-delete Instance Deleting Files On Disk (CVE-2026-64863)
+id: 2f8c1a4e-6b3d-4c9a-9f2e-1a7b0c5d8e31
+status: experimental
+description: A goshs process started with the --no-delete guard performing a file delete/rename, indicating the WebDAV MOVE bypass (CVE-2026-64863) destroying protected files.
+references:
+  - https://github.com/advisories/GHSA-hq33-8jgp-8qq3
+author: SOC Detection Engineering
+date: 2026/08/04
+tags:
+  - attack.impact
+  - attack.t1485
+  - attack.t1070.004
+logsource:
+  category: file_delete
+detection:
+  selection:
+    Image|endswith:
+      - &#x27;/goshs&#x27;
+      - &#x27;\goshs.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.name:goshs @auditd.type:(SYSCALL OR PATH)</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^File(Deleted|Written)$/ ContextImageFileName=/goshs/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName, #event_simpleName], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN (&quot;deleted&quot;,&quot;renamed&quot;,&quot;modified&quot;)) Filesystem.process_name=goshs* by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name, Filesystem.action | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN (&quot;deleted&quot;,&quot;renamed&quot;,&quot;modified&quot;)) Filesystem.process_name=goshs* by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name, Filesystem.action | `drop_dm_object_name(Filesystem)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="d8b51d5bbb" data-platforms="sent,sigma,spl" data-targets="">
+<details class="uc" data-uc-slug="dd5bbdf090" data-platforms="sent,sigma,spl" data-targets="vcs">
   <summary>
-    <span class="uc-title">WebDAV MOVE/COPY write-verb succeeds against goshs artifact server (Overwrite:T destination clobber)</span>
+    <span class="uc-title">WebDAV MOVE succeeds (201/204) against goshs --no-delete server</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d8b51d5bbb" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="dd5bbdf090" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces successful WebDAV MOVE/COPY verbs (201/204) against an exposed goshs file server, the mechanism CVE-2026-64863 abuses to rename-away or, with the &#x27;Overwrite: T&#x27; header, RemoveAll and overwrite existing files under --no-delete. MOVE/COPY are rare in normal artifact-download traffic, so a success is a high-signal exploitation candidate.
+    <div class="uc-desc">Hunts the wire-side signature of the bypass: a WebDAV MOVE verb returning 201 Created or 204 No Content. Under a correctly enforced --no-delete policy MOVE should be 403; a successful MOVE is the source-file deletion (rename) primitive the CVE exposes on the goshs WebDAV port.
 
-Rationale: Keys on the article&#x27;s exploitation primitive — the WebDAV MOVE/COPY verbs returning 201/204 — plus the &#x27;Overwrite: T&#x27; header called out as the RemoveAll trigger (grep RequestContext/Message where the WAF logs headers). MOVE/COPY are near-absent in legitimate file-download workloads, so a success against a goshs host is worth a hunt even without correlation.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/CVE-2026-64863/
-  • https://advisories.gitlab.com/golang/goshs.de/goshs/v2/CVE-2026-50138/</div>
+Rationale: Keys on the exact article verb+status: MOVE returning 201/204. Successful WebDAV MOVE is rare in most estates and is the documented deletion primitive; scoping to the goshs host (by DstIpAddr/port) turns it high-fidelity.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate WebDAV clients (Finder, Windows Explorer, Cyberduck) renaming files on a genuinely writable goshs share (no --no-delete set)</li><li>CI/CD or backup jobs that use MOVE to atomically publish artifacts into the served directory</li><li>SharePoint/Nextcloud or other WebDAV appliances behind the same WAF that legitimately use MOVE/COPY</li><li>Web content-management operations issuing COPY for versioning</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the destination is a goshs instance and whether it runs with --no-delete/--read-only; inspect the request for a &#x27;Destination:&#x27; and &#x27;Overwrite: T&#x27; header (header-logging WAFs) that indicates intent to clobber an existing file. 2) Contain: strip MOVE/COPY at the proxy for that vhost and upgrade goshs to v2.1.4; restrict the WebDAV port to trusted source ranges. 3) Hunt: pivot on the src IP to list all MOVE/COPY targets and any preceding blocked DELETE (see companion rule) to determine which served files were destroyed or overwritten.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate WebDAV clients (macOS Finder, Windows Explorer web folders, Cyberduck) that use MOVE for normal rename operations on an intended-writable share</li><li>A goshs instance intentionally run WITHOUT --no-delete where MOVE is expected</li><li>Backup or sync tooling that stages files via MOVE/rename over WebDAV</li><li>Automated CI artifact reorganisation against a non-protected goshs endpoint</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm DstIpAddr/port is a goshs --no-delete instance (check the host&#x27;s process cmdline) and inspect the MOVE Url + Destination to see which served file was renamed away. 2) Contain: restrict the WebDAV port to trusted source IPs or take goshs offline until upgraded past v2.1.3. 3) Hunt: from the source IP, enumerate all MOVE/DELETE/PROPFIND to the same host and correlate to host-side FileDeleted events (see the goshs file-deletion UC) to confirm data loss.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(24h)
-| where RequestMethod in (&quot;MOVE&quot;, &quot;COPY&quot;)
-| project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, RequestContext, DeviceProduct, DeviceVendor, Message
+    <div class="tab-content active" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where HttpMethod =~ &quot;MOVE&quot;
+| where toint(HttpStatusCode) in (201, 204)
+| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, DstPortNumber, Url, HttpMethod, HttpStatusCode, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: WebDAV MOVE or COPY Write-Verb Success (goshs CVE-2026-64863 --no-delete bypass)
-id: 6b2f9c41-8e33-4a7d-9d21-7c0f5b1a2e64
-description: Detects successful WebDAV MOVE/COPY requests, the verbs CVE-2026-64863 abuses to delete/overwrite files on a goshs server despite --no-delete.
+    <div class="tab-content" id="art-102-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Successful WebDAV MOVE (goshs --no-delete Bypass CVE-2026-64863)
+id: 7d4b0c92-1e3a-4f6b-8c2d-9a5e7b1f0c44
+status: experimental
+description: A WebDAV MOVE request returning 201/204 indicates the source file was renamed away (deleted) — the goshs --no-delete bypass on the WebDAV port.
 references:
-  - https://advisories.gitlab.com/golang/goshs.de/goshs/v2/CVE-2026-64863/
+  - https://github.com/advisories/GHSA-hq33-8jgp-8qq3
 author: SOC Detection Engineering
-date: 2026/07/29
+date: 2026/08/04
 tags:
+  - attack.initial_access
   - attack.t1190
+  - attack.impact
   - attack.t1485
 logsource:
   category: webserver
 detection:
   selection:
-    cs-method:
-      - &#x27;MOVE&#x27;
-      - &#x27;COPY&#x27;
+    cs-method: &#x27;MOVE&#x27;
     sc-status:
       - 201
       - 204
   condition: selection
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.http_method IN (&quot;MOVE&quot;,&quot;COPY&quot;) AND Web.status IN (201,204) by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| stats count, values(url) as urls, values(status) as statuses, dc(url) as distinct_urls by src, dest, dest_port, http_method, http_user_agent
-| sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method IN (&quot;MOVE&quot;,&quot;COPY&quot;) AND Web.status IN (201,204) by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| stats count, values(url) as urls, values(status) as statuses, dc(url) as distinct_urls by src, dest, dest_port, http_method, http_user_agent
-| sort - count</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;MOVE&quot; Web.status IN (201,204) by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;MOVE&quot; Web.status IN (201,204) by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cf0b6298a1" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="28cc7a451d" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">goshs process deletes or renames served files while launched with --no-delete (impact confirmation)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-title">WebDAV --no-delete probe: 403 DELETE then successful MOVE on same path</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cf0b6298a1" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="28cc7a451d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Confirms real data loss from CVE-2026-64863 on the host: a goshs process removing or renaming files (os.Rename / RemoveAll) even though it was started with --no-delete. Under that flag goshs should never delete anything, so any goshs-initiated file delete/rename event is a direct policy violation and proof the WebDAV MOVE bypass fired.
+    <div class="uc-desc">Detects the exploit&#x27;s discovery-to-abuse pivot described verbatim in the advisory: DELETE is blocked (403) but MOVE on the same resource succeeds. Correlating a 403 DELETE followed within 60s by a 201/204 MOVE on the identical URL from the same client is the bypass signature.
 
-Rationale: Combines the article&#x27;s process (goshs) with its stated invariant (--no-delete means no deletion) — so a goshs-initiated FileDeleted/FileRenamed with &#x27;--no-delete&#x27; on the command line is a definitional bypass with essentially no benign explanation. This is the on-host impact confirmation for the HTTP-layer rules.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/golang/goshs.de/goshs/v2/CVE-2026-64863/
-  • https://github.com/goshs-labs/goshs/releases</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Indicator Removal: File Deletion">T1070.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>goshs writing/cleaning up transient files for the ?bulk zip-download feature (temporary archive creation, not served-file deletion)</li><li>An operator manually deleting files in the served directory with another tool (would not show goshs as the initiating process)</li><li>goshs launched without --no-delete performing intended deletes (excluded by the --no-delete command-line filter)</li><li>Log-rotation or the goshs binary being self-updated/replaced on disk (rename of the binary rather than served content)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Defender: exclude self-update/binary replacement and keep only served-content paths
-| where not (FileName endswith &quot;goshs&quot; or FileName endswith &quot;goshs.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the InitiatingProcessCommandLine to confirm --no-delete/--webdav were set, and capture FolderPath/PreviousFolderPath to identify exactly which served file was renamed or removed. 2) Contain: stop the goshs service and upgrade to v2.1.4 (or remove WebDAV); restore the affected file(s) from backup, as MOVE/RemoveAll destroys the original content. 3) Hunt: correlate the file event timestamp back to the WebDAV access log for the matching MOVE 201/204 and its source IP to attribute the actor, and review whether other files in the same directory disappeared in the same window.</div></details>
+Rationale: Directly encodes the advisory&#x27;s stated asymmetry (&#x27;DELETE is correctly blocked (403) but MOVE still destroys files&#x27;) as a same-URL, same-client 403-DELETE→2xx-MOVE temporal correlation — an operational sequence with essentially no benign explanation.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Defense Evasion">T1211</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A WebDAV client that retries a failed delete as a rename by design (rare, but some sync tools fall back)</li><li>Two unrelated users hitting the same URL where one&#x27;s DELETE is denied by ACL and another legitimately renames — mitigated by same-SrcIpAddr join</li><li>Load-balancer health probes issuing method variety (won&#x27;t produce 403+2xx on same file path)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request sequence from SrcIpAddr to DstHostname — a 403 DELETE immediately followed by a 2xx MOVE on the same Url is a deliberate probe; note the Destination header target. 2) Contain: block SrcIpAddr at the WAF/proxy and restrict the goshs WebDAV port; preserve the served directory for recovery. 3) Hunt: sweep all goshs hosts for the same source IP and for host-side FileDeleted/FileRenamed by goshs to quantify data destroyed.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn active" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(24h)
-| where InitiatingProcessFileName startswith &quot;goshs&quot;
-| where InitiatingProcessCommandLine has &quot;--no-delete&quot;
-| where ActionType in (&quot;FileDeleted&quot;, &quot;FileRenamed&quot;)
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, PreviousFolderPath, PreviousFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(24h)
-| where ActingProcessName has &quot;goshs&quot;
-| where ActingProcessCommandLine has &quot;--no-delete&quot;
-| where EventType in (&quot;FileDeleted&quot;, &quot;FileRenamed&quot;)
-| project TimeGenerated, DvcHostname, EventType, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine, ActorUsername
+    <div class="tab-content active" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 60s;
+let moves = ImWebSession
+    | where TimeGenerated &gt; ago(7d)
+    | where HttpMethod =~ &quot;MOVE&quot; and toint(HttpStatusCode) in (201,204)
+    | project MoveTime = TimeGenerated, SrcIpAddr, DstHostname, Url;
+ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where HttpMethod =~ &quot;DELETE&quot; and toint(HttpStatusCode) == 403
+| project DelTime = TimeGenerated, SrcIpAddr, DstHostname, Url
+| join kind=inner moves on SrcIpAddr, DstHostname, Url
+| where MoveTime between (DelTime .. DelTime + win)
+| extend DelaySec = datetime_diff(&#x27;second&#x27;, MoveTime, DelTime)
+| project DelTime, MoveTime, DelaySec, SrcIpAddr, DstHostname, Url
+| order by MoveTime desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web.Web where Web.http_method IN (&quot;DELETE&quot;,&quot;MOVE&quot;) by _time, Web.src, Web.dest, Web.url, Web.http_method, Web.status span=1s | `drop_dm_object_name(Web)` | eval isDenyDelete=if(http_method=&quot;DELETE&quot; AND status==403,1,0), isMove=if(http_method=&quot;MOVE&quot; AND (status==201 OR status==204),1,0) | stats max(eval(if(isDenyDelete==1,_time,null()))) as delTime max(eval(if(isMove==1,_time,null()))) as moveTime values(status) as statuses by src, dest, url | where isnotnull(delTime) AND isnotnull(moveTime) AND moveTime&gt;=delTime AND (moveTime-delTime)&lt;=60 | eval delaySec=moveTime-delTime | sort - moveTime</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.http_method IN (&quot;DELETE&quot;,&quot;MOVE&quot;) by _time, Web.src, Web.dest, Web.url, Web.http_method, Web.status span=1s | `drop_dm_object_name(Web)` | eval isDenyDelete=if(http_method=&quot;DELETE&quot; AND status==403,1,0), isMove=if(http_method=&quot;MOVE&quot; AND (status==201 OR status==204),1,0) | stats max(eval(if(isDenyDelete==1,_time,null()))) as delTime max(eval(if(isMove==1,_time,null()))) as moveTime values(status) as statuses by src, dest, url | where isnotnull(delTime) AND isnotnull(moveTime) AND moveTime&gt;=delTime AND (moveTime-delTime)&lt;=60 | eval delaySec=moveTime-delTime | sort - moveTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9718b116b2" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">WebDAV MOVE with Overwrite:T header (destructive RemoveAll on destination)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="9718b116b2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the second, more destructive bypass path: a WebDAV MOVE carrying the &#x27;Overwrite: T&#x27; header, which makes golang.org/x/net/webdav RemoveAll the existing destination before renaming — clobbering a pre-existing victim file even under --no-delete. Requires WAF/proxy header capture.
+
+Rationale: Targets the exact header the advisory names as the overwrite mechanism (&#x27;with Overwrite: T it additionally performs an explicit RemoveAll on the destination&#x27;). MOVE+Overwrite:T is the destructive-clobber variant and is not a shape normal clients emit against a read-controlled share.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>macOS Finder / Windows mini-redirector legitimately sending Overwrite:T on renames against an intentionally writable WebDAV share</li><li>Sync clients (Cyberduck, davfs2) that default Overwrite:T on rename</li><li>Proxy not capturing request headers → query silently returns nothing (coverage gap, not a benign hit)</li><li>A goshs instance run without --no-delete where overwrite is expected behaviour</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the target DestinationHostName is a goshs --no-delete instance and read the Destination header to see which existing file was RemoveAll&#x27;d. 2) Contain: block the SourceIP and restrict the WebDAV port; recover the clobbered file from backup/snapshot. 3) Hunt: correlate to host-side FileDeleted+FileWritten to the same path by the goshs process, and search other goshs hosts for MOVE+Overwrite:T from the same client.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod =~ &quot;MOVE&quot;
+| where Message has &quot;Overwrite: T&quot; or Message has &quot;Overwrite:T&quot; or DeviceCustomString1 has &quot;Overwrite&quot; or RequestContext has &quot;Overwrite&quot;
+| project TimeGenerated, SourceIP, DestinationIP, DestinationHostName, RequestURL, RequestMethod, RequestClientApplication, Message, DeviceCustomString1
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs Process Deletes or Renames Served Files Under --no-delete (CVE-2026-64863)
-id: c9d4a1e7-2b6f-4f88-a0c3-5e1d8b930af2
-description: A goshs process performs a file delete/rename despite being started with --no-delete, confirming the WebDAV MOVE bypass destroyed data.
+    <div class="tab-content" id="art-102-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: WebDAV MOVE With Overwrite Header (goshs --no-delete Bypass CVE-2026-64863)
+id: c93a5e18-4b7f-4d2a-a1c6-3e8f0b6d9a27
+status: experimental
+description: A WebDAV MOVE request carrying an Overwrite:T header triggers RemoveAll on the destination, destroying an existing file under goshs --no-delete (CVE-2026-64863). Requires proxy/WAF header logging.
 references:
-  - https://advisories.gitlab.com/golang/goshs.de/goshs/v2/CVE-2026-64863/
+  - https://github.com/advisories/GHSA-hq33-8jgp-8qq3
 author: SOC Detection Engineering
-date: 2026/07/29
+date: 2026/08/04
 tags:
+  - attack.impact
   - attack.t1485
-  - attack.t1070.004
+  - attack.t1190
 logsource:
-  category: file_delete
-  product: windows
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;MOVE&#x27;
+    cs_header|contains:
+      - &#x27;Overwrite: T&#x27;
+      - &#x27;Overwrite:T&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;MOVE&quot; by Web.src, Web.dest, Web.url, Web.status, Web.http_method | `drop_dm_object_name(Web)` | search http_method=&quot;MOVE&quot; | eval note=&quot;filter to events where captured request header Overwrite=T; enable header logging on the proxy&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;MOVE&quot; by Web.src, Web.dest, Web.url, Web.status, Web.http_method | `drop_dm_object_name(Web)` | search http_method=&quot;MOVE&quot; | eval note=&quot;filter to events where captured request header Overwrite=T; enable header logging on the proxy&quot; | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b80f883d41" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Vulnerable goshs exposure: process launched with --webdav and --no-delete (&lt;= v2.1.3)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b80f883d41" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Inventory/exposure hunt for the vulnerable configuration itself: any goshs process started with both --webdav and --no-delete is exploitable by CVE-2026-64863 until upgraded past v2.1.3 (commit ba00ce3). Surfaces the attack surface before it is abused.
+
+Rationale: Uses the two flags the advisory names as the vulnerable combination (--webdav + --no-delete) plus the binary name goshs; projecting ProcessVersionInfoProductVersion lets an analyst confirm &lt;= 2.1.3 without hand-editing the query.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A goshs instance already upgraded past v2.1.3 where the flag combo is present but patched — check ProcessVersionInfoProductVersion</li><li>Internal-only goshs on a segmented network with no untrusted WebDAV clients (still vulnerable, lower priority)</li><li>Security team running goshs deliberately for a lab/CTF exercise</li><li>A renamed goshs binary — mitigated by also matching via the --no-delete/--webdav cmdline tokens</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessVersionInfoProductVersion !in (&quot;2.1.4&quot;,&quot;2.2.0&quot;) or isempty(ProcessVersionInfoProductVersion)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the goshs version (ProcessVersionInfoProductVersion / --version) is &lt;= 2.1.3 and determine whether the WebDAV port is reachable from untrusted networks. 2) Contain: upgrade goshs past 2.1.3, or firewall the WebDAV port to trusted hosts as an interim control. 3) Hunt: for every exposed instance, review WebDAV access logs for MOVE/Overwrite:T activity and host-side goshs file deletions to determine if the bypass was already used.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;goshs&quot;
+| where ProcessCommandLine has &quot;--webdav&quot; and ProcessCommandLine has &quot;--no-delete&quot;
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, ProcessVersionInfoProductVersion, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessName has &quot;goshs&quot;
+| where TargetProcessCommandLine has &quot;--webdav&quot; and TargetProcessCommandLine has &quot;--no-delete&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable goshs Config Started With --webdav and --no-delete (CVE-2026-64863)
+id: 4b1f2d6a-8c30-4e7a-b5d2-0f9a3c7e1b58
+status: experimental
+description: A goshs process launched with both --webdav and --no-delete is exploitable via the WebDAV MOVE bypass (CVE-2026-64863) up to and including v2.1.3.
+references:
+  - https://github.com/advisories/GHSA-hq33-8jgp-8qq3
+author: SOC Detection Engineering
+date: 2026/08/04
+tags:
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: process_creation
 detection:
   selection:
     Image|endswith:
-      - &#x27;\goshs.exe&#x27;
       - &#x27;/goshs&#x27;
+      - &#x27;\goshs.exe&#x27;
+    CommandLine|contains|all:
+      - &#x27;--webdav&#x27;
+      - &#x27;--no-delete&#x27;
   condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon (@EventID:23 OR @EventID:11) @Image:(*\goshs.exe OR *\Goshs.exe OR *\GOSHS.EXE)) OR (source:linux.auditd @process.name:goshs @auditd.type:SYSCALL)</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileDeleted ContextImageFileName=/goshs(\.exe)?$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action IN (&quot;deleted&quot;,&quot;renamed&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_guid, _time
-| `drop_dm_object_name(Filesystem)`
-| join type=inner process_guid [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=&quot;goshs&quot; by Endpoint.Processes.process_guid, Endpoint.Processes.process, Endpoint.Processes.dest | `drop_dm_object_name(Processes)` | search process=&quot;*--no-delete*&quot;]
-| table _time, dest, process, file_path, file_name, action
-| sort - _time</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.action IN (&quot;deleted&quot;,&quot;renamed&quot;) by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_guid, _time
-| `drop_dm_object_name(Filesystem)`
-| join type=inner process_guid [| tstats summariesonly=false count from datamodel=Endpoint.Processes where Endpoint.Processes.process_name=&quot;goshs&quot; by Endpoint.Processes.process_guid, Endpoint.Processes.process, Endpoint.Processes.dest | `drop_dm_object_name(Processes)` | search process=&quot;*--no-delete*&quot;]
-| table _time, dest, process, file_path, file_name, action
-| sort - _time</code></pre></div></div>
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.name:goshs @process.command_line:*--no-delete*</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/goshs/i
+| regex(&quot;--webdav&quot;, field=CommandLine)
+| regex(&quot;--no-delete&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=goshs* Processes.process=&quot;*--webdav*&quot; Processes.process=&quot;*--no-delete*&quot; by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.process_id | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=goshs* Processes.process=&quot;*--webdav*&quot; Processes.process=&quot;*--no-delete*&quot; by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.process_id | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -19126,11 +19214,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -19139,7 +19227,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -19151,12 +19239,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-64863&quot;, &quot;CVE-2026-50138&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-64863&quot;, &quot;CVE-2026-50138&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve

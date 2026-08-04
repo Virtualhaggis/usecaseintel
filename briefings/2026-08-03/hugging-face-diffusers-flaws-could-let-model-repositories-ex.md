@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Untrusted custom-pipeline .py (incl. None.py) staged in Hugging Face cache — FaceHugger
 
-`UC_19_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceFileEvents
 
 ### Python/Diffusers process spawning shell or download utility (FaceHugger RCE execution)
 
-`UC_19_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_21_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Outbound C2/exfil from Python after Diffusers model load (non-Hugging-Face egress)
 
-`UC_19_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hugging Face Diffusers Flaws Could Let Model Repositories Execute Arbitrary Code
 
-`UC_19_7` · phase: **exploit** · confidence: **High**
+`UC_21_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

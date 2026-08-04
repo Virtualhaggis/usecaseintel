@@ -8,6 +8,9 @@ _2602 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-08-04
+- [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
+
 ## 2026-08-03
 - [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
 - [an analysis of incidents at brazilian educational institutio](./2026-08-03/an-analysis-of-incidents-at-brazilian-educational-institutio.md)
@@ -23,6 +26,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
 - [n able warns of n central auth bypass flaw exploited in atta](./2026-08-03/n-able-warns-of-n-central-auth-bypass-flaw-exploited-in-atta.md)
 - [new doublecup clickfix service hides malware in browser cach](./2026-08-03/new-doublecup-clickfix-service-hides-malware-in-browser-cach.md)
+- [new pass ta key attacks let malware hijack google synced pas](./2026-08-03/new-pass-ta-key-attacks-let-malware-hijack-google-synced-pas.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 - [pnld breach exposes u k police and government contact detail](./2026-08-03/pnld-breach-exposes-u-k-police-and-government-contact-detail.md)
 
@@ -39,12 +43,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [captivecrunch midnight blizzard targets travelers worldwide ](./2026-07-31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-.md)
 - [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
 - [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
-- [cisa warns of cyberattacks disrupting u s water utilities](./2026-07-31/cisa-warns-of-cyberattacks-disrupting-u-s-water-utilities.md)
 - [ghsa critical cve 2026 52855 wings exposes node configuratio](./2026-07-31/ghsa-critical-cve-2026-52855-wings-exposes-node-configuratio.md)
 - [ghsa critical cve 2026 52887 nocobase sql injection in api m](./2026-07-31/ghsa-critical-cve-2026-52887-nocobase-sql-injection-in-api-m.md)
 - [ghsa critical cve 2026 53609 apostrophe has server side prot](./2026-07-31/ghsa-critical-cve-2026-53609-apostrophe-has-server-side-prot.md)
 - [ghsa critical cve 2026 54725 vault addr annotation ssrf webh](./2026-07-31/ghsa-critical-cve-2026-54725-vault-addr-annotation-ssrf-webh.md)
-- [hacker uses deepseek ai to autonomously attack vulnerable se](./2026-07-31/hacker-uses-deepseek-ai-to-autonomously-attack-vulnerable-se.md)
 - [hollowframe loader deploys matryoshka backdoor in spear phis](./2026-07-31/hollowframe-loader-deploys-matryoshka-backdoor-in-spear-phis.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
 - [online ad firm adform s script compromised to steal cryptocu](./2026-07-31/online-ad-firm-adform-s-script-compromised-to-steal-cryptocu.md)

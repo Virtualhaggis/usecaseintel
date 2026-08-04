@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Fake Xeno loader (xeno.exe) executed from archive-extract / non-official path
 
-`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Fake Xeno Java loader chain: xeno.exe spawning javaw.exe / decompiler.exe
 
-`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_4_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Portable JRE (instance.exe) extracted to %LOCALAPPDATA%\Java\jre by fake Xeno
 
-`UC_2_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### Fake Xeno persistence via 'Display Calibration' Run key
 
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceRegistryEvents
 
 ### Fake Xeno C2 to solthere[.]net registration and redeem endpoints
 
-`UC_2_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceNetworkEvents
 
 ### javaw.exe reading multiple browser credential stores (Chrome/Edge/Brave/Opera/Vivaldi)
 
-`UC_2_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceFileEvents
 
 ### Exodus wallet theft via SquirrelInteractive.bin log by javaw.exe
 
-`UC_2_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Roblox Xeno script launcher pushes infostealer, RAT malware
 
-`UC_2_4` · phase: **exploit** · confidence: **High**
+`UC_4_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
