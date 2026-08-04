@@ -7777,11 +7777,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190,T1486,T1566,T1566.002"
   data-sources="The Hacker News"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,m365,windows"
   data-uc-count="16" data-llm-uc-count="5"
-  data-search="INC Ransomware Emerges as Dominant Actor Exploiting SonicWall SMA 1000 Flaws The INC Ransomware operation has emerged as the &quot;dominant threat actor&quot; exploiting the recently disclosed security flaws in SonicWall Secure Mobile Access (SMA) 1000 series VPN appliances. In a report published over the weekend, Resecurity said it observed the INC Ransomware accelerating its activity since the beginning of August 2026, listing multiple victims on its data leak site. Per CVE-2026-15409 CVE-2026-15410 T1190 T1486 T1566 T1566.002 [LLM] SonicWall SMA 1000 /wsproxy WebSocket proxy-bypass exploitation (CVE-2026-15409) [LLM] ORANGETAIL Java web shell access via SonicWall /workplace/error.jsp [LLM] Callbacks to known UTA0533 / INC Ransomware SonicWall exploitation infrastructure [LLM] Execution of known UTA0533/INC SonicWall campaign payloads by hash [LLM] INC Ransomware extortion contact via helprans.com (email sender / DNS) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Remote service execution — PsExec / SMB lateral movement Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  data-search="INC Ransomware Emerges as Dominant Actor Exploiting SonicWall SMA 1000 Flaws The INC Ransomware operation has emerged as the &quot;dominant threat actor&quot; exploiting the recently disclosed security flaws in SonicWall Secure Mobile Access (SMA) 1000 series VPN appliances. In a report published over the weekend, Resecurity said it observed the INC Ransomware accelerating its activity since the beginning of August 2026, listing multiple victims on its data leak site. Per CVE-2026-15409 CVE-2026-15410 T1190 T1486 T1566 T1566.002 [LLM] SonicWall SMA 1000 /wsproxy exploitation from known UTA0533/INC source IPs (CVE-2026-15409/15410) [LLM] Callback to INC/UTA0533 SonicWall-campaign infrastructure (IP set + helprans.com) [LLM] INC Ransomware extortion contact via helprans.com email [LLM] INC Ransomware encryption burst — .INC extension and INC-README notes [LLM] KNUCKLEBALL / Suo5 / ORANGETAIL malware hashes on hosts Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Remote service execution — PsExec / SMB lateral movement Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-03-inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -7846,181 +7846,103 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SonicWall SMA 1000 /wsproxy WebSocket proxy-bypass exploitation (CVE-2026-15409) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] ORANGETAIL Java web shell access via SonicWall /workplace/error.jsp · [LLM] Execution of known UTA0533/INC SonicWall campaign payloads by hash · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Callbacks to known UTA0533 / INC Ransomware SonicWall exploitation infrastructure · [LLM] INC Ransomware extortion contact via helprans.com (email sender / DNS) · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Remote service execution — PsExec / SMB lateral movement · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft)</em></div></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SonicWall SMA 1000 /wsproxy exploitation from known UTA0533/INC source IPs (CVE-2026-15409/15410) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] KNUCKLEBALL / Suo5 / ORANGETAIL malware hashes on hosts · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Callback to INC/UTA0533 SonicWall-campaign infrastructure (IP set + helprans.com) · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] INC Ransomware extortion contact via helprans.com email · [LLM] INC Ransomware encryption burst — .INC extension and INC-README notes · Remote service execution — PsExec / SMB lateral movement · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft)</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="750d7a4fb8" data-platforms="sent,sigma,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="970dd25494" data-platforms="sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">SonicWall SMA 1000 /wsproxy WebSocket proxy-bypass exploitation (CVE-2026-15409)</span>
+    <span class="uc-title">SonicWall SMA 1000 /wsproxy exploitation from known UTA0533/INC source IPs (CVE-2026-15409/15410)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="750d7a4fb8" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="970dd25494" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts external source addresses hitting the SonicWall SMA 1000 /wsproxy endpoint, the pre-auth WebSocket/SSRF proxy-bypass abused by UTA0533/INC to reach restricted internal services and escalate to root. Article-specific: Resecurity explicitly advised identifying external IPs that interacted with /wsproxy or used unusual parameters.
+    <div class="uc-desc">Hunts inbound HTTP(S) access to the SonicWall SMA 1000 &#x27;/wsproxy&#x27; endpoint that Volexity flagged as the exploitation vector for CVE-2026-15409/CVE-2026-15410, correlated against the eight source IPs published as INC/UTA0533 infrastructure. Alerts when /wsproxy is hit from a known-bad source or when a single external source hammers the endpoint.
 
-Rationale: Uses the exact /wsproxy endpoint named in the article as the exploitation surface for CVE-2026-15409; second-sourced via Volexity (CVSS 10.0 pre-auth WebSocket bypass) and Tenable. External-source filter keeps it high-fidelity since /wsproxy should not be hit by arbitrary internet IPs.
+Rationale: Uses the article&#x27;s exact hunt instruction (&#x27;Identify external source addresses that interacted with /wsproxy or used unusual parameters&#x27;) plus the /wsproxy vector named in Volexity&#x27;s write-up, sharpened with the 8 published source IPs so legitimate /wsproxy traffic doesn&#x27;t drown it.
 
 Cross-checked against:
   • https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
-  • https://www.tenable.com/blog/cve-2026-15409-cve-2026-15410-sonicwall-sma-1000-zero-day-vulnerabilities-exploited-in-the
-  • https://www.bleepingcomputer.com/news/security/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custom-malware/</div>
+  • https://www.bleepingcomputer.com/news/security/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custom-malware/
+  • https://www.securityweek.com/sonicwall-zero-days-exploited-to-deliver-custom-malware-for-weeks-before-patch/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate SonicWall SMA WebSocket VPN client sessions from known corporate/mobile source ranges</li><li>Vulnerability scanners (Tenable/Qualys) authorised to probe /wsproxy</li><li>Internal health-check or load-balancer probes hitting the appliance web service</li><li>SonicWall support diagnostics reaching the management interface</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,src)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all /wsproxy hits for the SourceIP over the last 14d; confirm the appliance firmware pre-dates the 14 July 2026 SMA 1000 hotfix and check whether the source IP is in the known INC infra set. 2) Contain: block the external SourceIP at the perimeter, isolate the SMA 1000 appliance, and force patch to the fixed build; rotate all appliance-stored credentials and TOTP MFA seeds (Rapid7 confirmed seed theft). 3) Hunt: search for follow-on ORANGETAIL web-shell POSTs to /workplace/error.jsp, Suo5 proxy tunnels, and internal auth from the appliance IP.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate SMA 1000 client sessions that use /wsproxy for normal WorkPlace/tunnel proxying</li><li>Vulnerability scanners (Nessus/Qualys) authorised to probe the appliance</li><li>Load-balancer / uptime health-check probes hitting the endpoint at high volume</li><li>Penetration-testing engagements against the VPN appliance</li><li>Shared corporate NAT egress IP generating &gt;100 legit requests</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(SourceIP in (dynamic([&quot;&lt;corporate_scanner_ranges&gt;&quot;]))) // maintain an allow-list of sanctioned scanner/health-probe IPs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull full request lines for the flagged SourceIP — inspect query parameters for command-injection/chained-CVE payloads and check whether the source is a known corporate/scanner IP. 2) Contain: block the source IP at the perimeter, confirm SMA 1000 is patched (fixes released mid-July 2026); if unpatched and hit, treat appliance as compromised and isolate it from the internal network. 3) Hunt: on the appliance and behind it, look for KNUCKLEBALL/Suo5/ORANGETAIL artefacts, extracted session DBs / TOTP seeds, and outbound connections to the IOC IP list (UC2).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-08-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-08-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-08-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-08-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(14d)
-| where DeviceVendor has &quot;SonicWall&quot;
-| where RequestURL has &quot;/wsproxy&quot;
-| where isnotempty(SourceIP) and ipv4_is_private(SourceIP) == false
-| project TimeGenerated, SourceIP, DestinationIP, DeviceProduct, RequestMethod, RequestURL, DestinationServiceName, Activity
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SonicWall SMA 1000 wsproxy WebSocket Proxy-Bypass Exploitation (CVE-2026-15409)
-id: 7a3f2c14-8b9e-4d21-9f0a-1c2d3e4f5a61
-description: Detects requests to the SonicWall SMA 1000 /wsproxy endpoint abused by UTA0533/INC Ransomware as a pre-auth WebSocket proxy-bypass (CVE-2026-15409).
-references:
-  - https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
-  - https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
-author: SOC Detection Engineering
-date: 2026/08/04
-tags:
-  - attack.t1190
-  - attack.t1133
-logsource:
-  category: webserver
-detection:
-  selection:
-    c-uri|contains: &#x27;/wsproxy&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-08-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*/wsproxy*&quot; by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.status Web.http_user_agent
-| `drop_dm_object_name(&quot;Web&quot;)`
-| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,src)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*/wsproxy*&quot; by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.status Web.http_user_agent
-| `drop_dm_object_name(&quot;Web&quot;)`
-| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,src)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ab42ae82a4" data-platforms="sent,sigma,spl" data-targets="">
-  <summary>
-    <span class="uc-title">ORANGETAIL Java web shell access via SonicWall /workplace/error.jsp</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ab42ae82a4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects POST requests to the two disguised JSP paths that expose the ORANGETAIL Behinder-style web shell deployed on compromised SonicWall SMA 1000 appliances by UTA0533/INC. These error-page JSPs never legitimately receive POST bodies, making a POST a high-fidelity web-shell tasking signal.
-
-Rationale: Uses the exact ORANGETAIL web-shell paths (/workplace/error.jsp, /workplace/dialogs/errorDialog.jsp) documented by Volexity; POST method to a static error page is behaviourally anomalous and Behinder shells are POST-driven, giving very low FP.
-
-Cross-checked against:
-  • https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
-  • https://securityonline.info/sonicwall-sma-zero-day/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SonicWall SMA portal legitimately POSTing to an error handler during a genuine application error (rare)</li><li>Automated appliance UI test tooling exercising the workplace portal</li><li>Security scanner replaying captured requests including POST to JSP endpoints</li><li>WAF/appliance-generated synthetic health checks</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: review the POST bodies/user-agents and SourceIP for the flagged /workplace/*.jsp requests; a Behinder shell shows opaque encrypted POST bodies and repeat access from the same external IP. 2) Contain: isolate the SMA 1000 appliance, capture the file system for the injected JSP/JAR (KNUCKLEBALL drops JARs into a Python site-packages dir), and rebuild from clean firmware &gt;= 14 Jul 2026 hotfix. 3) Hunt: pivot on the SourceIP to /wsproxy exploitation, Suo5 proxy egress, and any internal lateral auth sourced from the appliance.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-08-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-08-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-08-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-08-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+    <div class="tab-content active" id="art-08-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let iocIPs = dynamic([&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;]);
+CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where DeviceVendor has &quot;SonicWall&quot;
-| where RequestMethod =~ &quot;POST&quot;
-| where RequestURL has_any (&quot;/workplace/error.jsp&quot;, &quot;/workplace/dialogs/errorDialog.jsp&quot;)
-| project TimeGenerated, SourceIP, DestinationIP, DeviceProduct, RequestMethod, RequestURL, RequestClientApplication, Activity
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: ORANGETAIL Web Shell POST to SonicWall SMA workplace error JSP
-id: 2b8d4e19-6c1a-4f73-8e25-9a0b1c2d3e4f
-description: Detects POST requests to /workplace/error.jsp or /workplace/dialogs/errorDialog.jsp, the disguised paths hosting the ORANGETAIL Behinder-like Java web shell on compromised SonicWall SMA 1000 appliances (UTA0533/INC).
-references:
-  - https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
-author: SOC Detection Engineering
-date: 2026/08/04
-tags:
-  - attack.t1505.003
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-method: &#x27;POST&#x27;
-    c-uri|contains:
-      - &#x27;/workplace/error.jsp&#x27;
-      - &#x27;/workplace/dialogs/errorDialog.jsp&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-08-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/workplace/error.jsp*&quot; OR Web.url=&quot;*/workplace/dialogs/errorDialog.jsp*&quot;) Web.http_method=&quot;POST&quot; by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.status Web.http_user_agent
-| `drop_dm_object_name(&quot;Web&quot;)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/workplace/error.jsp*&quot; OR Web.url=&quot;*/workplace/dialogs/errorDialog.jsp*&quot;) Web.http_method=&quot;POST&quot; by Web.src Web.dest Web.dest_port Web.http_method Web.url Web.status Web.http_user_agent
-| `drop_dm_object_name(&quot;Web&quot;)`
-| sort - lastTime</code></pre></div></div>
+| where DeviceVendor has &quot;SonicWall&quot; or DeviceProduct has_any (&quot;SMA&quot;,&quot;Secure Mobile Access&quot;,&quot;SMA1000&quot;)
+| where RequestURL has &quot;/wsproxy&quot;
+| extend KnownBadSource = SourceIP in (iocIPs)
+| summarize Requests=count(), Methods=make_set(RequestMethod,5), URLs=make_set(RequestURL,10), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), AnyKnownBad=max(tolong(KnownBadSource)) by SourceIP, DestinationIP, DeviceProduct
+| where AnyKnownBad == 1 or Requests &gt; 100   // known-bad source =&gt; alert; &gt;100 req from one src =&gt; hunt
+| order by AnyKnownBad desc, Requests desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.url) as url from datamodel=Web where Web.url=&quot;*/wsproxy*&quot; by Web.src Web.dest Web.vendor_product | `drop_dm_object_name(Web)` | eval known_bad=if(match(src,&quot;^(108\.205\.8\.173|147\.45\.51\.19|150\.241\.210\.53|202\.8\.105\.201|217\.77\.15\.99|42\.200\.172\.14|81\.19\.140\.217|89\.117\.20\.1)$&quot;),1,0) | where known_bad=1 OR count&gt;100 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - known_bad - count</code></pre><pre class="spl-mode-body" id="art-08-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.url) as url from datamodel=Web where Web.url=&quot;*/wsproxy*&quot; by Web.src Web.dest Web.vendor_product | `drop_dm_object_name(Web)` | eval known_bad=if(match(src,&quot;^(108\.205\.8\.173|147\.45\.51\.19|150\.241\.210\.53|202\.8\.105\.201|217\.77\.15\.99|42\.200\.172\.14|81\.19\.140\.217|89\.117\.20\.1)$&quot;),1,0) | where known_bad=1 OR count&gt;100 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - known_bad - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7aab328b5f" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="3418478b36" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Callbacks to known UTA0533 / INC Ransomware SonicWall exploitation infrastructure</span>
+    <span class="uc-title">Callback to INC/UTA0533 SonicWall-campaign infrastructure (IP set + helprans.com)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7aab328b5f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="3418478b36" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on network connections to the eight IP addresses tied to the UTA0533/INC SonicWall SMA 1000 campaign. Catches Suo5 proxy egress from a compromised appliance, C2 beaconing, or any internal host reaching campaign infrastructure.
+    <div class="uc-desc">Detects hosts or perimeter devices communicating with any of the eight IPs and the helprans.com domain published as INC Ransomware / UTA0533 infrastructure for the SonicWall SMA campaign. Covers Suo5 reverse-proxy tunneling out through the appliance as well as endpoint C2/extortion-domain resolution.
 
-Rationale: Direct IOC match on the eight campaign IPs pre-extracted from the article and consistent with the Volexity/Resecurity reporting; IP-match is inherently high-fidelity, and covering both directions catches Suo5 tunnel egress from the appliance as well as internal beacons.
+Rationale: Pure IOC match on the 8 campaign IPs and the helprans.com extortion domain from the article&#x27;s pre-extracted IOC block, cross-checked against Volexity&#x27;s write-up of the same UTA0533 campaign — high fidelity, near-zero benign overlap.
 
 Cross-checked against:
-  • https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
   • https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
-  • https://securityaffairs.com/195626/hacking/volexity-uncovers-zero-day-campaign-targeting-sonicwall-vpn-appliances.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span> <span class="ind tech" title="Proxy">T1090</span></div>
+  • https://www.bleepingcomputer.com/news/security/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custom-malware/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy">T1090</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An IP being reassigned to a benign hosting tenant after the campaign (stale IOC)</li><li>Threat-intel platform or sandbox detonating samples that beacon to these IPs</li><li>Security researcher / IR team actively connecting to the infrastructure</li><li>Shared hosting where a legitimate co-tenant service reuses the same IP</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal host/appliance and the initiating process for the connection; determine whether the local endpoint is the SMA 1000 appliance (Suo5 egress) or an internal workstation (potential C2). 2) Contain: block all eight IPs at the perimeter, isolate the involved host, and preserve netflow for scope. 3) Hunt: correlate the connection timestamp with /wsproxy exploitation and ORANGETAIL POSTs, and sweep for the campaign file hashes and helprans.com resolutions across the estate.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An IP is re-assigned by the hosting provider to a benign tenant after the campaign ends (stale IOC)</li><li>Threat-intel/sandbox detonation host in the org deliberately contacting the IOC IPs</li><li>Security researcher validating IOCs from a corporate workstation</li><li>helprans.com appearing in a security awareness email being previewed/scanned</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MpCmdRun.exe&quot;) // exclude EDR/AV detonation contexts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the internal host/appliance and the initiating process; confirm the connection was outbound and completed (not just a blocked SYN). 2) Contain: isolate the host, block all 8 IPs and helprans.com at the perimeter and on EDR. If the source is the SMA 1000 appliance, treat as active Suo5 tunneling and pull it offline. 3) Hunt: sweep for the malware hashes (UC5), /wsproxy exploitation (UC1), and any INC ransom-note / .INC encryption activity (UC4) on hosts reachable from the compromised device.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-08-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-08-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-08-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-08-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-08-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-08-uc2-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-08-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-08-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-08-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-08-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-08-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-08-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-08-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-08-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-08-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let iocIPs = dynamic([&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;]);
+DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP in (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| sort by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where RemoteIP in (iocIPs) or RemoteUrl has &quot;helprans.com&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let iocIPs = dynamic([&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;]);
+union isfuzzy=true
+(CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where DestinationIP in (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;)
-    or SourceIP in (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;)
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, RequestURL, Activity
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Network Connection to UTA0533/INC Ransomware SonicWall Campaign Infrastructure
-id: 9f1a2b3c-4d5e-6071-8293-a4b5c6d7e8f9
-description: Detects outbound connections to IPs associated with the UTA0533/INC Ransomware SonicWall SMA 1000 exploitation campaign (Suo5 proxy egress / C2).
+| where DestinationIP in (iocIPs) or SourceIP in (iocIPs)
+| project TimeGenerated, Src=SourceIP, Dst=DestinationIP, DstPort=DestinationPort, Product=DeviceProduct, URL=RequestURL),
+(DnsEvents
+| where TimeGenerated &gt; ago(30d)
+| where Name has &quot;helprans.com&quot;
+| project TimeGenerated, Src=ClientIP, Dst=Name, DstPort=int(null), Product=&quot;DNS&quot;, URL=Name)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: INC/UTA0533 SonicWall-campaign C2 IP callback
+id: 5f2c9e14-3a6b-4c1e-9d77-6b0a1f2e8c31
+description: Network connection to an IP published as INC Ransomware / UTA0533 SonicWall SMA campaign infrastructure
 references:
-  - https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
   - https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
+  - https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
 author: SOC Detection Engineering
 date: 2026/08/04
 tags:
-  - attack.t1071
+  - attack.t1071.001
   - attack.t1090
 logsource:
   category: network_connection
@@ -8038,41 +7960,74 @@ detection:
       - &#x27;89.117.20.1&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(108.205.8.173 OR 147.45.51.19 OR 150.241.210.53 OR 202.8.105.201 OR 217.77.15.99 OR 42.200.172.14 OR 81.19.140.217 OR 89.117.20.1)</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+    <div class="tab-content" id="art-08-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@DestinationIp:(108.205.8.173 OR 147.45.51.19 OR 150.241.210.53 OR 202.8.105.201 OR 217.77.15.99 OR 42.200.172.14 OR 81.19.140.217 OR 89.117.20.1) OR @DestinationHostname:(*helprans.com* OR *HELPRANS.COM*))</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
 | in(RemoteAddressIP4, values=[&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;])
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, dstPort, action, bytes
-| filter dstAddr in [&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;] or srcAddr in [&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(&quot;All_Traffic&quot;)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(&quot;All_Traffic&quot;)`
-| sort - lastTime</code></pre></div></div>
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count(as=connections))</code></pre></div>
+    <div class="tab-content" id="art-08-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.transport) as transport values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest in (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre><pre class="spl-mode-body" id="art-08-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.transport) as transport values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest in (&quot;108.205.8.173&quot;,&quot;147.45.51.19&quot;,&quot;150.241.210.53&quot;,&quot;202.8.105.201&quot;,&quot;217.77.15.99&quot;,&quot;42.200.172.14&quot;,&quot;81.19.140.217&quot;,&quot;89.117.20.1&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="1fa8138c98" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="e1a7577fa4" data-platforms="def,sent" data-targets="m365">
   <summary>
-    <span class="uc-title">Execution of known UTA0533/INC SonicWall campaign payloads by hash</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1fa8138c98" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">INC Ransomware extortion contact via helprans.com email</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e1a7577fa4" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts when any file or process matching the campaign&#x27;s KNUCKLEBALL/Suo5/ORANGETAIL payload hashes is written or executed on an endpoint. Direct IOC coverage for the malware set staged during the SonicWall SMA 1000 compromise and subsequent INC ransomware deployment.
+    <div class="uc-desc">Flags inbound email from the helprans.com domain that INC operators (calling themselves &#x27;a group of hackers&#x27;, persona &#x27;Andrew&#x27;) used to open ransom negotiations against victims of this SonicWall campaign. The negotiation address info@helprans.com is the concrete anchor.
 
-Rationale: Direct hash IOC match on the campaign&#x27;s SHA256/SHA1/MD5 payload set from the article; union of process and file events catches both staged drops and execution. Hash matches are near-zero FP.
+Rationale: info@helprans.com / the helprans.com domain is named verbatim in the article as the INC negotiation channel — a mail from that domain to an internal recipient is an unambiguous, article-specific extortion signal.
 
 Cross-checked against:
-  • https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
-  • https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware sample stored in a quarantined analysis share triggering file-event hash match without execution</li><li>Threat-intel/EDR sync writing sample copies to a research host</li><li>Backup restore of a previously-detected artifact</li><li>Hash collision (cryptographically implausible for SHA256; possible for the MD5 entries only)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ActionType != &quot;FileDeleted&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the hit is an execution (DeviceProcessEvents/ProcessRollup2) versus a benign file-at-rest, and identify the host and initiating process. 2) Contain: isolate the endpoint, kill/quarantine the matching process and file, and disable involved accounts pending review. 3) Hunt: pivot from the host to campaign IP callbacks, /wsproxy exploitation of any upstream SMA 1000 appliance, and helprans.com contact; look for ransomware pre-encryption behaviour (shadow-copy deletion, mass file rename).</div></details>
+  • https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Financial Theft">T1657</span> <span class="ind tech" title="Establish Accounts">T1585</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An internal user forwards/quotes the extortion email for reporting, creating an intra-org copy</li><li>Security-vendor threat brief quoting helprans.com delivered to a distribution list</li><li>Phishing simulation reusing the helprans.com lure</li><li>Journalist / researcher outreach mentioning the domain</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeliveryAction == &quot;Delivered&quot; and EmailDirection == &quot;Inbound&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the recipient and whether the message was Delivered vs Quarantined; read the message for a personal victim ID / TOR portal reference indicating a real INC contact. 2) Contain: if delivered, this signals the org may already be compromised — engage IR, purge the message org-wide, and begin credential rotation (article recommends this explicitly). 3) Hunt: immediately check for /wsproxy exploitation (UC1), IOC-IP callbacks (UC2), and .INC encryption / INC-README notes (UC4); block helprans.com and the phone-number lure in mail flow.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-08-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-08-uc2-sentinel">Sentinel KQL</button>
+    </div>
+    <div class="tab-content active" id="art-08-uc2-kql"><pre><button class="copy-btn">COPY</button><code>EmailEvents
+| where Timestamp &gt; ago(30d)
+| where EmailDirection == &quot;Inbound&quot;
+| where SenderFromDomain =~ &quot;helprans.com&quot; or SenderMailFromDomain =~ &quot;helprans.com&quot; or SenderFromAddress has &quot;helprans.com&quot;
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, ThreatTypes
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+EmailEvents
+| where TimeGenerated &gt; ago(30d)
+| where EmailDirection == &quot;Inbound&quot;
+| where SenderFromDomain =~ &quot;helprans.com&quot; or SenderMailFromDomain =~ &quot;helprans.com&quot; or SenderFromAddress has &quot;helprans.com&quot;
+| project TimeGenerated, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, ThreatTypes
+| order by TimeGenerated desc</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6af45832c5" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">INC Ransomware encryption burst — .INC extension and INC-README notes</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6af45832c5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the INC Ransomware impact stage: mass file rename/creation to the &#x27;.INC&#x27; extension and dropping of INC-README.txt / INC-README.html / INC_README.txt ransom notes across directories. Fires on either a high-volume .INC write burst or any ransom-note creation.
+
+Rationale: The article names INC Ransomware as the dominant actor but omits note/extension strings; the &#x27;.INC&#x27; extension and INC-README.txt/.html/INC_README.txt notes are corroborated across SentinelOne, Secureworks and Huntress INC write-ups, so these are genuine INC IOCs rather than an invented template.
+
+Cross-checked against:
+  • https://www.sentinelone.com/anthology/inc-ransom/
+  • https://www.secureworks.com/blog/gold-ionic-deploys-inc-ransomware
+  • https://www.huntress.com/blog/investigating-new-inc-ransom-group-activity</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span> <span class="ind tech" title="Inhibit System Recovery">T1490</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate files/software using a .INC include extension (e.g. PHP/ASM include files) written in bulk by a build or deployment job</li><li>Developer checking out a repo containing many *.inc files</li><li>A file literally named INC_README.txt in a software package (documentation)</li><li>Backup/restore job rehydrating .inc includes across folders</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SampleProc !in~ (&quot;php.exe&quot;,&quot;msbuild.exe&quot;,&quot;git.exe&quot;,&quot;robocopy.exe&quot;) and DistinctFolders &gt; 3 // build/dev tools writing .inc includes</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the flagged host&#x27;s process tree for the InitiatingProcessId, confirm the writes are true renames of victim files (original + .INC) rather than developer .inc includes, and read one INC-README note for a victim ID / TOR portal. 2) Contain: isolate the host immediately, kill the encrypting process, and disable the account it ran under; preserve one ransom note and one encrypted sample for IR. 3) Hunt: pivot to shares written by the same process, check for the campaign&#x27;s initial access (UC1) and C2 IPs (UC2), and verify shadow copies / backups integrity before recovery.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-08-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-08-uc3-sentinel">Sentinel KQL</button>
@@ -8081,29 +8036,113 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-08-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-08-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-08-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let iocSha256 = dynamic([&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;]);
-let iocMd5 = dynamic([&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;]);
-let iocSha1 = dynamic([&quot;04d4a9fbb32e967200eb98be014ca914a03bfa6b&quot;,&quot;b4ee1f50fbb49f0ff5fde3d026343bc23ee08d51&quot;,&quot;c2b0ae0a1f42a139abe4dd612676066ec1426394&quot;,&quot;5e5b716f2385c818ec61198be1a2a07a4560eac5&quot;]);
-union
-  (DeviceProcessEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (iocSha256) or MD5 in~ (iocMd5) or SHA1 in~ (iocSha1) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, SHA1, MD5, InitiatingProcessCommandLine),
-  (DeviceFileEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (iocSha256) or MD5 in~ (iocMd5) or SHA1 in~ (iocSha1) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, SHA1, MD5, InitiatingProcessCommandLine)
-| sort by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let iocSha256 = dynamic([&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;]);
-let iocMd5 = dynamic([&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;]);
-union
-  (ImProcessCreate | where TimeGenerated &gt; ago(30d) | where SHA256 in~ (iocSha256) or MD5 in~ (iocMd5) | project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, SHA256, MD5),
-  (ImFileEvent | where TimeGenerated &gt; ago(30d) | where TargetFileSHA256 in~ (iocSha256) or TargetFileMD5 in~ (iocMd5) | project TimeGenerated, DvcHostname, TargetFilePath, SHA256=TargetFileSHA256, MD5=TargetFileMD5)
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: UTA0533/INC SonicWall Campaign Payload Hash Execution
-id: 4c5d6e7f-8091-42a3-b4c5-d6e7f8091a2b
-description: Detects execution or write of files matching known UTA0533/INC Ransomware SonicWall SMA 1000 campaign payload hashes (KNUCKLEBALL/Suo5/ORANGETAIL and related).
+    <div class="tab-content active" id="art-08-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileRenamed&quot;,&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FileName endswith &quot;.INC&quot; or FileName in~ (&quot;INC-README.txt&quot;,&quot;INC-README.html&quot;,&quot;INC_README.txt&quot;)
+| summarize EncryptedFiles = countif(FileName endswith &quot;.INC&quot;),
+            RansomNotes = countif(FileName has &quot;INC-README&quot; or FileName has &quot;INC_README&quot;),
+            DistinctFolders = dcount(FolderPath),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            SampleProc = any(InitiatingProcessFileName), ProcSHA256 = any(InitiatingProcessSHA256)
+        by DeviceName, InitiatingProcessId
+| where EncryptedFiles &gt; 50 or RansomNotes &gt; 0   // 50 = mass-encryption burst; a dropped note alone also fires
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where TargetFileName endswith &quot;.INC&quot; or TargetFileName in~ (&quot;INC-README.txt&quot;,&quot;INC-README.html&quot;,&quot;INC_README.txt&quot;)
+| summarize EncryptedFiles = countif(TargetFileName endswith &quot;.INC&quot;),
+            RansomNotes = countif(TargetFileName has &quot;INC-README&quot; or TargetFileName has &quot;INC_README&quot;),
+            DistinctFolders = dcount(TargetFilePath),
+            FirstSeen = min(TimeGenerated), SampleProc = any(ActingProcessName)
+        by DvcHostname, ActingProcessId
+| where EncryptedFiles &gt; 50 or RansomNotes &gt; 0
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: INC Ransomware encrypted file extension and ransom note
+id: 9a1d7f60-24bc-4b8e-8c2f-1e5b3a9d4f77
+description: File written with the .INC ransomware extension or an INC-README ransom note dropped
 references:
+  - https://www.sentinelone.com/anthology/inc-ransom/
+  - https://www.secureworks.com/blog/gold-ionic-deploys-inc-ransomware
   - https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
 author: SOC Detection Engineering
 date: 2026/08/04
 tags:
-  - attack.t1204.002
   - attack.t1486
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_ext:
+    TargetFilename|endswith: &#x27;.INC&#x27;
+  selection_note:
+    TargetFilename|endswith:
+      - &#x27;\INC-README.txt&#x27;
+      - &#x27;\INC-README.html&#x27;
+      - &#x27;\INC_README.txt&#x27;
+  condition: 1 of selection_*
+level: high</code></pre></div>
+    <div class="tab-content" id="art-08-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*.INC OR *.inc) OR @TargetFilename:(*INC-README.txt* OR *INC-README.html* OR *INC_README.txt*))</code></pre></div>
+    <div class="tab-content" id="art-08-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| (TargetFileName=/\.INC$/i OR TargetFileName=/INC[-_]README\.(txt|html)$/i)
+| groupBy([aid, ComputerName, ContextImageFileName], function=count(as=writes))
+| writes &gt; 20</code></pre></div>
+    <div class="tab-content" id="art-08-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as fileEvents, dc(Filesystem.file_path) as folders, min(_time) as firstTime, max(_time) as lastTime, values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*.INC&quot; OR Filesystem.file_name IN (&quot;INC-README.txt&quot;,&quot;INC-README.html&quot;,&quot;INC_README.txt&quot;)) by Filesystem.dest Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where fileEvents&gt;50 OR folders&gt;5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - fileEvents</code></pre><pre class="spl-mode-body" id="art-08-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as fileEvents, dc(Filesystem.file_path) as folders, min(_time) as firstTime, max(_time) as lastTime, values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*.INC&quot; OR Filesystem.file_name IN (&quot;INC-README.txt&quot;,&quot;INC-README.html&quot;,&quot;INC_README.txt&quot;)) by Filesystem.dest Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where fileEvents&gt;50 OR folders&gt;5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - fileEvents</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3d7d6b9a8e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">KNUCKLEBALL / Suo5 / ORANGETAIL malware hashes on hosts</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3d7d6b9a8e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Sweeps process, file and image-load telemetry for the four published SHA256/MD5 hashes of the KNUCKLEBALL Python loader, Suo5 proxy and ORANGETAIL Java web shell used by UTA0533/INC against SonicWall SMA 1000. Any match indicates the campaign toolset touched a monitored host.
+
+Rationale: Direct SHA256/MD5 IOC match on the four samples from the article&#x27;s IOC block, cross-checked against Volexity&#x27;s KNUCKLEBALL/Suo5/ORANGETAIL analysis of the same UTA0533 campaign; hash matches are deterministic and effectively FP-free.
+
+Cross-checked against:
+  • https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
+  • https://www.bleepingcomputer.com/news/security/sonicwall-sma1000-flaws-exploited-as-zero-days-to-push-custom-malware/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Proxy">T1090</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A malware analyst intentionally detonating one of the samples in a monitored sandbox VM</li><li>EDR/AV quarantine copy of the file generating a file-event with the same hash</li><li>Threat-intel tooling writing the sample to disk for YARA scanning</li><li>Purple-team exercise replaying the campaign toolset</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !in~ (&quot;&lt;malware-sandbox-host&gt;&quot;) // exclude sanctioned detonation VMs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is not a sanctioned malware-analysis sandbox; capture the process tree, parent (expect a SonicWall/Java or python context for KNUCKLEBALL), and network connections. 2) Contain: isolate the host, block the hashes tenant-wide, and if it is the SMA 1000 appliance or a host behind it, treat as compromised — rotate credentials and TOTP seeds per the vendor guidance. 3) Hunt: pivot on the initiating process to find dropped JARs, Suo5 tunnels to the IOC IPs (UC2), the /wsproxy foothold (UC1), and any downstream INC encryption (UC4).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-08-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-08-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-08-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-08-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-08-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-08-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-08-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let iocSHA256 = dynamic([&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;]);
+let iocMD5 = dynamic([&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;]);
+union
+(DeviceProcessEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (iocSHA256) or MD5 in~ (iocMD5) | project Timestamp, DeviceName, Source=&quot;Process&quot;, FileName, FolderPath, SHA256, MD5, Cmd=ProcessCommandLine),
+(DeviceFileEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (iocSHA256) or MD5 in~ (iocMD5) | project Timestamp, DeviceName, Source=&quot;File&quot;, FileName, FolderPath, SHA256, MD5, Cmd=InitiatingProcessCommandLine),
+(DeviceImageLoadEvents | where Timestamp &gt; ago(30d) | where SHA256 in~ (iocSHA256) or MD5 in~ (iocMD5) | project Timestamp, DeviceName, Source=&quot;ImageLoad&quot;, FileName, FolderPath, SHA256, MD5, Cmd=InitiatingProcessCommandLine)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let iocSHA256 = dynamic([&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;]);
+let iocMD5 = dynamic([&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;]);
+ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileSHA256 in~ (iocSHA256) or TargetFileMD5 in~ (iocMD5)
+| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileSHA256, TargetFileMD5
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-08-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: UTA0533/INC SonicWall campaign malware hash
+id: 3c8e2b41-7d19-4f6a-9b0e-2a4c6d8f1e90
+description: Execution of a file matching a published KNUCKLEBALL/Suo5/ORANGETAIL SHA256 hash
+references:
+  - https://www.volexity.com/blog/2026/07/17/proxying-to-compromise-sonicwall-secure-mobile-access-0-day-exploitation/
+  - https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
+author: SOC Detection Engineering
+date: 2026/08/04
+tags:
+  - attack.t1505.003
+  - attack.t1105
 logsource:
   category: process_creation
   product: windows
@@ -8116,80 +8155,11 @@ detection:
       - &#x27;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-08-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon (@EventID:1 OR @EventID:11) @Hashes:(*81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2* OR *81A9AF3846BAD3A1107164FF7CF0A08E020B31A3B32FD17866E17D4C1565F7F2* OR *8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3* OR *8C470301DCB7278F73E622F1950073567B34011C64B60CDFBB0F89803923A5A3* OR *1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee* OR *ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081*)</code></pre></div>
-    <div class="tab-content" id="art-08-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+    <div class="tab-content" id="art-08-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:(1 OR 11) @Hashes:(*81A9AF3846BAD3A1107164FF7CF0A08E020B31A3B32FD17866E17D4C1565F7F2* OR *8C470301DCB7278F73E622F1950073567B34011C64B60CDFBB0F89803923A5A3* OR *1E1E68BBB899450A57274A8B12082ED4E2040A2AAE77014F20431689D2B4EDEE* OR *EA9154E374E4F77BC2CF54282E23543573980342A85BC888CB23F20B8BBBA081*)</code></pre></div>
+    <div class="tab-content" id="art-08-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
 | in(SHA256HashData, values=[&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;])
-| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-08-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_hash IN (&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;,&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;) by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process_hash
-| `drop_dm_object_name(&quot;Processes&quot;)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process_hash IN (&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;,&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;) by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.process_name Endpoint.Processes.process_hash
-| `drop_dm_object_name(&quot;Processes&quot;)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b1418e8274" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="m365,windows">
-  <summary>
-    <span class="uc-title">INC Ransomware extortion contact via helprans.com (email sender / DNS)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b1418e8274" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces contact with the INC ransomware negotiation domain helprans.com — inbound email from the actor&#x27;s negotiation address (info@helprans.com) and any internal DNS resolution of the domain. Article-specific: victims were pressured by emails/calls and directed to info@helprans.com for negotiation.
-
-Rationale: Uses the exact negotiation domain helprans.com and sender info@helprans.com named in the article as INC&#x27;s pressure-tactic/extortion channel; email-sender and DNS coverage both anchor on the same high-fidelity indicator with minimal legitimate reason for internal contact.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
-  • https://www.darkreading.com/vulnerabilities-threats/inc-ransomware-exploits-sonicwall-sma-zero-days</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Financial Theft">T1657</span> <span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SOC/IR analyst investigating the domain from a corporate workstation (generates DNS lookup)</li><li>Threat-intel platform automatically enriching/resolving the IOC domain</li><li>Sandbox detonation resolving helprans.com</li><li>Security awareness or phishing-simulation platform referencing the domain</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for email hits confirm recipient(s) and whether the message was delivered vs quarantined; for DNS hits identify the querying host and whether it is an analyst box. 2) Contain: block helprans.com at mail gateway and DNS/proxy, quarantine any delivered messages, and treat any non-analyst host that resolved it as potentially post-encryption/extortion contact. 3) Hunt: pivot the affected host/user to campaign IP callbacks, payload hashes, and upstream SonicWall SMA 1000 /wsproxy exploitation to confirm the intrusion chain.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-08-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-08-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-08-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-08-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-08-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-08-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-08-uc4-kql"><pre><button class="copy-btn">COPY</button><code>EmailEvents
-| where Timestamp &gt; ago(30d)
-| where SenderFromDomain =~ &quot;helprans.com&quot; or SenderMailFromDomain =~ &quot;helprans.com&quot; or SenderFromAddress =~ &quot;info@helprans.com&quot;
-| project Timestamp, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, ThreatTypes
-| sort by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
-| where TimeGenerated &gt; ago(30d)
-| where Name has &quot;helprans.com&quot;
-| project TimeGenerated, Computer, ClientIP, Name, QueryType, ResultCode
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-08-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: INC Ransomware Negotiation Domain helprans.com DNS Resolution
-id: 1e2d3c4b-5a69-4788-9906-a1b2c3d4e5f6
-description: Detects DNS resolution of helprans.com, the INC Ransomware extortion/negotiation domain (info@helprans.com) referenced in the SonicWall SMA 1000 campaign.
-references:
-  - https://thehackernews.com/2026/08/inc-ransomware-emerges-as-dominant.html
-author: SOC Detection Engineering
-date: 2026/08/04
-tags:
-  - attack.t1657
-  - attack.t1071.004
-logsource:
-  category: dns
-detection:
-  selection:
-    query|endswith: &#x27;helprans.com&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-08-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:22 @QueryName:(*helprans.com* OR *HELPRANS.COM*)</code></pre></div>
-    <div class="tab-content" id="art-08-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/helprans\.com$/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-08-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query=&quot;*helprans.com*&quot; by Network_Resolution.src Network_Resolution.query Network_Resolution.answer
-| `drop_dm_object_name(&quot;DNS&quot;)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-08-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query=&quot;*helprans.com*&quot; by Network_Resolution.src Network_Resolution.query Network_Resolution.answer
-| `drop_dm_object_name(&quot;DNS&quot;)`
-| sort - lastTime</code></pre></div></div>
+| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count(as=hits))</code></pre></div>
+    <div class="tab-content" id="art-08-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-08-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-08-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-08-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;,&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-08-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;81a9af3846bad3a1107164ff7cf0a08e020b31a3b32fd17866e17d4c1565f7f2&quot;,&quot;8c470301dcb7278f73e622f1950073567b34011c64b60cdfbb0f89803923a5a3&quot;,&quot;1e1e68bbb899450a57274a8b12082ed4e2040a2aae77014f20431689d2b4edee&quot;,&quot;ea9154e374e4f77bc2cf54282e23543573980342a85bc888cb23f20b8bbba081&quot;,&quot;5cb00bbfe818ee3e85fb99ab1db1af7c&quot;,&quot;b6df166291f80ee89032d769c99714f3&quot;,&quot;54d21399b8b52b48a0fef68450593e45&quot;,&quot;5f3a55201c511c9ff9be4c16c41028a2&quot;) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
