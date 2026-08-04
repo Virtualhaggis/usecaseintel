@@ -38,16 +38,17 @@ A new Russian loader-as-a-service (LaaS) codenamed DOUBLECUP has been using Clic
 - **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1102.001** — Web Service: Dead Drop Resolver
 - **T1027.003** — Obfuscated Files or Information: Steganography
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1571** — Non-Standard Port
 - **T1059.006** — Command and Scripting Interpreter: Python
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.004** — Application Layer Protocol: DNS
 - **T1070.004** — Indicator Removal: File Deletion
-- **T1614.001** — System Location Discovery: System Language Discovery
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547.009** — Boot or Logon Autostart Execution: Shortcut Modification
+- **T1614.001** — System Location Discovery: System Language Discovery
 
 ## Kill chain phases observed
 
@@ -55,109 +56,123 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### DOUBLECUP C2 / license-panel network beacon (CountLoader + DeviceManager infra)
+### DOUBLECUP ClickFix: script interpreter reads steganographic PNG from browser cache
 
-`UC_3_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("91.92.240.100","213.139.77.109","194.230.225.18") by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("91.92.240.100", "213.139.77.109", "194.230.225.18")
-   or RemoteUrl has_any ("cloud-electronic.com", "rigmadessignkit.com")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### ClickFix: browser cache PNG steganography extraction via Run-dialog script
-
-`UC_3_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe")) (Processes.process="*Cache*" OR Processes.process="*cache2*" OR Processes.process="*Code Cache*") Processes.process="*.png*" by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe") Processes.process="*.png*" (Processes.process="*\\Cache\\*" OR Processes.process="*Cache_Data*" OR Processes.process="*\\Code Cache\\*" OR Processes.process="*cache2\\entries*" OR Processes.process="*\\Chrome\\User Data*" OR Processes.process="*\\Edge\\User Data*" OR Processes.process="*\\Firefox\\Profiles*" OR Processes.process="*\\BraveSoftware\\*" OR Processes.process="*\\Opera Software\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName =~ "explorer.exe"
+| where Timestamp > ago(14d)
 | where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe")
-| extend cmd = tolower(ProcessCommandLine)
-| where cmd has_any (@"\cache", "cache2", @"code cache", @"user data\default\cache")
-| where cmd has ".png"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where ProcessCommandLine has ".png"
+| where ProcessCommandLine has_any (@"\Cache\", @"Cache_Data", @"\Code Cache\", @"cache2\entries", @"\Chrome\User Data", @"\Edge\User Data", @"\Mozilla\Firefox\Profiles", @"\BraveSoftware\", @"\Opera Software\")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### DeviceManager: embedded Python environment egress from temp/AppData (EtherHiding RAT)
+### DOUBLECUP delivery domain and /api/config endpoint contact
 
-`UC_3_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name="python.exe" OR All_Traffic.process_name="pythonw.exe") (All_Traffic.process="*\\AppData\\*" OR All_Traffic.process="*\\Temp\\*" OR All_Traffic.process="*\\Users\\Public\\*") by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*cloud-electronic.com*" OR Web.url="*rigmadessignkit.com*" OR Web.dest="cloud-electronic.com" OR Web.dest="rigmadessignkit.com") by Web.src Web.dest Web.url Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | eval config_endpoint=if(like(url,"%/api/config"),"yes","no") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Temp\", @"\Users\Public\")
-| where RemoteIPType == "Public"
-| summarize FirstSeen=min(Timestamp), Conns=count(), DistinctDsts=dcount(RemoteIP), SampleDsts=make_set(RemoteIP, 15) by DeviceName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by FirstSeen desc
+| where RemoteUrl has_any ("cloud-electronic.com","rigmadessignkit.com")
+| extend IsConfigEndpoint = RemoteUrl endswith "/api/config"
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, IsConfigEndpoint, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
-### DeviceManager CIS-locale self-deletion (schtasks delete + rmdir install dir via cmd.exe)
+### DOUBLECUP / CountLoader / DeviceManager C2 IP connections
 
-`UC_3_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="cmd.exe" (Processes.parent_process_name IN ("python.exe","pythonw.exe")) (Processes.process="*rmdir*" OR Processes.process="*rd /s*" OR Processes.process="*rd /q*" OR Processes.process="*schtasks*/delete*" OR Processes.process="*schtasks*/DELETE*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("213.139.77.109","91.92.240.100","194.230.225.18") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("213.139.77.109","91.92.240.100","194.230.225.18")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### DeviceManager RAT: embedded Python spawned from Inno Setup installer in user space
+
+`UC_8_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","pythonw.exe") (Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\AppData\\Roaming\\*" OR Processes.process_path="*\\AppData\\Local\\Programs\\*" OR Processes.process_path="*\\Temp\\is-*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "cmd.exe"
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| extend cmd = tolower(ProcessCommandLine)
-| where (cmd has "rmdir" or cmd has "rd /s" or cmd has "rd /q" or (cmd has "schtasks" and cmd has "/delete"))
-| where cmd has_any (@"\appdata", @"\temp", @"\users\public")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where FileName in~ ("python.exe","pythonw.exe")
+| where FolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\AppData\Local\Programs\", @"\Temp\is-")
+| where InitiatingProcessFolderPath has_any (@"\AppData\Local\Temp\", @"\Downloads\", @"\Temp\is-")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessVersionInfoProductName, SHA256
 | order by Timestamp desc
 ```
 
-### CountLoader browser shortcut (.LNK) hijack on Desktop/Start Menu
+### DeviceManager EtherHiding: non-browser process resolving C2 via blockchain RPC
 
-`UC_3_15` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_8_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("modified","renamed","created") Filesystem.file_name="*.lnk" (Filesystem.file_path="*\\Desktop\\*" OR Filesystem.file_path="*\\Start Menu\\Programs\\*") (Filesystem.file_name="*chrome*" OR Filesystem.file_name="*edge*" OR Filesystem.file_name="*firefox*" OR Filesystem.file_name="*brave*" OR Filesystem.file_name="*opera*") by Filesystem.dest, Filesystem.user, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name!="explorer.exe" process_name!="msiexec.exe" | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*infura.io*" OR Web.url="*alchemy.com*" OR Web.url="*polygon-rpc.com*" OR Web.url="*rpc.ankr.com*" OR Web.url="*cloudflare-eth.com*" OR Web.url="*quiknode.pro*" OR Web.url="*publicnode.com*" OR Web.url="*llamarpc.com*") Web.app IN ("python.exe","pythonw.exe") by Web.src Web.dest Web.url Web.app Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileModified","FileRenamed","FileCreated")
-| where FileName endswith ".lnk"
-| where FolderPath has_any (@"\Desktop\", @"\Start Menu\Programs\")
-| where tolower(FileName) has_any ("chrome","edge","firefox","brave","opera")
-| where InitiatingProcessFileName !in~ ("explorer.exe","msiexec.exe","OfficeClickToRun.exe","setup.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| where RemoteUrl has_any ("infura.io","alchemy.com","polygon-rpc.com","rpc.ankr.com","cloudflare-eth.com","quiknode.pro","publicnode.com","llamarpc.com","blockpi.network")
+| where InitiatingProcessFileName has_any ("python","pythonw") or InitiatingProcessFolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Temp\is-")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### DeviceManager anti-analysis self-deletion: python spawns cmd rmdir + schtasks /delete
+
+`UC_8_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","pythonw.exe") ((Processes.process_name="cmd.exe" (Processes.process="*rmdir*" OR Processes.process="*rd /s*" OR Processes.process="*rd /q*" OR Processes.process="* del *") (Processes.process="*\\AppData\\*" OR Processes.process="*\\Temp\\*")) OR (Processes.process_name="schtasks.exe" Processes.process="*/delete*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
+| where (FileName =~ "cmd.exe" and ProcessCommandLine has_any ("rmdir","rd /s","rd /q"," del ") and ProcessCommandLine has_any (@"\AppData\", @"\Temp\"))
+   or (FileName =~ "schtasks.exe" and ProcessCommandLine has "/delete")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
@@ -526,4 +541,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

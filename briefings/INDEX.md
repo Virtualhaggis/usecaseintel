@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2602 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2603 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-04
+- [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
 - [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [doublecup uses clickfix and cached pngs to deliver countload](./2026-08-04/doublecup-uses-clickfix-and-cached-pngs-to-deliver-countload.md)
+- [evo continuous offensive security is here pentesting grade c](./2026-08-04/evo-continuous-offensive-security-is-here-pentesting-grade-c.md)
+- [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
 - [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
+- [how legitimate cloud platforms enable phishers to bypass mfa](./2026-08-04/how-legitimate-cloud-platforms-enable-phishers-to-bypass-mfa.md)
+- [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
+- [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 
 ## 2026-08-03
 - [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
@@ -82,7 +88,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
 - [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
 - [critical rails flaw could let unauthenticated attackers read](./2026-07-29/critical-rails-flaw-could-let-unauthenticated-attackers-read.md)
-- [flying eagle android rat traces found on 170 servers as sour](./2026-07-29/flying-eagle-android-rat-traces-found-on-170-servers-as-sour.md)
 - [four incident response decisions from the hugging face breac](./2026-07-29/four-incident-response-decisions-from-the-hugging-face-breac.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
@@ -93,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
 - [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
-- [two compromised joyfill npm packages run rat when imported i](./2026-07-29/two-compromised-joyfill-npm-packages-run-rat-when-imported-i.md)
 
 ## 2026-07-28
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
@@ -199,7 +203,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 46817 oracle e business suite improper pri](./2026-07-15/cisa-kev-cve-2026-46817-oracle-e-business-suite-improper-pri.md)
 - [ghsa critical cve 2026 47156 mantisbt soap api authenticatio](./2026-07-15/ghsa-critical-cve-2026-47156-mantisbt-soap-api-authenticatio.md)
 - [ghsa critical cve 2026 52881 mantisbt reflected xss in admin](./2026-07-15/ghsa-critical-cve-2026-52881-mantisbt-reflected-xss-in-admin.md)
-- [okobot new sophisticated malware framework targets cryptocur](./2026-07-15/okobot-new-sophisticated-malware-framework-targets-cryptocur.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-07-15/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [tuxbot v3 inside an iot botnet framework with llm assisted d](./2026-07-15/tuxbot-v3-inside-an-iot-botnet-framework-with-llm-assisted-d.md)
 
@@ -324,7 +327,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-25
 - [cisa kev cve 2026 12569 ptc windchill and flexplm improper i](./2026-06-25/cisa-kev-cve-2026-12569-ptc-windchill-and-flexplm-improper-i.md)
 - [cisa kev cve 2026 20230 cisco unified communications manager](./2026-06-25/cisa-kev-cve-2026-20230-cisco-unified-communications-manager.md)
-- [cl sta 1062 targets southeast asian governments and critical](./2026-06-25/cl-sta-1062-targets-southeast-asian-governments-and-critical.md)
 - [everybody s shipping code they can t read](./2026-06-25/everybody-s-shipping-code-they-can-t-read.md)
 - [gamaredon in 2025 leveraging tunnels workers dead drops and ](./2026-06-25/gamaredon-in-2025-leveraging-tunnels-workers-dead-drops-and-.md)
 - [nvd in the ai era the case for multi source vulnerability in](./2026-06-25/nvd-in-the-ai-era-the-case-for-multi-source-vulnerability-in.md)
@@ -339,7 +341,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 34909 ubiquiti unifi os path traversal vul](./2026-06-23/cisa-kev-cve-2026-34909-ubiquiti-unifi-os-path-traversal-vul.md)
 - [cisa kev cve 2026 34910 ubiquiti unifi os improper input val](./2026-06-23/cisa-kev-cve-2026-34910-ubiquiti-unifi-os-improper-input-val.md)
 - [macos gaslight rust backdoor turns prompt injection on the a](./2026-06-23/macos-gaslight-rust-backdoor-turns-prompt-injection-on-the-a.md)
-- [openclaw s skill marketplace and the emerging ai supply chai](./2026-06-23/openclaw-s-skill-marketplace-and-the-emerging-ai-supply-chai.md)
 - [what nearly 10 000 developer environments reveal about agent](./2026-06-23/what-nearly-10-000-developer-environments-reveal-about-agent.md)
 - [when a vendor s breach becomes yours lessons from the klue i](./2026-06-23/when-a-vendor-s-breach-becomes-yours-lessons-from-the-klue-i.md)
 
@@ -4142,7 +4143,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
+- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09

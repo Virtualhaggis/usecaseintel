@@ -28,8 +28,8 @@ Tracked as CVE-2026-60004 (CVSS score: 9.8), the flaw affects Gitea versions 1.1
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1546** — Event Triggered Execution
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
@@ -37,71 +37,54 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Gitea diffpatch endpoint abused twice for add/add hook-drop (CVE-2026-60004)
+### Gitea CVE-2026-60004 diffpatch endpoint abused twice (add/add collision RCE)
 
-`UC_100_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web.Web where Web.http_method=POST Web.url="*/api/v1/repos/*/diffpatch*" by Web.src Web.user _time span=10m | `drop_dm_object_name(Web)` | where count>=2 | sort - lastTime
-```
-
-### Gitea git process spawning shell / network tool via planted hook (CVE-2026-60004 RCE)
-
-`UC_100_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_109_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmds from datamodel=Endpoint.Processes where ((Processes.parent_process_name=git OR Processes.parent_process_name=gitea) AND (Processes.process_name IN ("sh","bash","dash","zsh","curl","wget","nc","ncat","python","python3","perl","id","whoami"))) OR Processes.process="*hooks/post-index-change*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web.Web where Web.http_method="POST" Web.url="*/api/v1/repos/*/diffpatch*" by Web.src, Web.dest, Web.user, _time span=10m | `drop_dm_object_name(Web)` | where count>=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (InitiatingProcessFileName in~ ("git","gitea") and FileName in~ ("sh","bash","dash","zsh","curl","wget","nc","ncat","python","python3","perl","id","whoami"))
-    or ProcessCommandLine has "hooks/post-index-change"
-    or InitiatingProcessCommandLine has "hooks/post-index-change"
-| project Timestamp, DeviceName, AccountName, ProcessIntegrityLevel, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
+### Gitea hook 'post-index-change' planted in repository hook directory (CVE-2026-60004)
 
-### Git server-side hook file written (hooks/post-index-change) - CVE-2026-60004 persistence
-
-`UC_100_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_109_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/hooks/*" (Filesystem.file_name="post-index-change" OR Filesystem.file_name="post-checkout" OR Filesystem.file_name="post-merge" OR Filesystem.file_name="post-commit" OR Filesystem.file_name="pre-commit") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Endpoint.Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_name="post-index-change" Endpoint.Filesystem.file_path="*hooks*" by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_name, Endpoint.Filesystem.process_id | `drop_dm_object_name(Endpoint.Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath has "/hooks/"
+| where ActionType in ("FileCreated", "FileModified")
 | where FileName =~ "post-index-change"
-    or (FileName in~ ("post-checkout","post-merge","post-commit","pre-commit") and InitiatingProcessFileName in~ ("git","gitea"))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath
+| where FolderPath has "hooks"
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Vulnerable Gitea version exposed to CVE-2026-60004 (pre-1.27.1)
+### Gitea/git process spawns shell or network tool (CVE-2026-60004 hook execution)
 
-`UC_100_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_109_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-60004" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Endpoint.Processes.process) as cmd from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN ("gitea","git")) (Endpoint.Processes.process_name IN ("sh","bash","dash","zsh","curl","wget","nc","ncat","python","python3","perl","ruby","socat") OR Endpoint.Processes.process="*post-index-change*") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.process_name, Endpoint.Processes.process | `drop_dm_object_name(Processes)` | search NOT (process="*hooks/pre-receive*" OR process="*hooks/post-receive*" OR process="*hooks/update*" OR process="*hooks/proc-receive*" OR process="*gitea hook*") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-60004"
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("gitea", "git")
+| where FileName in~ ("sh","bash","dash","zsh","curl","wget","nc","ncat","python","python3","perl","ruby","socat","busybox")
+    or ProcessCommandLine has "post-index-change"
+| where not(ProcessCommandLine has_any ("hooks/pre-receive", "hooks/post-receive", "hooks/update", "hooks/proc-receive", "gitea hook"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -309,7 +292,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Gitea RCE Lets Repository Writers Plant a Git Hook to Run Shell Commands
 
-`UC_100_6` · phase: **install** · confidence: **High**
+`UC_109_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -350,4 +333,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

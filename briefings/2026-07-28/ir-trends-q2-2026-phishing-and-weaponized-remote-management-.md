@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### Sinobi trojanized MeshAgent WSS C2 as SYSTEM auto-start service
 
-`UC_111_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_118_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### UAT-11764 QR-code PDF phish propagated via compromised internal M365 mailboxes
 
-`UC_111_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_118_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ EmailAttachmentInfo
 
 ### Warlock (Storm-2603) Zoho Assist Unattended Agent remote-access install
 
-`UC_111_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_118_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### ARToken PhaaS OAuth device-code authentication phishing (MFA bypass)
 
-`UC_111_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_118_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ AADSignInEventsBeta
 
 ### Sinobi domain-wide .SINOBI encryption via GPO logon-script deployment
 
-`UC_111_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_118_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceFileEvents
 
 ### Sinobi rclone cloud-exfiltration staging
 
-`UC_111_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_118_20` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceProcessEvents
 
 ### Post-compromise malicious inbox rule creation (UAT-11764 / ARToken)
 
-`UC_111_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_118_21` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -636,7 +636,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q2 2026: Phishing and weaponized remote management tools drive attack
 
-`UC_111_14` · phase: **exploit** · confidence: **High**
+`UC_118_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

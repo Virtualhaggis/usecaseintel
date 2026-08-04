@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Choosing the best Node.js Docker image
 
-`UC_1997_0` · phase: **exploit** · confidence: **High**
+`UC_2001_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

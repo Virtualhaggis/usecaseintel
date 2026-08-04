@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### peacenotwar protestware desktop file drop (WITH-LOVE-FROM-AMERICA.txt)
 
-`UC_2464_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2468_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceFileEvents
 
 ### node-ipc/peacenotwar geo-locate check via ipgeolocation.io from Node runtime
 
-`UC_2464_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2468_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### node-ipc destructive payload artifact (dao/ssl-geospec.js) on disk
 
-`UC_2464_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2468_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

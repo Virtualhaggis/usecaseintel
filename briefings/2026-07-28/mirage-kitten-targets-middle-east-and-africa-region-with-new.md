@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### NightLedger DLL search-order hijack: SspiCli.dll side-loaded by AppVShNotify.exe
 
-`UC_112_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_119_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceImageLoadEvents
 
 ### NightLedger C2 beacon to hardcoded URIs and Mirage Kitten domains
 
-`UC_112_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_119_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### BridgeHead/ArcBridge tunneler DLL dropped at hardcoded side-load paths
 
-`UC_112_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_119_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### BridgeHead WebSocket tunnel to smartconnect.azurewebsites.net with hardcoded UA
 
-`UC_112_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_119_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -348,7 +348,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware
 
-`UC_112_7` · phase: **exploit** · confidence: **High**
+`UC_119_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

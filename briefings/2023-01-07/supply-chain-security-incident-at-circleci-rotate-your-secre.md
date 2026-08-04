@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### CircleCI breach C2 egress to potrax[.]com and 8 hardcoded attacker IPs
 
-`UC_1879_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1883_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### PTX-Player macOS infostealer artifacts (SHA256 + dropped /private/tmp logs)
 
-`UC_1879_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1883_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### Reuse of CircleCI-exfiltrated secrets / stolen SSO session from breach attacker IPs
 
-`UC_1879_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1883_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

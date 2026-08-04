@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The importance of verifying webhook signatures
 
-`UC_1660_1` · phase: **exploit** · confidence: **High**
+`UC_1665_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

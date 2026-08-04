@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Spring4Shell (CVE-2022-22965) classLoader pipeline injection / JSP webshell call in web logs
 
-`UC_2350_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2354_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Tomcat/Java process writing a .jsp webshell into webapps (Spring4Shell drop)
 
-`UC_2350_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2354_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### Tomcat/Java JVM spawning command shell (Spring4Shell webshell command execution)
 
-`UC_2350_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2354_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

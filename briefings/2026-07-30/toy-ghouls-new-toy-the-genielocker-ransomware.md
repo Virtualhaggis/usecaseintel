@@ -90,7 +90,7 @@ _(none detected from narrative keywords)_
 
 ### GenieLocker Windows PE encryptor: secret hex arg + genie_encrypt --percent/--recursive flags
 
-`UC_77_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_86_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### GenieLocker ELF encryptor on Linux/ESXi: genie_encrypt CLI execution
 
-`UC_77_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_86_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### Toy Ghouls C2: egress to 89.125.66.101, socks5.exe proxy, reverse SSH tunnel
 
-`UC_77_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_86_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### Toy Ghouls toolset staging: SoftPerfect netscan, socks5.exe proxy, Mimikatz
 
-`UC_77_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_86_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### KeePassXC credential-vault access by non-KeePass process (.kdbx theft)
 
-`UC_77_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_86_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -340,7 +340,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Toy Ghouls’ new toy: the GenieLocker ransomware
 
-`UC_77_7` · phase: **exploit** · confidence: **High**
+`UC_86_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
