@@ -9417,14 +9417,14 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-153" data-art-slug="2026-07-21-ghsa-critical-cve-2026-58443-gitea-public-only-repository-to"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,web"
+  data-splunk-cats="application,web"
   data-targets="vcs"
   data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-58443: Gitea: Public-only repository tokens can update private PR head branches Gitea: Public-only repository tokens can update private PR head branches CVE-2026-58443 T1190 [LLM] Gitea CVE-2026-58443: POST to pulls/{index}/update PR-branch-update endpoint [LLM] Gitea CVE-2026-58443: single principal updating PR branches across many repos Asset exposure — vulnerability matches article CVE(s)">
+  data-search="[GHSA / CRITICAL] CVE-2026-58443: Gitea: Public-only repository tokens can update private PR head branches Gitea: Public-only repository tokens can update private PR head branches CVE-2026-58443 T1190 [LLM] Gitea PR head-branch update via API v1 pulls/{index}/update (CVE-2026-58443 exploit vector) [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (≤1.26.4) Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-58443-gitea-public-only-repository-to" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -9435,7 +9435,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2026-07-21</span>
     <span>3 use cases</span>
     <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
+    <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">Gitea: Public-only repository tokens can update private PR head branches</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-58443</span></div>
@@ -9476,119 +9476,125 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Command &amp; Control</div>
   <div class="marker">Likely</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 7</div>
   <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea CVE-2026-58443: POST to pulls/{index}/update PR-branch-update endpoint</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea PR head-branch update via API v1 pulls/{index}/update (CVE-2026-58443 exploit vector) · [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (≤1.26.4)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gitea CVE-2026-58443: single principal updating PR branches across many repos</em></div></div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="701cc9227f" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="52efc1470c" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">Gitea CVE-2026-58443: POST to pulls/{index}/update PR-branch-update endpoint</span>
+    <span class="uc-title">Gitea PR head-branch update via API v1 pulls/{index}/update (CVE-2026-58443 exploit vector)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="701cc9227f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="52efc1470c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts calls to the Gitea PR-update route POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update, the endpoint exploited by CVE-2026-58443 where a public-only,write:repository token is re-authorized against the public base repo and pushed into a private head branch. Article-specific because it pivots on the exact vulnerable REST path, not a generic web-exploit template.
+    <div class="uc-desc">Surfaces POST requests to the Gitea REST endpoint POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update, the exact route abused by CVE-2026-58443 where a public-only,write:repository token forces a server-side push into a PRIVATE head branch through a PUBLIC base repo. Programmatic API calls to this route are low-volume (the UI &#x27;Update branch&#x27; button uses the web route, not /api/v1/), so hunting API-path hits and triaging the requesting token&#x27;s scope is the cleanest available discriminator.
 
-Rationale: Pivots on the exact vulnerable REST path from the advisory (POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update) and extracts owner/repo/PR index so an analyst can immediately cross-check the head repo&#x27;s privacy against the caller&#x27;s token scope. Endpoint is also used by legitimate PR updates, hence hunting-tier/high-FP; Gitea behind nginx will surface the same URI via Syslog SyslogMessage free-text if W3CIISLog is unavailable.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+Rationale: Uses the exact vulnerable route from the advisory (POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update). Distinguished from the UI &#x27;Update branch&#x27; feature by scoping to the /api/v1/ programmatic path. Defender KQL left empty: Advanced Hunting has no table for inbound web-app request paths; this must run on proxy/WAF/web-access telemetry. Cross-checked GitHub advisory GHSA-xxjv-752h-3vp2 and secondary write-ups (securityonline, gbhackers) confirming the endpoint and CVSS 9.6.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xxjv-752h-3vp2
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
+  • https://securityonline.info/gitea-vulnerability/
+  • https://gbhackers.com/critical-gitea-flaw-trigger-actions-workflows/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers legitimately clicking &#x27;Update branch&#x27; on their own public PRs</li><li>CI/automation bots (Renovate, Dependabot-style) batch-updating PR head branches via API tokens</li><li>Gitea mirror-sync jobs refreshing PR branches on schedule</li><li>Load-balancer / uptime health-checkers probing API paths (usually GET, filter on POST)</li><li>Internal QA/pentest of the Gitea instance from a known jump host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT (csUsername in~ (&quot;renovate-bot&quot;,&quot;dependabot&quot;,&quot;ci-svc&quot;) or cIP startswith &quot;10.&quot; or cIP startswith &quot;192.168.&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit, extract owner/repo/PR index and look up in Gitea whether the PR HEAD repository is private while the base (route) repo is public — the CVE only triggers on that mismatch. Identify the caller&#x27;s token and its scope (public-only,write:repository) in Gitea admin &gt; Applications.
-2) Contain: if a public-only token pushed into a private head branch, revoke that token, force-push-revert the injected merge/rebase commits on the private branch, and upgrade Gitea to the patched release.
-3) Hunt: pivot on the same src IP/username for other POSTs to /pulls/*/update across additional repos, and review the private head repo&#x27;s git reflog / webhook deliveries (PushTriggerPRUpdateWithBase) for unexpected server-side writes.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate CI/CD automation calling the PR update API to keep feature branches current with base</li><li>Developers or bots using the Gitea REST API (Tea CLI, custom scripts) to update PRs on repos they legitimately own</li><li>Renovate/Dependabot-style bots invoking pulls/update programmatically</li><li>Mirror/sync tooling that updates PR head branches via API on private repos it is authorized for</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: For each hit, pull the requesting access token from Gitea (admin API /api/v1/admin or DB) and confirm its scope — a public-only,write:repository token hitting this route against a public base repo whose PR head repo is PRIVATE is the exploit signature; note source IP/UA and the PR index. 2) CONTAIN: Revoke the offending token, and upgrade Gitea from any ≤1.26.4 build to 1.27.0 (the fixed release). 3) HUNT: Review the affected private repo&#x27;s git reflog/push events for server-side pushes attributed to the PR-update trigger, and check whether any Gitea Actions push-triggered workflows fired in private repos as a downstream effect of the forced push.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-153-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-153-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-153-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+    <div class="tab-content active" id="art-153-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(7d)
-| where csMethod == &quot;POST&quot;
-| where csUriStem matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
-| extend RepoOwner = extract(@&quot;(?i)/api/v1/repos/([^/]+)/[^/]+/pulls/[0-9]+/update&quot;, 1, csUriStem)
-| extend RepoName  = extract(@&quot;(?i)/api/v1/repos/[^/]+/([^/]+)/pulls/[0-9]+/update&quot;, 1, csUriStem)
-| extend PrIndex   = extract(@&quot;(?i)/pulls/([0-9]+)/update&quot;, 1, csUriStem)
-| project TimeGenerated, Computer, cIP, csUsername, RepoOwner, RepoName, PrIndex, csUriStem, csUriQuery, scStatus, csUserAgent
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
+| project TimeGenerated, SourceIP, SourceUserName, DestinationHostName, RequestURL, RequestMethod, DeviceAction, RequestClientApplication, DeviceVendor, DeviceProduct
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea CVE-2026-58443 Pull Request Update Endpoint Access
-id: 3e1a9f42-6b0c-4d7e-9a21-2f8c5b0d7c11
-description: Detects POST requests to the Gitea PR-update route exploited by CVE-2026-58443, where a public-only token can be re-authorized against the public base repo and used to push into a private PR head branch.
+    <div class="tab-content" id="art-153-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea API PR Head-Branch Update Endpoint Access (CVE-2026-58443)
+id: 8f1c9d2e-6a4b-4c31-9e7d-2b5f0a7c4d11
+description: Detects POST requests to the Gitea REST endpoint /api/v1/repos/{owner}/{repo}/pulls/{index}/update, the route abused by CVE-2026-58443 to push public base commits into a private PR head branch using a public-only scoped token.
 references:
   - https://github.com/advisories/GHSA-xxjv-752h-3vp2
+  - https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
 author: SOC Detection Engineering
 date: 2026/08/04
 tags:
-  - attack.t1190
   - attack.t1068
+  - attack.t1190
+  - attack.t1550.001
 logsource:
   category: webserver
 detection:
   selection:
     cs-method: POST
-    cs-uri-stem|re: &#x27;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&#x27;
+    cs-uri-stem|re: &#x27;/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&#x27;
   condition: selection
+falsepositives:
+  - Legitimate CI automation or clients calling the PR update API on their own repositories
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-153-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(Web.status) as status, values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src, Web.user, Web.dest, Web.url _time span=1h
+    <div class="tab-content" id="art-153-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.status
 | `drop_dm_object_name(Web)`
-| rex field=url &quot;/api/v1/repos/(?&lt;repo_owner&gt;[^/]+)/(?&lt;repo_name&gt;[^/]+)/pulls/(?&lt;pr_index&gt;\d+)/update&quot;
-| where isnotnull(pr_index)
-| table _time, src, user, dest, repo_owner, repo_name, pr_index, url, status, user_agent, count
-| sort - _time</code></pre><pre class="spl-mode-body" id="art-153-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Web.status) as status, values(Web.http_user_agent) as user_agent from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src, Web.user, Web.dest, Web.url _time span=1h
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-153-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.status
 | `drop_dm_object_name(Web)`
-| rex field=url &quot;/api/v1/repos/(?&lt;repo_owner&gt;[^/]+)/(?&lt;repo_name&gt;[^/]+)/pulls/(?&lt;pr_index&gt;\d+)/update&quot;
-| where isnotnull(pr_index)
-| table _time, src, user, dest, repo_owner, repo_name, pr_index, url, status, user_agent, count
-| sort - _time</code></pre></div></div>
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="f1d5c28467" data-platforms="sent,spl" data-targets="">
+<details class="uc" data-uc-slug="5a4a632e0b" data-platforms="def,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Gitea CVE-2026-58443: single principal updating PR branches across many repos</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f1d5c28467" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Vulnerable Gitea instance exposed to CVE-2026-58443 (≤1.26.4)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5a4a632e0b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Aggregation hunt for one source IP or token principal issuing POST .../pulls/{index}/update calls against an unusually high number of distinct repositories/PRs in a short window — the enumeration/abuse shape of an attacker sweeping public base repos to find private head branches writable via the CVE-2026-58443 token-scope bypass.
+    <div class="uc-desc">Exposure hunt that flags managed devices running a Gitea version vulnerable to CVE-2026-58443 (all builds up to and including 1.26.4; fixed in 1.27.0). Prioritises patching of internet-facing or shared self-hosted Gitea servers before the public PoC is weaponised.
 
-Rationale: Reuses the CVE&#x27;s exact vulnerable path but pivots on cardinality (distinct PR-update targets per principal per hour), which distinguishes an attacker enumerating repos from a single developer updating their own PR. Threshold/aggregation shape means no Sigma; endpoint-only telemetry means no Defender/Falcon/CloudTrail expression.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Stored Data Manipulation">T1565.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CI/automation service accounts (Renovate/Dependabot-style) legitimately updating many PR branches per hour</li><li>A release-engineering script rebasing a batch of PRs before a merge train</li><li>Org-wide &#x27;update all my PRs&#x27; developer workflow after a base-branch change</li><li>Gitea instance migration / bulk-sync tooling</li><li>Security scanner or QA harness exercising the API against many test repos</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where NOT (csUsername in~ (&quot;renovate-bot&quot;,&quot;dependabot&quot;,&quot;ci-svc&quot;,&quot;release-bot&quot;) or cIP startswith &quot;10.&quot; or cIP startswith &quot;192.168.&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the high-cardinality principal is a known CI/service token; if not, list the distinct repos hit and check which have PRs whose HEAD repository is private while the route (base) repo is public.
-2) Contain: revoke the offending token, block the source IP at the reverse proxy/WAF, and snapshot the affected private head branches before any revert.
-3) Hunt: correlate the same principal/IP against Gitea git push and webhook logs (PushTriggerPRUpdateWithBase), enumerate every private repo whose head branch received a server-side merge/rebase in the window, and validate none contain unexpected base-repo commits.</div></details>
+Rationale: Concrete CVE id (CVE-2026-58443) and fixed version (1.27.0) confirmed via the GitHub advisory and Gitea security advisory; vulnerable range ≤1.26.4. TVM CveId match is high-fidelity and zero-cmdline-noise. Datadog/Falcon/CloudWatch left empty — Gitea version inventory is not shipped to those platforms in this tenant.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xxjv-752h-3vp2
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/
+  • https://securityonline.info/gitea-vulnerability/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/internal-only Gitea instances that are not exploitable by untrusted token holders (still worth patching but lower urgency)</li><li>TVM version parsing lag immediately after an upgrade to 1.27.0 shows a stale vulnerable state</li><li>Dev/test Gitea containers spun up transiently that TVM inventories before teardown</li><li>Forks/repackaged Gitea (e.g. Forgejo) mis-attributed to the Gitea CVE by the scanner</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the reported SoftwareVersion is ≤1.26.4 and identify whether the host is internet-facing or multi-tenant (shared runners, external contributors) which raises exploitability. 2) CONTAIN: Schedule/emergency-apply the upgrade to Gitea 1.27.0; where patching lags, restrict issuance of public-only scoped tokens and audit existing tokens with write:repository scope. 3) HUNT: Pivot to the endpoint-access UC — search proxy/web logs for POST /api/v1/repos/*/pulls/*/update against this host to determine whether the flaw was already exercised before patching.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-153-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-153-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-153-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-153-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-153-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+    <div class="tab-content active" id="art-153-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-58443&quot;
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where csMethod == &quot;POST&quot;
-| where csUriStem matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
-| where scStatus == 200
-| summarize DistinctTargets = dcount(csUriStem), Total = count(), SampleTargets = make_set(csUriStem, 20), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by cIP, csUsername, bin(TimeGenerated, 1h)
-| where DistinctTargets &gt;= 5   // 5 = one principal touching 5+ distinct PR-update paths per hour; well above normal single-dev cadence
-| order by DistinctTargets desc</code></pre></div>
-    <div class="tab-content" id="art-153-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(Web.url) as distinct_targets, count as total from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; Web.status=200 by Web.src, Web.user _time span=1h
-| `drop_dm_object_name(Web)`
-| where distinct_targets &gt;= 5
-| sort - distinct_targets</code></pre><pre class="spl-mode-body" id="art-153-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.url) as distinct_targets, count as total from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; Web.status=200 by Web.src, Web.user _time span=1h
-| `drop_dm_object_name(Web)`
-| where distinct_targets &gt;= 5
-| sort - distinct_targets</code></pre></div></div>
+| where CveId == &quot;CVE-2026-58443&quot;
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-153-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-153-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-153-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-153-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-153-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - severity</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
