@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### pip install redirected to non-PyPI index / find-links (dependency confusion)
 
-`UC_233_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_234_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Python setup.py install-time code execution spawning shell/LOLBin
 
-`UC_233_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_234_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Malicious .pth file dropped into site-packages by pip/python
 
-`UC_233_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_234_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### Persistent PIP_ index/config environment variable set in registry
 
-`UC_233_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_234_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -339,7 +339,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The serpent’s tongue: Luring the Python out of its den
 
-`UC_233_5` · phase: **exploit** · confidence: **High**
+`UC_234_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

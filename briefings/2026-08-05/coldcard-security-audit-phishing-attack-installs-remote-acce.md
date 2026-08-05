@@ -11,17 +11,13 @@ By Lawrence Abrams
 August 5, 2026
 01:49 PM
 0 
-
-
 A phishing campaign is exploiting fears surrounding the recently disclosed COLDCARD wallet vulnerability and suspected $88.6 million Bitcoin theft to trick users into installing ScreenConnect remote access software.
-
-
-Proofpoint, which discovered the campaign, says it uses emails impersonating COLDCARD that claim a security audit is underway across its hardware cold storage w…
+Proofpoint, which discovered the campaign, says it uses emails impersonating COLDCARD that claim a security audit is underway across its hardware cold storage wallet de…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `coldcardteamnews.com`
 - **Domain (defanged):** `coldcardcompliance.com`
+- **Domain (defanged):** `coldcardteamnews.com`
 - **Domain (defanged):** `activeretirementrelocation.com`
 
 ## MITRE ATT&CK Techniques
@@ -58,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### COLDCARD security-audit phishing lure from coldcardteamnews.com / coldcardcompliance.com
 
-`UC_3_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -82,7 +78,7 @@ EmailEvents
 
 ### certutil decodes embedded setup.msi / docusign.exe from Coldcard batch dropper
 
-`UC_3_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +103,7 @@ DeviceProcessEvents
 
 ### Coldcard_Diagnostic_Tool.bat self-elevates via PowerShell UAC relaunch
 
-`UC_3_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_5_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +129,7 @@ DeviceProcessEvents
 
 ### ScreenConnect C2 beacon to activeretirementrelocation.com (COLDCARD campaign)
 
-`UC_3_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -505,7 +501,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — COLDCARD security audit phishing attack installs remote access tool
 
-`UC_3_11` · phase: **exploit** · confidence: **High**
+`UC_5_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -557,7 +553,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `coldcardteamnews.com`, `coldcardcompliance.com`, `activeretirementrelocation.com`
+  - IP / domain IOC(s): `coldcardcompliance.com`, `coldcardteamnews.com`, `activeretirementrelocation.com`
 
 
 ## Why this matters

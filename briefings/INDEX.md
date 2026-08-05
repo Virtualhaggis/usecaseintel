@@ -14,6 +14,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa warns of hackers exploiting langflow n central apache t](./2026-08-05/cisa-warns-of-hackers-exploiting-langflow-n-central-apache-t.md)
 - [coldcard security audit phishing attack installs remote acce](./2026-08-05/coldcard-security-audit-phishing-attack-installs-remote-acce.md)
 - [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
+- [ghsa critical cve 2026 71319 unauthenticated nuxt devtools r](./2026-08-05/ghsa-critical-cve-2026-71319-unauthenticated-nuxt-devtools-r.md)
+- [hackers run khunt post exploitation toolkit from oracle data](./2026-08-05/hackers-run-khunt-post-exploitation-toolkit-from-oracle-data.md)
 - [how ai powered phishing killed blocklists for good](./2026-08-05/how-ai-powered-phishing-killed-blocklists-for-good.md)
 - [kali365 weaponizes microsoft authentication against us compa](./2026-08-05/kali365-weaponizes-microsoft-authentication-against-us-compa.md)
 - [leaked n8n api tokens exposed live instances to credential t](./2026-08-05/leaked-n8n-api-tokens-exposed-live-instances-to-credential-t.md)
@@ -69,7 +71,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [chinese threat actor uses leaked darksword kit to deploy gho](./2026-08-03/chinese-threat-actor-uses-leaked-darksword-kit-to-deploy-gho.md)
 - [cisa kev cve 2026 18577 n able n central authentication bypa](./2026-08-03/cisa-kev-cve-2026-18577-n-able-n-central-authentication-bypa.md)
-- [fake roblox xeno script launcher pushes infostealer rat malw](./2026-08-03/fake-roblox-xeno-script-launcher-pushes-infostealer-rat-malw.md)
 - [ghsa critical cve 2026 69240 sequelize sql injection oracle ](./2026-08-03/ghsa-critical-cve-2026-69240-sequelize-sql-injection-oracle-.md)
 - [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
@@ -294,7 +295,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06
-- [ghsa critical cve 2026 48205 apache camel dns has improper i](./2026-07-06/ghsa-critical-cve-2026-48205-apache-camel-dns-has-improper-i.md)
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)

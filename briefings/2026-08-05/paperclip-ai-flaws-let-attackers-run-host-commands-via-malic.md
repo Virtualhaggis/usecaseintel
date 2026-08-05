@@ -29,7 +29,8 @@ A third flaw could expose sensitive data and control-plane details through appli
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1136** — Create Account
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1189** — Drive-by Compromise
 
 ## Kill chain phases observed
@@ -38,55 +39,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Paperclip node server spawns Unix shell with base64/openssl decoder (CVE-2026-41679 RCE)
+### Paperclip AI process adapter spawning an interactive shell (host command execution)
 
-`UC_7_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="node" AND Processes.parent_process="*paperclip*") AND (Processes.process_name IN ("bash","sh","dash","zsh")) AND (Processes.process="*base64*" OR Processes.process="*openssl*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("sh","bash","zsh","dash","cmd.exe","powershell.exe","pwsh","pwsh.exe","whoami","curl","wget") AND Processes.parent_process="*paperclip*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName =~ "node"
-| where InitiatingProcessCommandLine has "paperclip"
-| where FileName in~ ("bash","sh","dash","zsh")
-| where ProcessCommandLine has "-c"
-| where ProcessCommandLine has_any ("base64","openssl")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where Timestamp > ago(7d)
+| where InitiatingProcessCommandLine has "paperclip" or InitiatingProcessFolderPath has "paperclip"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","pwsh","sh","bash","zsh","dash","whoami","curl","curl.exe","wget")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Paperclip unauthenticated import + wakeup exploit chain on port 3100 (CVE-2026-41679)
+### Malicious .paperclip.yaml agent-import bundle written to a Paperclip host
 
-`UC_7_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Web.uri_path) as urls values(Web.http_method) as methods min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="POST" AND (Web.url="*/api/companies/import*" OR Web.url="*/api/agents/*/wakeup*" OR Web.url="*/api/cli-auth/challenges/*/approve*") by Web.src Web.dest | `drop_dm_object_name(Web)` | where match(mvjoin(urls,","),"companies/import") AND match(mvjoin(urls,","),"wakeup") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=".paperclip.yaml" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
-### DNS rebinding: external hostname resolving to loopback then hitting Paperclip port 3100 (GHSA-x8hx-rhr2-9rf7)
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where FileName =~ ".paperclip.yaml"
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
-`UC_7_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+### DNS-rebinding to loopback against local_trusted Paperclip (external hostname resolving to 127.0.0.1)
+
+`UC_9_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.answer="127.0.0.1" NOT (DNS.query="localhost" OR DNS.query="*.localhost" OR DNS.query="localhost.localdomain") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.answer="127.0.0.1" by DNS.src DNS.query DNS.answer DNS.record_type
+| `drop_dm_object_name(DNS)`
+| where NOT match(query,"(?i)(^localhost$|\.local$|\.localhost$|^127\.0\.0\.1$)")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteIP in ("127.0.0.1", "::1")
-| where RemotePort == 3100
+| where Timestamp > ago(7d)
+| where RemoteIP in ("127.0.0.1","::1")
 | where isnotempty(RemoteUrl)
-| where RemoteUrl !has "localhost" and RemoteUrl !has "127.0.0.1"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl !in~ ("localhost","127.0.0.1","::1")
+| where RemoteUrl contains "."
+| where InitiatingProcessFileName in~ ("firefox.exe","firefox","chrome.exe","msedge.exe","brave.exe","Safari","Google Chrome")
+| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -305,4 +325,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

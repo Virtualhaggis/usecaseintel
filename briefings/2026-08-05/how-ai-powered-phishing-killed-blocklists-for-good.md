@@ -32,10 +32,11 @@ Attackers are using AI to generate phishing pages from screenshots in minutes, s
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1105** — Ingress Tool Transfer
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1557** — Adversary-in-the-Middle
+- **T1111** — Multi-Factor Authentication Interception
+- **T1598.003** — Phishing for Information: Spearphishing Link
 
 ## Kill chain phases observed
 
@@ -43,50 +44,93 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### macOS ClickFix: Terminal shell piping curl/wget download into bash (paste-to-run)
+### Entra ID device code authentication flow success (EvilTokens / Kali365 / Storm-2372)
 
-`UC_10_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Terminal","bash","zsh","sh")) (Processes.process="*curl*" OR Processes.process="*wget*") (Processes.process="*| bash*" OR Processes.process="*|bash*" OR Processes.process="*| sh*" OR Processes.process="*|sh*" OR Processes.process="*| zsh*" OR Processes.process="*|zsh*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process,"(?i)(brew\.sh|raw\.githubusercontent\.com|sh\.rustup\.rs|get\.docker\.com|nvm\.sh)") | sort - lastTime
+index=azure (sourcetype="azure:aad:signin" OR sourcetype="azure:aad:signin:interactive") "status.errorCode"=0 authenticationProtocol=deviceCode
+| stats dc(userPrincipalName) as user_count values(userPrincipalName) as users values(appDisplayName) as apps values(location.countryOrRegion) as countries min(_time) as firstTime by ipAddress
+| where user_count>=2
+| convert ctime(firstTime)
+| sort - user_count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+AADSignInEventsBeta
 | where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("Terminal","bash","zsh","sh")
-| where FileName in~ ("bash","sh","zsh","curl","wget")
-| where ProcessCommandLine has_any ("curl","wget")
-| where ProcessCommandLine has_any ("| bash","|bash","| sh","|sh","| zsh","|zsh","| /bin/bash","| /bin/sh")
-| where AccountName !endswith "$"
-| where not(ProcessCommandLine has_any ("brew.sh","raw.githubusercontent.com","sh.rustup.rs","get.docker.com","nvm.sh"))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
+| where ErrorCode == 0
+| where AuthenticationProcessingDetails has "Device Code"   // device-code grant leg
+| where AccountUpn !endswith "$"
+| summarize Users = dcount(AccountUpn), UserList = make_set(AccountUpn, 10), Apps = make_set(AppDisplayName, 5), Cities = make_set(City, 5), FirstSeen = min(Timestamp), Last = max(Timestamp) by IPAddress, bin(Timestamp, 1h)
+| where Users >= 2   // one source IP completing device-code auth for >=2 users/hour = campaign fan-out
+| order by Users desc
 ```
 
-### macOS shell/curl egress to file-token DGA look-alike domains (ClickFix staging)
+### AiTM session-cookie replay — interactive vs non-interactive geo/IP split (Tycoon 2FA / Evilginx)
 
-`UC_10_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="apricotfilepoint.com" OR DNS.query="*file*") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | regex query="(?i)(apricotfilepoint\.com$)|(^[a-z0-9-]*file[a-z0-9-]+\.(com|net|shop|xyz|top|online|cfd)$)" | where NOT match(query,"(?i)(files?\.|wetransfer|dropbox|filezilla|smartfile\.com$|microsoft|apple\.com$|icloud)") | sort - lastTime
+index=azure sourcetype="azure:aad:signin" "status.errorCode"=0
+| eval country='location.countryOrRegion'
+| stats dc(country) as country_count values(country) as countries dc(ipAddress) as ip_count values(ipAddress) as ips values(appDisplayName) as apps min(_time) as firstTime max(_time) as lastTime by userPrincipalName
+| where country_count>1 AND ip_count>1 AND (lastTime-firstTime)<3600
+| convert ctime(firstTime) ctime(lastTime)
+| sort - country_count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("curl","wget","bash","sh","zsh","osascript")
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has "apricotfilepoint.com"
-    or RemoteUrl matches regex @"(?i)https?://[a-z0-9-]*file[a-z0-9-]+\.(com|net|shop|xyz|top|online|cfd)(/|$)"
-| where not(RemoteUrl has_any ("wetransfer","dropbox","smartfile.com","filezilla","microsoft","apple.com","icloud"))
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+let window = 1h;
+let interactive = AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where IsInteractive == true and ErrorCode == 0
+    | where AccountUpn !endswith "$"
+    | project IntTime = Timestamp, AccountObjectId, AccountUpn, IntIP = IPAddress, IntCountry = Country, IntUA = UserAgent, Application;
+interactive
+| join kind=inner (
+    AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where IsInteractive == false and ErrorCode == 0
+    | project NonIntTime = Timestamp, AccountObjectId, NonIntIP = IPAddress, NonIntCountry = Country, NonIntUA = UserAgent
+  ) on AccountObjectId
+| where NonIntTime between (IntTime .. IntTime + window)
+| where IntIP != NonIntIP and IntCountry != NonIntCountry
+| project IntTime, NonIntTime, AccountUpn, IntIP, IntCountry, IntUA, NonIntIP, NonIntCountry, NonIntUA, Application
+| order by IntTime desc
+```
+
+### Phishing delivery via abused trusted SaaS hosting (Workers.dev / Vercel / Railway / Firebase / Jotform)
+
+`UC_12_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*workers.dev*" OR Web.url="*pages.dev*" OR Web.url="*vercel.app*" OR Web.url="*railway.app*" OR Web.url="*web.app*" OR Web.url="*firebaseapp.com*" OR Web.url="*jotform.com*" OR Web.url="*sites.google.com*") by Web.src Web.user Web.dest Web.url
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+let SaaS = dynamic(["workers.dev","pages.dev","vercel.app","railway.app","up.railway.app","web.app","firebaseapp.com","jotform.com","sites.google.com"]);
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| join kind=inner (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| where UrlDomain has_any (SaaS)
+| join kind=inner (
+    UrlClickEvents
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | project NetworkMessageId, ClickTime = Timestamp, AccountUpn, IsClickedThrough, ClickIP = IPAddress
+  ) on NetworkMessageId
+| project Timestamp, ClickTime, SenderFromAddress, Recipient = AccountUpn, Subject, Url, UrlDomain, IsClickedThrough, ClickIP
+| order by ClickTime desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -324,4 +368,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

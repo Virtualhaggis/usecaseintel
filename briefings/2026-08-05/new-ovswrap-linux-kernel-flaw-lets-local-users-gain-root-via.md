@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### OVSwrap privesc: unprivileged `unshare -Urn` to obtain CAP_NET_ADMIN in new netns
 
-`UC_12_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### OVSwrap: openvswitch kernel module load/autoload on a host that doesn't run ovs-vswitchd
 
-`UC_12_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### OVSwrap AppArmor bypass: `aa-exec -p trinity` userns-restriction fallback (Ubuntu 24.04)
 
-`UC_12_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### OVSwrap post-exploit: /etc/sudoers or /etc/sudoers.d modified outside package/config tooling
 
-`UC_12_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -300,7 +300,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New OVSwrap Linux Kernel Flaw Lets Local Users Gain Root via Open vSwitch
 
-`UC_12_5` · phase: **install** · confidence: **High**
+`UC_14_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Adform crypto-swap stealer C2/exfil beacon to 84.32.102.230:7744
 
-`UC_83_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_84_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Confirmed Adform supply-chain victim: poisoned script load + beacon to attacker IP
 
-`UC_83_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_84_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### Exposure scoping: hosts that loaded poisoned Adform trackpoint-async.js (Jul 26-28 2026)
 
-`UC_83_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_84_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -397,7 +397,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
 
-`UC_83_9` · phase: **exploit** · confidence: **High**
+`UC_84_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

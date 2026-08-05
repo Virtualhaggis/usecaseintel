@@ -46,11 +46,13 @@ XCSSET mal…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.004** — Persistence (article-specific)
 - **T1185** — Browser Session Hijacking
-- **T1554** — Compromise Host Software Binary
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1059.002** — Command and Scripting Interpreter: AppleScript
+- **T1105** — Ingress Tool Transfer
+- **T1080** — Taint Shared Content
+- **T1036** — Masquerading
+- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
@@ -58,63 +60,103 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### XCSSET v40 CDP hijack: Google Chrome launched with remote-debugging-port
+### XCSSET v40 Chrome launched with CDP remote-debugging enabled (browser hijack)
 
-`UC_103_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="Google Chrome" OR Processes.process="*Google Chrome*") Processes.process="*--remote-debugging-port*" NOT (Processes.parent_process_name IN ("chromedriver","node","Playwright","python*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | eval custom_profile=if(match(process,"--user-data-dir"),"yes","no") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="Google Chrome" OR Processes.process="*Google Chrome.app/Contents/MacOS/*") Processes.process="*--remote-debugging-port*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where FileName =~ "Google Chrome"
+| where AccountName !endswith "$"
+| where FileName has "Google Chrome" or FolderPath has "Google Chrome.app/Contents/MacOS"
 | where ProcessCommandLine has "--remote-debugging-port"
-| where InitiatingProcessFileName !in~ ("chromedriver","node","python","python3")
-| extend UsesCustomProfile = iff(ProcessCommandLine has "--user-data-dir", "yes", "no")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ParentProcess=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, UsesCustomProfile, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### XCSSET v40 chrome_remote backdoor execution and C2 WebSocket egress
+### XCSSET v40 chrome_remote CDP backdoor binary execution
 
-`UC_103_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_104_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="chrome_remote" OR Processes.process="*/chrome_remote*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="chrome_remote" OR Processes.process="*/chrome_remote*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where FileName =~ "chrome_remote" or FolderPath endswith "/chrome_remote"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ParentProcess=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### XCSSET v40 build-triggered loader: Xcode build spawning osascript/curl
+### XCSSET v40 trojanized Xcode build spawning curl-to-shell downloader
 
-`UC_103_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_104_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("osascript","curl")) (Processes.parent_process_name IN ("xcodebuild","Xcode") OR Processes.parent_process="*xcodebuild*" OR Processes.parent_process="*Xcode.app*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("sh","bash","zsh") (Processes.parent_process="*Xcode.app*" OR Processes.parent_process_name="xcodebuild") Processes.process="*curl*" (Processes.process="*| bash*" OR Processes.process="*| sh*" OR Processes.process="*| zsh*" OR Processes.process="*| osascript*" OR Processes.process="*eval*") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where FileName in~ ("osascript","curl")
-| where InitiatingProcessFileName in~ ("xcodebuild","Xcode")
-    or InitiatingProcessParentFileName in~ ("xcodebuild","Xcode")
-    or InitiatingProcessCommandLine has_any (".xcodeproj",".xcworkspace","DerivedData","Build/Intermediates.noindex")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, GrandParent=InitiatingProcessParentFileName
+| where AccountName !endswith "$"
+| where FileName in~ ("sh","bash","zsh")
+| where InitiatingProcessFolderPath has "Xcode.app" or InitiatingProcessFileName in~ ("xcodebuild","Xcode")
+| where ProcessCommandLine has "curl" and ProcessCommandLine has_any ("| bash","| sh","| zsh","| osascript","eval")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### XCSSET v40 worming: non-IDE process modifying multiple Xcode .pbxproj files
+
+`UC_104_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Filesystem.file_path) as file_paths dc(Filesystem.file_path) as projects_touched min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") Filesystem.file_name="*.pbxproj" Filesystem.process_name IN ("sh","bash","zsh","osascript","python","python3","curl") by Filesystem.dest Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where projects_touched >= 2 | convert ctime(firstTime) ctime(lastTime) | sort - projects_touched
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified")
+| where FileName endswith ".pbxproj" or FolderPath has ".xcodeproj/"
+| where InitiatingProcessFileName in~ ("sh","bash","zsh","osascript","python","python3","curl")
+| summarize ProjectsTouched = dcount(FolderPath), Files = make_set(FolderPath, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| where ProjectsTouched >= 2
+| order by ProjectsTouched desc
+```
+
+### XCSSET v40 outbound retrieval to rotating C2 module/binary paths (/s/, /d/)
+
+`UC_104_13` · phase: **c2** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.url IN ("*/s/*","*/d/*") All_Traffic.app!="Google Chrome" All_Traffic.app!="Safari" by All_Traffic.src All_Traffic.dest All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | regex url="/(s|d)/[A-Za-z0-9_+/=\-]{6,}" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where isnotempty(RemoteUrl)
+| where InitiatingProcessFileName !in~ ("Google Chrome","Google Chrome Helper","Safari","firefox","Microsoft Edge","com.apple.WebKit.Networking","nsurlsessiond")
+| where RemoteUrl matches regex @"(?i)/(s|d)/[A-Za-z0-9_+/=\-]{6,}"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -405,7 +447,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Xcode Assassin Returns: A Deep Dive Into the Latest XCSSET Version
 
-`UC_103_8` · phase: **install** · confidence: **High**
+`UC_104_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -439,4 +481,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

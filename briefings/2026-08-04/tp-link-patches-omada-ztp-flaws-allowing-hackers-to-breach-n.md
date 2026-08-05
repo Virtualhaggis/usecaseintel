@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-sourced enumeration of TP-Link Omada device-adoption ports (29810-29816)
 
-`UC_24_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_26_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### Rogue device adoption from the public internet to Omada controller (default-cred/race exploit)
 
-`UC_24_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_26_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### Stored XSS / JavaScript injection into Omada controller admin UI (CVE-2025-9289)
 
-`UC_24_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_26_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

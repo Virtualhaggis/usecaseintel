@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall lifecycle spawns 'node setup.mjs' / Math_Symbol.js (Shai-Hulud worm hook)
 
-`UC_42_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_44_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### Standalone Bun 1.3.13 runtime pulled/executed inside npm install chain (worm stage-two)
 
-`UC_42_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_44_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud plants Claude Code / VS Code auto-execution hook (setup.mjs in .claude or .vscode)
 
-`UC_42_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_44_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### Node/Bun reads developer & cloud credential stores during npm activity (worm harvest)
 
-`UC_42_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_44_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -343,7 +343,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Keyv-Linked npm Worm Poisons Hundreds of Packages, Plants Claude Code and VS Cod
 
-`UC_42_7` · phase: **exploit** · confidence: **High**
+`UC_44_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

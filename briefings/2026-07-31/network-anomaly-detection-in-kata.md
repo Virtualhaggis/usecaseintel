@@ -34,7 +34,9 @@ Once the attacker has breached the corporate network, subsequent stages of the a
 - **T1053.005** — Scheduled Task
 - **T1558.003** — Steal or Forge Kerberos Tickets: Kerberoasting
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted Non-C2 Protocol
+- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted Non-C2
+- **T1048.003** — Exfiltration Over Alternative Protocol
+- **T1572** — Protocol Tunneling
 
 ## Kill chain phases observed
 
@@ -42,46 +44,95 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Kerberoasting: single account/host requesting TGS tickets for many unique non-system SPNs
+### Kerberoasting: single account receives TGS-REP for many unique non-system SPNs
 
-`UC_102_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_103_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`wineventlog_security` EventCode=4769 Service_Name!="*$" Service_Name!="krbtgt" Account_Name!="*$" Failure_Code="0x0"
-| eval win=bin(_time, span=10m)
-| stats dc(Service_Name) AS unique_spns values(Service_Name) AS targeted_spns count AS tgs_requests min(_time) AS firstTime max(_time) AS lastTime by Account_Name, Client_Address, win
+index=* source="WinEventLog:Security" EventCode=4769 Service_Name!="krbtgt" Service_Name!="*$" (Ticket_Encryption_Type="0x17" OR Ticket_Encryption_Type="0x18" OR Ticket_Encryption_Type="0x11" OR Ticket_Encryption_Type="0x12") Failure_Code="0x0"
+| eval requester=mvindex(Account_Name,0)
+| bucket _time span=10m
+| stats dc(Service_Name) as unique_spns values(Service_Name) as spns values(Ticket_Encryption_Type) as enc_types by _time, Client_Address, requester
 | where unique_spns >= 10
-| convert ctime(firstTime) ctime(lastTime)
 | sort - unique_spns
 ```
 
-### DNS tunneling: host issuing many long unique subdomain queries under one parent domain
+### Kerberoasting RC4 downgrade: TGS requested with weakened encryption for a non-machine service account
 
-`UC_102_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count AS query_count, dc(DNS.query) AS unique_subdomains, values(DNS.query) AS sample_queries FROM datamodel=Network_Resolution.DNS WHERE nodename=DNS DNS.message_type="QUERY" BY DNS.src, DNS.query, _time span=10m
-| eval parent=replace(DNS.query, "^.*?\.([^.]+\.[^.]+)$", "\1"), qlen=len(DNS.query)
-| stats sum(query_count) AS total_queries, dc(DNS.query) AS unique_subdomains, avg(qlen) AS avg_len, max(qlen) AS max_len, values(sample_queries) AS sample_queries BY DNS.src, parent
-| where unique_subdomains >= 50 AND avg_len >= 40
-| sort - unique_subdomains
+index=* source="WinEventLog:Security" EventCode=4769 Ticket_Encryption_Type="0x17" Ticket_Options="0x40810000" Service_Name!="krbtgt" Service_Name!="*$" Failure_Code="0x0"
+| eval requester=mvindex(Account_Name,0)
+| stats count values(Service_Name) as targeted_spns min(_time) as firstTime max(_time) as lastTime by Client_Address, requester
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+### DNS tunneling to KATA test infrastructure testinglab.ru / crust.testinglab.ru
+
+`UC_103_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*testinglab.ru" OR DNS.query="*crust.testinglab.ru") by DNS.src DNS.query DNS.record_type
+| `drop_dm_object_name("DNS")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(1h)
-| where isnotempty(RemoteUrl)
-| extend Labels = split(RemoteUrl, ".")
-| where array_length(Labels) >= 3
-| extend Parent = strcat(tostring(Labels[array_length(Labels)-2]), ".", tostring(Labels[array_length(Labels)-1]))
-| where Parent !endswith "in-addr.arpa"
-| summarize UniqueFqdns = dcount(RemoteUrl), AvgLen = avg(strlen(RemoteUrl)), MaxLen = max(strlen(RemoteUrl)), Conns = count(), Sample = make_set(RemoteUrl, 10)
-    by DeviceName, Parent, bin(Timestamp, 10m)
-| where UniqueFqdns >= 50 and AvgLen >= 40    // 50 distinct long labels under one zone in 10m = tunneling shape
-| order by UniqueFqdns desc
+| where Timestamp > ago(7d)
+| where RemoteUrl endswith "testinglab.ru"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### DNS tunneling behavioural: high-volume long/high-entropy subdomains under a single parent domain per host
+
+`UC_103_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" by DNS.src DNS.query DNS.record_type
+| `drop_dm_object_name("DNS")`
+| eval label=mvindex(split(query,"."),0)
+| eval parent=mvindex(split(query,"."),-2).".".mvindex(split(query,"."),-1)
+| eval qlen=len(query)
+| stats dc(label) as unique_labels avg(qlen) as avg_len max(qlen) as max_len values(record_type) as rtypes count by src parent
+| where unique_labels >= 50 AND avg_len >= 50
+| sort - unique_labels
+```
+
+### DNS queries to unknown/unauthorised resolvers (KATA 'Queries to unknown DNS servers')
+
+`UC_103_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.dest_category!="internal_dns" (All_Traffic.dest!="8.8.8.8" AND All_Traffic.dest!="8.8.4.4" AND All_Traffic.dest!="1.1.1.1") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name("All_Traffic")`
+| where NOT cidrmatch("10.0.0.0/8",dest) AND NOT cidrmatch("172.16.0.0/12",dest) AND NOT cidrmatch("192.168.0.0/16",dest)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+// Internal host doing DNS to a public resolver that is not corporate DNS.
+// Replace the ApprovedResolvers set with your sanctioned DNS server IPs.
+let ApprovedResolvers = dynamic(["8.8.8.8","8.8.4.4","1.1.1.1"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 53
+| where RemoteIPType == "Public"
+| where RemoteIP !in (ApprovedResolvers)
+| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+            by DeviceName, InitiatingProcessFileName, RemoteIP
+| order by ConnCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -190,4 +241,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
