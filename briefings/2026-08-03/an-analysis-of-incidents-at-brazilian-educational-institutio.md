@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### RDP re-enable + EDR/Defender disable batch script (LockBit intrusion)
 
-`UC_51_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceRegistryEvents
 
 ### LockBit payload execution via PsExec service (PsExecSvc.exe → 1.exe/LBB.exe)
 
-`UC_51_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_53_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Potato privilege-escalation tooling (GodPotato / SweetPotato / BadPotato)
 
-`UC_51_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_53_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### AnyDesk silent/unattended install used for DragonForce access
 
-`UC_51_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_53_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -430,7 +430,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An analysis of incidents at Brazilian educational institutions
 
-`UC_51_8` · phase: **exploit** · confidence: **High**
+`UC_53_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

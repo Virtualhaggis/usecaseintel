@@ -11,15 +11,9 @@ By Bill Toulas
 August 4, 2026
 06:18 PM
 0 
-
-
 TP-Link has patched 15 vulnerabilities in the zero-touch provisioning (ZTP) mechanism of its Omada network devices that could be chained with previously disclosed flaws to achieve remote code execution (RCE).
-
-
 The flaws were uncovered by Forescout’s Vedere Labs researchers, who published the full details at the Black Hat USA security conference earlier today.
-
-
-Omada is TP-Lin…
+Omada is TP-Link’s business…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -61,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-sourced enumeration of TP-Link Omada device-adoption ports (29810-29816)
 
-`UC_0_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_2_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +81,7 @@ DeviceNetworkEvents
 
 ### Rogue device adoption from the public internet to Omada controller (default-cred/race exploit)
 
-`UC_0_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +94,7 @@ DeviceNetworkEvents
 
 ### Stored XSS / JavaScript injection into Omada controller admin UI (CVE-2025-9289)
 
-`UC_0_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

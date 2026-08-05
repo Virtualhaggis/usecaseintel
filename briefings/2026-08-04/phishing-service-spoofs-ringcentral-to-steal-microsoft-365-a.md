@@ -11,19 +11,15 @@ By Bill Toulas
 August 4, 2026
 05:45 PM
 0 
-
-
 The Greatness phishing-as-a-service (PhaaS) platform has expanded from credential phishing to adversary-in-the-middle attacks and device-code phishing targeting Microsoft 365 accounts.
-
-
 The platform has been active since at least mid-2022 , targeting Microsoft 365 users in the United States, Canada, the UK, Australia, and South Africa.
-
-
-It evolved over the years and now targe…
+It evolved over the years and now targets multiple …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `38.248.95.214`
+- **Domain (defanged):** `panel.securehubcloud.com`
+- **Domain (defanged):** `aitomayu.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -37,13 +33,18 @@ It evolved over the years and now targe…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1656** — Impersonation
+- **T1621** — Multi-Factor Authentication Request Generation
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1539** — Steal Web Session Cookie
+- **T1526** — Cloud Service Discovery
+- **T1213** — Data from Information Repositories
 - **T1087.004** — Account Discovery: Cloud Account
-- **T1114.002** — Email Collection: Remote Email Collection
-- **T1213.002** — Data from Information Repositories: SharePoint
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1557** — Adversary-in-the-Middle
 
 ## Kill chain phases observed
 
@@ -51,75 +52,116 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### RingCentral-spoofing inbound email delivered despite envelope/header domain mismatch (Greatness PhaaS)
+### Spoofed RingCentral email delivered to inbox despite SPF/DMARC failure (safe-sender whitelist abuse)
 
-`UC_1_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let RingCentralClaim = dynamic(["ringcentral.com","service@ringcentral.com"]);
 EmailEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(14d)
 | where EmailDirection == "Inbound"
-| where SenderFromDomain =~ "ringcentral.com"          // what the recipient sees (header From)
-| where isnotempty(SenderMailFromDomain) and SenderMailFromDomain !~ "ringcentral.com"  // envelope != header = spoof via whitelisted brand
-| where DeliveryAction in ("Delivered","DeliveredAsSpam")
+| where SenderFromDomain =~ "ringcentral.com" or SenderFromAddress has "ringcentral"
+| where DeliveryAction == "Delivered" and DeliveryLocation in ("Inbox","Inbox/Folder")
+| extend Auth = tolower(tostring(AuthenticationDetails))
+| where Auth has "spf=fail" or Auth has "spf=softfail" or Auth has "dmarc=fail" or Auth has "dkim=none" or Auth has "compauth=fail"
+| where SenderMailFromDomain !~ "ringcentral.com"
 | join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderDisplayName, SenderFromAddress, SenderMailFromAddress,
-          SenderMailFromDomain, SenderIPv4, RecipientEmailAddress, Subject, DeliveryAction,
-          DeliveryLocation, AuthenticationDetails, Url, UrlDomain
+| project Timestamp, RecipientEmailAddress, SenderFromAddress, SenderMailFromAddress, SenderMailFromDomain, SenderIPv4, Subject, DeliveryAction, DeliveryLocation, AuthenticationDetails, Url, UrlDomain, NetworkMessageId
 | order by Timestamp desc
 ```
 
-### Successful Microsoft 365 device-code authentication (Greatness device-code phishing branch)
+### Microsoft 365 device-code authentication flow redeemed (Greatness device-code phishing)
 
-`UC_1_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where ErrorCode == 0                                  // successful auth only
-| where AuthenticationProcessingDetails has "Device Code"  // device-code (RFC 8628) flow marker
-| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City,
-          Application, AppDisplayName, ResourceDisplayName, ClientAppUsed, UserAgent,
-          DeviceTrustType, ConditionalAccessStatus, AuthenticationProcessingDetails
-| order by Timestamp desc
-```
-
-### MFA-approved M365 sign-in replayed from VPS / commercial-VPN hosting ASN
-
-`UC_1_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
 | where Timestamp > ago(14d)
-| where ErrorCode == 0                                  // successful
-| where IsAnonymousProxy == true                        // commercial VPN / anonymizing proxy egress
-| where AccountUpn !endswith "$"
-| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City,
-          Application, AppDisplayName, ResourceDisplayName, ClientAppUsed, UserAgent,
-          RiskLevelDuringSignIn, RiskState, ConditionalAccessStatus, IsAnonymousProxy
-| order by Timestamp desc
+| where ErrorCode == 0
+| extend Proc = tolower(tostring(AuthenticationProcessingDetails))
+| where Proc has "device code" or Proc has "devicecode"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SignIns=count(), IPs=make_set(IPAddress,20), Apps=make_set(Application,20), Countries=make_set(Country,10) by AccountUpn
+| order by FirstSeen desc
 ```
 
-### Post-compromise Microsoft 365 Graph enumeration across mailbox, SharePoint, OneDrive, Teams & app registrations
+### MFA-satisfied M365 token replay from VPS/VPN hosting ASN (Greatness AiTM post-compromise)
 
-`UC_1_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+AADSignInEventsBeta
+| where Timestamp > ago(14d)
+| where ErrorCode == 0
+| where IsInteractive == false
+| where AuthenticationRequirement == "multiFactorAuthentication"
+| where RiskLevelDuringSignIn in ("high","medium") or IPAddress == "38.248.95.214"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Sessions=count(), Resources=make_set(ResourceDisplayName,20), Apps=make_set(Application,20) by AccountUpn, IPAddress, Country
+| where LastSeen - FirstSeen > 1h
+| order by FirstSeen desc
+```
+
+### Bulk Microsoft Graph resource enumeration from a single hosted session (post-token-replay discovery)
+
+`UC_3_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let HostingISP = dynamic(["digitalocean","linode","ovh","hetzner","contabo","vultr","choopa","m247","amazon","microsoft","google","voxility","leaseweb"]);
 CloudAppEvents
 | where Timestamp > ago(14d)
-| where Application in ("Microsoft Graph","Office 365 Exchange Online","Microsoft Exchange Online",
-                       "Microsoft SharePoint Online","Microsoft OneDrive for Business",
-                       "Microsoft Teams","Microsoft Azure Active Directory")
-| where isnotempty(AccountObjectId)
-| summarize WorkloadCount=dcount(Application), Workloads=make_set(Application,10),
-            Actions=make_set(ActionType,25), IPs=make_set(IPAddress,10), Events=count()
-          by AccountObjectId, AccountDisplayName, bin(Timestamp, 30m)
-| where WorkloadCount >= 4          // 4+ distinct workloads in 30m = cross-service enumeration, not normal use
-| order by Events desc
+| where Application in~ ("Microsoft Graph","Office 365","Microsoft 365")
+| extend ISPl = tolower(tostring(ISP))
+| where isnotempty(ISPl) and ISPl has_any (HostingISP)
+| summarize DistinctObjectTypes=dcount(ObjectType), DistinctActions=dcount(ActionType), Ops=count(), ObjectTypes=make_set(ObjectType,25), Actions=make_set(ActionType,25) by AccountObjectId, AccountDisplayName, IPAddress, ISP, bin(Timestamp, 1h)
+| where DistinctObjectTypes >= 4 and Ops >= 20
+| order by Ops desc
+```
+
+### Connection or sign-in to known Greatness / RingCentral-phish infrastructure
+
+`UC_3_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let IOCIPs = dynamic(["38.248.95.214"]);
+let IOCDomains = dynamic(["panel.securehubcloud.com","aitomayu.com"]);
+union
+(DeviceNetworkEvents
+ | where Timestamp > ago(30d)
+ | where RemoteIP in (IOCIPs) or RemoteUrl has_any (IOCDomains)
+ | project Timestamp, Source="DeviceNetwork", DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemoteUrl, RemotePort),
+(AADSignInEventsBeta
+ | where Timestamp > ago(30d)
+ | where IPAddress in (IOCIPs)
+ | project Timestamp, Source="AADSignIn", DeviceName, AccountName=AccountUpn, InitiatingProcessFileName="", RemoteIP=IPAddress, RemoteUrl=Application, RemotePort=int(null))
+| order by Timestamp desc
+```
+
+### RingCentral-phish click followed by MFA-approved M365 sign-in from a new IP (AiTM correlation)
+
+`UC_3_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let Lookback = 14d;
+let WindowMin = 30m;
+let Clicks =
+    EmailEvents
+    | where Timestamp > ago(Lookback)
+    | where EmailDirection == "Inbound" and (SenderFromDomain =~ "ringcentral.com" or SenderFromAddress has "ringcentral")
+    | join kind=inner (UrlClickEvents | where Timestamp > ago(Lookback) | where ActionType in ("ClickAllowed","ClickedThrough")) on NetworkMessageId
+    | project ClickTime = Timestamp1, AccountUpn, ClickUrl = Url, Subject, SenderFromAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(Lookback)
+| where ErrorCode == 0 and AuthenticationRequirement == "multiFactorAuthentication"
+| join kind=inner Clicks on $left.AccountUpn == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + WindowMin)
+| project ClickTime, SignInTime = Timestamp, DelayMin = datetime_diff('minute', Timestamp, ClickTime), AccountUpn, SignInIP = IPAddress, Country, Application, ClickUrl, SenderFromAddress, Subject
+| order by ClickTime desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -325,7 +367,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `38.248.95.214`, `panel.securehubcloud.com`, `aitomayu.com`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

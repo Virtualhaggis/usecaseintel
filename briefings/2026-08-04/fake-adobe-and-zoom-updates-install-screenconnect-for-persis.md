@@ -13,9 +13,9 @@ The campaign has…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-50522`
 - **IPv4 (defanged):** `207.174.0.143`
 - **IPv4 (defanged):** `207.189.11.170`
+- **Domain (defanged):** `subscription-magnetic-recommended-meat.trycloudflare.com`
 - **Domain (defanged):** `solthere.net`
 
 ## MITRE ATT&CK Techniques
@@ -25,7 +25,6 @@ The campaign has…
 - **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -55,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### SMOKE#SCREEN ScreenConnect relay C2 beacon to attacker IPs / port 8041
 
-`UC_19_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +75,7 @@ DeviceNetworkEvents
 
 ### SMOKE#SCREEN security-product registry tamper (SmartScreen/Defender) by script host
 
-`UC_19_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_21_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +99,7 @@ DeviceRegistryEvents
 
 ### SMOKE#SCREEN Cloudflare Quick Tunnel C2 (trycloudflare.com staging subdomain)
 
-`UC_19_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_21_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +120,7 @@ DeviceNetworkEvents
 
 ### SMOKE#SCREEN silent msiexec install of ScreenConnect / ConnectWise Control
 
-`UC_19_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_21_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +144,7 @@ DeviceProcessEvents
 
 ### Powercat fake Xeno loader chain (xeno.exe → AppData javaw.exe → decompiler.exe)
 
-`UC_19_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +168,7 @@ DeviceProcessEvents
 
 ### Powercat stage-2 C2 to solthere.net redeem endpoint
 
-`UC_19_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_21_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +188,7 @@ DeviceNetworkEvents
 
 ### Powercat stage-3 persistence via HKCU Run 'Display Calibration' → GameDVR payload
 
-`UC_19_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_21_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -507,7 +506,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Adobe and Zoom Updates Install ScreenConnect for Persistent Remote Access
 
-`UC_19_10` · phase: **exploit** · confidence: **High**
+`UC_21_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -559,12 +558,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `207.174.0.143`, `207.189.11.170`, `solthere.net`
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50522`
+  - IP / domain IOC(s): `207.174.0.143`, `207.189.11.170`, `subscription-magnetic-recommended-meat.trycloudflare.com`, `solthere.net`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

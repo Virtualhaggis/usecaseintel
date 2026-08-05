@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2609 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2611 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,6 +14,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a first look at evo agentic appsec agentic remediation and m](./2026-08-04/a-first-look-at-evo-agentic-appsec-agentic-remediation-and-m.md)
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
 - [chaindrop npm worm bun loaded ci cd credential harvester wit](./2026-08-04/chaindrop-npm-worm-bun-loaded-ci-cd-credential-harvester-wit.md)
+- [chaindrop supply chain compromise anatomy of a self propagat](./2026-08-04/chaindrop-supply-chain-compromise-anatomy-of-a-self-propagat.md)
 - [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [cisa kev cve 2026 18556 n able n central authentication bypa](./2026-08-04/cisa-kev-cve-2026-18556-n-able-n-central-authentication-bypa.md)
 - [cisa kev cve 2026 34486 apache tomcat missing encryption of ](./2026-08-04/cisa-kev-cve-2026-34486-apache-tomcat-missing-encryption-of-.md)
@@ -38,6 +39,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
 - [massive chaindrop npm supply chain attack infects hundreds o](./2026-08-04/massive-chaindrop-npm-supply-chain-attack-infects-hundreds-o.md)
 - [new xcsset variant targets macos devs via compromised xcode ](./2026-08-04/new-xcsset-variant-targets-macos-devs-via-compromised-xcode-.md)
+- [openai anthropic ai agents targeted real people and systems ](./2026-08-04/openai-anthropic-ai-agents-targeted-real-people-and-systems-.md)
 - [phishing service spoofs ringcentral to steal microsoft 365 a](./2026-08-04/phishing-service-spoofs-ringcentral-to-steal-microsoft-365-a.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 - [tp link patches omada ztp flaws allowing hackers to breach n](./2026-08-04/tp-link-patches-omada-ztp-flaws-allowing-hackers-to-breach-n.md)
