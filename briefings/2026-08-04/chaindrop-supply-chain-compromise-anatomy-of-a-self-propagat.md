@@ -37,18 +37,12 @@ Microsoft Threat Intelligence identified a large-scale npm supply chain attack a
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1546.016** — Event Triggered Execution: Installer Packages
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
+- **T1059.007** — JavaScript
+- **T1105** — Ingress Tool Transfer
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552.001** — Credentials In Files
+- **T1195.001** — Compromise Software Dependencies and Development Tools
 - **T1554** — Compromise Host Software Binary
-- **T1098** — Account Manipulation
-- **T1074.001** — Data Staged: Local Data Staging
-- **T1567.001** — Exfiltration Over Web Service: Exfiltration to Code Repository
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1080** — Taint Shared Content
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
 
 ## Kill chain phases observed
 
@@ -56,151 +50,120 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Shai-Hulud npm worm: 'node setup.mjs' spawns obfuscated Bun bundle from node_modules/bun-dl-
+### npm preinstall lifecycle hook launches setup.mjs loader (ChainDrop/Mini Shai-Hulud)
 
-`UC_0_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe") AND Processes.parent_process="*setup.mjs*") AND (Processes.process_name IN ("bun","bun.exe")) AND (Processes.process="*node_modules*" OR Processes.process_path="*bun-dl-*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("node","node.exe") AND Processes.process="*setup.mjs*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_guid | `drop_dm_object_name(Processes)` | where NOT match(user,"\$$") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(3d)
+| where FileName in~ ("node","node.exe")
+| where ProcessCommandLine has "setup.mjs"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### setup.mjs spawns obfuscated Bun payload from bun-dl staging dir
+
+`UC_2_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe") AND Processes.parent_process="*setup.mjs*" AND Processes.process_name IN ("bun","bun.exe")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | where like(process,"%bun-dl-%") OR like(process,"%node_modules%") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(3d)
 | where InitiatingProcessFileName in~ ("node","node.exe")
 | where InitiatingProcessCommandLine has "setup.mjs"
 | where FileName in~ ("bun","bun.exe")
-| where FolderPath has "bun-dl-" or ProcessCommandLine has "node_modules"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where FolderPath contains "bun-dl-" or ProcessCommandLine has "node_modules"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Shai-Hulud loader/payload known-bad SHA256 written to disk (setup.mjs, Math_*.js)
+### ChainDrop known-bad file hashes on disk (setup.mjs / Math_*.js loaders)
 
-`UC_0_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("54dc7ea54a1317cca0e890a2770630cf7fa6c97813e0cb9d2caa93012b350668","fd3ca4007b225fdf8de7af4345a19179d5efa8c4bb9205f88cda806e5684b1eb","9fc2570b7cef51c1b8df116d144d11ff4096357be7d2c4c6367cfc2509cf1bcc") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("54dc7ea54a1317cca0e890a2770630cf7fa6c97813e0cb9d2caa93012b350668","fd3ca4007b225fdf8de7af4345a19179d5efa8c4bb9205f88cda806e5684b1eb","9fc2570b7cef51c1b8df116d144d11ff4096357be7d2c4c6367cfc2509cf1bcc")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA256 in~ ("54dc7ea54a1317cca0e890a2770630cf7fa6c97813e0cb9d2caa93012b350668","fd3ca4007b225fdf8de7af4345a19179d5efa8c4bb9205f88cda806e5684b1eb","9fc2570b7cef51c1b8df116d144d11ff4096357be7d2c4c6367cfc2509cf1bcc")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where Timestamp > ago(3d)
+| where SHA256 in~ ("9fc2570b7cef51c1b8df116d144d11ff4096357be7d2c4c6367cfc2509cf1bcc","fd3ca4007b225fdf8de7af4345a19179d5efa8c4bb9205f88cda806e5684b1eb","54dc7ea54a1317cca0e890a2770630cf7fa6c97813e0cb9d2caa93012b350668")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Shai-Hulud C2 beacon to npm-cache[.]com / pypi-get[.]com / js-mirror[.]com from node/bun
+### ChainDrop C2 / exfil egress to npm-cache.com, pypi-get.com, js-mirror.com
 
-`UC_0_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("npm-cache.com","*.npm-cache.com","pypi-get.com","*.pypi-get.com","js-mirror.com","*.js-mirror.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("npm-cache.com","*.npm-cache.com","pypi-get.com","*.pypi-get.com","js-mirror.com","*.js-mirror.com")) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let c2 = dynamic(["npm-cache.com","pypi-get.com","js-mirror.com"]);
-union
-  (DeviceNetworkEvents
-   | where Timestamp > ago(30d)
-   | where RemoteUrl has_any (c2)
-   | project Timestamp, DeviceName, Signal="NetConn", InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName),
-  (DeviceEvents
-   | where Timestamp > ago(30d)
-   | where ActionType == "DnsQueryResponse"
-   | where RemoteUrl has_any (c2)
-   | project Timestamp, DeviceName, Signal="DNS", InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP="", RemotePort=int(null), InitiatingProcessAccountName)
+DeviceNetworkEvents
+| where Timestamp > ago(3d)
+| where RemoteUrl has_any ("npm-cache.com","pypi-get.com","js-mirror.com")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Shai-Hulud editor-config persistence: setup.mjs written under .claude/ or .vscode/
+### ChainDrop persistence: .claude / .vscode config injection by node/bun
 
-`UC_0_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="setup.mjs" AND (Filesystem.file_path="*\\.claude\\*" OR Filesystem.file_path="*/.claude/*" OR Filesystem.file_path="*\\.vscode\\*" OR Filesystem.file_path="*/.vscode/*")) OR Filesystem.file_hash="fd3ca4007b225fdf8de7af4345a19179d5efa8c4bb9205f88cda806e5684b1eb" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("node","node.exe","bun","bun.exe") AND (Filesystem.file_path="*\\.claude\\*" OR Filesystem.file_path="*/.claude/*" OR Filesystem.file_path="*\\.vscode\\*" OR Filesystem.file_path="*/.vscode/*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(3d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName =~ "setup.mjs" and (FolderPath has @"\.claude\" or FolderPath has "/.claude/" or FolderPath has @"\.vscode\" or FolderPath has "/.vscode/"))
-      or SHA256 =~ "fd3ca4007b225fdf8de7af4345a19179d5efa8c4bb9205f88cda806e5684b1eb"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where InitiatingProcessFileName in~ ("node","node.exe","bun","bun.exe")
+| where FolderPath has_any ("\\.claude\\","/.claude/","\\.vscode\\","/.vscode/")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Shai-Hulud exfil staging: results-<timestamp>-<counter>.json written by node/bun
+### ChainDrop self-propagation: Bun/node writing setup.mjs loaders into packages
 
-`UC_0_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_2_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND Filesystem.file_name="results-*.json" AND Filesystem.process_name IN ("node","node.exe","bun","bun.exe") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | regex file_name="(?i)^results-\d+-\d+\.json$" | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("bun","bun.exe","node","node.exe") AND Filesystem.action="created" AND Filesystem.file_name="setup.mjs") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(3d)
 | where ActionType == "FileCreated"
-| where FileName matches regex @"(?i)^results-\d+-\d+\.json$"
-| where InitiatingProcessFileName in~ ("node","node.exe","bun","bun.exe")
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Shai-Hulud self-propagation: node/bun injecting setup.mjs / Math_*.js into node_modules packages
-
-`UC_0_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node","node.exe","bun","bun.exe") AND (Filesystem.file_name="setup.mjs" OR Filesystem.file_name="Math_Symbol.js" OR Filesystem.file_name="Math_init.js" OR Filesystem.file_name="math_*.js") AND (Filesystem.file_path="*node_modules*" OR Filesystem.file_path="*bun-dl-*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where InitiatingProcessFileName in~ ("node","node.exe","bun","bun.exe")
-| where (FileName =~ "setup.mjs" or FileName matches regex @"(?i)^math_(symbol|init)\.js$" or FileName matches regex @"(?i)^math_[0-9a-f\-]{8,}\.js$")
-| where FolderPath has "node_modules" or FolderPath has "bun-dl-"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Shai-Hulud credential harvesting: node/bun reading SSH keys, cloud creds and npm/GitHub tokens
-
-`UC_0_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node","node.exe","bun","bun.exe") AND (Filesystem.file_path="*\\.ssh\\id_*" OR Filesystem.file_path="*/.ssh/id_*" OR Filesystem.file_path="*\\.aws\\credentials" OR Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_name=".npmrc" OR Filesystem.file_path="*\\.kube\\config" OR Filesystem.file_path="*/.kube/config" OR Filesystem.file_path="*gh*hosts.yml" OR Filesystem.file_name=".git-credentials" OR Filesystem.file_name=".bash_history" OR Filesystem.file_name=".zsh_history") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node","node.exe","bun","bun.exe")
-| where FolderPath has @"\.ssh\" or FolderPath has "/.ssh/"
-      or FolderPath has @"\.aws\" or FolderPath has "/.aws/"
-      or FolderPath has @"\.kube\" or FolderPath has "/.kube/"
-      or FileName in~ (".npmrc",".git-credentials",".bash_history",".zsh_history")
-      or (FolderPath has "gh" and FileName =~ "hosts.yml")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where InitiatingProcessFileName in~ ("bun","bun.exe","node","node.exe")
+| where FileName =~ "setup.mjs"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -378,7 +341,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ChainDrop supply chain compromise: Anatomy of a self-propagating worm
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_2_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -438,4 +401,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

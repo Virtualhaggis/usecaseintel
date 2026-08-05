@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Fake Xeno Executor: xeno.exe first-stage loader run from archive/AppData path
 
-`UC_44_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_46_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Fake Xeno Java loader chain: javaw.exe from %LOCALAPPDATA%\Java\jre executing decompiler/GameDVR JAR
 
-`UC_44_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_46_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Fake Xeno persistence: 'Display Calibration' Run key pointing at javaw JAR
 
-`UC_44_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_46_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceRegistryEvents
 
 ### Fake Xeno C2 beacon to solthere.net registration/redeem endpoints
 
-`UC_44_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_46_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### Fake Xeno privilege escalation via CMSTP launched by bundled javaw
 
-`UC_44_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_46_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### Fake Xeno stealer: javaw enumerating browser stores, gaming configs and Exodus wallet
 
-`UC_44_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_46_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -289,7 +289,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Roblox Xeno script launcher pushes infostealer, RAT malware
 
-`UC_44_4` · phase: **exploit** · confidence: **High**
+`UC_46_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

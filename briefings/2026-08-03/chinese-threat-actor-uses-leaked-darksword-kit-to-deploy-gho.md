@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Egress to DarkSword/GHOSTBLADE exploit-panel and C2 infrastructure IPs
 
-`UC_55_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_57_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### Browser web session to fake AWS-console / Apple ID DarkSword watering-hole hosts
 
-`UC_55_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_57_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### Proxy hunt for DarkSword operator Telegram contact channel t.me/YATA0000
 
-`UC_55_8` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_57_8` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,9 +28,10 @@ At QNET, an attacker initiated a multi-stage attack using a legitimate Windows t
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1218.005** — System Binary Proxy Execution: Mshta
-- **T1059** — Command and Scripting Interpreter
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1204.002** — User Execution: Malicious File
 - **T1112** — Modify Registry
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -38,33 +39,17 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### mshta.exe retrieving remote second-stage payload via URL or script protocol
+### mshta.exe outbound connection to public host (remote HTA C2 retrieval)
 
-`UC_10_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*vbscript:*" OR Processes.process="*javascript:*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | where user!="*$" | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "mshta.exe"
-| where AccountName !endswith "$"
-| where ProcessCommandLine has_any ("http://","https://","vbscript:","javascript:","\\\\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### mshta.exe making outbound connection to a public IP
-
-`UC_10_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=mshta.exe All_Traffic.direction=outbound NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="mshta.exe" All_Traffic.direction="outbound" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| where NOT cidrmatch("10.0.0.0/8",dest) AND NOT cidrmatch("172.16.0.0/12",dest) AND NOT cidrmatch("192.168.0.0/16",dest)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -74,53 +59,76 @@ DeviceNetworkEvents
 | where InitiatingProcessFileName =~ "mshta.exe"
 | where RemoteIPType == "Public"
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### RunMRU Run-dialog key populated with mshta / URL / LOLBin command
+### mshta.exe launched with inline http/https URL argument
 
-`UC_10_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Explorer\\RunMRU*" (Registry.registry_value_data="*mshta*" OR Registry.registry_value_data="*http*" OR Registry.registry_value_data="*powershell*" OR Registry.registry_value_data="*cmd*" OR Registry.registry_value_data="*certutil*" OR Registry.registry_value_data="*regsvr32*") by Registry.dest Registry.registry_value_name Registry.registry_value_data Registry.registry_path | `drop_dm_object_name(Registry)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*ftp://*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "mshta.exe"
+| where ProcessCommandLine has_any ("http://","https://","ftp://")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### RunMRU registry write launching mshta / URL / PowerShell (ClickFix-style user persistence)
+
+`UC_12_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Explorer\\RunMRU*" (Registry.registry_value_data="*mshta*" OR Registry.registry_value_data="*http*" OR Registry.registry_value_data="*powershell*" OR Registry.registry_value_data="*.hta*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data
+| `drop_dm_object_name(Registry)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
-| where RegistryKey has @"\Explorer\RunMRU"
+| where RegistryKey has "Explorer\\RunMRU"
+| where RegistryValueData has_any ("mshta","http","powershell",".hta","cmd /c")
 | where InitiatingProcessAccountName !endswith "$"
-| where RegistryValueData has_any ("mshta","http://","https://","powershell","cmd /c","cmd.exe","certutil","regsvr32","bitsadmin","wscript","cscript","\\\\")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
-### Multi-stage chain: mshta execution followed by RunMRU write on same host
+### mshta.exe spawning command interpreter or secondary LOLBin
 
-`UC_10_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as procTime from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` min(_time) as regTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Explorer\\RunMRU*" by Registry.dest Registry.registry_value_data | `drop_dm_object_name(Registry)`] | eval delta=abs(regTime-procTime) | where delta<=300 | table dest user procTime regTime delta registry_value_data | sort - procTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=mshta.exe Processes.process_name IN (cmd.exe,powershell.exe,pwsh.exe,wscript.exe,cscript.exe,rundll32.exe,regsvr32.exe,bitsadmin.exe,certutil.exe,curl.exe) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let Window = 5m;
-let RunMRU = DeviceRegistryEvents
-    | where Timestamp > ago(7d)
-    | where RegistryKey has @"\Explorer\RunMRU"
-    | project RegTime = Timestamp, DeviceId, RegistryValueName, RegistryValueData;
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where (FileName =~ "mshta.exe" or InitiatingProcessFileName =~ "mshta.exe")
+| where InitiatingProcessFileName =~ "mshta.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe")
 | where AccountName !endswith "$"
-| join kind=inner RunMRU on DeviceId
-| where RegTime between (Timestamp .. Timestamp + Window)
-| project Timestamp, RegTime, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, RegistryValueData
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
@@ -273,4 +281,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
