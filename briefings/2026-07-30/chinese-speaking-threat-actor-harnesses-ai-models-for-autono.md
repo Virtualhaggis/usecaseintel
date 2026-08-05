@@ -40,14 +40,13 @@ Vulnerabi…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1090.002** — Proxy: External Proxy
+- **T1090** — Proxy
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1070** — Indicator Removal
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1590** — Gather Victim Network Information
-- **T1203** — Exploitation for Client Execution
+- **T1046** — Network Service Discovery
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -55,50 +54,37 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Connection to code.newcli.com — anti-attribution AI-coding-tool proxy (knaithe/KnYuan)
+### Egress to code.newcli.com anti-attribution AI proxy (knaithe/KnYuan)
 
 `UC_102_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="*newcli.com*" OR All_Traffic.url="*code.newcli.com*" by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query IN ("code.newcli.com","*.newcli.com") by Network_Resolution.src Network_Resolution.query Network_Resolution.answer
+| `drop_dm_object_name(Network_Resolution)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "newcli.com" or RemoteUrl endswith "code.newcli.com"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has "newcli.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Server/non-browser process calling native Chinese LLM APIs (api.deepseek.com / dashscope.aliyuncs.com)
+### AI coding-tool anti-attribution / auto-approve config strings
 
-`UC_102_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="api.deepseek.com" OR All_Traffic.dest_host="dashscope.aliyuncs.com") AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") by All_Traffic.src All_Traffic.dest_host All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("api.deepseek.com","dashscope.aliyuncs.com")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP
-| order by Timestamp desc
-```
-
-### Claude Code / Codex anti-attribution and skip-permission config (knaithe AI tooling)
-
-`UC_102_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*CLAUDE_CODE_ATTRIBUTION_HEADER*" OR Processes.process="*CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC*" OR Processes.process="*dangerously-skip-permissions*" OR Processes.process="*disable_response_storage*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process IN ("*CLAUDE_CODE_ATTRIBUTION_HEADER*","*CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC*","*dangerously-skip-permissions*","*disable_response_storage*") OR (Endpoint.Processes.process="*approvalMode*" AND Endpoint.Processes.process="*yolo*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -106,29 +92,65 @@ DeviceNetworkEvents
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where ProcessCommandLine has_any ("CLAUDE_CODE_ATTRIBUTION_HEADER","CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC","dangerously-skip-permissions","disable_response_storage")
+      or (ProcessCommandLine has "approvalMode" and ProcessCommandLine has "yolo")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Hermes Agent Langflow exploit + FOFA enumeration tooling (langflow_poc.py / fofoapi.py, CVE-2026-33017)
+### Hermes Agent autonomous FOFA + Langflow PoC scanner execution
 
-`UC_102_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_102_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*langflow_poc.py*" OR Processes.process="*langflow_targets.txt*" OR Processes.process="*fofoapi.py*" OR (Processes.process="*langflow_poc*" AND Processes.process="*--scan-file*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.process IN ("*langflow_poc.py*","*fofoapi.py*","*langflow_targets.txt*","*FofaMap-Platinum-Full-Expert*") by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("langflow_poc.py","langflow_targets.txt","fofoapi.py")
-   or (ProcessCommandLine has "langflow_poc" and ProcessCommandLine has "--scan-file")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| where ProcessCommandLine has_any ("langflow_poc.py","fofoapi.py","langflow_targets.txt","FofaMap-Platinum-Full-Expert")
+      or (ProcessCommandLine has "langflow_poc.py" and ProcessCommandLine has "--scan-file")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
+```
+
+### Direct egress to DeepSeek / Qwen (dashscope) LLM APIs
+
+`UC_102_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query IN ("api.deepseek.com","dashscope.aliyuncs.com") by Network_Resolution.src Network_Resolution.query Network_Resolution.answer
+| `drop_dm_object_name(Network_Resolution)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("api.deepseek.com","dashscope.aliyuncs.com")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Cmds=make_set(InitiatingProcessCommandLine, 5) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
+| order by LastSeen desc
+```
+
+### Langflow CVE-2026-33017 unauth RCE endpoint exploitation (inbound)
+
+`UC_102_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/api/v1/build_public_tmp/*" by Web.src Web.dest Web.http_method Web.url Web.status Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -286,4 +308,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

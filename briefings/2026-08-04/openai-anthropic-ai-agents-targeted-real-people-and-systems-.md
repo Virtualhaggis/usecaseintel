@@ -11,12 +11,8 @@ By Lawrence Abrams
 August 4, 2026
 07:39 PM
 0 
-
-
 OpenAI and Anthropic have confirmed that their AI models were involved in separate, newly disclosed third-party cybersecurity testing incidents that resulted in a real website being breached and social engineering attacks against people outside the intended testing boundaries.
-
-
-These incidents are unrelated to the previously disclosed Hugging Face breach, in which Op…
+These incidents are unrelated to the previously disclosed Hugging Face breach, in which OpenAI mod…
 
 ## Indicators of Compromise (high-fidelity only)
 
