@@ -1,3 +1,319 @@
+<article class="card" id="art-130" data-art-slug="2026-07-28-ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application"
+  data-targets="vcs"
+  data-uc-count="5" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-54658: @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution CVE-2026-54658  [LLM] Web-tier @hypequery escapeValue SQLi attempt (backslash-escaped quote in HTTP parameter) [LLM] ClickHouse query_log WHERE-clause literal breakout (@hypequery escapeValue bug) [LLM] Spike of ClickHouse SQL parse/syntax errors (failed escapeValue breakout attempts) [LLM] ClickHouse system/information_schema enumeration following @hypequery SQLi Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-28-ghsa-critical-cve-2026-54658-hypequery-clickhouse-has-sql-in" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-6wcc-39rp-hh9p" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-54658: @hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-28</span>
+    <span>5 use cases</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">@hypequery/clickhouse has SQL Injection in parameter escaping that allows arbitrary SQL execution</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54658</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-130-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-130"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-130-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Web-tier @hypequery escapeValue SQLi attempt (backslash-escaped quote in HTTP parameter) · [LLM] ClickHouse query_log WHERE-clause literal breakout (@hypequery escapeValue bug) · [LLM] Spike of ClickHouse SQL parse/syntax errors (failed escapeValue breakout attempts)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] ClickHouse system/information_schema enumeration following @hypequery SQLi</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="1a82de32f6" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Web-tier @hypequery escapeValue SQLi attempt (backslash-escaped quote in HTTP parameter)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="1a82de32f6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound web-request query strings carrying the two literal-breakout payload shapes described in CVE-2026-54658: a value ending in a trailing backslash that escapes the closing quote (`x\&#x27;`), or an object/array parameter whose embedded apostrophe terminates the literal (`{&quot;k&quot;:&quot;x&#x27; OR 1=1 -- &quot;}`). This is the pre-database view of an exploitation attempt against an app using @hypequery/clickhouse &lt; 2.5.1.
+
+Rationale: Uses the exact literal-breakout payload artifacts the advisory prints (`x\&#x27;` trailing-backslash escape and the `&#x27; OR 1=1 --` classic that lands outside the literal), matched in the URL-encoded (`%5c%27`, `%27%20or%201=1`) and decoded forms that appear in web logs. Web datamodel / W3CIISLog is the only telemetry that sees the parameter before the vulnerable escapeValue() runs.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Contracted DAST/pen-test scanners (Burp, ZAP, sqlmap) firing SQLi payloads in scope</li><li>Security researchers submitting bug-bounty PoCs against the app</li><li>Legitimate search/filter fields where a user genuinely types text like &quot;O&#x27;Brien union catalog&quot;</li><li>Marketing/analytics query strings that legitimately contain the token &quot;information_schema&quot; in free text</li><li>WAF already blocked the request but the log still records the payload (scStatus 403)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP not in (&quot;&lt;approved-scanner-ips&gt;&quot;)   // maintain approved-scanner allowlist as a lookup; omit if none</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full decoded query string and the responding endpoint; check scStatus — a 200 means the payload may have executed, a 500 suggests a parse error (attempt). Confirm the app dependency @hypequery/clickhouse version (&lt; 2.5.1 = exploitable). 2) Contain: block the source IP at the WAF/edge and, if the app is vulnerable, deploy the vector-2 workaround (`JSON.stringify` non-scalar params) or upgrade to 2.5.1. 3) Hunt: pivot the source IP and session across all app endpoints for further payloads, and jump to the ClickHouse query_log detections (UC2/UC4) to confirm whether any breakout reached the database.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-130-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-130-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-130-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-130-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| extend DecodedQuery = url_decode(csUriQuery)
+| where DecodedQuery matches regex @&quot;(?i)(&#x27;\s*or\s+1=1|union\s+select|information_schema|\\&#x27;\s*(and|or|union|;|--))&quot;
+| project TimeGenerated, Computer, cIP, csUsername, csMethod, csUriStem, DecodedQuery, scStatus
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-130-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: @hypequery ClickHouse escapeValue SQL injection in web request parameter
+id: 7b3e1f2a-9c4d-4a6b-8e21-1a2b3c4d5e6f
+status: experimental
+description: Detects SQL-injection literal-breakout payloads (trailing backslash or embedded quote) targeting @hypequery/clickhouse escapeValue() below 2.5.1 in web request query strings (CVE-2026-54658).
+references:
+  - https://github.com/advisories/GHSA-6wcc-39rp-hh9p
+author: SOC Detection Engineering
+date: 2026/08/05
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - &quot;&#x27; OR 1=1&quot;
+      - &#x27;union select&#x27;
+      - information_schema
+      - &#x27;%5c%27&#x27;
+      - &#x27;%27%20or%201=1&#x27;
+  condition: selection
+falsepositives:
+  - DAST/vulnerability scanners
+  - Legitimate app payloads containing SQL-like strings
+level: high</code></pre></div>
+    <div class="tab-content" id="art-130-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-130-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-130-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-130-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*%5c%27*&quot; OR Web.uri_query=&quot;*&#x27; OR 1=1*&quot; OR Web.uri_query=&quot;*%27%20or%201=1*&quot; OR Web.uri_query=&quot;*union select*&quot; OR Web.uri_query=&quot;*information_schema*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-130-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_query=&quot;*%5c%27*&quot; OR Web.uri_query=&quot;*&#x27; OR 1=1*&quot; OR Web.uri_query=&quot;*%27%20or%201=1*&quot; OR Web.uri_query=&quot;*union select*&quot; OR Web.uri_query=&quot;*information_schema*&quot;) by Web.src Web.dest Web.http_method Web.uri_path Web.uri_query Web.status
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5f4599d052" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">ClickHouse query_log WHERE-clause literal breakout (@hypequery escapeValue bug)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5f4599d052" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the post-substitution artifact of CVE-2026-54658 directly in ClickHouse query logs: a parameter value that escaped its enclosing string literal via a trailing backslash or an unescaped JSON apostrophe, leaving injected SQL (`&#x27; OR 1=1 --`, `UNION SELECT`) parsed as code. This is the ground-truth view that HTTP-layer detection cannot fully confirm.
+
+Rationale: Anchors on the advisory&#x27;s worked example `WHERE a = &#x27;x\&#x27; AND b = &#x27; OR 1=1 --` — the injected tokens (`&#x27; OR 1=1`, `UNION SELECT`) become visible in the executed query text in system.query_log. The Sentinel regex additionally matches the `=&#x27;...\&#x27;( AND|OR|UNION)` breakout shape. No CIM datamodel covers DB query logs, so the Splunk search targets the clickhouse sourcetype directly.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal analysts running ad-hoc queries against information_schema for schema documentation</li><li>ORM/BI tools (Metabase, Superset) that legitimately emit UNION and information_schema queries</li><li>DBA maintenance scripts enumerating tables</li><li>Application unit/integration tests that intentionally exercise SQLi payloads in a staging query_log</li><li>A parameter value that legitimately contains the literal text &quot;OR 1=1&quot; (rare in analytics data)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| search NOT user IN (&quot;metabase&quot;,&quot;superset&quot;,&quot;dba_svc&quot;,&quot;bi_readonly&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full `query` and `initial_query_id`; confirm whether the injected clause changed result semantics (e.g. `OR 1=1` widening a filter) and identify the originating application user. 2) Contain: rotate the ClickHouse credentials the app uses, restrict the account&#x27;s grants, and upgrade @hypequery/clickhouse to 2.5.1 (both vectors closed). 3) Hunt: pull all queries sharing the same initial_query_id/session and run UC4 to see if the actor pivoted to system.*/information_schema enumeration.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-130-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-130-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-130-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-130-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where ProcessName has &quot;clickhouse&quot;
+| where SyslogMessage matches regex @&quot;(?i)(&#x27;\s*or\s+1=1|union\s+select|=\s*&#x27;[^&#x27;]*\\&#x27;\s*(and|or|union))&quot;
+| project TimeGenerated, Computer, HostIP, ProcessName, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-130-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: ClickHouse WHERE-clause literal breakout from @hypequery escapeValue bug
+id: c1d2e3f4-a5b6-47c8-9d0e-1f2a3b4c5d6e
+status: experimental
+description: Detects malformed WHERE clauses in ClickHouse query_log where a parameter literal was broken out via trailing backslash or an unescaped JSON quote (CVE-2026-54658).
+references:
+  - https://github.com/advisories/GHSA-6wcc-39rp-hh9p
+author: SOC Detection Engineering
+date: 2026/08/05
+tags:
+  - attack.t1190
+  - attack.execution
+logsource:
+  product: clickhouse
+  service: query_log
+detection:
+  selection:
+    query|contains:
+      - &quot;&#x27; OR 1=1&quot;
+      - &#x27;union select&#x27;
+      - information_schema
+  condition: selection
+falsepositives:
+  - Analytics jobs that legitimately query information_schema
+level: high</code></pre></div>
+    <div class="tab-content" id="art-130-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=clickhouse (sourcetype=&quot;clickhouse:query_log&quot; OR sourcetype=&quot;clickhouse&quot;)
+| search query=&quot;*&#x27; OR 1=1*&quot; OR query=&quot;*union select*&quot; OR query=&quot;*information_schema*&quot;
+| table _time host user initial_query_id query exception
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cdc4a8b961" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Spike of ClickHouse SQL parse/syntax errors (failed escapeValue breakout attempts)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="cdc4a8b961" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Failed exploitation of CVE-2026-54658 frequently produces malformed SQL that ClickHouse rejects at parse time (unbalanced quotes/parentheses) before execution. This hunts an above-baseline burst of ClickHouse syntax/parse errors per host — the noisy fingerprint of an actor iterating on the injection payload.
+
+Rationale: The advisory&#x27;s fix note (`2879161a81` also rejects non-finite numbers and invalid Date values) plus the mechanics of an odd-backslash / broken-JSON payload mean unsuccessful breakout attempts land as ClickHouse parse exceptions. A per-host 10-minute spike of these is the earliest, cheapest signal of someone fuzzing the parameter. Threshold-based, so no Sigma emitted.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A newly deployed app version with a genuine SQL bug generating parse errors in bursts</li><li>A BI dashboard misconfiguration repeatedly submitting malformed generated SQL</li><li>ETL job failure retrying a bad query in a tight loop</li><li>Developer running iterative ad-hoc queries with typos against a shared cluster</li><li>ClickHouse version upgrade changing SQL dialect strictness (legit queries now error)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| search NOT host IN (&quot;etl-*&quot;,&quot;bi-*&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect sampleQueries for the offending host/window — distinguish repeated identical app-generated errors (likely a bug) from varied payloads with quote/backslash artifacts (likely an actor iterating). 2) Contain: if payloads show injection intent, block the upstream client at the WAF and upgrade @hypequery/clickhouse to 2.5.1. 3) Hunt: correlate the error window with UC1 (web params) and UC2 (successful breakout) on the same source to determine whether any attempt succeeded.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-130-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-130-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-130-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(24h)
+| where ProcessName has &quot;clickhouse&quot;
+| where SeverityLevel in (&quot;err&quot;,&quot;error&quot;) or SyslogMessage has_any (&quot;Syntax error&quot;,&quot;Cannot parse expression&quot;,&quot;SYNTAX_ERROR&quot;,&quot;Unmatched parentheses&quot;,&quot;Unexpected&quot;)
+| summarize ErrCount = count(), sample = any(SyslogMessage) by Computer, bin(TimeGenerated, 10m)
+| where ErrCount &gt; 20     // 20 = ~P99 parse-errors per 10-min per host from baseline; tune per env
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-130-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=clickhouse (sourcetype=&quot;clickhouse:error_log&quot; OR sourcetype=&quot;clickhouse&quot;)
+| search &quot;Syntax error&quot; OR &quot;Cannot parse expression&quot; OR &quot;SYNTAX_ERROR&quot; OR &quot;Unmatched parentheses&quot; OR &quot;Unexpected&quot;
+| bin _time span=10m
+| stats count as ErrCount values(query) as sampleQueries by _time host
+| where ErrCount &gt; 20
+| sort - _time</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3203faf04c" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">ClickHouse system/information_schema enumeration following @hypequery SQLi</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3203faf04c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Post-breakout, arbitrary-SQL access via CVE-2026-54658 lets an attacker enumerate the database. This hunts application-context queries touching ClickHouse metadata objects (information_schema.*, system.tables/databases/columns/users) that a normal parameter-driven app query would never reference — a reconnaissance follow-on to a confirmed injection.
+
+Rationale: The advisory states the injection yields &#x27;arbitrary SQL execution&#x27;; schema enumeration is the immediate recon step, and a parameter-driven app (the vulnerable surface) essentially never queries system.*/information_schema itself, so those objects appearing in the app&#x27;s query_log is a strong deviation. Baseline-relative so no Sigma emitted; best used correlated with UC1/UC2 on the same host/session.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>BI tools (Metabase/Superset/Grafana) that introspect information_schema on connect</li><li>DBA or migration tooling enumerating system.tables/columns during deploys</li><li>Monitoring agents polling system.* for cluster health metrics</li><li>Data-catalog crawlers that legitimately walk information_schema nightly</li><li>A developer manually exploring schema through the app&#x27;s DB account</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| search NOT users IN (&quot;metabase&quot;,&quot;superset&quot;,&quot;grafana&quot;,&quot;dba_svc&quot;,&quot;catalog_crawler&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the querying `user`/service account is the app&#x27;s parameter-driven account (not a BI/DBA account expected to introspect); if so, treat metadata access as anomalous. 2) Contain: restrict that account&#x27;s grants to only required tables, rotate its credentials, and upgrade @hypequery/clickhouse to 2.5.1. 3) Hunt: reconstruct the session timeline — link back to UC1/UC2 injection events and look forward for bulk SELECTs against sensitive tables suggesting exfiltration.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-130-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-130-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-130-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where ProcessName has &quot;clickhouse&quot;
+| where SyslogMessage has_any (&quot;information_schema&quot;,&quot;system.tables&quot;,&quot;system.databases&quot;,&quot;system.columns&quot;,&quot;system.users&quot;)
+| summarize Queries = count(), Objects = make_set(extract(@&quot;(system\.\w+|information_schema\.\w+)&quot;, 1, SyslogMessage), 10), firstSeen = min(TimeGenerated), lastSeen = max(TimeGenerated) by Computer, HostIP
+| where Queries &gt; 3
+| order by lastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-130-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=clickhouse (sourcetype=&quot;clickhouse:query_log&quot; OR sourcetype=&quot;clickhouse&quot;)
+| search &quot;information_schema&quot; OR &quot;system.tables&quot; OR &quot;system.databases&quot; OR &quot;system.columns&quot; OR &quot;system.users&quot;
+| stats count as Queries values(user) as users dc(query) as distinctQueries min(_time) as firstTime max(_time) as lastTime by host
+| where Queries &gt; 3
+| sort - lastTime</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-130-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-130-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-130-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-130-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-54658&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-130-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-54658&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-130-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-130-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-130-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-130-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-54658&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-130-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-54658&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-131" data-art-slug="2026-07-28-ghsa-critical-cve-2026-64863-goshs-no-delete-webdav-move-byp"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -351,7 +667,7 @@ DeviceTvmSoftwareVulnerabilities
   data-splunk-cats="application,endpoint,network"
   data-targets="linux,vcs,windows"
   data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) CVE-2026-62325 CVE-2026-40884  [LLM] goshs SFTP launched with empty-credential -b flag and no -fkf (CVE-2026-62325) [LLM] Inbound connection to unauthenticated goshs SFTP listener (CVE-2026-62325) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas">
+  data-search="[GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) CVE-2026-62325 CVE-2026-40884  [LLM] Vulnerable goshs SFTP listener: empty-field basic-auth with no key-file (CVE-2026-62325) [LLM] External inbound connection to goshs unauthenticated SFTP listener (port 2121) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -410,32 +726,33 @@ DeviceTvmSoftwareVulnerabilities
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] goshs SFTP launched with empty-credential -b flag and no -fkf (CVE-2026-62325) · [LLM] Inbound connection to unauthenticated goshs SFTP listener (CVE-2026-62325)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable goshs SFTP listener: empty-field basic-auth with no key-file (CVE-2026-62325) · [LLM] External inbound connection to goshs unauthenticated SFTP listener (port 2121)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="4b909d73a3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="ffed7ad5c7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
   <summary>
-    <span class="uc-title">goshs SFTP launched with empty-credential -b flag and no -fkf (CVE-2026-62325)</span>
+    <span class="uc-title">Vulnerable goshs SFTP listener: empty-field basic-auth with no key-file (CVE-2026-62325)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4b909d73a3" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="ffed7ad5c7" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts for the goshs SimpleHTTPServer process started in SFTP mode with a basic-auth string that has an empty username or empty password segment (e.g. -b &#x27;admin:&#x27; or -b &#x27;:pass&#x27;) and no -fkf key file. This exact flag combination disables the SSH PasswordHandler and PublicKeyHandler, causing gliderlabs/ssh to set NoClientAuth=true — the vulnerable state described in the advisory.
+    <div class="uc-desc">Hunts execution of the goshs file server started with -sftp and a -b basic-auth argument whose username or password field is empty (e.g. -b &#x27;admin:&#x27; or -b &#x27;:pass&#x27;) and without -fkf. That exact flag combination leaves gliderlabs/ssh with NoClientAuth=true, exposing an unauthenticated SFTP file service. This is the root-cause misconfiguration behind CVE-2026-62325 / the incomplete CVE-2026-40884 fix.
 
-Rationale: Uses the advisory&#x27;s exact reproduction command (goshs -b &#x27;admin:&#x27; -sftp with no -fkf); the regex catches both the empty-password (admin:) and empty-username (:pass) variants, and the -fkf exclusion mirrors the code path where PublicKeyHandler stays nil. Corroborated against GitLab Advisory DB and SentinelOne which confirm the binary name and flag semantics.
+Rationale: Anchors on the exact strings the advisory names — binary goshs, -sftp, the empty-field -b credential syntax (admin: / :pass), and the absence of -fkf — which together are the precise precondition for NoClientAuth=true. Cross-checked against the GitLab advisory and SentinelOne CVE-2026-40884 entry confirming the -b parsing / SFTP-handler behaviour.
 
 Cross-checked against:
   • https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/v2/CVE-2026-62325/
   • https://www.sentinelone.com/vulnerability-database/cve-2026-40884/
-  • https://cve.threatint.com/CVE/CVE-2026-62325</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://github.com/patrickhener/goshs
+  • https://www.kali.org/tools/goshs/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Services: SSH">T1021.004</span> <span class="ind tech" title="Valid Accounts: Default Accounts">T1078.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Red-team / pentest operator intentionally standing up a goshs file drop with -b &#x27;user:&#x27; for a range exercise</li><li>Security researcher reproducing CVE-2026-62325 in a lab to validate the patch</li><li>CTF infrastructure using goshs as an intentional weak-auth target</li><li>Automation script that shells goshs with a placeholder credential where the password is templated in later (colon-terminated at parse time)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;redteam&quot;,&quot;pentest&quot;,&quot;lab-only&quot;)) and DeviceName !has &quot;CTF&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full ProcessCommandLine and confirm the -b value truly has an empty segment (nothing after or before the single colon) and that -fkf is absent; identify the listening host, user context, and whether the host is internet-facing. 2) CONTAIN: If the host is exposed or unsanctioned, stop the goshs process and block the SFTP listener port at the host/perimeter firewall; if sanctioned red-team, confirm engagement scope before actioning. 3) HUNT: Pivot to UC-2 (inbound connections to the goshs SFTP port) to see whether any external client already connected unauthenticated, and review DeviceFileEvents under the goshs served directory for reads/writes/deletes during the exposure window.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized red-team / penetration-test engagement intentionally standing up goshs as a payload/exfil file server</li><li>Security researcher reproducing CVE-2026-62325 in a lab to validate the patch</li><li>CTF infrastructure or training range running goshs with intentionally open auth</li><li>Sysadmin using goshs for a quick internal file drop and deliberately leaving the password blank</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the host and account — is this a sanctioned pentest/lab asset? Pull the full ProcessCommandLine, note the listening port (default 2121) and whether the host is internet-facing (DeviceInfo.IsInternetFacing). 2) Contain: If unsanctioned, kill the goshs process and block inbound on the SFTP port at the host firewall; the service accepts read/write/delete/rename with no auth, so treat any window of exposure as data-at-risk. 3) Hunt: Review inbound connections to the goshs port from external IPs (see companion network UC), enumerate files served from its root, and check for goshs binaries or v2.1.3 elsewhere in the estate.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-132-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-132-uc0-sentinel">Sentinel KQL</button>
@@ -446,72 +763,70 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-132-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where ProcessCommandLine has &quot;goshs&quot; and ProcessCommandLine has &quot;-sftp&quot; and ProcessCommandLine has &quot;-b&quot;
-| where not(ProcessCommandLine has &quot;-fkf&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)\s-b\s+[&#x27;&quot;&quot;]?(:[^\s&#x27;&quot;&quot;]*|[^\s:&#x27;&quot;&quot;]*:)[&#x27;&quot;&quot;]?(\s|$)&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
+| where FileName in~ (&quot;goshs&quot;,&quot;goshs.exe&quot;)
+| where ProcessCommandLine has &quot;-sftp&quot;
+// -b argument where username OR password field is empty (empty-username :pass or empty-password admin:)
+| where ProcessCommandLine matches regex @&quot;(?i)-b\s+[&quot;&quot;&#x27;]?(:[^\s&quot;&quot;&#x27;]+|[^\s&quot;&quot;&#x27;:]*:)[&quot;&quot;&#x27;]?(\s|$)&quot;
+| where ProcessCommandLine !has &quot;-fkf&quot;   // no public-key handler either -&gt; NoClientAuth
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content" id="art-132-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(30d)
-| where TargetProcessCommandLine has &quot;goshs&quot; and TargetProcessCommandLine has &quot;-sftp&quot; and TargetProcessCommandLine has &quot;-b&quot;
-| where not(TargetProcessCommandLine has &quot;-fkf&quot;)
-| where TargetProcessCommandLine matches regex @&quot;(?i)\s-b\s+[&#x27;&quot;&quot;]?(:[^\s&#x27;&quot;&quot;]*|[^\s:&#x27;&quot;&quot;]*:)[&#x27;&quot;&quot;]?(\s|$)&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs SFTP Launched With Empty-Credential Basic Auth (CVE-2026-62325)
-id: 5b9f7d2e-6c41-4a3e-9f0b-2c8d1e4a7f36
-status: experimental
-description: Detects the goshs SimpleHTTPServer started in SFTP mode (-sftp) with a basic-auth string (-b) that has an empty username or empty password segment and no -fkf key file, matching the CVE-2026-62325 / CVE-2026-40884 authentication-bypass configuration.
+| where EventID == 4688
+| where NewProcessName endswith &quot;\\goshs.exe&quot; or NewProcessName endswith &quot;/goshs&quot; or CommandLine has &quot;goshs&quot;
+| where CommandLine has &quot;-sftp&quot;
+| where CommandLine matches regex @&quot;(?i)-b\s+[&quot;&quot;&#x27;]?(:[^\s&quot;&quot;&#x27;]+|[^\s&quot;&quot;&#x27;:]*:)[&quot;&quot;&#x27;]?(\s|$)&quot;
+| where CommandLine !has &quot;-fkf&quot;
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName</code></pre></div>
+    <div class="tab-content" id="art-132-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs SFTP Started With Empty-Field Basic Auth And No Key File (CVE-2026-62325)
+id: 5b3f2c8e-9a41-4d7c-bd2a-7e1c9f0a6b34
+description: Detects the goshs file server launched with -sftp and a -b basic-auth argument whose username or password is empty, without -fkf, yielding an unauthenticated SFTP service.
 references:
   - https://github.com/advisories/GHSA-rjrw-mjq6-hpmm
   - https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/v2/CVE-2026-62325/
 author: SOC Detection Engineering
 date: 2026/08/05
 tags:
-  - attack.t1556
-  - attack.t1190
+  - attack.t1021.004
+  - attack.t1078.001
 logsource:
   category: process_creation
 detection:
-  selection_bin:
-    CommandLine|contains: &#x27;goshs&#x27;
-  selection_sftp:
-    CommandLine|contains: &#x27;-sftp&#x27;
-  selection_emptycred:
-    CommandLine|re: &#x27;(?i)\s-b\s+[&#x27;&#x27;&quot;]?(:[^\s&#x27;&#x27;&quot;]*|[^\s:&#x27;&#x27;&quot;]*:)[&#x27;&#x27;&quot;]?(\s|$)&#x27;
-  filter_fkf:
+  selection:
+    CommandLine|contains|all:
+      - &#x27;goshs&#x27;
+      - &#x27;-sftp&#x27;
+    CommandLine|re: &quot;-b\\s+[&#x27;\&quot;]?(:[^\\s&#x27;\&quot;]+|[^\\s&#x27;\&quot;:]*:)[&#x27;\&quot;]?(\\s|$)&quot;
+  filter_keyfile:
     CommandLine|contains: &#x27;-fkf&#x27;
-  condition: selection_bin and selection_sftp and selection_emptycred and not filter_fkf
+  condition: selection and not filter_keyfile
 level: high</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\goshs.exe OR *\\GOSHS.EXE OR *\\goshs OR *\\Goshs.exe) @CommandLine:(*-sftp* AND *-b*) -@CommandLine:*-fkf*</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 (ImageFileName=/goshs(\.exe)?$/i OR CommandLine=/goshs/i)
-| CommandLine=/-sftp/i
-| CommandLine=/-b\s+[&#x27;&quot;]?(:[^\s&#x27;&quot;]*|[^\s:&#x27;&quot;]*:)[&#x27;&quot;]?(\s|$)/i
-| NOT CommandLine=/-fkf/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;goshs*&quot; OR Processes.process=&quot;*goshs*&quot;) Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process=&quot;*-fkf*&quot; | regex process=&quot;(?i)\s-b\s+[&#x27;\&quot;]?(:[^\s&#x27;\&quot;]*|[^\s:&#x27;\&quot;]*:)[&#x27;\&quot;]?(\s|$)&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-132-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;goshs*&quot; OR Processes.process=&quot;*goshs*&quot;) Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process=&quot;*-fkf*&quot; | regex process=&quot;(?i)\s-b\s+[&#x27;\&quot;]?(:[^\s&#x27;\&quot;]*|[^\s:&#x27;\&quot;]*:)[&#x27;\&quot;]?(\s|$)&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-132-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*goshs* AND *-sftp*) NOT @process.command_line:*-fkf*</code></pre></div>
+    <div class="tab-content" id="art-132-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/goshs(\.exe)?$/i | CommandLine=/-sftp/i | CommandLine=/-b\s+[&#x27;&quot;]?(:[^\s&#x27;&quot;]+|[^\s&#x27;&quot;:]*:)[&#x27;&quot;]?(\s|$)/i | NOT CommandLine=/-fkf/i | groupBy([aid, ComputerName, UserName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-132-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=goshs OR Processes.process_name=goshs.exe) Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | regex process=&quot;-b\s+[\&quot;&#x27;]?(:[^\s\&quot;&#x27;]+|[^\s\&quot;&#x27;:]*:)[\&quot;&#x27;]?(\s|$)&quot; | search NOT process=&quot;*-fkf*&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-132-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=goshs OR Processes.process_name=goshs.exe) Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | regex process=&quot;-b\s+[\&quot;&#x27;]?(:[^\s\&quot;&#x27;]+|[^\s\&quot;&#x27;:]*:)[\&quot;&#x27;]?(\s|$)&quot; | search NOT process=&quot;*-fkf*&quot; | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="918a07aac8" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="64c1d13691" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Inbound connection to unauthenticated goshs SFTP listener (CVE-2026-62325)</span>
+    <span class="uc-title">External inbound connection to goshs unauthenticated SFTP listener (port 2121)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="918a07aac8" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="64c1d13691" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects inbound network sessions terminating on a goshs process running in SFTP mode, from public/external source IPs — the actual exploitation of the empty-password auth bypass. Surfaces the listener&#x27;s local port rather than assuming a fixed value, and ties the connection to the goshs process serving files.
+    <div class="uc-desc">Hunts inbound connections accepted by a goshs process on its SFTP port (default 2121) from a public/remote source. When the server is running the CVE-2026-62325 misconfiguration, such a connection is unauthenticated file access. Pairs with the process UC to catch active exploitation of an exposed listener.
 
-Rationale: Anchors on the advisory PoC&#x27;s default SFTP port 2121 and ties inbound sessions to a goshs process running -sftp; surfacing LocalPort/DstPort keeps it valid when an operator changes the port. Public-source-IP filter isolates external unauthenticated access, which is the CVE-2026-62325 exploitation shape.
+Rationale: Uses the goshs default SFTP port (2121, from the article PoC) combined with goshs process ownership of the inbound socket and an external source — a high-signal pair for actual exploitation of the exposed listener. Sentinel path falls back to port-only inbound because ASIM carries no server-process attribution; noted as broader.
 
 Cross-checked against:
+  • https://github.com/advisories/GHSA-rjrw-mjq6-hpmm
   • https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/v2/CVE-2026-62325/
-  • https://www.thehackerwire.com/goshs-sftp-unauthenticated-file-access/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+  • https://github.com/patrickhener/goshs</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="External Remote Services">T1133</span> <span class="ind tech" title="Remote Services: SSH">T1021.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sanctioned red-team operators connecting to their own goshs file-transfer server on 2121</li><li>Internal admins legitimately transferring files via a goshs instance they stood up</li><li>Vulnerability scanner (e.g. authenticated internal scan) probing port 2121</li><li>Another service legitimately bound to TCP 2121 (unrelated to goshs) generating inbound sessions — mitigated by the goshs process filter on endpoint telemetry</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP != &quot;127.0.0.1&quot; and not(ipv4_is_private(RemoteIP))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the destination process is goshs in -sftp mode and check whether the source IP is external/untrusted and whether any authentication banner/handshake was recorded; correlate with UC-1 to see if the listener was launched with an empty-credential -b flag. 2) CONTAIN: If unauthenticated external access is confirmed, kill the goshs process and block the source IP and listener port at the perimeter. 3) HUNT: Review file writes/reads/deletes/renames under the goshs served path during the session window (unauthenticated SFTP grants full file access) and sweep for the same source IP hitting other exposed services.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sanctioned pentest team connecting to their own goshs exfil server on 2121</li><li>Internet-wide scanners (Shodan/Censys/GreyNoise) probing port 2121</li><li>Another service legitimately bound to 2121 on the host (non-goshs) — mitigated here by the goshs process filter except on the Sentinel port-only path</li><li>Internal file transfers where staff intentionally use goshs SFTP with weak/no auth</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ipv4_is_match(RemoteIP, &quot;10.0.0.0/8&quot;) or ipv4_is_match(RemoteIP, &quot;172.16.0.0/12&quot;) or ipv4_is_match(RemoteIP, &quot;192.168.0.0/16&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Correlate the source IP against threat intel and confirm whether the goshs listener is the vulnerable empty-credential config (join to the process UC on DeviceName). Note connection count and duration. 2) Contain: If the listener is unsanctioned, terminate goshs and firewall the port; capture the served file-system root before shutdown for scoping. 3) Hunt: Pivot on the external source IP across other assets, review file read/write events by the goshs process for exfil, and search for goshs v2.1.3 binaries elsewhere.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-132-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-132-uc1-sentinel">Sentinel KQL</button>
@@ -520,25 +835,24 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-132-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-132-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName has &quot;goshs&quot;
-| where InitiatingProcessCommandLine has &quot;-sftp&quot;
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionSuccess&quot;)
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName in~ (&quot;goshs&quot;,&quot;goshs.exe&quot;)
+| where LocalPort == 2121   // goshs SFTP subsystem default port
 | where RemoteIPType == &quot;Public&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort, RemoteIP, RemotePort, ActionType
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-132-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstPortNumber == 2121
+| where TimeGenerated &gt; ago(7d)
+| where DstPortNumber == 2121   // goshs SFTP subsystem default port
 | where NetworkDirection == &quot;Inbound&quot;
-| where isnotempty(SrcIpAddr)
-| project TimeGenerated, SrcIpAddr, DstIpAddr, DstPortNumber, DvcHostname, NetworkApplicationProtocol, DvcAction
+| where EventResult == &quot;Success&quot;
+| where not(ipv4_is_private(SrcIpAddr))
+| project TimeGenerated, DvcHostname, DstIpAddr, SrcIpAddr, SrcPortNumber, DstPortNumber, NetworkApplicationProtocol
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\\goshs.exe OR *\\GOSHS.EXE OR *\\goshs) @DestinationPort:2121</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=2121
-| ContextImageFileName=/goshs/i
-| groupBy([aid, ComputerName, RemoteAddressIP4, LocalPort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=2121 All_Traffic.transport=tcp All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-132-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=2121 All_Traffic.transport=tcp All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-132-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:2121 @Image:(*\\goshs.exe OR *\\GOSHS.EXE OR *goshs)</code></pre></div>
+    <div class="tab-content" id="art-132-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/goshs(\.exe)?$/i | LocalPort=2121 | groupBy([aid, ComputerName, RemoteAddressIP4, LocalPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-132-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=2121 All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-132-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=2121 All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -9078,343 +9392,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-160" data-art-slug="2026-07-24-ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject"
-  data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into generated Copilot plugin manifest via x-ai-* extensions Microsoft Kiota: Path/URL injection into generated Copilot plugin manifest via x-ai-* extensions CVE-2026-59864  [LLM] Microsoft Kiota APIPlugin manifest generation from OpenAPI spec (CVE-2026-59864) [LLM] Kiota-generated *-apiplugin.json manifest written to disk (CVE-2026-59864 artifact) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-24-ghsa-critical-cve-2026-59864-microsoft-kiota-path-url-inject" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-4jwf-m4wg-8p66" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into generated Copilot plugin manifest via x-ai-* extensions</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-24</span>
-    <span>4 use cases</span>
-    <span>0 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Microsoft Kiota: Path/URL injection into generated Copilot plugin manifest via x-ai-* extensions</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-59864</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-160-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-160"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-160-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Microsoft Kiota APIPlugin manifest generation from OpenAPI spec (CVE-2026-59864)</em></div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Kiota-generated *-apiplugin.json manifest written to disk (CVE-2026-59864 artifact)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="a60627f28c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Microsoft Kiota APIPlugin manifest generation from OpenAPI spec (CVE-2026-59864)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="a60627f28c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts execution of `kiota plugin add` / `kiota plugin generate -t APIPlugin`, the propagation point where an attacker-controlled OpenAPI description&#x27;s x-ai-adaptive-card / x-ai-capabilities extensions are written verbatim into `&lt;name&gt;-apiplugin.json`. Surfaces the OpenAPI source and kiota version so analysts can confirm whether a poisoned static_template.file path (../ or absolute) was minted.
-
-Rationale: Anchors on the article&#x27;s exact CLI verbs (`plugin add`/`plugin generate`) plus the `APIPlugin` template type and the `kiota` binary (confirmed on the self-contained linux-x64 1.32.4 release; also runs as kiota.exe / `dotnet kiota` on Windows dev hosts). This is the one host-observable event in the chain — where the poisoned static_template.file is emitted.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-4jwf-m4wg-8p66
-  • https://github.com/microsoft/kiota/pull/7892</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers legitimately generating M365 Copilot/Teams plugins from trusted internal OpenAPI specs</li><li>CI/CD pipeline auto-regenerating plugin manifests on each build</li><li>Engineer following Kiota plugin tutorials/PoC testing</li><li>Platform team standardising internal API plugins from a vetted spec registry</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine has_any (&quot;http://&quot;,&quot;https://&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the command line&#x27;s OpenAPI source (`-d`/`--openapi`) — is it a remote URL or third-party/untrusted spec? Confirm the kiota version; 1.32.4 and below are vulnerable, 1.32.5+ is patched. 2) Contain: quarantine the generated `&lt;name&gt;-apiplugin.json`, block its packaging/sideload to Copilot/Teams, and upgrade kiota to 1.32.5+ then regenerate. 3) Hunt: grep all generated manifests for `response_semantics.static_template.file` values containing `../`, absolute paths, UNC (`\\`), Windows drive (`C:\`), or `file://`/`http` URIs; find other plugins built from the same spec source.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-160-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-160-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-160-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-160-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-160-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-160-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-160-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine has &quot;kiota&quot; or FileName in~ (&quot;kiota&quot;,&quot;kiota.exe&quot;)
-| where ProcessCommandLine has &quot;plugin&quot;
-| where ProcessCommandLine has &quot;APIPlugin&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-160-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessName has &quot;kiota&quot; or TargetProcessCommandLine has &quot;kiota&quot;
-| where TargetProcessCommandLine has &quot;plugin&quot;
-| where TargetProcessCommandLine has &quot;APIPlugin&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-160-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Microsoft Kiota APIPlugin manifest generation (CVE-2026-59864)
-id: 9f3b1c2a-7d64-4e58-9a11-2f8c6e0b4d71
-description: Detects Microsoft Kiota generating a Copilot/Teams APIPlugin manifest, the propagation point for path/URL injection into static_template.file from attacker-controlled OpenAPI x-ai-* extensions.
-references:
-  - https://github.com/advisories/GHSA-4jwf-m4wg-8p66
-  - https://github.com/microsoft/kiota/pull/7892
-author: SOC Detection Engineering
-date: 2026/07/27
-tags:
-  - attack.t1195.001
-logsource:
-  category: process_creation
-detection:
-  selection:
-    CommandLine|contains|all:
-      - &#x27;kiota&#x27;
-      - &#x27;plugin&#x27;
-      - &#x27;APIPlugin&#x27;
-  condition: selection
-level: low</code></pre></div>
-    <div class="tab-content" id="art-160-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*kiota* @process.command_line:*plugin* @process.command_line:*APIPlugin*</code></pre></div>
-    <div class="tab-content" id="art-160-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 (ImageFileName=/kiota/i OR CommandLine=/kiota/i)
-| CommandLine=/plugin/i
-| CommandLine=/APIPlugin/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-160-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-160-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-160-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-160-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*kiota*&quot; AND Processes.process=&quot;*plugin*&quot; AND Processes.process=&quot;*APIPlugin*&quot;) by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-160-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*kiota*&quot; AND Processes.process=&quot;*plugin*&quot; AND Processes.process=&quot;*APIPlugin*&quot;) by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2a918d09d7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">Kiota-generated *-apiplugin.json manifest written to disk (CVE-2026-59864 artifact)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2a918d09d7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces the write of a `&lt;name&gt;-apiplugin.json` Copilot/Teams plugin manifest by kiota so analysts can open it and inspect the `response_semantics.static_template.file` field for a path/URL-injected traversal (../, absolute, UNC, drive, or file/http URI). This is the exact artifact that carries the CWE-22/CWE-829 payload before it is sideloaded downstream.
-
-Rationale: Uses Kiota&#x27;s fixed output naming convention `&lt;name&gt;-apiplugin.json` (per the advisory) scoped to a kiota/dotnet writer. It hands the analyst the precise file to open and check for a `..`/absolute/UNC/URI static_template.file value — the injected payload — which endpoint file telemetry cannot content-match directly.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-4jwf-m4wg-8p66
-  • https://github.com/microsoft/kiota/pull/7892</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Copilot/Teams plugin builds writing a benign relative static_template.file</li><li>CI runners regenerating manifests on every commit</li><li>Developer testing plugin generation locally</li><li>Repo tooling re-emitting manifests during dependency bumps</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the flagged `-apiplugin.json` and read `functions[].capabilities.response_semantics.static_template.file` — flag if it contains `../`, a leading `/`, `\\`, `C:\`, or a `file://`/`http` URI (patched kiota 1.32.5+ rejects these). 2) Contain: block the manifest from being packaged/sideloaded to Copilot/Teams and upgrade kiota to 1.32.5+, then regenerate from a trusted spec. 3) Hunt: enumerate other `-apiplugin.json` files across build hosts and source repos produced from the same OpenAPI source and re-scan their static_template.file values.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-160-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-160-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-160-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-160-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-160-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-160-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-160-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where FileName endswith &quot;-apiplugin.json&quot;
-| where InitiatingProcessFileName in~ (&quot;kiota&quot;,&quot;kiota.exe&quot;,&quot;dotnet&quot;,&quot;dotnet.exe&quot;) or InitiatingProcessCommandLine has &quot;kiota&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-160-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where TargetFileName endswith &quot;-apiplugin.json&quot;
-| where ActingProcessName has &quot;kiota&quot; or ActingProcessCommandLine has &quot;kiota&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFileName, TargetFilePath, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-160-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Kiota Copilot APIPlugin manifest file written (CVE-2026-59864)
-id: 2c7e4a90-15bd-4c6f-b3e2-88a1f6d0c934
-description: Detects creation of a Kiota-generated &lt;name&gt;-apiplugin.json manifest, the artifact into which attacker-controlled x-ai-* extension static_template.file paths are written verbatim.
-references:
-  - https://github.com/advisories/GHSA-4jwf-m4wg-8p66
-  - https://github.com/microsoft/kiota/pull/7892
-author: SOC Detection Engineering
-date: 2026/07/27
-tags:
-  - attack.t1195.001
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|endswith: &#x27;-apiplugin.json&#x27;
-  condition: selection
-level: low</code></pre></div>
-    <div class="tab-content" id="art-160-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:*-apiplugin.json</code></pre></div>
-    <div class="tab-content" id="art-160-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/-apiplugin\.json$/i
-| (ContextImageFileName=/kiota/i OR ContextImageFileName=/dotnet/i)
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-160-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-160-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-160-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-160-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*-apiplugin.json&quot;) by Filesystem.dest, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-160-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;*-apiplugin.json&quot;) by Filesystem.dest, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-160-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-160-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-160-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-160-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-59864&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-160-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-59864&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-160-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-160-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-160-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-160-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-59864&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-160-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-59864&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="734a42a1b8" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="734a42a1b8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-160-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-160-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-160-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-160-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/passwd&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-160-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/passwd&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-160-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-160-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-160-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-160-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-160-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-59864: Microsoft Kiota: Path/URL injection into gener ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -102,11 +102,17 @@ Infrastru…
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
 - **T1059.003** — Windows Command Shell
-- **T1055** — Process Injection
-- **T1573.001** — Symmetric Cryptography
-- **T1614.001** — System Language Discovery
-- **T1033** — System Owner/User Discovery
+- **T1055.001** — Dynamic-link Library Injection
+- **T1568.002** — Domain Generation / Dynamic DNS
+- **T1082** — System Information Discovery
 - **T1057** — Process Discovery
+- **T1033** — System Owner/User Discovery
+- **T1003.002** — Security Account Manager
+- **T1003.006** — DCSync
+- **T1046** — Network Service Discovery
+- **T1018** — Remote System Discovery
+- **T1555.003** — Credentials from Web Browsers
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -114,16 +120,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OctLurk persistence: 'GoogleUpDate' scheduled task executing Videos\1.bat
+### OctLurk deployment via 'GoogleUpDate' scheduled task launching Videos\1.bat
 
-`UC_103_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe AND Processes.process="*GoogleUpDate*") OR Processes.process="*\\Videos\\1.bat*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe AND Processes.process="*GoogleUpDate*") OR Processes.process="*\\Videos\\1.bat*" OR Processes.process="*\\Desktop\\auto.bat*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -132,88 +135,138 @@ DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where (FileName =~ "schtasks.exe" and ProcessCommandLine has "GoogleUpDate")
     or ProcessCommandLine has @"\Videos\1.bat"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, MD5
+    or ProcessCommandLine has @"\Desktop\auto.bat"
+    or MD5 in ("6ecf84fb18f6747ed08d7598364d853a","b874123a80fc4f40e06872b9cb54ebc6")
+    or InitiatingProcessMD5 in ("6ecf84fb18f6747ed08d7598364d853a","b874123a80fc4f40e06872b9cb54ebc6")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, MD5
 | order by Timestamp desc
 ```
 
-### OctLurk/LurkProxy service DLL side-load via RegisterService ServiceMain
+### OctLurk/LurkProxy loader service registration (ServiceMain=RegisterService loading oleasapi.dll/msbasesysdc.dll)
 
-`UC_103_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Endpoint.Registry.registry_path="*\\Services\\*" AND ((Endpoint.Registry.registry_value_name=ServiceMain AND Endpoint.Registry.registry_value_data=RegisterService) OR (Endpoint.Registry.registry_value_name=ServiceDll AND (Endpoint.Registry.registry_value_data="*oleasapi.dll*" OR Endpoint.Registry.registry_value_data="*msbasesysdc.dll*"))) by Endpoint.Registry.dest Endpoint.Registry.registry_path Endpoint.Registry.registry_value_name Endpoint.Registry.registry_value_data
-| `drop_dm_object_name(Registry)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Services\\*" AND ((Registry.registry_value_name=ServiceMain AND Registry.registry_value_data=RegisterService) OR (Registry.registry_value_data="*oleasapi.dll*" OR Registry.registry_value_data="*msbasesysdc.dll*"))) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
 | where RegistryKey has @"\Services\"
 | where (RegistryValueName =~ "ServiceMain" and RegistryValueData =~ "RegisterService")
-    or (RegistryValueName =~ "ServiceDll" and RegistryValueData has_any ("oleasapi.dll","msbasesysdc.dll"))
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+    or (RegistryValueName in~ ("ServiceDll","ImagePath") and RegistryValueData has_any ("oleasapi.dll","msbasesysdc.dll"))
+    or RegistryKey has_any (@"\Services\NgcCIntSvc", @"\Services\Cusrxsrv", @"\Services\specitsrc", @"\Services\cmtastsvc", @"\Services\vmictimerosync", @"\Services\vmicagent")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### OctLurk/SilkLurk/LurkProxy C2 beacon to campaign infrastructure
+### OctLurk/SilkLurk/LurkProxy C2 beacon to named backdoor infrastructure
 
-`UC_103_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_104_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.138.157.165","154.196.162.76","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.138.157.165","154.196.162.76","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130") OR All_Traffic.dest IN ("dns.multitoconference.com","tj.tajikistandip.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","digital.leroymerlin.com","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","dns.ssentialserv.xyz","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","ctyuhjerf.kozow.com","uyhvfredc.accesscam.org","gycudore.kozow.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["dns.multitoconference.com","tj.tajikistandip.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","digital.leroymerlin.com","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","dns.ssentialserv.xyz","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","ctyuhjerf.kozow.com","uyhvfredc.accesscam.org","gycudore.kozow.com"]);
-let c2Ips = dynamic(["45.138.157.165","154.196.162.76","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl in~ (c2Domains) or RemoteIP in (c2Ips)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| where RemoteUrl in~ ("dns.multitoconference.com","tj.tajikistandip.com","fm01.clouddevicemetrics.com","confbase.mdpsupport.net","digital.leroymerlin.com","api2.annoyingremote.com","about.blsouqs.com","ssl.blsouqs.com","dns.ssentialserv.xyz","tyhbgtyuj.gleeze.com","wedfcvbn.gleeze.com","rgnojb.casacam.net","ctyuhjerf.kozow.com","uyhvfredc.accesscam.org","gycudore.kozow.com")
+    or RemoteIP in ("45.138.157.165","154.196.162.76","95.179.210.138","45.77.136.228","95.179.141.26","45.32.152.50","212.11.39.138","195.86.120.2","154.196.187.73","45.61.149.112","64.7.198.130")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessMD5, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### OctLurk Command Shell plugin post-compromise recon cluster (chcp 1256 + session enum)
+### OctLurk victim-fingerprinting recon command burst (chcp 1256 + qwinsta + klist + tasklist)
 
-`UC_103_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_104_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Processes.process) as commands dc(Processes.process_name) as distinct_cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=chcp.com AND Processes.process="*1256*") OR Processes.process_name=qwinsta.exe OR (Processes.process_name=klist.exe AND Processes.process="*sessions*") OR (Processes.process_name=tasklist.exe AND Processes.process="*/V*") OR Processes.process="*$PSVersionTable*" by Processes.dest _time span=1h
-| `drop_dm_object_name(Processes)`
-| where distinct_cmds>=3
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count values(Processes.process) as cmds dc(Processes.process_name) as cmdcount min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=chcp.com AND Processes.process="*1256*") OR Processes.process_name=qwinsta.exe OR (Processes.process_name=klist.exe AND Processes.process="*sessions*") OR (Processes.process_name=tasklist.exe AND Processes.process="*/V*") OR (Processes.process_name IN (powershell.exe,pwsh.exe) AND Processes.process="*PSVersionTable*") by Processes.dest Processes.parent_process_id Processes.parent_process_name _time span=10m | where cmdcount>=3 | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
 | where (FileName =~ "chcp.com" and ProcessCommandLine has "1256")
     or FileName =~ "qwinsta.exe"
     or (FileName =~ "klist.exe" and ProcessCommandLine has "sessions")
     or (FileName =~ "tasklist.exe" and ProcessCommandLine has "/V")
     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "$PSVersionTable")
-| summarize DistinctCmds = dcount(FileName), Cmds = make_set(ProcessCommandLine),
-            Parents = make_set(InitiatingProcessFileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-            by DeviceName, bin(Timestamp, 1h)
-| where DistinctCmds >= 3
-| order by LastSeen desc
+| summarize CmdCount=dcount(FileName), Cmds=make_set(ProcessCommandLine, 10), StartTime=min(Timestamp), EndTime=max(Timestamp)
+    by DeviceName, InitiatingProcessId, InitiatingProcessFileName, bin(Timestamp, 10m)
+| where CmdCount >= 3
+| order by StartTime desc
+```
+
+### Impacket secretsdump credential dumping in OctLurk post-compromise
+
+`UC_104_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*secretsdump*" OR (Processes.process="*-just-dc*" AND Processes.process="*@*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("secretsdump","secretsdump.py")
+    or (ProcessCommandLine has "-just-dc" and ProcessCommandLine has "@")
+    or (ProcessCommandLine has "-just-dc-ntlm" and ProcessCommandLine has "-hashes")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### FSCAN internal network reconnaissance fan-out
+
+`UC_104_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(All_Traffic.dest_ip) as DistinctHosts values(All_Traffic.dest_port) as Ports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,135,139,445,1433,3306,3389,6379) AND (All_Traffic.dest_ip="10.0.0.0/8" OR All_Traffic.dest_ip="172.16.0.0/12" OR All_Traffic.dest_ip="192.168.0.0/16") by All_Traffic.src _time span=5m | where DistinctHosts>=50 | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIPType == "Private"
+| where RemotePort in (22, 135, 139, 445, 1433, 3306, 3389, 6379)
+| summarize DistinctHosts=dcount(RemoteIP), Ports=make_set(RemotePort, 20), StartTime=min(Timestamp), EndTime=max(Timestamp)
+    by DeviceName, InitiatingProcessFileName, InitiatingProcessId, bin(Timestamp, 5m)
+| where DistinctHosts >= 50   // fscan-style fan-out; tune to /24 estate size
+| order by DistinctHosts desc
+```
+
+### Browser credential-store theft via OctLurk browser password decryptor
+
+`UC_104_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\User Data\\*\\Login Data" OR Filesystem.file_path="*\\User Data\\Local State" OR Filesystem.file_name=key4.db OR Filesystem.file_name=logins.json) AND NOT Filesystem.process_name IN (chrome.exe,msedge.exe,firefox.exe,brave.exe,opera.exe,msedgewebview2.exe) by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FileName in~ ("Login Data","Local State","logins.json","key4.db","Web Data","cookies.sqlite")
+    or FolderPath has_any (@"\User Data\Default\Login Data", @"\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","msedgewebview2.exe","OneDrive.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ActionType
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -541,7 +594,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OctLurk and SilkLurk: newly identified tailored backdoors in cyber-espionage cam
 
-`UC_103_11` · phase: **exploit** · confidence: **High**
+`UC_104_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -620,4 +673,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

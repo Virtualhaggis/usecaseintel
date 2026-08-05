@@ -38,12 +38,11 @@ CVE-2026-9198 (CVSS score: 9.8) - A code injection vulnerability in Langflow tha
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
-- **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1595.003** — Active Scanning: Wordlist Scanning
-- **T1590** — Gather Victim Network Information
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1203** — Exploitation for Client Execution
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
 
 ## Kill chain phases observed
 
@@ -51,54 +50,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Single source fingerprinting Langflow/n8n/Tomcat exploit paths (Hermes/FOFA sweep)
+### Langflow unauthenticated RCE via /api/v1/auto_login + /api/v1/validate/code (CVE-2026-9198)
 
-`UC_1_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count values(Web.uri_path) as uri_paths dc(Web.uri_path) as distinct_paths min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.uri_path IN ("/api/v1/auto_login","/api/v1/validate/code","/rest/","/manager/html") by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| where distinct_paths>=3
-| convert ctime(firstTime) ctime(lastTime)
-| sort - distinct_paths
-```
-
-### Langflow CVE-2026-9198 RCE chain: auto_login token mint then validate/code exec
-
-`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count values(Web.uri_path) as uri_paths values(Web.http_method) as methods values(Web.status) as statuses min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.uri_path IN ("/api/v1/auto_login","/api/v1/validate/code") by Web.src Web.dest
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_path="/api/v1/validate/code" OR Web.uri_path="/api/v1/auto_login") by Web.src, Web.dest, Web.uri_path, Web.http_method, Web.status, Web.http_user_agent
 | `drop_dm_object_name(Web)`
-| search uri_paths="*auto_login*" uri_paths="*validate/code*"
-| convert ctime(firstTime) ctime(lastTime)
+| where uri_path="/api/v1/validate/code" OR uri_path="/api/v1/auto_login"
 | sort - lastTime
 ```
 
-### Langflow application service spawning a shell/recon binary (CVE-2026-9198 execution)
+### Langflow (python/uvicorn) process spawning shell interpreter — post-RCE code execution
 
-`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","uvicorn","gunicorn") OR Processes.parent_process="*langflow*") AND Processes.process_name IN ("sh","bash","dash","cmd.exe","powershell.exe","curl","wget","whoami","id","nc") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process="*langflow*" AND Endpoint.Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","pwsh") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.parent_process, Endpoint.Processes.process_name, Endpoint.Processes.process
 | `drop_dm_object_name(Processes)`
-| where match(parent_process,"(?i)langflow|uvicorn")
-| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessCommandLine has_any ("langflow","uvicorn")
-| where InitiatingProcessFileName in~ ("python","python3","python3.11","python3.12","uvicorn","gunicorn","python.exe","pythonw.exe")
-| where FileName in~ ("sh","bash","dash","cmd.exe","powershell.exe","pwsh","curl","wget","whoami","id","nc","nslookup")
+| where Timestamp > ago(14d)
+| where InitiatingProcessCommandLine has "langflow"
+| where InitiatingProcessFileName in~ ("python","python3","uvicorn","gunicorn")
+| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","pwsh.exe")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### KEV exposure hunt — Langflow, Tomcat, N-central and knaithe campaign CVEs unpatched
+
+`UC_2_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-9198","CVE-2026-34486","CVE-2026-18556","CVE-2026-18577","CVE-2026-3055","CVE-2026-39987","CVE-2026-33824") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| sort cve
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-9198","CVE-2026-34486","CVE-2026-18556","CVE-2026-18577","CVE-2026-3055","CVE-2026-39987","CVE-2026-33824")
+| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by CveId asc
+```
+
+### Post-RCE persistence written by Langflow python process (cron/systemd/authorized_keys)
+
+`UC_2_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name IN ("python","python3","uvicorn","gunicorn") AND (Endpoint.Filesystem.file_path IN ("/etc/cron.d/*","/var/spool/cron/*","/etc/systemd/system/*") OR Endpoint.Filesystem.file_name IN ("authorized_keys","crontab",".bashrc",".bash_profile",".profile")) by Endpoint.Filesystem.dest, Endpoint.Filesystem.process_name, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessCommandLine has "langflow"
+| where ActionType in ("FileCreated","FileModified")
+| where FolderPath has_any ("/etc/cron", "/var/spool/cron", "/etc/systemd/system", "/.config/systemd", "/.ssh")
+    or FileName in~ ("authorized_keys","crontab",".bashrc",".bash_profile",".profile")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
 | order by Timestamp desc
 ```
 
@@ -291,4 +317,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2613 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-08-05
 - [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
+- [open vsx removes 77 malicious evil twin extensions exfiltrat](./2026-08-05/open-vsx-removes-77-malicious-evil-twin-extensions-exfiltrat.md)
 - [quickfox supply chain attack delivers fdmtp backdoor via tro](./2026-08-05/quickfox-supply-chain-attack-delivers-fdmtp-backdoor-via-tro.md)
 
 ## 2026-08-04
