@@ -34,16 +34,15 @@ The Chinese cybercrime group known as Silver Fox has been observed using new dri
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1053.005** — Persistence (article-specific)
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1068** — Exploitation for Privilege Escalation
 - **T1543.003** — Create or Modify System Process: Windows Service
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1105** — Ingress Tool Transfer
 - **T1095** — Non-Application Layer Protocol
 - **T1055.003** — Process Injection: Thread Execution Hijacking
+- **T1105** — Ingress Tool Transfer
 - **T1102** — Web Service
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547.001** — Boot or Logon Autostart Execution
+- **T1547.010** — Boot or Logon Autostart Execution
 
 ## Kill chain phases observed
 
@@ -51,15 +50,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Zeon-signed ConvertToPDF.exe / PDFDirect.exe side-loading PDFCORE8.dll (SilverFox)
+### SilverFox DLL side-load: PDFCORE8.dll loaded by ConvertToPDF.exe / PDFDirect.exe
 
 `UC_101_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("ConvertToPDF.exe","PDFDirect.exe")) AND NOT (Processes.process_path IN ("*\\Program Files\\*","*\\Program Files (x86)\\*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process Processes.process_id
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ConvertToPDF.exe" OR Processes.process_name="PDFDirect.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -68,60 +65,57 @@ DeviceImageLoadEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "PDFCORE8.dll"
 | where InitiatingProcessFileName in~ ("ConvertToPDF.exe","PDFDirect.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, LoadedDll = FileName, DllPath = FolderPath, SHA256
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, LoadedDll = FileName, LoadedDllPath = FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### SilverFox multi-driver BYOVD payload dropped (BootRepair/EnPortv/wsftprm/amsdk .sys)
+### SilverFox BYOVD vulnerable-driver drop (BootRepair.sys / EnPortv.sys / wsftprm.sys)
 
-`UC_101_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_101_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count dc(Filesystem.file_name) as DriverCount values(Filesystem.file_name) as Drivers values(Filesystem.file_path) as Paths min(_time) as firstTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name IN ("BootRepair.sys","EnPortv.sys","wsftprm.sys","amsdk.sys")) by Filesystem.dest Filesystem.process_id
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="BootRepair.sys" OR Filesystem.file_name="EnPortv.sys" OR Filesystem.file_name="wsftprm.sys" OR Filesystem.file_name="amsdk.sys") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
 | where FileName in~ ("BootRepair.sys","EnPortv.sys","wsftprm.sys","amsdk.sys")
-| summarize DriverCount = dcount(FileName), Drivers = make_set(FileName), Paths = make_set(FolderPath), FirstSeen = min(Timestamp), SHA256s = make_set(SHA256) by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256
-| order by FirstSeen desc
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, DroppedDriver = FileName, FolderPath, SHA256
+| order by Timestamp desc
 ```
 
-### BYOVD driver service registration for SilverFox vulnerable drivers
+### SilverFox BYOVD driver service registration in HKLM Services
 
-`UC_101_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_101_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime from datamodel=Endpoint.Registry where (Registry.registry_path IN ("*\\CurrentControlSet\\Services\\BootRepair*","*\\CurrentControlSet\\Services\\EnPortv*","*\\CurrentControlSet\\Services\\wsftprm*","*\\CurrentControlSet\\Services\\amsdk*")) by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_id
-| `drop_dm_object_name(Registry)`
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentControlSet\\Services\\*" AND (Registry.registry_value_data="*BootRepair.sys*" OR Registry.registry_value_data="*EnPortv.sys*" OR Registry.registry_value_data="*wsftprm.sys*" OR Registry.registry_value_data="*amsdk.sys*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(30d)
-| where RegistryKey has @"CurrentControlSet\Services"
-| where RegistryKey has_any ("BootRepair","EnPortv","wsftprm","amsdk")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\CurrentControlSet\Services\"
+| where RegistryValueData has_any ("BootRepair.sys","EnPortv.sys","wsftprm.sys","amsdk.sys")
+    or RegistryKey has_any ("\\BootRepair","\\EnPortv","\\wsftprm","\\amsdk")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RegistryKey, RegistryValueName, RegistryValueData
 | order by Timestamp desc
 ```
 
-### ValleyRAT C2 / shellcode fetch to 43.128.26.132
+### ValleyRAT C2 to SilverFox server 43.128.26.132 (esp. from svchost.exe)
 
 `UC_101_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="43.128.26.132" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="43.128.26.132" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -129,19 +123,18 @@ DeviceRegistryEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "43.128.26.132"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| extend SuspiciousProc = iff(InitiatingProcessFileName =~ "svchost.exe", "svchost-outbound-anomaly", "other")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, SuspiciousProc
 | order by Timestamp desc
 ```
 
-### Downloader retrieval from SilverFox Tencent COS bucket
+### SilverFox staging domain: Tencent Cloud COS bucket hrefbfdhfhgre-1422102728
 
 `UC_101_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime from datamodel=Network_Resolution.DNS where DNS.query="hrefbfdhfhgre-1422102728.cos.ap-hongkong.myqcloud.com" by DNS.src DNS.query DNS.answer
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="hrefbfdhfhgre-1422102728.cos.ap-hongkong.myqcloud.com" by All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -149,29 +142,26 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteUrl has "hrefbfdhfhgre-1422102728.cos.ap-hongkong.myqcloud.com"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### SilverFox watchdog persistence: scheduled task launching a batch loader
+### SilverFox watchdog persistence: PDF loader spawning schtasks / batch script
 
-`UC_101_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_101_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND Processes.process="*.bat*" by Processes.dest Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="ConvertToPDF.exe" OR Processes.parent_process_name="PDFDirect.exe") AND (Processes.process_name="schtasks.exe" OR Processes.process_name="cmd.exe" OR Processes.process_name="reg.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create" and ProcessCommandLine has ".bat"
-| where InitiatingProcessFileName in~ ("ConvertToPDF.exe","PDFDirect.exe","cmd.exe","rundll32.exe","svchost.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, ProcessCommandLine
+| where InitiatingProcessFileName in~ ("ConvertToPDF.exe","PDFDirect.exe")
+| where FileName in~ ("schtasks.exe","cmd.exe","reg.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, ChildProcess = FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -476,4 +466,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
