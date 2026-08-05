@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2613 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,8 +10,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-08-05
 - [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
+- [cisa warns of hackers exploiting langflow n central apache t](./2026-08-05/cisa-warns-of-hackers-exploiting-langflow-n-central-apache-t.md)
+- [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
+- [how ai powered phishing killed blocklists for good](./2026-08-05/how-ai-powered-phishing-killed-blocklists-for-good.md)
+- [kali365 weaponizes microsoft authentication against us compa](./2026-08-05/kali365-weaponizes-microsoft-authentication-against-us-compa.md)
+- [leaked n8n api tokens exposed live instances to credential t](./2026-08-05/leaked-n8n-api-tokens-exposed-live-instances-to-credential-t.md)
+- [new ovswrap linux kernel flaw lets local users gain root via](./2026-08-05/new-ovswrap-linux-kernel-flaw-lets-local-users-gain-root-via.md)
 - [open vsx removes 77 malicious evil twin extensions exfiltrat](./2026-08-05/open-vsx-removes-77-malicious-evil-twin-extensions-exfiltrat.md)
+- [paperclip ai flaws let attackers run host commands via malic](./2026-08-05/paperclip-ai-flaws-let-attackers-run-host-commands-via-malic.md)
+- [poison claude sells discounted claude access while its opera](./2026-08-05/poison-claude-sells-discounted-claude-access-while-its-opera.md)
 - [quickfox supply chain attack delivers fdmtp backdoor via tro](./2026-08-05/quickfox-supply-chain-attack-delivers-fdmtp-backdoor-via-tro.md)
+- [trojanized npm packages employ nullreceiver tactic to decode](./2026-08-05/trojanized-npm-packages-employ-nullreceiver-tactic-to-decode.md)
 
 ## 2026-08-04
 - [128 seconds to disruption microsoft defender stops ransomwar](./2026-08-04/128-seconds-to-disruption-microsoft-defender-stops-ransomwar.md)
@@ -60,7 +69,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
 - [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
-- [inside the underground business of the android btmob rat mal](./2026-08-03/inside-the-underground-business-of-the-android-btmob-rat-mal.md)
 - [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
 - [n able warns of n central auth bypass flaw exploited in atta](./2026-08-03/n-able-warns-of-n-central-auth-bypass-flaw-exploited-in-atta.md)
 - [new doublecup clickfix service hides malware in browser cach](./2026-08-03/new-doublecup-clickfix-service-hides-malware-in-browser-cach.md)
@@ -89,10 +97,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
 ## 2026-07-30
-- [amazon links debug and chalk npm hijack to north korea s sap](./2026-07-30/amazon-links-debug-and-chalk-npm-hijack-to-north-korea-s-sap.md)
 - [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
-- [cisco fmc zero day actively exploited static credentials cou](./2026-07-30/cisco-fmc-zero-day-actively-exploited-static-credentials-cou.md)
 - [compromised npm packages joyfill components and joyfill layo](./2026-07-30/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
 - [ghsa critical cve 2025 4318 aws amplify studio ui component ](./2026-07-30/ghsa-critical-cve-2025-4318-aws-amplify-studio-ui-component-.md)
@@ -112,14 +118,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-29
 - [cisa kev cve 2026 20316 cisco secure firewall management cen](./2026-07-29/cisa-kev-cve-2026-20316-cisco-secure-firewall-management-cen.md)
-- [coordinated cyberattack targets 30 minnesota water systems a](./2026-07-29/coordinated-cyberattack-targets-30-minnesota-water-systems-a.md)
-- [critical rails flaw could let unauthenticated attackers read](./2026-07-29/critical-rails-flaw-could-let-unauthenticated-attackers-read.md)
 - [four incident response decisions from the hugging face breac](./2026-07-29/four-incident-response-decisions-from-the-hugging-face-breac.md)
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
-- [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
-- [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
-- [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
 
 ## 2026-07-28
 - [2026 mid year update on pace for our biggest year yet](./2026-07-28/2026-mid-year-update-on-pace-for-our-biggest-year-yet.md)
@@ -160,7 +161,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-23
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
-- [email threat landscape q2 2026 trends and insights](./2026-07-23/email-threat-landscape-q2-2026-trends-and-insights.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
@@ -171,7 +171,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 16232 check point smartconsole improper au](./2026-07-22/cisa-kev-cve-2026-16232-check-point-smartconsole-improper-au.md)
 - [cisa kev cve 2026 50522 microsoft sharepoint deserialization](./2026-07-22/cisa-kev-cve-2026-50522-microsoft-sharepoint-deserialization.md)
 - [finding eight high severity vulnerabilities in nodebb in six](./2026-07-22/finding-eight-high-severity-vulnerabilities-in-nodebb-in-six.md)
-- [real world incident response microsoft and axa xl strengthen](./2026-07-22/real-world-incident-response-microsoft-and-axa-xl-strengthen.md)
 - [sol searching can frontier models tackle autonomous long hor](./2026-07-22/sol-searching-can-frontier-models-tackle-autonomous-long-hor.md)
 - [sql injection isn t dead](./2026-07-22/sql-injection-isn-t-dead.md)
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)

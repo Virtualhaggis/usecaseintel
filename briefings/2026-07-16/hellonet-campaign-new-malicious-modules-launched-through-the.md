@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### HelloInjector DLL side-load: wtsapi32.dll dropped into ViPNet Update System dir
 
-`UC_206_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_205_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### HelloNet renamed-PuTTY reverse SSH tunnel to 5.39.253.206
 
-`UC_206_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_205_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### HelloProxy C2-handler artifact: tesh4RPC.txt written to C:\Users\Public
 
-`UC_206_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_205_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceFileEvents
 
 ### HelloExecutor recon enumerating ViPNet Client/Administrator Export key stores
 
-`UC_206_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_205_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceProcessEvents
 
 ### HelloNet C2 egress to 5.39.253.206 / 176.32.34.135
 
-`UC_206_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_205_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceNetworkEvents
 
 ### HelloProxy listener: svchost.exe binding TCP 5003/5060
 
-`UC_206_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_205_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -237,7 +237,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — HelloNet campaign: new malicious modules launched through the ViPNet update syst
 
-`UC_206_4` · phase: **exploit** · confidence: **High**
+`UC_205_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

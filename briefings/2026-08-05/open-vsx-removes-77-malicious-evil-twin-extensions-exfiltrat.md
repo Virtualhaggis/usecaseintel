@@ -36,13 +36,12 @@ The "evil twin" extensions were uploaded to the repository between July 26 and A
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1567** — Exfiltration Over Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1008** — Fallback Channels
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1176.002** — IDE Extensions
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1105** — Ingress Tool Transfer
-- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
@@ -50,70 +49,73 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Open VSX evil-twin extension exfiltrating developer data to mangorbit.com
+### Open VSX evil-twin extension exfil to mangorbit[.]com / npm-cache[.]com
 
-`UC_0_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_12_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*mangorbit.com*" OR Web.dest IN ("mangorbit.com","pulse.mangorbit.com","pulse2.mangorbit.com","api.mangorbit.com","cb.mangorbit.com")) by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.app | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("mangorbit.com","*.mangorbit.com","npm-cache.com","*.npm-cache.com")) by DNS.src DNS.query DNS.record_type | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "mangorbit.com"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has_any ("mangorbit.com","npm-cache.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### DNS TXT fallback-channel lookup to mangorbit.com (recon-variant contingency)
+### Malicious Open VSX evil-twin extension install (named IDs, version 0.0.1)
 
-`UC_0_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_12_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="mangorbit.com" OR DNS.query="*.mangorbit.com") AND DNS.record_type="TXT" by DNS.src, DNS.query, DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\.vscode\\extensions\\*","*\\.vscode-oss\\extensions\\*","*\\.cursor\\extensions\\*","*\\.windsurf\\extensions\\*")) AND Filesystem.file_path="*-0.0.1*" AND (Filesystem.file_path="*amd.gaia-vscode*" OR Filesystem.file_path="*artsy.artsy-studio-extension-pack*" OR Filesystem.file_path="*configcat.configcat-feature-flags*" OR Filesystem.file_path="*iotaledger.iota-move*" OR Filesystem.file_path="*marketplace.visualstudio*" OR Filesystem.file_path="*obyte.oscript-vscode-plugin*" OR Filesystem.file_path="*openeuphoria.vscode-euphoria*" OR Filesystem.file_path="*oss.sfmc-devtools-vscode*" OR Filesystem.file_path="*rumbledb.jsoniq-vscode*" OR Filesystem.file_path="*ssagov.uef-snippets*" OR Filesystem.file_path="*taskfile.vscode-task*" OR Filesystem.file_path="*doi.fileheadercomment*" OR Filesystem.file_path="*mengsiCode.vscode-django-boilerplate*" OR Filesystem.file_path="*move.move-analyzer*" OR Filesystem.file_path="*uavcan.dsdl*" OR Filesystem.file_path="*vs-publisher-988541.apexsql-power-tools*" OR Filesystem.file_path="*casualjim.gotemplate*" OR Filesystem.file_path="*jcamp.dotnet-test-provider-view*" OR Filesystem.file_path="*superposition.supertoml-analyzer*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+let evilIds = dynamic(["amd.gaia-vscode","artsy.artsy-studio-extension-pack","configcat.configcat-feature-flags","iotaledger.iota-move","marketplace.visualstudio","obyte.oscript-vscode-plugin","openeuphoria.vscode-euphoria","oss.sfmc-devtools-vscode","rumbledb.jsoniq-vscode","ssagov.uef-snippets","taskfile.vscode-task","doi.fileheadercomment","mengsiCode.vscode-django-boilerplate","move.move-analyzer","uavcan.dsdl","vs-publisher-988541.apexsql-power-tools","casualjim.gotemplate","jcamp.dotnet-test-provider-view","superposition.supertoml-analyzer"]);
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "mangorbit.com"
-| where RemoteUrl has_any ("pulse.mangorbit.com","pulse2.mangorbit.com","api.mangorbit.com","cb.mangorbit.com")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
+| where ActionType in ("FileCreated","FileModified")
+| where FolderPath has_any (@"\.vscode\extensions\", @"\.vscode-oss\extensions\", @"\.cursor\extensions\", @"\.windsurf\extensions\")
+| where FolderPath has "-0.0.1"
+| where FolderPath has_any (evilIds)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName
 | order by Timestamp desc
 ```
 
-### ChainDrop / Mini Shai-Hulud npm preinstall hook downloading standalone Bun runtime
+### ChainDrop npm preinstall dropper (setup.mjs / Bun runtime / Math_Symbol.js)
 
-`UC_0_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("bun.exe","bun") AND Processes.parent_process_name IN ("node.exe","node","npm.cmd","npm","cmd.exe","bash","sh") by Processes.dest, Processes.user, Processes.parent_process, Processes.process, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*setup.mjs*" OR Processes.process="*Math_Symbol.js*") OR (Processes.parent_process="*npm*" AND Processes.process="*bun*" AND (Processes.process="*install*" OR Processes.process="*preinstall*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("bun.exe","bun")
-| where InitiatingProcessFileName in~ ("node.exe","node","npm.cmd","npm","cmd.exe","bash","sh")
-     or InitiatingProcessCommandLine has "preinstall"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where ProcessCommandLine has_any ("setup.mjs","Math_Symbol.js")
+   or (InitiatingProcessCommandLine has "preinstall" and ProcessCommandLine has "bun")
+   or (InitiatingProcessFileName in~ ("node.exe","npm.exe") and FileName =~ "bun.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Mini Shai-Hulud persistence via .claude and .vscode config injection
+### ChainDrop persistence via .claude / .vscode autostart injection by node/bun
 
-`UC_0_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.claude\\*" OR Filesystem.file_path="*\\.vscode\\*") AND Filesystem.file_name IN ("settings.json","extensions.json","mcp.json","config.json","CLAUDE.md") AND Filesystem.process_name IN ("node.exe","bun.exe","git.exe") by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.claude\\*" OR Filesystem.file_path="*/.claude/*" OR Filesystem.file_path="*\\.vscode\\*" OR Filesystem.file_path="*/.vscode/*") AND (Filesystem.file_name IN ("settings.json","tasks.json","mcp.json","extensions.json","launch.json")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -121,28 +123,10 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
+| where InitiatingProcessFileName in~ ("node.exe","bun.exe","npm.exe")
 | where FolderPath has_any (@"\.claude\", @"\.vscode\")
-| where FileName in~ ("settings.json","extensions.json","mcp.json","config.json","CLAUDE.md")
-| where InitiatingProcessFileName in~ ("node.exe","bun.exe","git.exe","npm.cmd")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
-| order by Timestamp desc
-```
-
-### ChainDrop stealer egress to npm-cache.com C2 / delivery channel
-
-`UC_0_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="npm-cache.com" OR DNS.query="*.npm-cache.com") by DNS.src, DNS.query, DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "npm-cache.com"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where FileName in~ ("settings.json","tasks.json","mcp.json","extensions.json","launch.json")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName
 | order by Timestamp desc
 ```
 
@@ -377,7 +361,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Open VSX Removes 77 Malicious Evil Twin Extensions Exfiltrating Developer Data
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_12_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -437,4 +421,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

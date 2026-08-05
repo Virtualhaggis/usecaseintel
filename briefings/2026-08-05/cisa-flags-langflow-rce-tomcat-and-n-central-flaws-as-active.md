@@ -40,9 +40,7 @@ CVE-2026-9198 (CVSS score: 9.8) - A code injection vulnerability in Langflow tha
 - **T1071** — Application Layer Protocol
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1053.003** — Scheduled Task/Job: Cron
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1098.004** — Account Manipulation: SSH Authorized Keys
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
@@ -50,82 +48,51 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Langflow unauthenticated RCE via /api/v1/auto_login + /api/v1/validate/code (CVE-2026-9198)
+### Langflow unauthenticated RCE chain: /api/v1/auto_login + /api/v1/validate/code (CVE-2026-9198)
 
-`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_path="/api/v1/validate/code" OR Web.uri_path="/api/v1/auto_login") by Web.src, Web.dest, Web.uri_path, Web.http_method, Web.status, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| where uri_path="/api/v1/validate/code" OR uri_path="/api/v1/auto_login"
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status from datamodel=Web.Web where (Web.url="*/api/v1/auto_login*" OR Web.url="*/api/v1/validate/code*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | eval endpoint=if(match(url,"validate/code"),"code-exec-sink","superuser-token-mint") | stats values(endpoint) as endpoints values(url) as urls values(http_method) as methods values(status) as statuses sum(count) as requests min(firstTime) as firstTime max(lastTime) as lastTime by src dest | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
-### Langflow (python/uvicorn) process spawning shell interpreter — post-RCE code execution
+### Langflow/uvicorn web process spawning OS shell or download tool (CVE-2026-9198 post-RCE)
 
-`UC_2_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Endpoint.Processes.parent_process="*langflow*" AND Endpoint.Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","pwsh") by Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.parent_process_name, Endpoint.Processes.parent_process, Endpoint.Processes.process_name, Endpoint.Processes.process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.parent_process="*langflow*") AND (Processes.process_name IN ("sh","bash","dash","cmd.exe","powershell.exe","pwsh","pwsh.exe","curl","wget","curl.exe","wget.exe","nc","ncat")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(7d)
 | where InitiatingProcessCommandLine has "langflow"
-| where InitiatingProcessFileName in~ ("python","python3","uvicorn","gunicorn")
-| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","pwsh.exe")
+| where FileName in~ ("sh","bash","dash","cmd.exe","powershell.exe","pwsh","pwsh.exe","curl","curl.exe","wget","wget.exe","nc","ncat")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess=FileName, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### KEV exposure hunt — Langflow, Tomcat, N-central and knaithe campaign CVEs unpatched
+### Exposure hunt: internet-facing hosts vulnerable to the CISA KEV Langflow/Tomcat/N-central CVEs
 
-`UC_2_8` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-9198","CVE-2026-34486","CVE-2026-18556","CVE-2026-18577","CVE-2026-3055","CVE-2026-39987","CVE-2026-33824") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature
-| `drop_dm_object_name(Vulnerabilities)`
-| sort cve
-```
+`UC_14_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-DeviceTvmSoftwareVulnerabilities
+let KevCves = dynamic(["CVE-2026-9198","CVE-2026-34486","CVE-2026-18556","CVE-2026-18577","CVE-2026-33017"]);
+let Exposure = DeviceInfo
 | where Timestamp > ago(1d)
-| where CveId in ("CVE-2026-9198","CVE-2026-34486","CVE-2026-18556","CVE-2026-18577","CVE-2026-3055","CVE-2026-39987","CVE-2026-33824")
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc
-```
-
-### Post-RCE persistence written by Langflow python process (cron/systemd/authorized_keys)
-
-`UC_2_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name IN ("python","python3","uvicorn","gunicorn") AND (Endpoint.Filesystem.file_path IN ("/etc/cron.d/*","/var/spool/cron/*","/etc/systemd/system/*") OR Endpoint.Filesystem.file_name IN ("authorized_keys","crontab",".bashrc",".bash_profile",".profile")) by Endpoint.Filesystem.dest, Endpoint.Filesystem.process_name, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessCommandLine has "langflow"
-| where ActionType in ("FileCreated","FileModified")
-| where FolderPath has_any ("/etc/cron", "/var/spool/cron", "/etc/systemd/system", "/.config/systemd", "/.ssh")
-    or FileName in~ ("authorized_keys","crontab",".bashrc",".bash_profile",".profile")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
-| order by Timestamp desc
+| summarize arg_max(Timestamp, IsInternetFacing) by DeviceId;
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (KevCves)
+| summarize by DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| join kind=leftouter Exposure on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| order by IsInternetFacing desc, CveId asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -317,4 +284,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
