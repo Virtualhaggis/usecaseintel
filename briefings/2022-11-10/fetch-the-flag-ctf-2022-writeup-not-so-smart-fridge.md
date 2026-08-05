@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Pistache CVE-2022-26068 path traversal reading /etc/passwd via /doc/../
 
-`UC_1935_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1936_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Pistache binary theft via /doc/../../proc/self/exe path traversal
 
-`UC_1935_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1936_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### curl --path-as-is traversal command exfiltrating /proc/self/exe or /etc/passwd
 
-`UC_1935_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1936_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

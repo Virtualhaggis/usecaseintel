@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### jQuery prototype pollution payload (__proto__) in inbound HTTP request (CVE-2019-11358)
 
-`UC_3554_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3555_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — After three years of silence, a new jQuery prototype pollution vulnerability eme
 
-`UC_3554_0` · phase: **exploit** · confidence: **High**
+`UC_3555_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2612 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2613 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,17 +10,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-08-05
 - [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
+- [cisa kev cve 2026 63077 jetbrains teamcity deserialization o](./2026-08-05/cisa-kev-cve-2026-63077-jetbrains-teamcity-deserialization-o.md)
 - [cisa warns of hackers exploiting langflow n central apache t](./2026-08-05/cisa-warns-of-hackers-exploiting-langflow-n-central-apache-t.md)
+- [coldcard security audit phishing attack installs remote acce](./2026-08-05/coldcard-security-audit-phishing-attack-installs-remote-acce.md)
 - [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
 - [how ai powered phishing killed blocklists for good](./2026-08-05/how-ai-powered-phishing-killed-blocklists-for-good.md)
 - [kali365 weaponizes microsoft authentication against us compa](./2026-08-05/kali365-weaponizes-microsoft-authentication-against-us-compa.md)
 - [leaked n8n api tokens exposed live instances to credential t](./2026-08-05/leaked-n8n-api-tokens-exposed-live-instances-to-credential-t.md)
 - [new ovswrap linux kernel flaw lets local users gain root via](./2026-08-05/new-ovswrap-linux-kernel-flaw-lets-local-users-gain-root-via.md)
 - [open vsx removes 77 malicious evil twin extensions exfiltrat](./2026-08-05/open-vsx-removes-77-malicious-evil-twin-extensions-exfiltrat.md)
+- [openai disrupts poipet scam network using chatgpt across mul](./2026-08-05/openai-disrupts-poipet-scam-network-using-chatgpt-across-mul.md)
+- [over 250 clickfix domains use browser fingerprinting to hide](./2026-08-05/over-250-clickfix-domains-use-browser-fingerprinting-to-hide.md)
 - [paperclip ai flaws let attackers run host commands via malic](./2026-08-05/paperclip-ai-flaws-let-attackers-run-host-commands-via-malic.md)
 - [poison claude sells discounted claude access while its opera](./2026-08-05/poison-claude-sells-discounted-claude-access-while-its-opera.md)
 - [quickfox supply chain attack delivers fdmtp backdoor via tro](./2026-08-05/quickfox-supply-chain-attack-delivers-fdmtp-backdoor-via-tro.md)
 - [trojanized npm packages employ nullreceiver tactic to decode](./2026-08-05/trojanized-npm-packages-employ-nullreceiver-tactic-to-decode.md)
+- [who was behind the attack possibly nobody](./2026-08-05/who-was-behind-the-attack-possibly-nobody.md)
 
 ## 2026-08-04
 - [128 seconds to disruption microsoft defender stops ransomwar](./2026-08-04/128-seconds-to-disruption-microsoft-defender-stops-ransomwar.md)
@@ -70,7 +75,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
 - [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
 - [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
-- [n able warns of n central auth bypass flaw exploited in atta](./2026-08-03/n-able-warns-of-n-central-auth-bypass-flaw-exploited-in-atta.md)
 - [new doublecup clickfix service hides malware in browser cach](./2026-08-03/new-doublecup-clickfix-service-hides-malware-in-browser-cach.md)
 - [new pass ta key attacks let malware hijack google synced pas](./2026-08-03/new-pass-ta-key-attacks-let-malware-hijack-google-synced-pas.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
@@ -108,9 +112,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
 - [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
-- [russian hackers exploit microsoft owa flaw to keep mailbox a](./2026-07-30/russian-hackers-exploit-microsoft-owa-flaw-to-keep-mailbox-a.md)
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
-- [silverfox targets japanese manufacturer with 3 driver byovd ](./2026-07-30/silverfox-targets-japanese-manufacturer-with-3-driver-byovd-.md)
 - [the attacker never sleeps neither can your testing](./2026-07-30/the-attacker-never-sleeps-neither-can-your-testing.md)
 - [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
 - [what s new in microsoft security july 2026](./2026-07-30/what-s-new-in-microsoft-security-july-2026.md)
@@ -679,7 +681,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 43510 apple multiple products improper loc](./2026-03-20/cisa-kev-cve-2025-43510-apple-multiple-products-improper-loc.md)
 - [cisa kev cve 2025 43520 apple multiple products classic buff](./2026-03-20/cisa-kev-cve-2025-43520-apple-multiple-products-classic-buff.md)
 - [cisa kev cve 2025 54068 laravel livewire code injection vuln](./2026-03-20/cisa-kev-cve-2025-54068-laravel-livewire-code-injection-vuln.md)
-- [teampcp deploys canisterworm on npm following trivy compromi](./2026-03-20/teampcp-deploys-canisterworm-on-npm-following-trivy-compromi.md)
 
 ## 2026-03-19
 - [ai is building your attack surface are you testing it](./2026-03-19/ai-is-building-your-attack-surface-are-you-testing-it.md)

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow unauthenticated RCE chain: /api/v1/auto_login + /api/v1/validate/code (CVE-2026-9198)
 
-`UC_14_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_18_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Langflow/uvicorn web process spawning OS shell or download tool (CVE-2026-9198 post-RCE)
 
-`UC_14_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_18_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Exposure hunt: internet-facing hosts vulnerable to the CISA KEV Langflow/Tomcat/N-central CVEs
 
-`UC_14_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_18_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

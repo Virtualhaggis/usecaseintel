@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Paperclip node server spawns Unix shell with base64/openssl decoder (CVE-2026-41679 RCE)
 
-`UC_4_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Paperclip unauthenticated import + wakeup exploit chain on port 3100 (CVE-2026-41679)
 
-`UC_4_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### DNS rebinding: external hostname resolving to loopback then hitting Paperclip port 3100 (GHSA-x8hx-rhr2-9rf7)
 
-`UC_4_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_7_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

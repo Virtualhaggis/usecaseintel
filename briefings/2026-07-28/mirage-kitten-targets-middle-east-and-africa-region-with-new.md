@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### NightLedger DLL search-order hijack: SspiCli.dll side-load via AppVShNotify.exe
 
-`UC_137_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_139_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceImageLoadEvents
 
 ### NightLedger C2 beacon to realhealthshop.com / tjconsultingservices.com
 
-`UC_137_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_139_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### BridgeHead WebSocket tunneler DLL drop (unbcl.dll / libwinpthread-1.dll in anomalous paths)
 
-`UC_137_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_139_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### BridgeHead WebSocket C2 to smartconnect.azurewebsites.net with hardcoded Edg/86 UA
 
-`UC_137_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_139_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### AppVShNotify.exe making outbound public network connections (NightLedger host beaconing)
 
-`UC_137_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_139_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -369,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mirage Kitten targets Middle East and Africa region with new malware
 
-`UC_137_7` · phase: **exploit** · confidence: **High**
+`UC_139_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

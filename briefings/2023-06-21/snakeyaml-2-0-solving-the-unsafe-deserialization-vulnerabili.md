@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable SnakeYAML <2.0 present (CVE-2022-1471 unsafe deserialization)
 
-`UC_1693_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1694_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### JVM (java/javaw) spawning OS command interpreter — SnakeYAML gadget RCE outcome
 
-`UC_1693_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1694_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### JVM outbound fetch of remote class/JAR to public host — URLClassLoader gadget
 
-`UC_1693_3` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_1694_3` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

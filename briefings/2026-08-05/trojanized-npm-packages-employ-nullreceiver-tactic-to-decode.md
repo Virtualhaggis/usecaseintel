@@ -29,8 +29,10 @@ The new dead drop resolver approach, observed in two trojanized npm packages "bi
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1102.001** — Web Service: Dead Drop Resolver
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
@@ -38,13 +40,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NullReceiver DPRK npm C2 egress to blockchain-decoded IP 166.88.134.62
+### NullReceiver npm C2 beacon to hardcoded IP 166.88.134.62
 
-`UC_7_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_11_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="166.88.134.62" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.direction | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="166.88.134.62" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process 
+| `drop_dm_object_name(All_Traffic)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -52,45 +57,62 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "166.88.134.62"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
 | order by Timestamp desc
 ```
 
-### Install of DPRK NullReceiver trojanized npm packages bianira-ui / fluid-type-ui
+### Install of trojanized npm packages bianira-ui / fluid-type-ui
 
-`UC_7_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*bianira-ui*" OR Processes.process="*fluid-type-ui*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("bianira-ui","fluid-type-ui")
-| where FileName in~ ("npm.exe","npm.cmd","node.exe","yarn.exe","pnpm.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe") or InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### On-disk NullReceiver npm package artifact under node_modules
-
-`UC_7_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\bianira-ui\\*" OR Filesystem.file_path="*\\node_modules\\fluid-type-ui\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\bianira-ui\\*" OR Filesystem.file_path="*/node_modules/bianira-ui/*" OR Filesystem.file_path="*\\node_modules\\fluid-type-ui\\*" OR Filesystem.file_path="*/node_modules/fluid-type-ui/*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has_any (@"\node_modules\bianira-ui\", @"\node_modules\fluid-type-ui\")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FolderPath has_any ("\\node_modules\\bianira-ui", "/node_modules/bianira-ui", "\\node_modules\\fluid-type-ui", "/node_modules/fluid-type-ui")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath
 | order by Timestamp desc
+```
+
+### NullReceiver dead-drop: node queries Ethereum RPC then beacons to a raw IP
+
+`UC_11_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*infura.io" OR DNS.query="*alchemy.com" OR DNS.query="*cloudflare-eth.com" OR DNS.query="*ankr.com" OR DNS.query="*publicnode.com" OR DNS.query="*etherscan.io" OR DNS.query="*llamarpc.com" OR DNS.query="*flashbots.net") by DNS.src DNS.query 
+| `drop_dm_object_name(DNS)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 30d;
+let WindowSec = 300;
+let RpcHosts = dynamic(["mainnet.infura.io","eth-mainnet.g.alchemy.com","cloudflare-eth.com","rpc.ankr.com","ethereum.publicnode.com","api.etherscan.io","etherscan.io","eth.llamarpc.com","bsc-dataseed.binance.org","rpc.flashbots.net"]);
+let BlockchainLookups = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackDays)
+    | where InitiatingProcessFileName in~ ("node.exe","node","npm.exe","npm")
+    | where RemoteUrl has_any (RpcHosts)
+    | project RpcTime = Timestamp, DeviceId, DeviceName, RpcHost = RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine;
+DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where RemoteIPType == "Public"
+| where isempty(RemoteUrl)
+| join kind=inner BlockchainLookups on DeviceId
+| where Timestamp between (RpcTime .. RpcTime + WindowSec * 1s)
+| project RpcTime, RawIpTime = Timestamp, DeviceName, RpcHost, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| order by RawIpTime desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -338,4 +360,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

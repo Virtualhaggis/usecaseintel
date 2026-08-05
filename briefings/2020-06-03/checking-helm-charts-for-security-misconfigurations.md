@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Checking Helm Charts for security misconfigurations
 
-`UC_3361_0` · phase: **exploit** · confidence: **High**
+`UC_3362_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
