@@ -1,3 +1,231 @@
+<article class="card" id="art-3239" data-art-slug="2021-01-18-cache-poisoning-in-popular-open-source-packages"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,web"
+  data-targets=""
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="Cache poisoning in popular open source packages This blog post provides an introduction to web cache poisoning and demonstrates why open source maintainers should take this issue into account. CVE-2021-23336 CVE-2020-28473 T1190 [LLM] Semicolon GET parameter cloaking in web/proxy logs (cache poisoning, CVE-2021-23336 / CVE-2020-28473) [LLM] Assets exposed to cache-poisoning CVEs (Python parse_qsl CVE-2021-23336 / Bottle CVE-2020-28473) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2021-01-18-cache-poisoning-in-popular-open-source-packages" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/cache-poisoning-in-popular-open-source-packages/" target="_blank" rel="noopener">Cache poisoning in popular open source packages</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2021-01-18</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">This blog post provides an introduction to web cache poisoning and demonstrates why open source maintainers should take this issue into account.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-23336</span> <span class="ind cve">CVE-2020-28473</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3239-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3239"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3239-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Assets exposed to cache-poisoning CVEs (Python parse_qsl CVE-2021-23336 / Bottle CVE-2020-28473) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Semicolon GET parameter cloaking in web/proxy logs (cache poisoning, CVE-2021-23336 / CVE-2020-28473)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="7ca1312df9" data-platforms="sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Semicolon GET parameter cloaking in web/proxy logs (cache poisoning, CVE-2021-23336 / CVE-2020-28473)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7ca1312df9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound HTTP requests whose query string uses a semicolon as a parameter separator (e.g. &#x27;?q=cat&amp;utm_content=1;q=dog&#x27;) — the exact parameter-cloaking primitive Snyk demonstrated against Bottle/Tornado/Rack and Python&#x27;s parse_qsl. The W3C mandates &#x27;&amp;&#x27; only, so a &#x27;;&#x27; immediately followed by &#x27;key=&#x27; inside the query is the smuggling signal that lets a proxy cache a poisoned response under a benign cache key.
+
+Rationale: Anchored on the exact exploit request from the article (&#x27;utm_content=1;q=dog&#x27;) — a &#x27;;&#x27; acting as a param separator is W3C-non-compliant and vanishingly rare in modern traffic, making it a high-fidelity marker of the parameter-cloaking cache-poisoning technique for both CVEs. Cross-checked Python Security tracker, Red Hat and Snyk/Ubuntu advisories for CVE-2021-23336 and CVE-2020-28473.
+
+Cross-checked against:
+  • https://python-security.readthedocs.io/vuln/urllib-query-string-semicolon-separator.html
+  • https://access.redhat.com/articles/5860431
+  • https://security.snyk.io/vuln/SNYK-PYTHON-BOTTLE-1017108
+  • https://ubuntu.com/security/CVE-2020-28473</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy apps (older Java servlet stacks) that legitimately accept &#x27;;&#x27; as a query separator</li><li>Java matrix parameters landing in the query field, e.g. &#x27;;jsessionid=ABC123&#x27;</li><li>Marketing/analytics pixels that embed &#x27;;&#x27;-delimited key=value pairs in the URL</li><li>Automated web scanners/pentest tooling (Burp, ZAP, Nuclei, sqlmap) probing for parameter cloaking</li><li>URL-encoded &#x27;%3B&#x27; that a log pipeline decodes back to &#x27;;&#x27; before matching</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Url !contains &quot;;jsessionid=&quot; | where HttpRequestHeaderUserAgent !has_any (&quot;Burp&quot;,&quot;Zap&quot;,&quot;OWASP&quot;,&quot;Nuclei&quot;,&quot;sqlmap&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: open the full Url and check whether the &#x27;;&#x27; splits into a duplicate keyed parameter that overrides a legitimate one (e.g. two &#x27;q=&#x27; values); inspect the response&#x27;s X-Cache / Cache-Control headers to confirm the poisoned response was cached (X-Cache: HIT). 2) Contain: purge the affected cache entries, reconfigure the proxy to reject or normalize &#x27;;&#x27; as a separator, and patch the backend (Python &gt;= 3.9.2/3.8.8/3.7.10/3.6.13, Bottle &gt;= 0.12.19). 3) Hunt: pivot on the source IP for other cloaking attempts, review cache HIT-ratio anomalies for the affected path, and check whether any reflected unkeyed parameter produced stored XSS in the cached response.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3239-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3239-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3239-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3239-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(24h)
+| where isnotempty(Url)
+// &#x27;;&#x27; used as a query-parameter separator (W3C mandates &#x27;&amp;&#x27; only) =&gt; parameter cloaking primitive
+| where Url matches regex @&quot;(?i)\?[^#]*;[A-Za-z0-9_.\-]{1,40}=&quot;
+| extend MarketingCloak = Url matches regex @&quot;(?i)[?&amp;;]utm_[a-z]+=&quot;
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, UserAgent = HttpRequestHeaderUserAgent, HttpStatusCode, MarketingCloak, Url
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3239-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Semicolon Query-Parameter Cloaking (Web Cache Poisoning)
+id: 6f3b2c14-9d5a-4e77-b1c8-2a4f7e0d9c31
+status: experimental
+description: Detects inbound HTTP requests using a semicolon as a query-parameter separator, the parameter-cloaking primitive behind CVE-2021-23336 (Python parse_qsl) and CVE-2020-28473 (Bottle) web cache poisoning.
+references:
+  - https://snyk.io/blog/cache-poisoning-in-open-source-packages/
+  - https://python-security.readthedocs.io/vuln/urllib-query-string-semicolon-separator.html
+  - https://security.snyk.io/vuln/SNYK-PYTHON-BOTTLE-1017108
+author: SOC Detection Engineering
+date: 2026/07/08
+tags:
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|re: &#x27;;[A-Za-z0-9_.\-]{1,40}=&#x27;
+  condition: selection
+falsepositives:
+  - Legacy applications that legitimately use &#x27;;&#x27; as a query separator
+  - Matrix parameters such as ;jsessionid=
+  - Web application security scanners (Burp, ZAP)
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3239-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3239-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3239-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3239-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=* by Web.src, Web.dest, Web.http_user_agent, Web.status, Web.url | `drop_dm_object_name(Web)` | where match(url, &quot;(?i)\?[^#]*;[a-zA-Z0-9_.\-]{1,40}=&quot;) | eval marketing_cloak=if(match(url,&quot;(?i)[?&amp;;]utm_[a-z]+=&quot;),&quot;yes&quot;,&quot;no&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3239-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=* by Web.src, Web.dest, Web.http_user_agent, Web.status, Web.url | `drop_dm_object_name(Web)` | where match(url, &quot;(?i)\?[^#]*;[a-zA-Z0-9_.\-]{1,40}=&quot;) | eval marketing_cloak=if(match(url,&quot;(?i)[?&amp;;]utm_[a-z]+=&quot;),&quot;yes&quot;,&quot;no&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="67f0cbc200" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Assets exposed to cache-poisoning CVEs (Python parse_qsl CVE-2021-23336 / Bottle CVE-2020-28473)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="67f0cbc200" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Inventory hunt surfacing hosts whose installed software carries CVE-2021-23336 (Python urllib parse_qsl semicolon separator) or CVE-2020-28473 (Bottle &lt; 0.12.19) — the two named vulnerabilities from Snyk&#x27;s research. Prioritizes internet-facing hosts sitting behind a caching reverse proxy, which are the ones actually exploitable via parameter cloaking.
+
+Rationale: Uses the two exact CVE IDs Snyk assigned to their research (CVE-2021-23336 in Python&#x27;s parse_qsl, CVE-2020-28473 in Bottle &lt; 0.12.19); a direct TVM CveId match is unambiguous and gives the SOC the affected-asset list to pair with the UC1 web-log hunt. Fixed versions confirmed via Python Security tracker and Snyk/Ubuntu advisories.
+
+Cross-checked against:
+  • https://python-security.readthedocs.io/vuln/urllib-query-string-semicolon-separator.html
+  • https://security.snyk.io/vuln/SNYK-PYTHON-BOTTLE-1017108
+  • https://ubuntu.com/security/CVE-2020-28473</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Hosts already patched (Python &gt;= 3.9.2 / Bottle &gt;= 0.12.19) but not yet re-scanned by TVM</li><li>Dev/test boxes intentionally pinned to an old Python for compatibility</li><li>Containers/appliances bundling an EOL Python that vendor mitigated another way</li><li>Non-web hosts where the vulnerable Python is never fronted by a caching proxy (not exploitable in practice)</li><li>TVM CVE-to-version mapping lag for third-party PyPI packages like Bottle</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the actual installed version against the fixed baselines (Python 3.6.13/3.7.10/3.8.8/3.9.2, Bottle 0.12.19) and flag whether the host is internet-facing behind NGINX/Varnish. 2) Contain: prioritize public-facing web tiers for upgrade; as an interim, configure the fronting proxy to treat &#x27;;&#x27; as a separator or strip it from cache keys. 3) Hunt: cross-reference each flagged host against the UC1 semicolon-cloaking web-log hunt to see if any already received exploitation attempts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3239-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3239-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3239-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3239-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in (&quot;CVE-2021-23336&quot;, &quot;CVE-2020-28473&quot;)
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-3239-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in (&quot;CVE-2021-23336&quot;, &quot;CVE-2020-28473&quot;)
+| project TimeGenerated, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-3239-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3239-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3239-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3239-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2021-23336&quot;,&quot;CVE-2020-28473&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - severity</code></pre><pre class="spl-mode-body" id="art-3239-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2021-23336&quot;,&quot;CVE-2020-28473&quot;) by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3239-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3239-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3239-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3239-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-23336&quot;, &quot;CVE-2020-28473&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3239-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-23336&quot;, &quot;CVE-2020-28473&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-3239-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3239-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3239-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3239-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-23336&quot;, &quot;CVE-2020-28473&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-3239-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-23336&quot;, &quot;CVE-2020-28473&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3240" data-art-slug="2021-01-12-what-is-typosquatting-and-how-typosquatting-attacks-are-resp"
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1021.002,T1190,T1566"
@@ -5797,142 +6025,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3321" data-art-slug="2020-09-08-building-a-secure-amazon-s3-bucket-aws"
-  data-phases="actions,c2,exploit,install" data-sev="med"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="network"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Building a secure Amazon S3 bucket (AWS) A pragmatic approach to understanding S3 security. You’ll be able to build a secure S3 bucket that meets your particular needs.  T1190 Beaconing — periodic outbound to small set of destinations">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2020-09-08-building-a-secure-amazon-s3-bucket-aws" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/building-a-secure-amazon-s3-bucket-aws/" target="_blank" rel="noopener">Building a secure Amazon S3 bucket (AWS)</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2020-09-08</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">A pragmatic approach to understanding S3 security. You’ll be able to build a secure S3 bucket that meets your particular needs.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3321-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3321"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3321-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3321-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3321-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3321-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3321-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
-| order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-3321-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(2h)
-| where DvcAction != &quot;Block&quot;
-| where ipv4_is_private(DstIpAddr) == false
-| summarize ConnCount = count(),
-            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
-            by DvcHostname, DstIpAddr, DstPortNumber
-| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
-| order by ConnCount desc
-</code></pre></div>
-    <div class="tab-content" id="art-3321-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3321-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3321-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3321-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-3321-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre></div></div>
   </div>
 </details></div>
 </article>

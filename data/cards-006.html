@@ -1,3 +1,333 @@
+<article class="card" id="art-164" data-art-slug="2026-07-23-ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro"
+  data-phases="c2,exploit,install" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="cloudwatch,datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,web"
+  data-targets="vcs,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause existence-based auth checks to fail open (auth object populated with an error) Auth.js: Configuration errors can cause existence-based auth checks to fail open (auth object populated with an error)  T1190 [LLM] Auth.js server-configuration error reaching production (fail-open precondition) [LLM] Auth.js fail-open exploited: protected routes served 200/302 during an active auth-error window [LLM] Auth.js config break on deploy: first-ever [auth][error] on a previously-healthy host Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-23-ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-8fpg-xm3f-6cx3" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause existence-based auth checks to fail open (auth object populated with an error)</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-23</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>1 kill-chain phase detected</span>
+  </div>
+  <p class="summary">Auth.js: Configuration errors can cause existence-based auth checks to fail open (auth object populated with an error)</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-164-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-164"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-164-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Auth.js server-configuration error reaching production (fail-open precondition) · [LLM] Auth.js fail-open exploited: protected routes served 200/302 during an active auth-error window · [LLM] Auth.js config break on deploy: first-ever [auth][error] on a previously-healthy host · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="e80be160a0" data-platforms="cloudwatch,datadog,sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Auth.js server-configuration error reaching production (fail-open precondition)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e80be160a0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts application/stdout logs for the specific Auth.js v5 configuration-error strings that flip the `auth()` object from null to a truthy error object, causing `!!auth` checks to fail open for every request. The article itself recommends treating any `[auth][error]` line as a failed health check, so this is the root-cause detection.
+
+Rationale: Uses the exact Auth.js error identifiers named in the advisory (`[auth][error]`, `InvalidEndpoints`, `MissingSecret`) plus the user-facing server-config error string; all four confirmed as real Auth.js error classes via authjs.dev/reference/core/errors and upstream issue #11934. These strings only emit when the config is broken, i.e. exactly when the fail-open condition is active.
+
+Cross-checked against:
+  • https://github.com/nextauthjs/next-auth/issues/11934
+  • https://authjs.dev/reference/core/errors
+  • https://cvereports.com/reports/GHSA-8FPG-XM3F-6CX3</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Dev/staging/preview deployments intentionally running with incomplete provider config emit [auth][error] routinely</li><li>CI builds surfacing MissingSecret during Next.js build since 5.0.0-beta.16 (upstream issue #10538)</li><li>A newly added OAuth provider misconfigured on a non-production branch preview</li><li>Log aggregation of test/debug output that quotes the error string verbatim</li><li>Deliberate DR/chaos testing of auth failure modes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Computer !has &quot;dev&quot; and Computer !has &quot;staging&quot; and Computer !has &quot;preview&quot; and Computer !has &quot;-ci&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the emitting host is production (not dev/preview). If prod, the app is currently fail-open — every visitor is treated as authenticated. Check the timestamp: has this host served traffic since the first error line? 2) CONTAIN: Roll back the offending deploy or restore the missing env var (AUTH_SECRET / provider issuer). If rollback is slow, take the affected instance out of the load balancer. 3) HUNT: Pull all successful requests to protected routes on that host since FirstSeen (see the fail-open exploitation UC) to scope who accessed what while auth was broken; review for sensitive-data or privileged-action access.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-164-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-164-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-164-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-164-uc0-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-164-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-164-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(1d)
+| where SyslogMessage has &quot;[auth][error]&quot;
+    or SyslogMessage has &quot;InvalidEndpoints&quot;
+    or SyslogMessage has &quot;MissingSecret&quot;
+    or SyslogMessage has &quot;There was a problem with the server configuration&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Count=count(), SampleMessage=any(SyslogMessage) by Computer, ProcessName
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-164-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Auth.js Server-Configuration Error Reaching Production (Fail-Open Precondition)
+id: b3f1c2a4-7d9e-4a1b-8c2d-1f4e6a9b0c31
+description: Detects Auth.js (next-auth v5) server-configuration error strings in application logs. These errors populate the auth() object with a truthy error, causing existence-based auth checks (!!auth) to fail open (GHSA-8fpg-xm3f-6cx3).
+references:
+  - https://github.com/advisories/GHSA-8fpg-xm3f-6cx3
+  - https://authjs.dev/reference/core/errors
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1556
+  - attack.defense_evasion
+logsource:
+  category: application
+  product: nodejs
+detection:
+  selection:
+    message|contains:
+      - &#x27;[auth][error]&#x27;
+      - &#x27;InvalidEndpoints&#x27;
+      - &#x27;MissingSecret&#x27;
+      - &#x27;There was a problem with the server configuration&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-164-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:nodejs (&quot;[auth][error]&quot; OR InvalidEndpoints OR MissingSecret OR &quot;There was a problem with the server configuration&quot;)</code></pre></div>
+    <div class="tab-content" id="art-164-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/lambda/*  (Next.js SSR / API-route function stdout)
+fields @timestamp, @logStream, @message
+| filter @message like /\[auth\]\[error\]/ or @message like /InvalidEndpoints/ or @message like /MissingSecret/ or @message like /There was a problem with the server configuration/
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-164-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (&quot;[auth][error]&quot; OR &quot;InvalidEndpoints&quot; OR &quot;MissingSecret&quot; OR &quot;There was a problem with the server configuration&quot;)
+| stats earliest(_time) as firstSeen latest(_time) as lastSeen count values(source) as sources by host
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - lastSeen</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="18a37715a7" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Auth.js fail-open exploited: protected routes served 200/302 during an active auth-error window</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="18a37715a7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates Auth.js `[auth][error]` log lines with successful (200/302) HTTP responses on the same host inside a short window — the observable signature of the app granting access while the auth layer is broken. This catches the vulnerability being exploited (unauthenticated visitors served protected content), not just the misconfiguration.
+
+Rationale: Ties the article&#x27;s exact fail-open string (`[auth][error]`) to served-content status codes (200/302) on the same host within 10 minutes — the mechanism the advisory describes (`!!auth` true for every request while broken). Correlation on host + time isolates the exploitation from the mere presence of the error.
+
+Cross-checked against:
+  • https://github.com/nextauthjs/next-auth/issues/11934
+  • https://cvereports.com/reports/GHSA-8FPG-XM3F-6CX3</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimately authenticated users receiving 200/302 during the same window as a transient auth error</li><li>Uptime/health-check probes hitting genuinely public routes returning 200</li><li>Static asset requests (js/css/img) returning 200 unrelated to auth-gated routes</li><li>A single transient OAuth provider timeout logged as [auth][error] while auth otherwise functions normally</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUriStem !endswith &quot;.js&quot; and csUriStem !endswith &quot;.css&quot; and csUriStem !endswith &quot;.ico&quot; and csUriStem !endswith &quot;.png&quot; and csUriStem !endswith &quot;.svg&quot; and csUriStem !endswith &quot;.woff2&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the 200/302 responses are to auth-protected routes (not public pages or static assets). Correlate cIP against known-authenticated sessions — unrecognised IPs receiving protected content during the error window are the strongest signal. 2) CONTAIN: If protected content was served to unauthenticated callers, roll back/fix the config (restore AUTH_SECRET or provider issuer) and pull the host from rotation; invalidate any sessions issued during the window. 3) HUNT: Enumerate every distinct src IP served 200 during all error windows on this host; check downstream logs for data export, privileged mutations, or account-takeover actions performed under the fail-open.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-164-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-164-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-164-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let ErrWindow = 10m;
+let AuthErrors = Syslog
+    | where TimeGenerated &gt; ago(1d)
+    | where SyslogMessage has &quot;[auth][error]&quot;
+    | project ErrTime = TimeGenerated, Computer, AuthError = SyslogMessage;
+W3CIISLog
+| where TimeGenerated &gt; ago(1d)
+| where scStatus in (200, 302)
+| where csMethod in (&quot;GET&quot;,&quot;POST&quot;)
+| join kind=inner AuthErrors on Computer
+| where TimeGenerated between (ErrTime .. ErrTime + ErrWindow)
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, scStatus, ErrTime, AuthError
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-164-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-164-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-164-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-164-uc1-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly`
+| tstats count, values(Web.uri_path) as uri_paths, values(Web.src) as src_ips from datamodel=Web where (Web.status=200 OR Web.status=302) by Web.dest, _time span=10m
+| `drop_dm_object_name(Web)`
+| join type=inner dest [ search index=* (&quot;[auth][error]&quot; OR &quot;MissingSecret&quot; OR &quot;InvalidEndpoints&quot;) | stats count by host | rename host as dest | fields dest ]
+| sort - _time</code></pre><pre class="spl-mode-body" id="art-164-uc1-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false
+| tstats count, values(Web.uri_path) as uri_paths, values(Web.src) as src_ips from datamodel=Web where (Web.status=200 OR Web.status=302) by Web.dest, _time span=10m
+| `drop_dm_object_name(Web)`
+| join type=inner dest [ search index=* (&quot;[auth][error]&quot; OR &quot;MissingSecret&quot; OR &quot;InvalidEndpoints&quot;) | stats count by host | rename host as dest | fields dest ]
+| sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f5632fd9b0" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Auth.js config break on deploy: first-ever [auth][error] on a previously-healthy host</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f5632fd9b0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Baseline anti-join that surfaces the exact moment a previously-working deployment becomes misconfigured — the article&#x27;s named trigger (&#x27;an environment variable is changed or removed during a deploy&#x27;). Flags hosts emitting `[auth][error]` for the first time versus a 14-day baseline, catching the silent transition from fail-closed to fail-open.
+
+Rationale: Directly targets the advisory&#x27;s stated risk narrative — a deploy removing/altering an env var flips a healthy app to fail-open. The 14-day baseline anti-join on `[auth][error]` isolates the first-time-broken transition, which is far higher-fidelity for prod than any-occurrence matching (dev noise typically pre-exists in the baseline).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-8fpg-xm3f-6cx3
+  • https://github.com/nextauthjs/next-auth/issues/11934</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>First deployment of a brand-new app/host with no prior baseline (expected initial errors)</li><li>Host re-imaged or renamed so it appears &#x27;new&#x27; though auth was already broken</li><li>Blue/green or autoscale instance coming online mid-rollout with a transient config gap</li><li>Baseline window shorter than an intermittent provider&#x27;s error cadence, so a rare blip reads as first-seen</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Computer !has &quot;dev&quot; and Computer !has &quot;staging&quot; and Computer !has &quot;preview&quot; and Computer !has &quot;-ci&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm this host had a healthy 14-day baseline and just started erroring — check whether a deploy/config change landed immediately before FirstSeen (CI/CD timeline, env-var change history). 2) CONTAIN: Treat as an active fail-open on a production host: roll back the deploy or restore the missing config value, and remove the instance from the load balancer until auth() returns null-on-failure again. 3) HUNT: Pivot to the fail-open exploitation UC for this host/window to enumerate what was accessed unauthenticated between FirstSeen and remediation; verify no privileged actions or data reads occurred.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-164-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-164-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-164-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Baseline = Syslog
+    | where TimeGenerated between (ago(14d) .. ago(1d))
+    | where SyslogMessage has &quot;[auth][error]&quot;
+    | summarize by Computer;
+Syslog
+| where TimeGenerated &gt; ago(1d)
+| where SyslogMessage has &quot;[auth][error]&quot;
+| join kind=leftanti Baseline on Computer
+| summarize FirstSeen=min(TimeGenerated), Count=count(), SampleMessage=any(SyslogMessage) by Computer, ProcessName
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-164-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* &quot;[auth][error]&quot; earliest=-1d
+| stats min(_time) as firstSeen count values(source) as sources by host
+| where firstSeen &gt;= relative_time(now(), &quot;-1d&quot;)
+| join type=leftanti host [ search index=* &quot;[auth][error]&quot; earliest=-14d latest=-1d | stats count by host | fields host ]
+| convert ctime(firstSeen)
+| sort - firstSeen</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="96d9b3a1b2" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="96d9b3a1b2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-164-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-164-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-164-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-164-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;auth.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;auth.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-164-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;auth.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;auth.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-164-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-164-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-164-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-164-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;auth.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;auth.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-164-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-8fpg-xm3f-6cx3: Auth.js: Configuration errors can cause e ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;auth.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;auth.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-165" data-art-slug="2026-07-23-ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v"
   data-phases="c2,delivery,exploit,install" data-sev="crit"
   data-techs=""
@@ -11596,132 +11926,6 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-189-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-0770&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-190" data-art-slug="2026-07-21-cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2021-27137 — DD-WRT Stack-Based Buffer Overflow Vulnerability DD-WRT contains a stack-based buffer overflow vulnerability that could allow an unauthenticated attacker to overflow an internal buffer used by UPnP and trigger a code execution vulnerability. Vendor: DD-WRT, Product: DD-WRT. Federal patch due: 2026-07-24. CVE-2021-27137  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-21-cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-27137 — DD-WRT Stack-Based Buffer Overflow Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-07-21</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">DD-WRT contains a stack-based buffer overflow vulnerability that could allow an unauthenticated attacker to overflow an internal buffer used by UPnP and trigger a code execution vulnerability. Vendor: DD-WRT, Product: DD-WRT. Federal patch due: 2026-07-24.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-27137</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-190-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-190"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-190-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-190-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-190-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-190-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-190-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-27137&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-190-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-27137&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-190-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-190-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-190-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-190-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-27137&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-190-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-27137&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

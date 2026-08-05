@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### ClickFix Run-dialog artifact: RunMRU value launching mshta/URL payload
 
-`UC_6_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceRegistryEvents
 
 ### mshta.exe outbound to public internet retrieving second-stage payload
 
-`UC_6_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### mshta.exe spawning script/LOLBin child (staged second-stage execution)
 
-`UC_6_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_8_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

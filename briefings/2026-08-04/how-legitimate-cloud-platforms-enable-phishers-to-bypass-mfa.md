@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### First-seen browser egress to abused cloud-PaaS phishing domains (workers.dev / pages.dev / vercel.app / github.io / netlify.app / dweb.link)
 
-`UC_20_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_22_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### Safe Links click resolving through a cloud-PaaS redirect chain into AitM phishing
 
-`UC_20_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_22_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -90,7 +90,7 @@ UrlClickEvents
 
 ### AitM session hijack: PaaS phishing-page visit followed by successful Entra sign-in from a different IP
 
-`UC_20_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_22_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

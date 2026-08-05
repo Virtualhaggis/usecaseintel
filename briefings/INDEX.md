@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2608 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2609 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -38,7 +38,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
 - [massive chaindrop npm supply chain attack infects hundreds o](./2026-08-04/massive-chaindrop-npm-supply-chain-attack-infects-hundreds-o.md)
 - [new xcsset variant targets macos devs via compromised xcode ](./2026-08-04/new-xcsset-variant-targets-macos-devs-via-compromised-xcode-.md)
+- [phishing service spoofs ringcentral to steal microsoft 365 a](./2026-08-04/phishing-service-spoofs-ringcentral-to-steal-microsoft-365-a.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
+- [tp link patches omada ztp flaws allowing hackers to breach n](./2026-08-04/tp-link-patches-omada-ztp-flaws-allowing-hackers-to-breach-n.md)
 
 ## 2026-08-03
 - [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
@@ -63,7 +65,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [coldcard hardware wallet flaw linked to 70 million bitcoin t](./2026-08-01/coldcard-hardware-wallet-flaw-linked-to-70-million-bitcoin-t.md)
 - [hackers poison adform script to swap crypto wallet addresses](./2026-08-01/hackers-poison-adform-script-to-swap-crypto-wallet-addresses.md)
 - [hijacked hotel wi fi pushes fake updates to deliver surveill](./2026-08-01/hijacked-hotel-wi-fi-pushes-fake-updates-to-deliver-surveill.md)
-- [rails patches critical active storage flaw with rce potentia](./2026-08-01/rails-patches-critical-active-storage-flaw-with-rce-potentia.md)
 
 ## 2026-07-31
 - [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
