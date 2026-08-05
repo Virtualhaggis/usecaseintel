@@ -1,22 +1,30 @@
-# [CRIT] Researchers Show a Single Malicious Webpage Visit Can Compromise Tor Browser
+# [CRIT] CISA Flags Langflow RCE, Tomcat, and N-central Flaws as Actively Exploited
 
 **Source:** The Hacker News
-**Published:** 2026-07-29
-**Article:** https://thehackernews.com/2026/07/researchers-show-single-malicious.html
+**Published:** 2026-08-05
+**Article:** https://thehackernews.com/2026/08/cisa-flags-langflow-rce-tomcat-and-n.html
 
 ## Threat Profile
 
-Researchers Show a Single Malicious Webpage Visit Can Compromise Tor Browser 
- Swati Khandelwal  Jul 29, 2026 Vulnerability / Browser Security 
-Nebula Security says a patched Firefox JIT flaw could be triggered by simply visiting a malicious webpage and was also used to compromise Tor Browser.
-Tracked as CVE-2026-10702 , the bug provides arbitrary code execution inside the browser's renderer process. Mozilla rated it High and fixed it in the Firefox 151.0.3 update .
-"No settings or additional …
+CISA Flags Langflow RCE, Tomcat, and N-central Flaws as Actively Exploited 
+ Ravie Lakshmanan  Aug 05, 2026 Vulnerability / Patch Management 
+The U.S. Cybersecurity and Infrastructure Security Agency (CISA), on August 5, 2026, added three flaws to its Known Exploited Vulnerabilities ( KEV ) catalog, citing evidence of active exploitation in the wild.
+The list of vulnerabilities is as follows -
+CVE-2026-9198 (CVSS score: 9.8) - A code injection vulnerability in Langflow that allows unauthentica…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-10702`
-- **CVE:** `CVE-2026-43499`
-- **IPv4 (defanged):** `185.220.101.4`
+- **CVE:** `CVE-2026-9198`
+- **CVE:** `CVE-2026-34486`
+- **CVE:** `CVE-2026-18556`
+- **CVE:** `CVE-2026-18577`
+- **CVE:** `CVE-2026-33017`
+- **CVE:** `CVE-2026-3055`
+- **CVE:** `CVE-2026-39987`
+- **CVE:** `CVE-2026-33824`
+- **CVE:** `CVE-2026-21858`
+- **CVE:** `CVE-2025-68613`
+- **Domain (defanged):** `code.newcli.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -30,9 +38,12 @@ Tracked as CVE-2026-10702 , the bug provides arbitrary code execution inside the
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1595.003** — Active Scanning: Wordlist Scanning
+- **T1590** — Gather Victim Network Information
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1203** — Exploitation for Client Execution
-- **T1189** — Drive-by Compromise
-- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
@@ -40,66 +51,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable Firefox exposed to CVE-2026-10702 JIT RCE (147 through 151.0.2)
+### Single source fingerprinting Langflow/n8n/Tomcat exploit paths (Hermes/FOFA sweep)
 
-`UC_125_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-10702" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name("Vulnerabilities")`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count values(Web.uri_path) as uri_paths dc(Web.uri_path) as distinct_paths min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.uri_path IN ("/api/v1/auto_login","/api/v1/validate/code","/rest/","/manager/html") by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| where distinct_paths>=3
+| convert ctime(firstTime) ctime(lastTime)
+| sort - distinct_paths
+```
+
+### Langflow CVE-2026-9198 RCE chain: auto_login token mint then validate/code exec
+
+`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count values(Web.uri_path) as uri_paths values(Web.http_method) as methods values(Web.status) as statuses min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.uri_path IN ("/api/v1/auto_login","/api/v1/validate/code") by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| search uri_paths="*auto_login*" uri_paths="*validate/code*"
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId == "CVE-2026-10702"
-| where SoftwareVendor has "mozilla" or SoftwareName has "firefox"
-| summarize arg_max(Timestamp, *) by DeviceId, SoftwareName, SoftwareVersion
-| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
-```
+### Langflow application service spawning a shell/recon binary (CVE-2026-9198 execution)
 
-### Outdated Tor Browser bundling vulnerable Firefox (CVE-2026-10702 exposure)
-
-`UC_125_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="firefox.exe" (Processes.process_path="*Tor Browser*" OR Processes.parent_process="*Tor Browser*" OR Processes.process_path="*\\Browser\\firefox.exe") by Processes.dest, Processes.user, Processes.process_path, Processes.process
-| `drop_dm_object_name("Processes")`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "firefox.exe"
-| where FolderPath has "Tor Browser" or InitiatingProcessCommandLine has "Tor Browser"
-| where AccountName !endswith "$"
-| extend Ver = ProcessVersionInfoProductVersion
-| extend P = split(Ver, ".")
-| extend Major = toint(P[0]), Minor = toint(P[1]), Build = toint(P[2])
-| where Major >= 147 and Major <= 151          // vulnerable Firefox range per article
-| where not (Major == 151 and Build >= 3)        // 151.0.3 is the patched build
-| summarize LastSeen=max(Timestamp), Version=any(Ver), FolderPath=any(FolderPath) by DeviceName, AccountName, Major, Minor, Build
-| order by LastSeen desc
-```
-
-### Firefox/Tor renderer (content) process spawning an unexpected child — sandbox escape / RCE
-
-`UC_125_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="firefox.exe" Processes.parent_process="*-contentproc*" NOT Processes.process_name IN ("firefox.exe","plugin-container.exe","updater.exe","crashreporter.exe","pingsender.exe","minidump-analyzer.exe") by Processes.dest, Processes.user, Processes.parent_process, Processes.process_name, Processes.process
-| `drop_dm_object_name("Processes")`
-| `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","uvicorn","gunicorn") OR Processes.parent_process="*langflow*") AND Processes.process_name IN ("sh","bash","dash","cmd.exe","powershell.exe","curl","wget","whoami","id","nc") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(parent_process,"(?i)langflow|uvicorn")
+| convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime
 ```
 
@@ -107,34 +94,12 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "firefox.exe"
-| where InitiatingProcessCommandLine has "-contentproc"   // the sandboxed renderer/content child
-| where FileName !in~ ("firefox.exe","plugin-container.exe","updater.exe","crashreporter.exe","pingsender.exe","minidump-analyzer.exe")
+| where InitiatingProcessCommandLine has_any ("langflow","uvicorn")
+| where InitiatingProcessFileName in~ ("python","python3","python3.11","python3.12","uvicorn","gunicorn","python.exe","pythonw.exe")
+| where FileName in~ ("sh","bash","dash","cmd.exe","powershell.exe","pwsh","curl","wget","whoami","id","nc","nslookup")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, RendererCmd = InitiatingProcessCommandLine, ChildProcess = FileName, ChildPath = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
-```
-
-### Endpoint exposed to GhostLock kernel futex LPE (CVE-2026-43499, IonStack stage 2)
-
-`UC_125_9` · phase: **exploit** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-43499" by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name("Vulnerabilities")`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId == "CVE-2026-43499"
-| summarize arg_max(Timestamp, *) by DeviceId
-| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -318,12 +283,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-10702`, `CVE-2026-43499`
+  - CVE(s): `CVE-2026-9198`, `CVE-2026-34486`, `CVE-2026-18556`, `CVE-2026-18577`, `CVE-2026-33017`, `CVE-2026-3055`, `CVE-2026-39987`, `CVE-2026-33824` _(+2 more)_
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.220.101.4`
+  - IP / domain IOC(s): `code.newcli.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

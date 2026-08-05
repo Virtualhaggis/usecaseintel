@@ -344,14 +344,14 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-132" data-art-slug="2026-07-28-ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network"
   data-targets="linux,vcs,windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) CVE-2026-62325 CVE-2026-40884  [LLM] goshs SFTP started with empty-password basic auth and no host-key (CVE-2026-62325) [LLM] goshs process accepting inbound SFTP connections (CVE-2026-62325 exposure) [LLM] goshs binary written or staged to disk (tool delivery) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas">
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884) CVE-2026-62325 CVE-2026-40884  [LLM] goshs SFTP launched with empty-credential -b flag and no -fkf (CVE-2026-62325) [LLM] Inbound connection to unauthenticated goshs SFTP listener (CVE-2026-62325) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-28-ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -360,9 +360,9 @@ DeviceTvmSoftwareVulnerabilities
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-28</span>
-    <span>5 use cases</span>
+    <span>4 use cases</span>
     <span>0 techniques</span>
-    <span>5 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">goshs SFTP authentication bypass via empty password (incomplete fix of CVE-2026-40884)</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-62325</span> <span class="ind cve">CVE-2026-40884</span></div>
@@ -382,10 +382,10 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
@@ -409,34 +409,33 @@ DeviceTvmSoftwareVulnerabilities
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] goshs binary written or staged to disk (tool delivery)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] goshs process accepting inbound SFTP connections (CVE-2026-62325 exposure)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] goshs SFTP started with empty-password basic auth and no host-key (CVE-2026-62325) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] goshs SFTP launched with empty-credential -b flag and no -fkf (CVE-2026-62325) · [LLM] Inbound connection to unauthenticated goshs SFTP listener (CVE-2026-62325)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="eac000558b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="4b909d73a3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">goshs SFTP started with empty-password basic auth and no host-key (CVE-2026-62325)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">goshs SFTP launched with empty-credential -b flag and no -fkf (CVE-2026-62325)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="eac000558b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4b909d73a3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the exact exploitable launch of goshs v2.1.3 described in CVE-2026-62325: the SFTP server started with &#x27;-sftp&#x27; and a &#x27;-b user:&#x27; basic-auth pair that has an empty password, while &#x27;-fkf&#x27; (key handler) is absent. This configuration leaves both SSH auth handlers nil, causing gliderlabs/ssh to set NoClientAuth=true and grant unauthenticated file read/write/delete.
+    <div class="uc-desc">Hunts for the goshs SimpleHTTPServer process started in SFTP mode with a basic-auth string that has an empty username or empty password segment (e.g. -b &#x27;admin:&#x27; or -b &#x27;:pass&#x27;) and no -fkf key file. This exact flag combination disables the SSH PasswordHandler and PublicKeyHandler, causing gliderlabs/ssh to set NoClientAuth=true — the vulnerable state described in the advisory.
 
-Rationale: Uses the article&#x27;s exact exploit signature: goshs binary + &#x27;-sftp&#x27; + &#x27;-b user:&#x27; (empty password, matched by the trailing-colon regex) + absence of &#x27;-fkf&#x27;. Non-empty-password launches (the safe &amp;&amp; case) are correctly excluded. Fix version 2.1.4 confirmed via NVD/GitLab advisory.
+Rationale: Uses the advisory&#x27;s exact reproduction command (goshs -b &#x27;admin:&#x27; -sftp with no -fkf); the regex catches both the empty-password (admin:) and empty-username (:pass) variants, and the -fkf exclusion mirrors the code path where PublicKeyHandler stays nil. Corroborated against GitLab Advisory DB and SentinelOne which confirm the binary name and flag semantics.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-62325
-  • https://advisories.gitlab.com/golang/goshs.de/goshs/v2/CVE-2026-62325/
-  • https://github.com/patrickhener/goshs
-  • https://www.sentinelone.com/vulnerability-database/cve-2026-40884/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+  • https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/v2/CVE-2026-62325/
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-40884/
+  • https://cve.threatint.com/CVE/CVE-2026-62325</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized red-team engagement intentionally running goshs SFTP for file transfer</li><li>Sysadmin quick-share with a deliberately blank password on a trusted/isolated network</li><li>CTF or security-training lab hosting goshs</li><li>Automated build/CI pipeline invoking goshs in test mode</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| join kind=inner (DeviceInfo | where Timestamp &gt; ago(30d) | where IsInternetFacing == true | distinct DeviceId) on DeviceId</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and confirm the &#x27;-b user:&#x27; segment has no password after the colon and &#x27;-fkf&#x27; is absent; note the SFTP port (default 2022 or 2121 from &#x27;-ftp-port&#x27;) and whether the host is internet-facing. 2) Contain: kill the goshs process and block inbound to the SFTP port at the host firewall; if exposed externally, isolate the host. 3) Hunt: review DeviceNetworkEvents for inbound accepts to that port (UC &#x27;goshs SFTP inbound access&#x27;) to see if any client connected during the exposure window, and enumerate files under the served directory for read/write/delete since process start.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Red-team / pentest operator intentionally standing up a goshs file drop with -b &#x27;user:&#x27; for a range exercise</li><li>Security researcher reproducing CVE-2026-62325 in a lab to validate the patch</li><li>CTF infrastructure using goshs as an intentional weak-auth target</li><li>Automation script that shells goshs with a placeholder credential where the password is templated in later (colon-terminated at parse time)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;redteam&quot;,&quot;pentest&quot;,&quot;lab-only&quot;)) and DeviceName !has &quot;CTF&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Pull the full ProcessCommandLine and confirm the -b value truly has an empty segment (nothing after or before the single colon) and that -fkf is absent; identify the listening host, user context, and whether the host is internet-facing. 2) CONTAIN: If the host is exposed or unsanctioned, stop the goshs process and block the SFTP listener port at the host/perimeter firewall; if sanctioned red-team, confirm engagement scope before actioning. 3) HUNT: Pivot to UC-2 (inbound connections to the goshs SFTP port) to see whether any external client already connected unauthenticated, and review DeviceFileEvents under the goshs served directory for reads/writes/deletes during the exposure window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-132-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-132-uc0-sentinel">Sentinel KQL</button>
@@ -447,197 +446,99 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-132-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(30d)
-| where FileName has &quot;goshs&quot; or InitiatingProcessCommandLine has &quot;goshs&quot;
-| where ProcessCommandLine has &quot;-sftp&quot;
-| where ProcessCommandLine has &quot;-b &quot;
-| where ProcessCommandLine !has &quot;-fkf&quot;
-| where ProcessCommandLine matches regex @&quot;(?i)-b\s+[&#x27;\x22]?[^:\s]+:[&#x27;\x22]?(\s|$)&quot;
+| where ProcessCommandLine has &quot;goshs&quot; and ProcessCommandLine has &quot;-sftp&quot; and ProcessCommandLine has &quot;-b&quot;
+| where not(ProcessCommandLine has &quot;-fkf&quot;)
+| where ProcessCommandLine matches regex @&quot;(?i)\s-b\s+[&#x27;&quot;&quot;]?(:[^\s&#x27;&quot;&quot;]*|[^\s:&#x27;&quot;&quot;]*:)[&#x27;&quot;&quot;]?(\s|$)&quot;
 | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-132-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(30d)
-| where TargetProcessName has &quot;goshs&quot;
-| where TargetProcessCommandLine has &quot;-sftp&quot;
-| where TargetProcessCommandLine has &quot;-b &quot;
-| where TargetProcessCommandLine !has &quot;-fkf&quot;
-| where TargetProcessCommandLine matches regex @&quot;(?i)-b\s+[&#x27;\x22]?[^:\s]+:[&#x27;\x22]?(\s|$)&quot;
+| where TargetProcessCommandLine has &quot;goshs&quot; and TargetProcessCommandLine has &quot;-sftp&quot; and TargetProcessCommandLine has &quot;-b&quot;
+| where not(TargetProcessCommandLine has &quot;-fkf&quot;)
+| where TargetProcessCommandLine matches regex @&quot;(?i)\s-b\s+[&#x27;&quot;&quot;]?(:[^\s&#x27;&quot;&quot;]*|[^\s:&#x27;&quot;&quot;]*:)[&#x27;&quot;&quot;]?(\s|$)&quot;
 | project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs SFTP launched with empty-password basic auth (CVE-2026-62325)
-id: 7b3e9c2a-1f4d-4a6b-9c8e-2d5f7a1b3c9d
+    <div class="tab-content" id="art-132-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs SFTP Launched With Empty-Credential Basic Auth (CVE-2026-62325)
+id: 5b9f7d2e-6c41-4a3e-9f0b-2c8d1e4a7f36
 status: experimental
-description: Detects goshs started with -sftp and a -b user: basic-auth pair lacking -fkf, the exploitable CVE-2026-62325 configuration that yields unauthenticated SFTP access.
+description: Detects the goshs SimpleHTTPServer started in SFTP mode (-sftp) with a basic-auth string (-b) that has an empty username or empty password segment and no -fkf key file, matching the CVE-2026-62325 / CVE-2026-40884 authentication-bypass configuration.
 references:
   - https://github.com/advisories/GHSA-rjrw-mjq6-hpmm
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-62325
+  - https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/v2/CVE-2026-62325/
 author: SOC Detection Engineering
 date: 2026/08/05
 tags:
+  - attack.t1556
   - attack.t1190
-  - attack.t1133
 logsource:
   category: process_creation
 detection:
-  selection:
-    CommandLine|contains|all:
-      - &#x27;-sftp&#x27;
-      - &#x27;-b &#x27;
-      - &#x27;goshs&#x27;
-  filter_keyfile:
+  selection_bin:
+    CommandLine|contains: &#x27;goshs&#x27;
+  selection_sftp:
+    CommandLine|contains: &#x27;-sftp&#x27;
+  selection_emptycred:
+    CommandLine|re: &#x27;(?i)\s-b\s+[&#x27;&#x27;&quot;]?(:[^\s&#x27;&#x27;&quot;]*|[^\s:&#x27;&#x27;&quot;]*:)[&#x27;&#x27;&quot;]?(\s|$)&#x27;
+  filter_fkf:
     CommandLine|contains: &#x27;-fkf&#x27;
-  condition: selection and not filter_keyfile
-falsepositives:
-  - Authorized red-team or pentest use of goshs
-  - goshs with a real (non-empty) password after the colon
+  condition: selection_bin and selection_sftp and selection_emptycred and not filter_fkf
 level: high</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*goshs* AND @process.command_line:*sftp* AND @process.command_line:*\-b* AND NOT @process.command_line:*fkf*</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/goshs/i
+    <div class="tab-content" id="art-132-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\goshs.exe OR *\\GOSHS.EXE OR *\\goshs OR *\\Goshs.exe) @CommandLine:(*-sftp* AND *-b*) -@CommandLine:*-fkf*</code></pre></div>
+    <div class="tab-content" id="art-132-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 (ImageFileName=/goshs(\.exe)?$/i OR CommandLine=/goshs/i)
 | CommandLine=/-sftp/i
-| CommandLine=/-b\s+[&#x27;\x22]?[^:\s]+:[&#x27;\x22]?(\s|$)/i
-| NOT (CommandLine=/-fkf/i)
-| table([aid, ComputerName, UserName, ImageFileName, CommandLine, SHA256HashData])</code></pre></div>
-    <div class="tab-content" id="art-132-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*goshs*&quot; Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; NOT Processes.process=&quot;*-fkf*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | regex process=&quot;(?i)-b\s+[&#x27;\x22]?[^:\s]+:[&#x27;\x22]?(\s|$)&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-132-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*goshs*&quot; Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; NOT Processes.process=&quot;*-fkf*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | regex process=&quot;(?i)-b\s+[&#x27;\x22]?[^:\s]+:[&#x27;\x22]?(\s|$)&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+| CommandLine=/-b\s+[&#x27;&quot;]?(:[^\s&#x27;&quot;]*|[^\s:&#x27;&quot;]*:)[&#x27;&quot;]?(\s|$)/i
+| NOT CommandLine=/-fkf/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-132-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;goshs*&quot; OR Processes.process=&quot;*goshs*&quot;) Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process=&quot;*-fkf*&quot; | regex process=&quot;(?i)\s-b\s+[&#x27;\&quot;]?(:[^\s&#x27;\&quot;]*|[^\s:&#x27;\&quot;]*:)[&#x27;\&quot;]?(\s|$)&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-132-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;goshs*&quot; OR Processes.process=&quot;*goshs*&quot;) Processes.process=&quot;*-sftp*&quot; Processes.process=&quot;*-b *&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | search NOT process=&quot;*-fkf*&quot; | regex process=&quot;(?i)\s-b\s+[&#x27;\&quot;]?(:[^\s&#x27;\&quot;]*|[^\s:&#x27;\&quot;]*:)[&#x27;\&quot;]?(\s|$)&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="ef024e1431" data-platforms="def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+<details class="uc" data-uc-slug="918a07aac8" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">goshs process accepting inbound SFTP connections (CVE-2026-62325 exposure)</span>
+    <span class="uc-title">Inbound connection to unauthenticated goshs SFTP listener (CVE-2026-62325)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ef024e1431" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="918a07aac8" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts live exploitation/exposure of a vulnerable goshs SFTP listener by tying inbound network accepts to the goshs process itself. Confirms the server is actually serving connections (default SFTP port 2022 or 2121) rather than merely configured, and surfaces the connecting client IPs for scoping unauthenticated access.
+    <div class="uc-desc">Detects inbound network sessions terminating on a goshs process running in SFTP mode, from public/external source IPs — the actual exploitation of the empty-password auth bypass. Surfaces the listener&#x27;s local port rather than assuming a fixed value, and ties the connection to the goshs process serving files.
 
-Rationale: Pivots on the goshs process attribution of inbound accepts (Defender/Falcon) plus the documented SFTP ports 2022/2121 (Splunk) to confirm a serving vulnerable listener and enumerate client IPs. Sentinel left empty because its available network telemetry (ImNetworkSession) cannot attribute the accept to the goshs process, making a port-only query too noisy.
+Rationale: Anchors on the advisory PoC&#x27;s default SFTP port 2121 and ties inbound sessions to a goshs process running -sftp; surfacing LocalPort/DstPort keeps it valid when an operator changes the port. Public-source-IP filter isolates external unauthenticated access, which is the CVE-2026-62325 exploitation shape.
 
 Cross-checked against:
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-62325
-  • https://goshs.de/en/usage/sftp/index.html
-  • https://github.com/patrickhener/goshs</div>
+  • https://advisories.gitlab.com/golang/github.com/patrickhener/goshs/v2/CVE-2026-62325/
+  • https://www.thehackerwire.com/goshs-sftp-unauthenticated-file-access/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate FTP service on 2121 or SSH on 2022 unrelated to goshs (Splunk port-only variant)</li><li>Authorized red-team goshs file transfer</li><li>Internal vulnerability scanner probing the SFTP port</li><li>Backup/file-sync tooling that happens to use goshs on a trusted segment</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: correlate the accepting goshs process command line (does it match the CVE-2026-62325 empty-password config?) and list distinct RemoteIP values and connection times. 2) Contain: firewall-block inbound to the goshs SFTP port and stop the process; if any external RemoteIP connected, treat as unauthenticated access. 3) Hunt: for each connecting IP, review DeviceFileEvents on the host for file create/rename/delete under the served path during the connection window, and check that host and IP against the broader estate for other exposed goshs instances.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sanctioned red-team operators connecting to their own goshs file-transfer server on 2121</li><li>Internal admins legitimately transferring files via a goshs instance they stood up</li><li>Vulnerability scanner (e.g. authenticated internal scan) probing port 2121</li><li>Another service legitimately bound to TCP 2121 (unrelated to goshs) generating inbound sessions — mitigated by the goshs process filter on endpoint telemetry</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP != &quot;127.0.0.1&quot; and not(ipv4_is_private(RemoteIP))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the destination process is goshs in -sftp mode and check whether the source IP is external/untrusted and whether any authentication banner/handshake was recorded; correlate with UC-1 to see if the listener was launched with an empty-credential -b flag. 2) CONTAIN: If unauthenticated external access is confirmed, kill the goshs process and block the source IP and listener port at the perimeter. 3) HUNT: Review file writes/reads/deletes/renames under the goshs served path during the session window (unauthenticated SFTP grants full file access) and sweep for the same source IP hitting other exposed services.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-132-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-132-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-132-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-132-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-132-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-132-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-132-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where ActionType == &quot;InboundConnectionAccepted&quot;
 | where InitiatingProcessFileName has &quot;goshs&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort, RemoteIP, RemotePort
+| where InitiatingProcessCommandLine has &quot;-sftp&quot;
+| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionSuccess&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort, RemoteIP, RemotePort, ActionType
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
+    <div class="tab-content" id="art-132-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(30d)
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| where InitiatingProcessFileName has &quot;goshs&quot;
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort, RemoteIP, RemotePort
+| where DstPortNumber == 2121
+| where NetworkDirection == &quot;Inbound&quot;
+| where isnotempty(SrcIpAddr)
+| project TimeGenerated, SrcIpAddr, DstIpAddr, DstPortNumber, DvcHostname, NetworkApplicationProtocol, DvcAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs process inbound SFTP network activity (CVE-2026-62325)
-id: 9d2f4a6b-3c8e-4b1a-8f7d-5e2c6a9b1d4f
-status: experimental
-description: Detects inbound network connections handled by the goshs process, indicating an exposed goshs SFTP listener that may be unauthenticated per CVE-2026-62325.
-references:
-  - https://github.com/advisories/GHSA-rjrw-mjq6-hpmm
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-62325
-author: SOC Detection Engineering
-date: 2026/08/05
-tags:
-  - attack.t1190
-  - attack.t1133
-logsource:
-  category: network_connection
-detection:
-  selection:
-    Image|contains: &#x27;goshs&#x27;
-    Initiated: false
-  condition: selection
-falsepositives:
-  - Authorized red-team use of goshs
-  - Vulnerability scanners probing the SFTP port
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+    <div class="tab-content" id="art-132-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\\goshs.exe OR *\\GOSHS.EXE OR *\\goshs) @DestinationPort:2121</code></pre></div>
+    <div class="tab-content" id="art-132-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=2121
 | ContextImageFileName=/goshs/i
-| groupBy([aid, ComputerName, ContextImageFileName, LocalPort, RemotePort, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-132-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=2022 OR All_Traffic.dest_port=2121) All_Traffic.direction=&quot;inbound&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-132-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=2022 OR All_Traffic.dest_port=2121) All_Traffic.direction=&quot;inbound&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f78ffeaba2" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">goshs binary written or staged to disk (tool delivery)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f78ffeaba2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the delivery/staging of the goshs single-binary file server to an endpoint, which precedes launching the vulnerable SFTP listener. Surfaces the writing process and any download origin so a dropped goshs binary can be caught before it is run with the CVE-2026-62325 configuration.
-
-Rationale: Keys on the distinctive &#x27;goshs&#x27; filename token in file-write telemetry, capturing the writing process and FileOriginUrl so a staged binary is caught pre-execution. Marked hunting/medium because filename alone is the only anchor the article provides (no hash published).
-
-Cross-checked against:
-  • https://github.com/patrickhener/goshs
-  • https://www.kali.org/tools/goshs/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer downloading or compiling goshs for legitimate file transfer</li><li>Kali/pentest distro packages or copr builds syncing goshs to disk</li><li>Security tooling repository cloned onto an analyst workstation</li><li>Unrelated filename coincidence containing the substring &#x27;goshs&#x27;</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the InitiatingProcess and FileOriginUrl of the write; determine if the drop path and writing user are consistent with sanctioned tooling. 2) Contain: if unsanctioned, quarantine the binary and record its SHA256 for blocklisting across the estate. 3) Hunt: on the same host pivot to process-creation for that binary being run with &#x27;-sftp&#x27; and &#x27;-b user:&#x27; (UC &#x27;goshs SFTP started with empty-password basic auth&#x27;) and to inbound network accepts on ports 2022/2121 to confirm whether the vulnerable listener was ever exposed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-132-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-132-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-132-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-132-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-132-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-132-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-132-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;, &quot;FileRenamed&quot;, &quot;FileModified&quot;)
-| where FileName has &quot;goshs&quot;
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, FileOriginUrl
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFileName has &quot;goshs&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: goshs file-server binary written to disk
-id: 4a1c7e9b-2d6f-4c3a-9b8e-1f5d7a2c6b3e
-status: experimental
-description: Detects a goshs binary being created or renamed on disk, staging the red-team file server that can be launched with the CVE-2026-62325 unauthenticated SFTP configuration.
-references:
-  - https://github.com/advisories/GHSA-rjrw-mjq6-hpmm
-  - https://github.com/patrickhener/goshs
-author: SOC Detection Engineering
-date: 2026/08/05
-tags:
-  - attack.t1105
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|contains: &#x27;goshs&#x27;
-  condition: selection
-falsepositives:
-  - Developer building or downloading goshs for legitimate testing
-  - Package-manager or repo sync placing goshs on disk
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-132-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:*goshs*</code></pre></div>
-    <div class="tab-content" id="art-132-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;goshs&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-132-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;*goshs*&quot; by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-132-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;*goshs*&quot; by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+| groupBy([aid, ComputerName, RemoteAddressIP4, LocalPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-132-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=2121 All_Traffic.transport=tcp All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-132-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=2121 All_Traffic.transport=tcp All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -655,11 +556,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-132-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-132-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-132-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-132-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-132-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-132-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-132-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-132-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -668,7 +569,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-132-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-132-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -680,12 +581,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-132-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-132-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-62325&quot;, &quot;CVE-2026-40884&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-132-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-132-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-62325&quot;, &quot;CVE-2026-40884&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -708,11 +609,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-132-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-132-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-132-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-132-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-132-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-132-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-132-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas
+    <div class="tab-content active" id="art-132-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -725,7 +626,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-132-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas
@@ -741,14 +642,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-132-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas ```
+    <div class="tab-content" id="art-132-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-132-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-132-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-132-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-132-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-132-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-62325: goshs SFTP authentication bypass via empty pas ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)

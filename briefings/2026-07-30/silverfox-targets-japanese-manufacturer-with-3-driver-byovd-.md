@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### SilverFox PDFCORE8.dll side-load via ConvertToPDF.exe / PDFDirect.exe
 
-`UC_103_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceImageLoadEvents
 
 ### SilverFox 3-driver BYOVD kernel-driver drop (BootRepair/EnPortv/wsftprm.sys)
 
-`UC_103_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_105_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### ValleyRAT C2 beacon to 43.128.26.132 on non-standard ports 778/779
 
-`UC_103_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### SilverFox registry-resident payload storage (HKLM\SOFTWARE\IpDates_sun / HKCU\Console\0)
 
-`UC_103_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceRegistryEvents
 
 ### SilverFox Tencent Cloud / QQ staging download (myqcloud + file.wx2.qq.com)
 
-`UC_103_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_105_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceNetworkEvents
 
 ### ValleyRAT svchost.exe spawned by PDF side-load host for thread-context injection
 
-`UC_103_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -404,7 +404,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SilverFox Targets Japanese Manufacturer with 3-Driver BYOVD Chain and ValleyRAT
 
-`UC_103_8` · phase: **exploit** · confidence: **High**
+`UC_105_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

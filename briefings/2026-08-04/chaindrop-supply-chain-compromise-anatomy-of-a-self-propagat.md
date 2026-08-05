@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall lifecycle hook launches setup.mjs loader (ChainDrop/Mini Shai-Hulud)
 
-`UC_2_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### setup.mjs spawns obfuscated Bun payload from bun-dl staging dir
 
-`UC_2_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_4_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### ChainDrop known-bad file hashes on disk (setup.mjs / Math_*.js loaders)
 
-`UC_2_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### ChainDrop C2 / exfil egress to npm-cache.com, pypi-get.com, js-mirror.com
 
-`UC_2_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceNetworkEvents
 
 ### ChainDrop persistence: .claude / .vscode config injection by node/bun
 
-`UC_2_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceFileEvents
 
 ### ChainDrop self-propagation: Bun/node writing setup.mjs loaders into packages
 
-`UC_2_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -341,7 +341,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ChainDrop supply chain compromise: Anatomy of a self-propagating worm
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_4_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

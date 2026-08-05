@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-05
+- [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
 - [quickfox supply chain attack delivers fdmtp backdoor via tro](./2026-08-05/quickfox-supply-chain-attack-delivers-fdmtp-backdoor-via-tro.md)
 
 ## 2026-08-04
@@ -116,7 +117,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54680 logging operator has fluentd co](./2026-07-29/ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co.md)
 - [ghsa critical cve 2026 54735 prebid server s request forgery](./2026-07-29/ghsa-critical-cve-2026-54735-prebid-server-s-request-forgery.md)
 - [nine year fraud campaign clones russian company sites to ste](./2026-07-29/nine-year-fraud-campaign-clones-russian-company-sites-to-ste.md)
-- [researchers show a single malicious webpage visit can compro](./2026-07-29/researchers-show-a-single-malicious-webpage-visit-can-compro.md)
 - [ruflo mcp flaw lets unauthenticated attackers run commands a](./2026-07-29/ruflo-mcp-flaw-lets-unauthenticated-attackers-run-commands-a.md)
 - [three critical vmware flaws allow auth bypass code execution](./2026-07-29/three-critical-vmware-flaws-allow-auth-bypass-code-execution.md)
 

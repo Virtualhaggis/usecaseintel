@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Spoofed RingCentral email delivered to inbox despite SPF/DMARC/DKIM failure (whitelist abuse)
 
-`UC_5_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ EmailEvents
 
 ### Endpoint connection to Greatness AiTM phishing infrastructure (securehubcloud / aitomayu / 38.248.95.214)
 
-`UC_5_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### MFA-approved M365 token replay from Greatness proxy IP / VPS-VPN hosting ASNs
 
-`UC_5_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ AADSignInEventsBeta
 
 ### Device-code phishing token grant via Microsoft Authentication Broker from unmanaged origin
 
-`UC_5_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_7_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ AADSignInEventsBeta
 
 ### Bulk Microsoft 365 / Graph resource enumeration from Greatness proxy IP
 
-`UC_5_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
