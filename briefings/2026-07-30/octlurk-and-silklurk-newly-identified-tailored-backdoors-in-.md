@@ -122,7 +122,7 @@ _(none detected from narrative keywords)_
 
 ### OctLurk deployment via 'GoogleUpDate' scheduled task launching Videos\1.bat
 
-`UC_121_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_122_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### OctLurk/LurkProxy loader service registration (ServiceMain=RegisterService loading oleasapi.dll/msbasesysdc.dll)
 
-`UC_121_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_122_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceRegistryEvents
 
 ### OctLurk/SilkLurk/LurkProxy C2 beacon to named backdoor infrastructure
 
-`UC_121_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_122_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceNetworkEvents
 
 ### OctLurk victim-fingerprinting recon command burst (chcp 1256 + qwinsta + klist + tasklist)
 
-`UC_121_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_122_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -209,7 +209,7 @@ DeviceProcessEvents
 
 ### Impacket secretsdump credential dumping in OctLurk post-compromise
 
-`UC_121_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_122_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -229,7 +229,7 @@ DeviceProcessEvents
 
 ### FSCAN internal network reconnaissance fan-out
 
-`UC_121_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_122_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -250,7 +250,7 @@ DeviceNetworkEvents
 
 ### Browser credential-store theft via OctLurk browser password decryptor
 
-`UC_121_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_122_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -594,7 +594,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OctLurk and SilkLurk: newly identified tailored backdoors in cyber-espionage cam
 
-`UC_121_11` · phase: **exploit** · confidence: **High**
+`UC_122_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

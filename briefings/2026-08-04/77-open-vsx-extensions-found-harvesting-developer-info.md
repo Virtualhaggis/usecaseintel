@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Open VSX evil-twin extension exfiltration to mangorbit[.]com C2 infrastructure
 
-`UC_46_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Code editor / node extension-host resolving mangorbit[.]com (evil-twin attribution)
 
-`UC_46_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_50_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — 77 Open VSX extensions found harvesting developer info
 
-`UC_46_3` · phase: **exploit** · confidence: **High**
+`UC_50_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

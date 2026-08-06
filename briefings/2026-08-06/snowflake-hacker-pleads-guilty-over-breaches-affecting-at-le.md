@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### UNC5537 Snowflake cloud sign-in from known exfil IPs 45.27.26.205 / 37.19.210.21
 
-`UC_10_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ AADSignInEventsBeta
 
 ### Password-only single-factor success to cloud app with long-stale credential
 
-`UC_10_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_14_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -84,7 +84,7 @@ AADSignInEventsBeta
 
 ### Endpoint / proxy egress to UNC5537 Snowflake exfil IPs 45.27.26.205 / 37.19.210.21
 
-`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_14_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

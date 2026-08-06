@@ -26,12 +26,11 @@ Its August 3 scan counted 4,407 exposed Rockwell controllers worldwide, includin
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T0883** — Internet Accessible Device
-- **T0846** — Remote System Discovery
-- **T0842** — Network Sniffing
-- **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T0814** — Denial of Service
-- **T0855** — Unauthorized Command Message
+- **T1133** — External Remote Services
+- **T0886** — Remote Services (ICS)
+- **T1499** — Endpoint Denial of Service
+- **T0814** — Denial of Service (ICS)
+- **T0855** — Unauthorized Command Message (ICS)
 
 ## Kill chain phases observed
 
@@ -39,63 +38,52 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inbound EtherNet/IP (TCP/44818) session to OT asset from external/cellular IP
+### Inbound external connections to exposed Rockwell EtherNet/IP OT ports (44818/2222/102)
 
-`UC_1_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=44818 All_Traffic.transport=tcp (All_Traffic.direction=inbound OR All_Traffic.src_category=external) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.action | `drop_dm_object_name(All_Traffic)` | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16) | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (44818, 2222, 102) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action
+| `drop_dm_object_name(All_Traffic)`
+| where NOT (cidrmatch("10.0.0.0/8", src) OR cidrmatch("172.16.0.0/12", src) OR cidrmatch("192.168.0.0/16", src))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(24h)
-| where RemotePort == 44818 and Protocol == "Tcp"
-| where ActionType == "InboundConnectionAccepted"
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, LocalIP, LocalPort, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName
-| order by Timestamp desc
+| where RemotePort in (44818, 2222, 102)
+| where ActionType == "ConnectionSuccess"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort), Targets=dcount(RemoteIP) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
+| order by Conns desc
 ```
 
-### External source enumerating multiple Rockwell OT ports (44818/2222/5069/502) — port sweep
+### External Modbus TCP (502) to MicroLogix 1400 — CVE-2017-16740 exploitation surface
 
-`UC_1_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_5_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (44818,2222,5069,502) All_Traffic.transport=tcp by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16) | stats dc(dest_port) as distinct_ports values(dest_port) as ports dc(dest) as target_hosts sum(count) as total_conns by src | where distinct_ports>=2 | sort - distinct_ports
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=502 by All_Traffic.src All_Traffic.dest All_Traffic.action
+| `drop_dm_object_name(All_Traffic)`
+| where NOT (cidrmatch("10.0.0.0/8", src) OR cidrmatch("172.16.0.0/12", src) OR cidrmatch("192.168.0.0/16", src))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(24h)
-| where RemotePort in (44818, 2222, 5069, 502) and Protocol == "Tcp"
-| where RemoteIPType == "Public"
-| summarize DistinctPorts = dcount(RemotePort), Ports = make_set(RemotePort), TargetHosts = dcount(DeviceName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by RemoteIP
-| where DistinctPorts >= 2   // two+ distinct OT service ports from one external source = sweep
-| order by DistinctPorts desc
-```
-
-### Inbound Modbus TCP (502) to MicroLogix 1400 — CVE-2017-16740 DoS surface
-
-`UC_1_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=502 All_Traffic.transport=tcp by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16) | eventstats sum(count) as conns_from_src by src | convert ctime(firstTime) ctime(lastTime) | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(24h)
-| where RemotePort == 502 and Protocol == "Tcp"
-| where ActionType == "InboundConnectionAccepted"
-| where RemoteIPType == "Public"
-| summarize Conns = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, LocalIP, RemoteIP, RemotePort
+| where RemotePort == 502
+| where ActionType == "ConnectionSuccess"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
+| where Conns > 50 // repeated 502 volume matches CVE-2017-16740 malformed-packet DoS; tune to plant baseline
 | order by Conns desc
 ```
 
@@ -285,4 +273,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -29,9 +29,8 @@ In several of the attack paths, the model never ran at all, so system prompts, c
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1611** — Escape to Host
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1068** — Exploitation for Privilege Escalation
+- **T1059** — Command and Scripting Interpreter
 - **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
@@ -40,49 +39,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vercel AI SDK harness sandbox-to-host bypass via spoofed host-tool-mcp.mjs path
+### Vercel AI SDK harness sandbox-to-host bypass via host-tool-mcp.mjs cmdline spoof
 
-`UC_7_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*host-tool-mcp.mjs*" OR Processes.process="*@ai-sdk/harness-opencode*" OR Processes.process="*@ai-sdk/harness-codex*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name, Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| search (parent_process="*postinstall*" OR parent_process="*preinstall*" OR parent_process="*prepare*" OR parent_process="*npm run*" OR parent_process="*node_modules/.bin*" OR parent_process_name IN ("npm","node","yarn","pnpm","sh","bash","dash"))
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*host-tool-mcp.mjs*" AND Processes.parent_process_name IN ("npm","npx","node","pnpm","yarn","sh","bash","dash","make","python","python3") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where ProcessCommandLine has_any ("host-tool-mcp.mjs","@ai-sdk/harness-opencode","@ai-sdk/harness-codex")
-| where InitiatingProcessCommandLine has_any ("postinstall","preinstall","prepare","prepublish","npm run","yarn ","pnpm ","node_modules/.bin","-c ")
-   or InitiatingProcessFileName in~ ("npm","yarn","pnpm","node","sh","bash","dash")
+| where ProcessCommandLine has "host-tool-mcp.mjs"
+| where InitiatingProcessFileName in~ ("npm","npx","node","pnpm","yarn","sh","bash","dash","make","python","python3")
+    or InitiatingProcessCommandLine has_any ("postinstall","preinstall","prepare","node_modules/.bin","lifecycle")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          InitiatingProcessParentFileName, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Vulnerable AI agent framework versions installed (Google ADK / Vercel harness CoreBreak)
+### Exposure inventory: hosts running CoreBreak-vulnerable AWS/Google/Vercel agent framework versions
 
-`UC_7_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-18236","CVE-2026-64650","CVE-2026-64651") by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
+`UC_11_7` · phase: **weapon** · confidence: **Low** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-18236","CVE-2026-64650","CVE-2026-64651")
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by CveId asc, DeviceName asc
+| where CveId in ("CVE-2026-18830","CVE-2026-18236","CVE-2026-64650","CVE-2026-64651")
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -263,7 +252,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AWS, Google, and Vercel Agent Flaws Let Attackers Trigger Tools Without Running
 
-`UC_7_5` · phase: **exploit** · confidence: **High**
+`UC_11_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,4 +309,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

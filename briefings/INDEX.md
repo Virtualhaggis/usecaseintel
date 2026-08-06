@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2615 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,9 +15,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [aws google and vercel agent flaws let attackers trigger tool](./2026-08-06/aws-google-and-vercel-agent-flaws-let-attackers-trigger-tool.md)
 - [chinese made zbtlink routers ship with backdoor that opens u](./2026-08-06/chinese-made-zbtlink-routers-ship-with-backdoor-that-opens-u.md)
 - [cryptojs weak rng behind 5 7 million in drains affects five ](./2026-08-06/cryptojs-weak-rng-behind-5-7-million-in-drains-affects-five-.md)
+- [ghsa critical cve 2026 65600 traefik authentication bypass v](./2026-08-06/ghsa-critical-cve-2026-65600-traefik-authentication-bypass-v.md)
+- [new interrupt injection attack can bypass spectre v2 defense](./2026-08-06/new-interrupt-injection-attack-can-bypass-spectre-v2-defense.md)
 - [over 4 400 rockwell plcs exposed online 22 found in water at](./2026-08-06/over-4-400-rockwell-plcs-exposed-online-22-found-in-water-at.md)
 - [ransom cartel creator gets 16 years in prison for operating ](./2026-08-06/ransom-cartel-creator-gets-16-years-in-prison-for-operating-.md)
 - [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
+- [threatsday odysseus rce samsung one click takeover icloud ba](./2026-08-06/threatsday-odysseus-rce-samsung-one-click-takeover-icloud-ba.md)
 - [token jacking cybercriminals could be stealing your ai resou](./2026-08-06/token-jacking-cybercriminals-could-be-stealing-your-ai-resou.md)
 
 ## 2026-08-05
@@ -100,7 +103,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-31
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
 - [captivecrunch midnight blizzard targets travelers worldwide ](./2026-07-31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-.md)
-- [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
 - [ghsa critical cve 2026 52855 wings exposes node configuratio](./2026-07-31/ghsa-critical-cve-2026-52855-wings-exposes-node-configuratio.md)
 - [ghsa critical cve 2026 52887 nocobase sql injection in api m](./2026-07-31/ghsa-critical-cve-2026-52887-nocobase-sql-injection-in-api-m.md)
 - [ghsa critical cve 2026 53609 apostrophe has server side prot](./2026-07-31/ghsa-critical-cve-2026-53609-apostrophe-has-server-side-prot.md)
@@ -303,7 +305,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
 - [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
-- [ghsa critical cve 2026 53913 apache camel keycloaksecuritypo](./2026-07-06/ghsa-critical-cve-2026-53913-apache-camel-keycloaksecuritypo.md)
 - [ghsa critical cve 2026 54496 zebra missing copy constraint i](./2026-07-06/ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i.md)
 - [ghsa critical cve 2026 54769 langroid sandbox escape to remo](./2026-07-06/ghsa-critical-cve-2026-54769-langroid-sandbox-escape-to-remo.md)
 - [ghsa critical cve 2026 55500 9routers has exposure of sensit](./2026-07-06/ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit.md)

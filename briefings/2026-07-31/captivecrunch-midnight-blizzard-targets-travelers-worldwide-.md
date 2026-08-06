@@ -83,7 +83,7 @@ _(none detected from narrative keywords)_
 
 ### CornFlake RAT persistence via svchost32.exe masquerade in %APPDATA%
 
-`UC_99_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Endpoint connections to Storm-2945 CaptiveCrunch AiTM doppelganger infrastructure
 
-`UC_99_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceNetworkEvents
 
 ### Entra ID sign-in or session from Storm-2945 AiTM device-code phishing infrastructure
 
-`UC_99_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_102_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ AADSignInEventsBeta
 
 ### ClickFix execution reaching CaptiveCrunch infrastructure or dropping svchost32
 
-`UC_99_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_102_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceProcessEvents
 
 ### CornFlake C2 egress from masqueraded svchost32.exe in AppData
 
-`UC_99_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -547,7 +547,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CaptiveCrunch: Midnight Blizzard targets travelers worldwide for malware deliver
 
-`UC_99_11` · phase: **exploit** · confidence: **High**
+`UC_102_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

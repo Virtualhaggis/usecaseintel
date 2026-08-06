@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### Successful Entra ID device-code authentication (ARToken/EvilTokens PhaaS MFA bypass)
 
-`UC_117_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_118_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ AADSignInEventsBeta
 
 ### Trojanized MeshAgent running outside its install path (Sinobi ransomware C2)
 
-`UC_117_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_118_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### Zoho Assist Unattended Agent deployment (Warlock / Storm-2603 ransomware)
 
-`UC_117_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_118_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### Email-hiding inbox rules created post-compromise (BEC / mailbox concealment)
 
-`UC_117_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_118_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -417,7 +417,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — You were onto something with “It’s the Climb,” Miley
 
-`UC_117_10` · phase: **exploit** · confidence: **High**
+`UC_118_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

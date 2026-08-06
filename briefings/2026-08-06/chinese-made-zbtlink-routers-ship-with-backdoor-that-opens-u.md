@@ -38,17 +38,11 @@ According to a new report from VulnCheck, the implant appears in all 21 firmware
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1571** — Non-Standard Port
-- **T1095** — Non-Application Layer Protocol
-- **T1584.008** — Compromise Infrastructure: Network Devices
+- **T1008** — Fallback Channels
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1568** — Dynamic Resolution
-- **T1542.001** — Pre-OS Boot: System Firmware
-- **T1036.004** — Masquerading: Masquerade Task or Service
-- **T1037** — Boot or Logon Initialization Scripts
+- **T1195.003** — Supply Chain Compromise: Compromise Hardware Supply Chain
+- **T1037.004** — Boot or Logon Initialization Scripts: RC Scripts
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1078.003** — Valid Accounts: Local Accounts
-- **T1592.004** — Gather Victim Host Information: Client Configurations
-- **T1046** — Network Service Discovery
 
 ## Kill chain phases observed
 
@@ -56,13 +50,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ENDLESSDOORS C2 egress to hardcoded Zbtlink implant IPs (rctl port 7000/7001)
+### ENDLESSDOORS rctl C2 beacon to hardcoded Zbtlink backdoor IPs (ports 7000/7001)
 
-`UC_8_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_12_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("47.107.224.89","47.100.190.96","45.32.81.152","43.248.136.125") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval rctl_port=if(dest_port IN(7000,7001),"yes","no") | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("47.107.224.89","47.100.190.96","45.32.81.152","43.248.136.125") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | eval rctl_port=if(dest_port IN ("7000","7001"),"yes","no") | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
@@ -70,14 +64,14 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(14d)
 | where RemoteIP in ("47.107.224.89","47.100.190.96","45.32.81.152","43.248.136.125")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort, 20) by DeviceName, LocalIP, RemoteIP, InitiatingProcessFileName
-| extend RctlPort = set_has_element(Ports, 7000) or set_has_element(Ports, 7001)
-| order by Conns desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), Ports=make_set(RemotePort), Procs=make_set(InitiatingProcessFileName) by DeviceName, DeviceId, LocalIP, RemoteIP
+| extend RctlPortSeen = set_has_element(Ports, 7000) or set_has_element(Ports, 7001)
+| order by FirstSeen asc
 ```
 
-### ENDLESSDOORS C2 domain DNS resolution (wikaba/epplink/online-string)
+### ENDLESSDOORS C2 domain resolution (rbdg4nzqadui.wikaba.com / zbtctl.epplink.net / online-string.com)
 
-`UC_8_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_12_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,17 +83,17 @@ DeviceNetworkEvents
 DeviceNetworkEvents
 | where Timestamp > ago(14d)
 | where RemoteUrl in~ ("rbdg4nzqadui.wikaba.com","zbtctl.epplink.net","online-string.com")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count() by DeviceName, LocalIP, RemoteUrl, RemoteIP, InitiatingProcessFileName
-| order by Conns desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Count=count(), RemoteIPs=make_set(RemoteIP) by DeviceName, DeviceId, RemoteUrl, InitiatingProcessFileName
+| order by FirstSeen asc
 ```
 
-### ENDLESSDOORS implant file artifacts on Linux (kworker / librctl.so / kworker.cfg / skworker)
+### ENDLESSDOORS rctl implant filesystem artifacts and skworker boot persistence
 
-`UC_8_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/usr/sbin/kworker","/usr/lib/librctl.so","/etc/kworker.cfg","/etc/init.d/skworker") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/usr/sbin/kworker","/usr/lib/librctl.so","/etc/kworker.cfg","/etc/init.d/skworker") OR Filesystem.file_name IN ("librctl.so","kworker.cfg","skworker") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
@@ -107,68 +101,28 @@ DeviceNetworkEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where FolderPath in~ ("/usr/sbin/kworker","/usr/lib/librctl.so","/etc/kworker.cfg","/etc/init.d/skworker")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+   or FileName in~ ("librctl.so","kworker.cfg","skworker")
+| project Timestamp, DeviceName, DeviceId, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### kworker userland-process masquerade + skworker boot persistence (rctl implant runtime)
+### ENDLESSDOORS kworker-masqueraded implant spawning interactive /bin/sh root shell
 
-`UC_8_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path="/usr/sbin/kworker" OR Processes.parent_process_path="/etc/init.d/skworker") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="kworker" AND Processes.process_name IN ("sh","bash","dash") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FolderPath =~ "/usr/sbin/kworker"
-    or InitiatingProcessFolderPath =~ "/etc/init.d/skworker"
-    or (FileName =~ "kworker" and isnotempty(FolderPath))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### rctl unauthenticated reverse root shell (kworker spawning /bin/sh to C2 port 7001)
-
-`UC_8_13` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_path="/usr/sbin/kworker" AND Processes.process_name IN ("sh","bash") AND Processes.user="root" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where InitiatingProcessFolderPath =~ "/usr/sbin/kworker" or InitiatingProcessFileName =~ "kworker"
-| where FileName in~ ("sh","bash","ash","dash")
-| where AccountName =~ "root"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath
+| where FileName in~ ("sh","bash","dash")
+| project Timestamp, DeviceName, DeviceId, AccountName, InitiatingProcessFolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine
 | order by Timestamp desc
-```
-
-### Zbtlink / Wiflyer affected-model inventory and exposure audit
-
-`UC_8_14` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| inputlookup asset_inventory where vendor="Zbtlink" OR vendor="Wiflyer" OR model IN ("CPE2801","WE1026-5G-WD","WE1326","WE2007","WE2008-DSIM","WE2416","WE3326","WE5927","WE5931","WE5931AC","WE826-T3-DSIM","WG108","WG1602","WG1608-DSIM","WG209","WG2105","WG2107","WG259","WG3526","Z8102AX-2DSIM") | table ip mac vendor model is_internet_facing | sort - is_internet_facing
-```
-
-**Defender KQL:**
-```kql
-DeviceInfo
-| where Timestamp > ago(7d)
-| summarize arg_max(Timestamp, *) by DeviceId
-| where Vendor has_any ("Zbtlink","Wiflyer")
-    or Model in~ ("CPE2801","WE1026-5G-WD","WE1326","WE2007","WE2008-DSIM","WE2416","WE3326","WE5927","WE5931","WE5931AC","WE826-T3-DSIM","WG108","WG1602","WG1608-DSIM","WG209","WG2105","WG2107","WG259","WG3526","Z8102AX-2DSIM")
-| project DeviceName, DeviceId, Vendor, Model, OSPlatform, PublicIP, IsInternetFacing, DeviceType
-| order by IsInternetFacing desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -408,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese-Made Zbtlink Routers Ship With Backdoor That Opens Unauthenticated Root
 
-`UC_8_8` · phase: **install** · confidence: **High**
+`UC_12_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -452,4 +406,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
