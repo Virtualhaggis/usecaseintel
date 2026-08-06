@@ -11,12 +11,8 @@ By Lawrence Abrams
 August 5, 2026
 07:00 PM
 0 
-
-
 Maksim Silnikau, the creator and administrator of the Ransom Cartel ransomware operation, was sentenced to 16 years in prison for his role in ransomware attacks against at least 18 companies worldwide.
-
-
-The U.S. Department of Justice announced today that the 40-year-old Belarusian national was sentenced for conspiracy to commit offenses against the United States, conspiracy to …
+The U.S. Department of Justice announced today that the 40-year-old Belarusian national was sentenced for conspiracy to commit offenses against the United States, conspiracy to commit w…
 
 ## Indicators of Compromise (high-fidelity only)
 

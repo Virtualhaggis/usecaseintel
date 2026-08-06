@@ -36,11 +36,14 @@ The operator, t…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
-- **T1213** — Data from Information Repositories
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1102** — Web Service
+- **T1571** — Non-Standard Port
+- **T1588.005** — Obtain Capabilities: Exploits
+- **T1595** — Active Scanning
 
 ## Kill chain phases observed
 
@@ -48,90 +51,135 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Citrix NetScaler SAML IdP memory-overread scraping loop (CVE-2026-3055)
+### Hermes AI-agent OpSec slip: python3 http.server 8888 from /home/worker
 
-`UC_102_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count as requests, max(Web.bytes_out) as max_bytes_out, values(Web.uri_path) as uris from datamodel=Web.Web where (Web.dest_category="netscaler" OR Web.dest="*netscaler*" OR Web.http_user_agent="*") Web.uri_path="*saml*" by Web.src, Web.dest, _time span=10m | `drop_dm_object_name(Web)` | where requests>20 | sort - max_bytes_out
-```
-
-### Marimo notebook server spawning shell/downloader (CVE-2026-39987 command execution)
-
-`UC_102_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.parent_process="*marimo*" (Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat","perl","python3")) by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python3","python") AND Processes.process="*http.server*" AND Processes.process="*8888*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(14d)
+| where FileName in~ ("python3","python")
+| where ProcessCommandLine has "http.server" and ProcessCommandLine has "8888"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Marimo CVE-2026-39987: notebook server spawning shell / recon (command execution)
+
+`UC_103_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*marimo*" AND Processes.process_name IN ("sh","bash","dash","zsh","curl","wget","nc","ncat")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
 | where InitiatingProcessCommandLine has "marimo"
-| where AccountName !endswith "$"
-| where (FileName in~ ("curl","wget","nc","ncat","perl")) or (FileName in~ ("sh","bash","dash","python3") and ProcessCommandLine has_any ("-i","/dev/tcp","curl","wget","base64","| sh","| bash","socket"))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, ChildProcess=FileName, ProcessCommandLine, FolderPath, SHA256
+| where FileName in~ ("sh","bash","dash","zsh","curl","wget","nc","ncat","python3")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Hermes Agent opsec tell: python3 -m http.server 8888 staging server
+### Langflow CVE-2026-33017 code-injection: langflow/uvicorn spawning shell
 
-`UC_102_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_103_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3") Processes.process="*http.server*" Processes.process="*8888*" by Processes.dest, Processes.parent_process_name, Processes.process | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process="*langflow*" OR Processes.parent_process="*uvicorn*langflow*") AND Processes.process_name IN ("sh","bash","dash","curl","wget","python3","nc")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("python","python3")
-| where ProcessCommandLine has_all ("http.server","8888")
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName, SHA256
+| where Timestamp > ago(14d)
+| where InitiatingProcessCommandLine has "langflow"
+| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat") or (FileName in~ ("python3","python") and ProcessCommandLine has_any ("-c","import os","import subprocess","os.system"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Hermes Agent Telegram bot C2 egress from a server/notebook workload
+### n8n CVE-2026-21858 + CVE-2025-68613 chain: node process spawning shell
 
-`UC_102_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(All_Traffic.app) as app, values(All_Traffic.process_name) as proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="api.telegram.org" (All_Traffic.process_name IN ("python","python3","node","curl","wget","sh","bash","marimo","n8n")) by All_Traffic.src, All_Traffic.dest_host, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*n8n*" AND Processes.parent_process_name IN ("node","node.js") AND Processes.process_name IN ("sh","bash","dash","curl","wget","nc","ncat")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node","node.js") and InitiatingProcessCommandLine has "n8n"
+| where FileName in~ ("sh","bash","dash","curl","wget","nc","ncat")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Telegram bot C2: server/agent host beaconing to api.telegram.org
+
+`UC_103_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*api.telegram.org*" OR All_Traffic.app="*telegram*") AND All_Traffic.process_name IN ("python3","python","node","curl","wget") by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl endswith "telegram.org" or RemoteUrl has "api.telegram.org"
-| where InitiatingProcessFileName in~ ("python","python3","node","curl","wget","sh","bash") or InitiatingProcessCommandLine has_any ("marimo","n8n","langflow","hermes")
-| where InitiatingProcessAccountName !endswith "$"
+| where Timestamp > ago(14d)
+| where RemoteUrl has "api.telegram.org"
+| where InitiatingProcessFileName in~ ("python3","python","node","curl","wget","sh","bash")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### DeepSeek LLM inference API egress from an exposed server workload
+### DeepSeek LLM inference API abuse from an exploitation host
 
-`UC_102_11` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_103_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(All_Traffic.process_name) as proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host="api.deepseek.com" (All_Traffic.process_name IN ("python","python3","node","curl","wget","sh","bash","marimo","n8n")) by All_Traffic.src, All_Traffic.dest_host, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*api.deepseek.com*" OR All_Traffic.dest="*deepseek.com*") AND All_Traffic.process_name IN ("python3","python","node","curl","wget") by All_Traffic.src All_Traffic.dest All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl endswith "deepseek.com" or RemoteUrl has "api.deepseek.com"
-| where InitiatingProcessFileName in~ ("python","python3","node","curl","wget","sh","bash") or InitiatingProcessCommandLine has_any ("marimo","n8n","langflow","hermes")
-| where InitiatingProcessAccountName !endswith "$"
+| where Timestamp > ago(14d)
+| where RemoteUrl has "deepseek.com"
+| where InitiatingProcessFileName in~ ("python3","python","node","curl","wget","sh","bash")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Autonomous exploit staging: agent host downloading exploits incl. code.newcli.com
+
+`UC_103_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*code.newcli.com*") by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "code.newcli.com" or RemoteIP == ""
+| where RemoteUrl has "code.newcli.com"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
@@ -314,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 
-`UC_102_6` · phase: **install** · confidence: **High**
+`UC_103_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -358,4 +406,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

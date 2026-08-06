@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### DOUBLECUP ClickFix: script interpreter reads steganographic PNG from browser cache
 
-`UC_56_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_57_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### DOUBLECUP delivery domain and /api/config endpoint contact
 
-`UC_56_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_57_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### DOUBLECUP / CountLoader / DeviceManager C2 IP connections
 
-`UC_56_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceNetworkEvents
 
 ### DeviceManager RAT: embedded Python spawned from Inno Setup installer in user space
 
-`UC_56_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_57_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### DeviceManager EtherHiding: non-browser process resolving C2 via blockchain RPC
 
-`UC_56_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_57_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceNetworkEvents
 
 ### DeviceManager anti-analysis self-deletion: python spawns cmd rmdir + schtasks /delete
 
-`UC_56_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_57_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

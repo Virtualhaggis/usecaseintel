@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 10 Kubernetes Security Context settings you should understand
 
-`UC_3215_0` · phase: **exploit** · confidence: **High**
+`UC_3216_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

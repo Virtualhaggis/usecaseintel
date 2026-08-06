@@ -37,14 +37,11 @@ Microsoft Threat Intelligence observed a macOS ClickFix campaign distributing in
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1105** — Ingress Tool Transfer
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1583.001** — Acquire Infrastructure: Domains
+- **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1553.001** — Subvert Trust Controls: Gatekeeper Bypass
-- **T1222.002** — File and Directory Permissions Modification: Linux and Mac
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1056.002** — Input Capture: GUI Input Capture
+- **T1222.002** — File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification
 
 ## Kill chain phases observed
 
@@ -52,34 +49,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### macOS ClickFix curl one-liner piped to shell (MacSync/AMOS delivery)
+### macOS ClickFix staging access: /curl/<id> path on 'file'-token look-alike domains
 
-`UC_4_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*curl*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)curl.*\|\s*(z|ba|d)?sh\b" | search NOT (process="*brew.sh*" OR process="*get.docker.com*" OR process="*rustup.rs*" OR process="*raw.githubusercontent.com/Homebrew*") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine has 'curl'
-| where ProcessCommandLine matches regex @'(?i)curl\s.*\|\s*(z|ba|d)?sh\b'
-| where ProcessCommandLine has_any ('-kSsfL','-fsSL','-sSfL','-fsSLk','| zsh','| bash','| sh')
-| where not(ProcessCommandLine has_any ('brew.sh','get.docker.com','rustup.rs','raw.githubusercontent.com/Homebrew'))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, FolderPath, ProcessCommandLine
-| order by Timestamp desc
-```
-
-### Connections/DNS to ClickFix 'file'-token look-alike domain cluster
-
-`UC_4_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("*apricotfilepoint.com*","*filecopperbasket*","*filevelvettractor*","*fileoceanhammer*","*filemarblegarden*","*applefilevault*","*bananafastfile*","*orangesmartfile*","*cloudsendhub*","*syncdatavault*")) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*/curl/*") OR (Web.dest IN ("apricotfilepoint.com","filecopperbasket*","filevelvettractor*","fileoceanhammer*","filemarblegarden*","applefilevault*","bananafastfile*","orangesmartfile*","cloudsendhub*","syncdatavault*")) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -87,51 +63,51 @@ DeviceProcessEvents
 DeviceNetworkEvents
 | where Timestamp > ago(14d)
 | where isnotempty(RemoteUrl)
-| extend Host = tolower(RemoteUrl)
-| where Host has_any ('apricotfilepoint.com','filecopperbasket','filevelvettractor','fileoceanhammer','filemarblegarden','applefilevault','bananafastfile','orangesmartfile','cloudsendhub','syncdatavault')
-   or Host matches regex @'(?i)\b(file[a-z]{6,14}|[a-z]{4,10}file[a-z]{0,10})\.(com|net|xyz|shop|top|online)\b'
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has "/curl/"
+   or RemoteUrl has_any ("apricotfilepoint.com","filecopperbasket","filevelvettractor","fileoceanhammer","filemarblegarden","applefilevault","bananafastfile","orangesmartfile","cloudsendhub","syncdatavault")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### macOS Gatekeeper/quarantine bypass via xattr or spctl after ClickFix download
+### macOS ClickFix execution: curl (insecure) piped to shell with base64 decode
+
+`UC_4_13` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*curl*" AND (Processes.process="*| zsh*" OR Processes.process="*|zsh*" OR Processes.process="*| bash*" OR Processes.process="*| sh*" OR Processes.process="*base64 -d*") AND (Processes.process="*-k*" OR Processes.process="*--insecure*" OR Processes.process="*/curl/*") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName in~ ("curl","zsh","bash","sh")
+| where ProcessCommandLine has "curl"
+| where ProcessCommandLine matches regex @"(?i)\|\s*(zsh|bash|/bin/sh|sh)\b"
+   or ProcessCommandLine has "base64"
+| where ProcessCommandLine has_any ("-k","--insecure","/curl/")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### macOS Gatekeeper/quarantine strip via xattr -c in shell download chain
 
 `UC_4_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="xattr" OR Processes.process_name="spctl") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search ((process_name="xattr" AND process="*com.apple.quarantine*") OR (process_name="spctl" AND (process="*--master-disable*" OR process="*--disable*"))) | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="xattr" AND (Processes.process="*-c*" OR Processes.process="*com.apple.quarantine*") AND Processes.parent_process_name IN ("zsh","bash","sh","curl","Terminal","osascript") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where FileName in~ ('xattr','spctl')
-| where (FileName =~ 'xattr' and ProcessCommandLine has 'com.apple.quarantine' and ProcessCommandLine has_any ('-d','-c','-rd','-cr'))
-   or (FileName =~ 'spctl' and ProcessCommandLine has_any ('--master-disable','--disable'))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, FolderPath, ProcessCommandLine
-| order by Timestamp desc
-```
-
-### macOS ClickFix second-stage loader: base64/gzip decode piped to shell + osascript password prompt
-
-`UC_4_15` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*base64*" OR Processes.process="*gzip*" OR Processes.process="*gunzip*" OR Processes.process="*osascript*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)(base64\s+(--decode|-d|-D)\b.*\|\s*(gunzip|gzip\s+-d|zcat))|((gunzip|gzip\s+-d|zcat).*\|\s*(z|ba)?sh\b)|(osascript.*(display dialog).*(hidden answer|password))" | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ('bash','zsh','sh','dash','osascript','base64','gzip','gunzip','zcat')
-| where ProcessCommandLine matches regex @'(?i)base64\s+(--decode|-d|-D)\b.*\|\s*(gunzip|gzip\s+-d|zcat)'
-   or ProcessCommandLine matches regex @'(?i)(gunzip|gzip\s+-d|zcat).*\|\s*(z|ba)?sh\b'
-   or (ProcessCommandLine has 'osascript' and ProcessCommandLine has 'display dialog' and ProcessCommandLine has_any ('hidden answer','password'))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where FileName =~ "xattr"
+| where ProcessCommandLine has_any ("-c","-d com.apple.quarantine","com.apple.quarantine")
+| where InitiatingProcessFileName in~ ("zsh","bash","sh","curl","Terminal","osascript")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -514,4 +490,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

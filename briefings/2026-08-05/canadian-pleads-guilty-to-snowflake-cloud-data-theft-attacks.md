@@ -11,12 +11,8 @@ By Ionut Ilascu
 August 5, 2026
 05:53 PM
 0 
-
-
 A Canadian man pleaded guilty today to his role in accessing company accounts at cloud storage provider Snowflake and stealing data from at least 165 organizations in a scheme to extort millions of dollars from victims.
-
-
-​26-year-old Connor Riley Moucka, also known as Alexander Moucka and Waifu, was arrested on October 30, 2024, for stealing data of hundreds of millions of individuals…
+​26-year-old Connor Riley Moucka, also known as Alexander Moucka and Waifu, was arrested on October 30, 2024, for stealing data of hundreds of millions of individuals from co…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -30,6 +26,7 @@ A Canadian man pleaded guilty today to his role in accessing company accounts at
 - **T1071** — Application Layer Protocol
 - **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1078** — Valid Accounts
+- **T1567** — Exfiltration Over Web Service
 - **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
@@ -38,49 +35,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Cloud/Entra sign-in from UNC5537 Snowflake-campaign VPN exit IPs (stolen-cred, no MFA)
+### UNC5537 Snowflake data-theft: sign-in from attacker infrastructure IPs
 
 `UC_1_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success AND Authentication.src IN ("45.27.26.205","37.19.210.21") by Authentication.user Authentication.src Authentication.app Authentication.dest Authentication.signature
-| `drop_dm_object_name(Authentication)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as app values(Authentication.action) as action from datamodel=Authentication where Authentication.src IN ("45.27.26.205","37.19.210.21") by Authentication.user Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let BadIPs = dynamic(["45.27.26.205","37.19.210.21"]);
 AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where IPAddress in (BadIPs)
-| where ErrorCode == 0                      // successful auth only
-| extend MfaSatisfied = AuthenticationRequirement =~ "multiFactorAuthentication"
-| project Timestamp, AccountUpn, AccountDisplayName, Application, AppDisplayName, ResourceDisplayName, IPAddress, Country, City, ClientAppUsed, ConditionalAccessStatus, AuthenticationRequirement, MfaSatisfied, RiskLevelDuringSignIn
+| where Timestamp > ago(90d)
+| where IPAddress in ("45.27.26.205","37.19.210.21")
+| project Timestamp, AccountUpn, AccountDisplayName, Application, AppDisplayName, IPAddress, Country, City, ErrorCode, ClientAppUsed, UserAgent
 | order by Timestamp desc
 ```
 
-### Network egress to UNC5537 Snowflake-campaign attacker infrastructure IPs
+### UNC5537 Snowflake campaign: network connection to attacker IPs
 
-`UC_1_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_ip IN ("45.27.26.205","37.19.210.21") OR All_Traffic.src_ip IN ("45.27.26.205","37.19.210.21")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - bytes_out
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.dest IN ("45.27.26.205","37.19.210.21") OR All_Traffic.src IN ("45.27.26.205","37.19.210.21")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let BadIPs = dynamic(["45.27.26.205","37.19.210.21"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (BadIPs)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| where Timestamp > ago(90d)
+| where RemoteIP in ("45.27.26.205","37.19.210.21")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -123,4 +110,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

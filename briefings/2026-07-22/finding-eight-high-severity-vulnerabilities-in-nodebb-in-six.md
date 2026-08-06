@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB remote federated-user profile lookup (ActivityPub XSS #1 trigger)
 
-`UC_175_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_176_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### NodeBB server outbound ActivityPub/webfinger fetch to ephemeral tunnel or new domain
 
-`UC_175_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_176_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### NodeBB ActivityPub inbox POST carrying HTML-breakout id (Federation Errors stored XSS)
 
-`UC_175_6` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_176_6` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Finding eight high-severity vulnerabilities in NodeBB in six hours
 
-`UC_175_3` · phase: **exploit** · confidence: **High**
+`UC_176_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

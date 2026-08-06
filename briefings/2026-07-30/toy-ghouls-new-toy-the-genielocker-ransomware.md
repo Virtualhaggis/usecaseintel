@@ -93,7 +93,7 @@ _(none detected from narrative keywords)_
 
 ### GenieLocker Windows ransomware execution via secret-argument hex + --percent/--recursive flags
 
-`UC_123_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### External-partner VPN logon with valid credentials (trusted-relationship abuse)
 
-`UC_123_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_124_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceLogonEvents
 
 ### SoftPerfect Network Scanner (netscan.exe) execution for internal discovery
 
-`UC_123_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_124_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### Mimikatz credential dumping via command-line/module signature
 
-`UC_123_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ DeviceProcessEvents
 
 ### KeePassXC .kdbx vault access/copy by non-KeePass process
 
-`UC_123_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_124_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -200,7 +200,7 @@ DeviceFileEvents
 
 ### socks5.exe / anomalous Windows OpenSSH server for pivot tunneling
 
-`UC_123_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_124_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -221,7 +221,7 @@ DeviceProcessEvents
 
 ### Reverse SSH tunnel and C2 beacon to GenieLocker C2 89.125.66.101
 
-`UC_123_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_124_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -240,7 +240,7 @@ DeviceNetworkEvents
 
 ### GenieLocker ELF encryptor on Linux/ESXi via --percent/--recursive flags
 
-`UC_123_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_124_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -406,7 +406,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Toy Ghouls’ new toy: the GenieLocker ransomware
 
-`UC_123_7` · phase: **exploit** · confidence: **High**
+`UC_124_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
