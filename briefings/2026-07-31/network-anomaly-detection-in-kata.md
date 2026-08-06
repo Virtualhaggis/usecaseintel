@@ -33,10 +33,10 @@ Once the attacker has breached the corporate network, subsequent stages of the a
 - **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1053.005** — Scheduled Task
 - **T1558.003** — Steal or Forge Kerberos Tickets: Kerberoasting
+- **T1078.002** — Valid Accounts: Domain Accounts
+- **T1550.003** — Use Alternate Authentication Material: Pass the Ticket
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted Non-C2
-- **T1048.003** — Exfiltration Over Alternative Protocol
-- **T1572** — Protocol Tunneling
+- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
 
 ## Kill chain phases observed
 
@@ -44,95 +44,94 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Kerberoasting: single account receives TGS-REP for many unique non-system SPNs
+### Kerberoasting: single account harvesting TGS tickets for many distinct SPNs
 
 `UC_103_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* source="WinEventLog:Security" EventCode=4769 Service_Name!="krbtgt" Service_Name!="*$" (Ticket_Encryption_Type="0x17" OR Ticket_Encryption_Type="0x18" OR Ticket_Encryption_Type="0x11" OR Ticket_Encryption_Type="0x12") Failure_Code="0x0"
-| eval requester=mvindex(Account_Name,0)
-| bucket _time span=10m
-| stats dc(Service_Name) as unique_spns values(Service_Name) as spns values(Ticket_Encryption_Type) as enc_types by _time, Client_Address, requester
-| where unique_spns >= 10
-| sort - unique_spns
+`comment("Event 4769 is not modelled in a CIM datamodel; DC Security log raw search")`
+(source="WinEventLog:Security" OR source="XmlWinEventLog:Security") EventCode=4769 Account_Name!="*$" Service_Name!="*$" Service_Name!="krbtgt"
+| bucket _time span=1h
+| stats dc(Service_Name) as distinct_spns values(Service_Name) as target_spns min(_time) as firstTime max(_time) as lastTime by _time, Account_Name, Client_Address
+| where distinct_spns>=10
+| sort - distinct_spns
 ```
 
-### Kerberoasting RC4 downgrade: TGS requested with weakened encryption for a non-machine service account
+### Kerberoasting RC4 downgrade: TGS-REP with 0x17 encryption for non-system SPN
 
 `UC_103_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=* source="WinEventLog:Security" EventCode=4769 Ticket_Encryption_Type="0x17" Ticket_Options="0x40810000" Service_Name!="krbtgt" Service_Name!="*$" Failure_Code="0x0"
-| eval requester=mvindex(Account_Name,0)
-| stats count values(Service_Name) as targeted_spns min(_time) as firstTime max(_time) as lastTime by Client_Address, requester
-| convert ctime(firstTime) ctime(lastTime)
+(source="WinEventLog:Security" OR source="XmlWinEventLog:Security") EventCode=4769 Ticket_Encryption_Type=0x17 Service_Name!="*$" Service_Name!="krbtgt" Account_Name!="*$"
+| stats count values(Service_Name) as target_spns min(_time) as firstTime max(_time) as lastTime by Account_Name, Client_Address, host
+| where count>=1
 | sort - count
 ```
 
-### DNS tunneling to KATA test infrastructure testinglab.ru / crust.testinglab.ru
+### Service account performing interactive/RDP logon (post-Kerberoast credential reuse)
 
-`UC_103_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_103_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*testinglab.ru" OR DNS.query="*crust.testinglab.ru") by DNS.src DNS.query DNS.record_type
-| `drop_dm_object_name("DNS")`
-| convert ctime(firstTime) ctime(lastTime)
+(source="WinEventLog:Security" OR source="XmlWinEventLog:Security") EventCode=4624 (Logon_Type=2 OR Logon_Type=10) Account_Name!="*$" (Account_Name="*svc*" OR Account_Name="*sql*" OR Account_Name="*iis*" OR Account_Name="*service*" OR Account_Name="*backup*" OR Account_Name="*srv*")
+| stats count min(_time) as firstTime max(_time) as lastTime values(Logon_Type) as logon_types values(Source_Network_Address) as src_ips by Account_Name, ComputerName
 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+DeviceLogonEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl endswith "testinglab.ru"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| where LogonType in ("Interactive", "RemoteInteractive")
+| where AccountName !endswith "$"
+| where AccountName has_any ("svc", "sql", "iis", "service", "backup", "srv")   // service-account naming; tune to org convention
+| project Timestamp, DeviceName, AccountName, LogonType, RemoteIP, RemoteDeviceName, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
-### DNS tunneling behavioural: high-volume long/high-entropy subdomains under a single parent domain per host
+### DNS tunneling: high-volume / long-label queries to testinglab.ru or anomalous domains
 
 `UC_103_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" by DNS.src DNS.query DNS.record_type
-| `drop_dm_object_name("DNS")`
-| eval label=mvindex(split(query,"."),0)
-| eval parent=mvindex(split(query,"."),-2).".".mvindex(split(query,"."),-1)
-| eval qlen=len(query)
-| stats dc(label) as unique_labels avg(qlen) as avg_len max(qlen) as max_len values(record_type) as rtypes count by src parent
-| where unique_labels >= 50 AND avg_len >= 50
-| sort - unique_labels
-```
-
-### DNS queries to unknown/unauthorised resolvers (KATA 'Queries to unknown DNS servers')
-
-`UC_103_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.dest_category!="internal_dns" (All_Traffic.dest!="8.8.8.8" AND All_Traffic.dest!="8.8.4.4" AND All_Traffic.dest!="1.1.1.1") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name("All_Traffic")`
-| where NOT cidrmatch("10.0.0.0/8",dest) AND NOT cidrmatch("172.16.0.0/12",dest) AND NOT cidrmatch("192.168.0.0/16",dest)
-| sort - count
+| tstats summariesonly=true count from datamodel=Network_Resolution.DNS by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| eval leftlabel=mvindex(split(query,"."),0), label_len=len(leftlabel), is_ioc=if(match(query,"testinglab\.ru$"),1,0)
+| where label_len>50 OR is_ioc=1
+| stats sum(count) as query_count dc(query) as distinct_subdomains max(label_len) as max_label_len sum(is_ioc) as ioc_hits by src
+| where ioc_hits>0 OR distinct_subdomains>=50 OR max_label_len>50
+| sort - query_count
 ```
 
 **Defender KQL:**
 ```kql
-// Internal host doing DNS to a public resolver that is not corporate DNS.
-// Replace the ApprovedResolvers set with your sanctioned DNS server IPs.
-let ApprovedResolvers = dynamic(["8.8.8.8","8.8.4.4","1.1.1.1"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort == 53
-| where RemoteIPType == "Public"
-| where RemoteIP !in (ApprovedResolvers)
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-            by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by ConnCount desc
+DeviceEvents
+| where Timestamp > ago(1d)
+| where ActionType == "DnsQueryResponse"
+| where isnotempty(RemoteUrl)
+| extend LeftLabel = tostring(split(RemoteUrl, ".")[0])
+| summarize QueryCount = count(), DistinctSubdomains = dcount(RemoteUrl), IOCHits = countif(RemoteUrl endswith "testinglab.ru"), MaxLabelLen = max(strlen(LeftLabel)), Samples = make_set(RemoteUrl, 15)
+    by DeviceName, InitiatingProcessFileName
+| where IOCHits > 0 or DistinctSubdomains >= 50 or MaxLabelLen > 50   // 50-char leftmost label = well above legit norms (~30)
+| order by QueryCount desc
+```
+
+### DNS exfiltration channel: TXT/NULL queries with many unique encoded subdomains
+
+`UC_103_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where (DNS.record_type="TXT" OR DNS.record_type="NULL") by DNS.src, DNS.query, DNS.record_type
+| `drop_dm_object_name(DNS)`
+| eval is_ioc=if(match(query,"testinglab\.ru$"),1,0)
+| stats sum(count) as txt_queries dc(query) as distinct_subdomains sum(is_ioc) as ioc_hits by src, record_type
+| where ioc_hits>0 OR distinct_subdomains>=30
+| sort - distinct_subdomains
 ```
 
 ### Beaconing — periodic outbound to small set of destinations

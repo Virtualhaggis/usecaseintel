@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### macOS ClickFix curl one-liner piped to shell (MacSync/AMOS delivery)
 
-`UC_2_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### Connections/DNS to ClickFix 'file'-token look-alike domain cluster
 
-`UC_2_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### macOS Gatekeeper/quarantine bypass via xattr or spctl after ClickFix download
 
-`UC_2_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### macOS ClickFix second-stage loader: base64/gzip decode piped to shell + osascript password prompt
 
-`UC_2_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

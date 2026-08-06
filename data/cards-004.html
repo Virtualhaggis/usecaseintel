@@ -5610,7 +5610,7 @@ DeviceFileEvents
   data-splunk-cats="endpoint,network"
   data-targets="windows"
   data-uc-count="9" data-llm-uc-count="5"
-  data-search="Network Anomaly Detection in KATA An analysis of how Network Anomaly Detection (NAD) rules work within Kaspersky Anti Targeted Attack, using Kerberoasting and DNS tunneling attacks as examples.  T1021.001 T1190 T1558 T1558.003 [LLM] Kerberoasting: single account receives TGS-REP for many unique non-system SPNs [LLM] Kerberoasting RC4 downgrade: TGS requested with weakened encryption for a non-machine service account [LLM] DNS tunneling to KATA test infrastructure testinglab.ru / crust.testinglab.ru [LLM] DNS tunneling behavioural: high-volume long/high-entropy subdomains under a single parent domain per host [LLM] DNS queries to unknown/unauthorised resolvers (KATA &#x27;Queries to unknown DNS servers&#x27;) Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains DNS tunneling / TXT-heavy domain queries Scheduled task created with suspicious image / encoded args">
+  data-search="Network Anomaly Detection in KATA An analysis of how Network Anomaly Detection (NAD) rules work within Kaspersky Anti Targeted Attack, using Kerberoasting and DNS tunneling attacks as examples.  T1021.001 T1190 T1558 T1558.003 [LLM] Kerberoasting: single account harvesting TGS tickets for many distinct SPNs [LLM] Kerberoasting RC4 downgrade: TGS-REP with 0x17 encryption for non-system SPN [LLM] Service account performing interactive/RDP logon (post-Kerberoast credential reuse) [LLM] DNS tunneling: high-volume / long-label queries to testinglab.ru or anomalous domains [LLM] DNS exfiltration channel: TXT/NULL queries with many unique encoded subdomains Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains DNS tunneling / TXT-heavy domain queries Scheduled task created with suspicious image / encoded args">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-31-network-anomaly-detection-in-kata" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5672,101 +5672,93 @@ DeviceFileEvents
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Scheduled task created with suspicious image / encoded args</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] DNS tunneling to KATA test infrastructure testinglab.ru / crust.testinglab.ru · [LLM] DNS tunneling behavioural: high-volume long/high-entropy subdomains under a single parent domain per host · [LLM] DNS queries to unknown/unauthorised resolvers (KATA &#x27;Queries to unknown DNS servers&#x27;) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains · DNS tunneling / TXT-heavy domain queries</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Kerberoasting: single account receives TGS-REP for many unique non-system SPNs · [LLM] Kerberoasting RC4 downgrade: TGS requested with weakened encryption for a non-machine service account</em></div></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] DNS tunneling: high-volume / long-label queries to testinglab.ru or anomalous domains · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains · DNS tunneling / TXT-heavy domain queries</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Kerberoasting: single account harvesting TGS tickets for many distinct SPNs · [LLM] Kerberoasting RC4 downgrade: TGS-REP with 0x17 encryption for non-system SPN · [LLM] Service account performing interactive/RDP logon (post-Kerberoast credential reuse) · [LLM] DNS exfiltration channel: TXT/NULL queries with many unique encoded subdomains</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="c08806aae0" data-platforms="sent,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="c418f6e0d9" data-platforms="sent,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Kerberoasting: single account receives TGS-REP for many unique non-system SPNs</span>
+    <span class="uc-title">Kerberoasting: single account harvesting TGS tickets for many distinct SPNs</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c08806aae0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c418f6e0d9" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the core Kerberoasting behaviour KATA&#x27;s &#x27;Signs of a Kerberoasting attack&#x27; rule targets: one source host/user obtaining successful Kerberos service tickets (KRB_TGS_REP) for an abnormally high count of DISTINCT service accounts (SPNs) in a short window, after excluding machine/system SPNs. Article-specific because it mirrors the exact grouping (source IP + cname) and unique-SPN threshold logic KATA implements.
+    <div class="uc-desc">Hunts the KATA NAD &#x27;Signs of a Kerberoasting attack&#x27; logic: one client account (cname) from one source IP receiving successful TGS-REP responses for an abnormally high number of unique non-system SPNs within a short window. This is the enumeration/harvest phase before offline cracking.
 
-Rationale: Anchors on the article&#x27;s exact detection model: successful KRB_TGS_REP (4769 Failure_Code 0x0) grouped by client IP + requesting account (cname), counting UNIQUE SPNs (sname) after excluding machine-account SPNs ending in &#x27;$&#x27; — the same system-SPN exclusion the article calls out to avoid FP threshold breaches.
+Rationale: Directly implements the article&#x27;s NAD rule: group KRB_TGS_REP by source IP + cname, count unique non-system sname, alert on threshold. The &#x27;!endswith $&#x27; / krbtgt exclusion mirrors the article&#x27;s system-SPN omission that prevents FP threshold blowouts.
 
 Cross-checked against:
-  • https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  • https://attack.mitre.org/techniques/T1558/003/</div>
+  • https://adsecurity.org/?p=3458
+  • https://attack.mitre.org/techniques/T1558/003/
+  • https://github.com/SigmaHQ/sigma/blob/master/rules/windows/builtin/security/win_security_susp_rc4_kerberos.yml</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal or Forge Kerberos Tickets: Kerberoasting">T1558.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanners (Qualys/Tenable/BloodHound collectors) enumerating SPNs during authorised assessments</li><li>SCOM/monitoring service accounts that legitimately touch many services</li><li>MSSQL/Exchange servers with dense SPN registration querying peers on startup</li><li>Backup/inventory tooling that walks the directory</li><li>Domain join / GPO refresh storms after a large deployment</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RequestingUser !in~ (&quot;svc-scanner&quot;,&quot;svc-scom&quot;,&quot;svc-bloodhound&quot;) and ClientIP !in (&quot;10.0.0.0/8 scanner subnet - replace with your scanner IPs&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the requesting account (TargetUserName) and ClientIP; confirm whether the host is a known scanner/SQL server and whether the SPNs span unrelated services (attacker) vs one app family (benign). Note encryption types requested. 2) Contain: if unexplained, disable the requesting account or force-logoff the source host, and force-reset passwords of the targeted service accounts (they may already be cracked offline). 3) Hunt: search the same host for RC4-downgrade 4769s, subsequent logons using the targeted service accounts, and DNS beaconing to testinglab.ru.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanners (Tenable/Qualys/Purple Knight/PingCastle) enumerating SPNs during an authorized AD assessment</li><li>Legitimate SPN discovery tooling run by IAM/AD admins during service-account audits</li><li>A monitoring or backup service that legitimately touches many service endpoints on startup</li><li>SCCM/Configuration Manager or MSSQL clustering hosts that request tickets for many services</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where IpAddress !in (&quot;10.0.0.0&quot;)  // replace with sanctioned scanner/PingCastle host IPs
+| where TargetUserName !in~ (&quot;svc-pingcastle&quot;, &quot;svc-tenable&quot;)  // sanctioned assessment accounts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the TargetUserName + source IP; confirm whether the host is a known scanner/admin jumpbox. Pull the full SPN list — a spread across unrelated services (SQL, HTTP, CIFS on different owners) indicates roasting vs. a legitimate app touching one service family. 2) Contain: if unsanctioned, disable/reset the requesting account, and force-rotate passwords + set AES-only on every targeted service account (they should be treated as harvested). 3) Hunt: pivot on the same source IP for RC4 downgrade requests (0x17), subsequent interactive logons by the service accounts, and offline-cracking follow-on lateral movement.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Kerberoasting SPN fan-out from Windows DC security logs
-let Window = 10m;
-let SpnThreshold = 10;   // &gt;=10 distinct non-system SPNs / 10min = fan-out (legit users request few)
-SecurityEvent
+    <div class="tab-content active" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(1d)
 | where EventID == 4769
-| where ServiceName !~ &quot;krbtgt&quot;
-| where ServiceName !endswith &quot;$&quot;          // drop auto-generated machine/system SPNs (complex passwords)
-| where isnotempty(TargetUserName) and TargetUserName !endswith &quot;$&quot;
-| summarize UniqueSPNs = dcount(ServiceName), SPNs = make_set(ServiceName, 50),
-            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
-            by RequestingUser = TargetUserName, ClientIP = IpAddress, bin(TimeGenerated, Window)
-| where UniqueSPNs &gt;= SpnThreshold
-| order by UniqueSPNs desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>index=* source=&quot;WinEventLog:Security&quot; EventCode=4769 Service_Name!=&quot;krbtgt&quot; Service_Name!=&quot;*$&quot; (Ticket_Encryption_Type=&quot;0x17&quot; OR Ticket_Encryption_Type=&quot;0x18&quot; OR Ticket_Encryption_Type=&quot;0x11&quot; OR Ticket_Encryption_Type=&quot;0x12&quot;) Failure_Code=&quot;0x0&quot;
-| eval requester=mvindex(Account_Name,0)
-| bucket _time span=10m
-| stats dc(Service_Name) as unique_spns values(Service_Name) as spns values(Ticket_Encryption_Type) as enc_types by _time, Client_Address, requester
-| where unique_spns &gt;= 10
-| sort - unique_spns</code></pre></div>
+| where TargetUserName !endswith &quot;$&quot;                              // requesting user, not a computer account
+| where ServiceName !endswith &quot;$&quot; and ServiceName != &quot;krbtgt&quot;     // drop auto-generated / system SPNs (immune to cracking)
+| summarize DistinctSPNs = dcount(ServiceName), SPNs = make_set(ServiceName, 50), StartTime = min(TimeGenerated), EndTime = max(TimeGenerated)
+    by TargetUserName, IpAddress, bin(TimeGenerated, 1h)
+| where DistinctSPNs &gt;= 10        // &gt;=10 unique service accounts roasted in 1h; typical user P99 ~3
+| order by DistinctSPNs desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>`comment(&quot;Event 4769 is not modelled in a CIM datamodel; DC Security log raw search&quot;)`
+(source=&quot;WinEventLog:Security&quot; OR source=&quot;XmlWinEventLog:Security&quot;) EventCode=4769 Account_Name!=&quot;*$&quot; Service_Name!=&quot;*$&quot; Service_Name!=&quot;krbtgt&quot;
+| bucket _time span=1h
+| stats dc(Service_Name) as distinct_spns values(Service_Name) as target_spns min(_time) as firstTime max(_time) as lastTime by _time, Account_Name, Client_Address
+| where distinct_spns&gt;=10
+| sort - distinct_spns</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="e9844cb4bf" data-platforms="sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="e8c61b221f" data-platforms="sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Kerberoasting RC4 downgrade: TGS requested with weakened encryption for a non-machine service account</span>
+    <span class="uc-title">Kerberoasting RC4 downgrade: TGS-REP with 0x17 encryption for non-system SPN</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e9844cb4bf" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="e8c61b221f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the &#x27;weakened encryption&#x27; TGS requests the article describes attackers using so the retrieved ticket is crackable offline: a Kerberos service ticket (4769) requested with RC4 (0x17) encryption and the classic Kerberoasting ticket-options mask, targeting a user-created (non-&#x27;$&#x27;) service account. Single-event shape — high fidelity per event.
+    <div class="uc-desc">Hunts the &#x27;weakened encryption&#x27; the article calls out — attackers request TGS tickets that are cheap to crack offline. RC4-HMAC (0x17) service tickets for manually-created (non-$) service accounts are the highest-fidelity Kerberoast indicator when AES is the domain norm.
 
-Rationale: Directly operationalises the article&#x27;s statement that attackers &#x27;request TGS tickets with weakened encryption for service accounts with SPNs&#x27; — RC4 (0x17) plus TicketOptions 0x40810000 is the offline-crackable signature, and the non-&#x27;$&#x27; filter reproduces the article&#x27;s exclusion of complex-password system SPNs.
+Rationale: The article stresses &#x27;TGS tickets with weakened encryption&#x27; as the whole point of Kerberoasting; RC4/0x17 is the concrete, queryable manifestation. Cross-checked against SigmaHQ win_security_susp_rc4_kerberos.yml and ADSecurity — same 0x17 + &#x27;$&#x27;-exclusion logic.
 
 Cross-checked against:
-  • https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  • https://attack.mitre.org/techniques/T1558/003/</div>
+  • https://github.com/SigmaHQ/sigma/blob/master/rules/windows/builtin/security/win_security_susp_rc4_kerberos.yml
+  • https://adsecurity.org/?p=3458</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal or Forge Kerberos Tickets: Kerberoasting">T1558.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy applications / trusts still negotiating RC4 by policy</li><li>Accounts without AES keys where the KDC falls back to RC4</li><li>Older Linux/appliance Kerberos clients that default to RC4</li><li>NetApp/Isilon or other appliances integrated with AD via RC4</li><li>Pentest/red-team validation activity</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where TargetSPN !in~ (&quot;MSSQLSvc/legacy-app.corp.local&quot;) // exclude known RC4-only legacy service accounts after validation</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the targeted ServiceName is a user-created service account and whether it even supports AES (msDS-SupportedEncryptionTypes); RC4 against an AES-capable account from a workstation IP is high-suspicion. 2) Contain: reset the targeted service account password to a 25+ char value and set AES-only, then review that account&#x27;s recent logons. 3) Hunt: pivot on ClientIP for a burst of distinct SPNs (UC1) and for downstream lateral use of the service account.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legacy applications or appliances that only support RC4 Kerberos (older Java stacks, some NAS devices)</li><li>Trust relationships / cross-realm auth where RC4 is still negotiated</li><li>Accounts explicitly configured with &#x27;This account supports Kerberos AES&#x27; unchecked (msDS-SupportedEncryptionTypes not set)</li><li>Older domain functional level where RC4 remains the default</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ServiceName !in~ (&quot;svc-legacyapp&quot;, &quot;svc-nas&quot;)   // documented RC4-only service accounts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the target service account legitimately requires RC4 (check msDS-SupportedEncryptionTypes). In an AES-standard domain, RC4 for a manually-created svc account is anomalous. Correlate the requesting Account Name/IP with UC1 (multi-SPN fan-out). 2) Contain: rotate the targeted service-account password, set msDS-SupportedEncryptionTypes to AES-only, and monitor for its reuse. 3) Hunt: sweep for other 0x17 requests from the same client, and for cracked-credential logons on member servers over the following days.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// RC4-downgrade Kerberoasting single-event detection
-SecurityEvent
+    <div class="tab-content active" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(1d)
 | where EventID == 4769
-| where ServiceName !~ &quot;krbtgt&quot; and ServiceName !endswith &quot;$&quot;
-| where isnotempty(TargetUserName) and TargetUserName !endswith &quot;$&quot;
-| extend EncType = extract(@&#x27;TicketEncryptionType&quot;&gt;(0x[0-9A-Fa-f]+)&#x27;, 1, EventData),
-         TktOpts = extract(@&#x27;TicketOptions&quot;&gt;(0x[0-9A-Fa-f]+)&#x27;, 1, EventData),
-         FailCode = extract(@&#x27;Status&quot;&gt;(0x[0-9A-Fa-f]+)&#x27;, 1, EventData)
-| where EncType =~ &quot;0x17&quot;                 // RC4-HMAC — crackable offline
-| where TktOpts =~ &quot;0x40810000&quot;           // canonical Kerberoasting ticket options mask
-| project TimeGenerated, Computer, RequestingUser = TargetUserName, TargetSPN = ServiceName, ClientIP = IpAddress, EncType, TktOpts
+| where ServiceName !endswith &quot;$&quot; and ServiceName != &quot;krbtgt&quot;   // ignore computer / system SPNs (complex random passwords)
+| where TargetUserName !endswith &quot;$&quot;
+| where EventData has &quot;0x17&quot;       // RC4-HMAC ticket encryption = classic Kerberoast downgrade (0x12/0x11 = AES)
+| project TimeGenerated, TargetUserName, ServiceName, IpAddress, Computer
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Kerberoasting RC4 Downgrade TGS Request for User Service Account
-id: 8f3b1c2e-6a54-4d7f-9c11-2b7d9e4a1f60
-description: Detects a Kerberos TGS ticket (4769) requested with RC4-HMAC encryption and the canonical Kerberoasting ticket-options mask against a non-machine service account, as described in Kaspersky KATA network anomaly research.
+    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Kerberoasting RC4 Downgrade TGS Request (Event 4769)
+id: 3f2a9c1e-7b4d-4e2a-9f10-8c6b5a4d3e21
+description: Detects a Kerberos TGS request yielding an RC4-HMAC (0x17) service ticket for a non-system SPN, the offline-crackable downgrade central to the KATA NAD Kerberoasting article.
 references:
   - https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  - https://attack.mitre.org/techniques/T1558/003/
+  - https://adsecurity.org/?p=3458
 author: SOC Detection Engineering
-date: 2026/08/05
+date: 2026/08/06
 tags:
   - attack.credential_access
   - attack.t1558.003
@@ -5777,40 +5769,38 @@ detection:
   selection:
     EventID: 4769
     TicketEncryptionType: &#x27;0x17&#x27;
-    TicketOptions: &#x27;0x40810000&#x27;
+  filter_computer:
+    ServiceName|endswith: &#x27;$&#x27;
   filter_krbtgt:
     ServiceName: &#x27;krbtgt&#x27;
-  filter_machine:
-    ServiceName|endswith: &#x27;$&#x27;
-  condition: selection and not filter_krbtgt and not filter_machine
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>index=* source=&quot;WinEventLog:Security&quot; EventCode=4769 Ticket_Encryption_Type=&quot;0x17&quot; Ticket_Options=&quot;0x40810000&quot; Service_Name!=&quot;krbtgt&quot; Service_Name!=&quot;*$&quot; Failure_Code=&quot;0x0&quot;
-| eval requester=mvindex(Account_Name,0)
-| stats count values(Service_Name) as targeted_spns min(_time) as firstTime max(_time) as lastTime by Client_Address, requester
-| convert ctime(firstTime) ctime(lastTime)
+  condition: selection and not (filter_computer or filter_krbtgt)
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>(source=&quot;WinEventLog:Security&quot; OR source=&quot;XmlWinEventLog:Security&quot;) EventCode=4769 Ticket_Encryption_Type=0x17 Service_Name!=&quot;*$&quot; Service_Name!=&quot;krbtgt&quot; Account_Name!=&quot;*$&quot;
+| stats count values(Service_Name) as target_spns min(_time) as firstTime max(_time) as lastTime by Account_Name, Client_Address, host
+| where count&gt;=1
 | sort - count</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cd4cf7a13a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="36b44220be" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">DNS tunneling to KATA test infrastructure testinglab.ru / crust.testinglab.ru</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cd4cf7a13a" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Service account performing interactive/RDP logon (post-Kerberoast credential reuse)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="36b44220be" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on any host resolving the DNS-tunnel domains named in the article (testinglab.ru and its crust.testinglab.ru label), which KATA&#x27;s &#x27;Data tunneling in DNS traffic&#x27; rule demonstrates as a covert C2/exfil channel. Direct IOC match on the article&#x27;s domains — near-zero FP.
+    <div class="uc-desc">After cracking a service-account password the article says the credentials enable &#x27;vertical and horizontal movement&#x27;. Service accounts normally authenticate as service (type 5) or network (type 3) logons — an interactive (2) or RemoteInteractive/RDP (10) logon by a service account is a strong sign a cracked credential is being driven by a human/attacker.
 
-Rationale: Uses the two concrete IOC domains the pipeline pre-extracted (testinglab.ru, crust.testinglab.ru) as an exact-match DNS anchor — the highest-fidelity signal available from the article since these are the demonstrated tunnel endpoints.
+Rationale: Grounded in the article&#x27;s explicit &#x27;vertical and horizontal movement across the network&#x27; after credential compromise. Pivots on logon-type semantics (service accounts should never log on interactively) rather than a generic PtT template, and the service-naming heuristic keeps it article-specific to the cracked-svc-account scenario.
 
 Cross-checked against:
-  • https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  • https://attack.mitre.org/techniques/T1071/004/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over Alternative Protocol: Unencrypted Non-C2">T1048.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / analyst deliberately reproducing the KATA lab in your own environment</li><li>Threat-intel sandbox detonation resolving the IOC domain</li><li>Proxy/DNS-filter appliance pre-resolving flagged domains for categorisation</li><li>Legitimate &#x27;.ru&#x27; business traffic — unlikely for this exact subdomain but verify</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MpCmdRun.exe&quot;) // exclude Defender&#x27;s own IOC-detonation lookups</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the querying host + initiating process; if it&#x27;s a browser vs a script/LOLBin changes severity sharply. 2) Contain: sinkhole/block testinglab.ru and crust.testinglab.ru at the resolver, isolate the host if a non-browser process is the source. 3) Hunt: on that host look for the preceding Kerberoasting activity (UC1/UC2) and any high-volume/long-label DNS to OTHER rare domains (UC4).</div></details>
+  • https://attack.mitre.org/techniques/T1558/003/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Domain Accounts">T1078.002</span> <span class="ind tech" title="Use Alternate Authentication Material: Pass the Ticket">T1550.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Admin troubleshooting a service by RDP-ing in with the service account (bad practice but common)</li><li>Service account used to run a scheduled interactive task or installer</li><li>Naming-convention collision — a real human user whose name contains &#x27;srv&#x27;/&#x27;sql&#x27;</li><li>Break-glass or vendor-support RDP sessions using an app service account</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where IpAddress !in (&quot;10.10.10.5&quot;)   // sanctioned admin jumpbox for service maintenance
+| where WorkstationName !in~ (&quot;PAW-ADMIN01&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the account is genuinely a non-interactive service account (check SPN, description, last interactive logon history). Look at the source IP/workstation — a user subnet or jumpbox strengthens suspicion. 2) Contain: if unexpected, disable the session, reset the service-account password (AES-only), and revoke active Kerberos tickets. 3) Hunt: trace the same account across other hosts (4624/4648), check for tools dropped in the session, and correlate back to a preceding Kerberoast (UC1/UC2) on the same credential.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
@@ -5819,205 +5809,194 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-103-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceLogonEvents
 | where Timestamp &gt; ago(7d)
-| where RemoteUrl endswith &quot;testinglab.ru&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| where LogonType in (&quot;Interactive&quot;, &quot;RemoteInteractive&quot;)
+| where AccountName !endswith &quot;$&quot;
+| where AccountName has_any (&quot;svc&quot;, &quot;sql&quot;, &quot;iis&quot;, &quot;service&quot;, &quot;backup&quot;, &quot;srv&quot;)   // service-account naming; tune to org convention
+| project Timestamp, DeviceName, AccountName, LogonType, RemoteIP, RemoteDeviceName, InitiatingProcessFileName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
+    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
-| where Name endswith &quot;testinglab.ru&quot;
-| summarize QueryCount = count(), QueryTypes = make_set(QueryTypeName, 10),
-            SampleNames = make_set(Name, 25), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
-            by ClientIP, Computer
-| order by QueryCount desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: DNS Query to KATA Kerberoasting/Tunnel Test Domain testinglab.ru
-id: d1a2f4b7-3c88-4e21-9a0f-77c9b6e2a5d3
-description: Detects DNS resolution of testinglab.ru / crust.testinglab.ru, the DNS-tunnel domains documented in Kaspersky KATA network anomaly detection research.
+| where EventID == 4624
+| where LogonType in (2, 10)          // 2=Interactive, 10=RemoteInteractive (RDP)
+| where TargetUserName !endswith &quot;$&quot;
+| where TargetUserName has_any (&quot;svc&quot;, &quot;sql&quot;, &quot;iis&quot;, &quot;service&quot;, &quot;backup&quot;, &quot;srv&quot;)   // service-account naming; tune to org convention
+| project TimeGenerated, Computer, TargetUserName, LogonTypeName, IpAddress, WorkstationName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Service Account Interactive or RDP Logon (Post-Kerberoast Credential Reuse)
+id: b71c4e88-2d3a-4c6f-9a1b-5e7d0f2c9a44
+description: Detects an interactive or RemoteInteractive logon by an account matching service-account naming conventions, an anomaly consistent with reuse of a cracked Kerberoast credential for lateral movement.
 references:
   - https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  - https://attack.mitre.org/techniques/T1071/004/
 author: SOC Detection Engineering
-date: 2026/08/05
+date: 2026/08/06
+tags:
+  - attack.lateral_movement
+  - attack.t1078.002
+  - attack.t1550.003
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4624
+    LogonType:
+      - 2
+      - 10
+  svc_naming:
+    TargetUserName|contains:
+      - &#x27;svc&#x27;
+      - &#x27;sql&#x27;
+      - &#x27;iis&#x27;
+      - &#x27;service&#x27;
+      - &#x27;backup&#x27;
+      - &#x27;srv&#x27;
+  filter_machine:
+    TargetUserName|endswith: &#x27;$&#x27;
+  condition: selection and svc_naming and not filter_machine
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.security @EventID:4624 (@LogonType:2 OR @LogonType:10) (@TargetUserName:*svc* OR @TargetUserName:*SVC* OR @TargetUserName:*sql* OR @TargetUserName:*SQL* OR @TargetUserName:*iis* OR @TargetUserName:*srv*) NOT @TargetUserName:*\$</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=UserLogon
+| (LogonType=2 OR LogonType=10)
+| UserName=/(svc|sql|iis|service|backup|srv)/i
+| NOT UserName=/\$$/
+| groupBy([aid, ComputerName, UserName, LogonType, RemoteAddressIP4], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>(source=&quot;WinEventLog:Security&quot; OR source=&quot;XmlWinEventLog:Security&quot;) EventCode=4624 (Logon_Type=2 OR Logon_Type=10) Account_Name!=&quot;*$&quot; (Account_Name=&quot;*svc*&quot; OR Account_Name=&quot;*sql*&quot; OR Account_Name=&quot;*iis*&quot; OR Account_Name=&quot;*service*&quot; OR Account_Name=&quot;*backup*&quot; OR Account_Name=&quot;*srv*&quot;)
+| stats count min(_time) as firstTime max(_time) as lastTime values(Logon_Type) as logon_types values(Source_Network_Address) as src_ips by Account_Name, ComputerName
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="adbc375803" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">DNS tunneling: high-volume / long-label queries to testinglab.ru or anomalous domains</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="adbc375803" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the article&#x27;s DNS tunneling NAD scenario. Flags hosts issuing DNS queries with abnormally long leftmost labels (encoded C2/data), high query volume to a single registered domain, or any resolution of the article&#x27;s IOC domains testinglab.ru / crust.testinglab.ru.
+
+Rationale: Anchors on the article&#x27;s concrete IOC domains (testinglab.ru / crust.testinglab.ru) plus the DNS-tunnel behavioural markers the article and MITRE DET0400 both cite: long encoded labels and high per-host query volume to a single domain.
+
+Cross-checked against:
+  • https://attack.mitre.org/detectionstrategies/DET0400/
+  • https://attack.mitre.org/techniques/T1071/004/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CDN / anti-fraud / DLP products that legitimately use long hashed subdomain labels (e.g. some CDNs, Cisco Umbrella, endpoint telemetry)</li><li>Antivirus/EDR cloud-lookup services encoding hashes into DNS labels</li><li>Certificate transparency / OCSP or ad-tech domains with high query volume</li><li>Legitimate DNS-based licensing or software-update beacons</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;umbrella.com&quot;, &quot;opendns.com&quot;, &quot;akamai&quot;, &quot;cloudfront.net&quot;, &quot;trafficmanager.net&quot;))   // known long-label CDN/security services</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: decode the leftmost labels (base32/base64/hex) — random high-entropy content that changes every query = tunnel; stable vendor hashes = likely benign CDN/security tooling. Identify the initiating process. 2) Contain: sinkhole/block the registered domain at the resolver, isolate the host if the process is not a known DNS client. 3) Hunt: enumerate every internal host querying the same registered domain, review query volume over time for beaconing cadence, and check whether the tunneling host was a prior Kerberoast source.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
+| where Timestamp &gt; ago(1d)
+| where ActionType == &quot;DnsQueryResponse&quot;
+| where isnotempty(RemoteUrl)
+| extend LeftLabel = tostring(split(RemoteUrl, &quot;.&quot;)[0])
+| summarize QueryCount = count(), DistinctSubdomains = dcount(RemoteUrl), IOCHits = countif(RemoteUrl endswith &quot;testinglab.ru&quot;), MaxLabelLen = max(strlen(LeftLabel)), Samples = make_set(RemoteUrl, 15)
+    by DeviceName, InitiatingProcessFileName
+| where IOCHits &gt; 0 or DistinctSubdomains &gt;= 50 or MaxLabelLen &gt; 50   // 50-char leftmost label = well above legit norms (~30)
+| order by QueryCount desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
+| where TimeGenerated &gt; ago(1d)
+| where QueryType != &quot;PTR&quot;
+| extend LeftLabel = tostring(split(Name, &quot;.&quot;)[0])
+| summarize QueryCount = count(), DistinctSubdomains = dcount(Name), IOCHits = countif(Name endswith &quot;testinglab.ru&quot;), MaxLabelLen = max(strlen(LeftLabel)), Samples = make_set(Name, 15)
+    by ClientIP, Computer
+| where IOCHits &gt; 0 or DistinctSubdomains &gt;= 50 or MaxLabelLen &gt; 50   // encoded tunnel labels dwarf legit subdomain lengths (~30)
+| order by QueryCount desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: DNS Query to Kerberoast/DNS-Tunnel IOC Domain testinglab.ru
+id: 9c4e1a77-6f2b-4d38-8a19-2b7c0e5f4a63
+description: Detects DNS resolution of the KATA NAD article IOC domain testinglab.ru / crust.testinglab.ru used to demonstrate DNS tunneling C2.
+references:
+  - https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
+author: SOC Detection Engineering
+date: 2026/08/06
 tags:
   - attack.command_and_control
   - attack.t1071.004
 logsource:
   category: dns
 detection:
-  selection:
-    QueryName|endswith:
-      - &#x27;testinglab.ru&#x27;
-  condition: selection
+  selection_sub:
+    query|endswith: &#x27;.testinglab.ru&#x27;
+  selection_apex:
+    query: &#x27;testinglab.ru&#x27;
+  condition: selection_sub or selection_apex
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:22 @QueryName:(*.testinglab.ru OR testinglab.ru OR *.crust.testinglab.ru)</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/testinglab\.ru$/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;*testinglab.ru&quot; OR DNS.query=&quot;*crust.testinglab.ru&quot;) by DNS.src DNS.query DNS.record_type
-| `drop_dm_object_name(&quot;DNS&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=&quot;*testinglab.ru&quot; OR DNS.query=&quot;*crust.testinglab.ru&quot;) by DNS.src DNS.query DNS.record_type
-| `drop_dm_object_name(&quot;DNS&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="293dec67a2" data-platforms="falcon,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">DNS tunneling behavioural: high-volume long/high-entropy subdomains under a single parent domain per host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="293dec67a2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunting analogue of KATA&#x27;s &#x27;Data tunneling in DNS traffic&#x27; rule for UNKNOWN tunnel domains: one host emitting a high count of distinct, long, high-entropy subdomain labels (and/or TXT/NULL query types) under a single registered domain within a short window — the shape of data encoded into DNS labels. Catches variants beyond the article&#x27;s known IOC.
-
-Rationale: Implements the article&#x27;s stated NAD approach for the &#x27;Data tunneling in DNS traffic&#x27; rule — deviation from a host&#x27;s normal DNS via a burst of unique, long subdomain labels under one parent — rather than a signature, so it generalises past the single IOC domain to unknown tunnels.
-
-Cross-checked against:
-  • https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  • https://attack.mitre.org/techniques/T1071/004/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over Alternative Protocol">T1048.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CDN / anti-bot providers using long randomised subdomains (Akamai, Cloudflare, CAPTCHA)</li><li>Antivirus/EDR cloud-reputation lookups that hash file data into subdomains (some AV DNS reputation services)</li><li>Telemetry/analytics SDKs encoding IDs into DNS</li><li>Email security services (SPF/DKIM/DMARC bulk lookups) on mail gateways</li><li>Large web pages fanning out to many third-party hostnames</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ParentDomain !endswith &quot;akamaiedge.net&quot; and ParentDomain !endswith &quot;cloudflare.com&quot; and ParentDomain !endswith &quot;trafficmanager.net&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the parent domain and a sample of subdomains — random/base32-looking labels + TXT/NULL types is tunneling; vendor CDN names are benign. Check the initiating process. 2) Contain: block the parent domain at the resolver and isolate the host if a script/LOLBin is the source. 3) Hunt: correlate with bytes-out on the host, check for the article&#x27;s Kerberoasting precursor, and add the confirmed parent domain to the UC3 IOC watchlist.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Behavioural DNS-tunnel: many long distinct subdomains under one parent per host
-let Window = 30m;
-DnsEvents
-| where TimeGenerated &gt; ago(1d)
-| where isnotempty(Name)
-| extend Labels = split(Name, &quot;.&quot;)
-| extend ParentDomain = strcat(tostring(Labels[array_length(Labels)-2]), &quot;.&quot;, tostring(Labels[array_length(Labels)-1])),
-         Leftmost = tostring(Labels[0]), QLen = strlen(Name)
-| where array_length(Labels) &gt;= 3
-| summarize UniqueSubdomains = dcount(Leftmost), AvgLen = avg(QLen), MaxLen = max(QLen),
-            QueryTypes = make_set(QueryTypeName, 10), Total = count()
-            by ClientIP, Computer, ParentDomain, bin(TimeGenerated, Window)
-| where UniqueSubdomains &gt;= 50 and AvgLen &gt;= 50    // 50 distinct long labels/30min = encoded data, not browsing
-| order by UniqueSubdomains desc</code></pre></div>
     <div class="tab-content" id="art-103-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| length(DomainName) &gt;= 50
-| domTLD := regex(&quot;(?&lt;parent&gt;[^.]+\.[^.]+)$&quot;, field=DomainName)
-| groupBy([aid, ComputerName, parent], function=count(field=DomainName, distinct=true, as=unique_names))
-| unique_names &gt;= 50
-| sort(unique_names, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.message_type=&quot;QUERY&quot; by DNS.src DNS.query DNS.record_type
-| `drop_dm_object_name(&quot;DNS&quot;)`
-| eval label=mvindex(split(query,&quot;.&quot;),0)
-| eval parent=mvindex(split(query,&quot;.&quot;),-2).&quot;.&quot;.mvindex(split(query,&quot;.&quot;),-1)
-| eval qlen=len(query)
-| stats dc(label) as unique_labels avg(qlen) as avg_len max(qlen) as max_len values(record_type) as rtypes count by src parent
-| where unique_labels &gt;= 50 AND avg_len &gt;= 50
-| sort - unique_labels</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS where DNS.message_type=&quot;QUERY&quot; by DNS.src DNS.query DNS.record_type
-| `drop_dm_object_name(&quot;DNS&quot;)`
-| eval label=mvindex(split(query,&quot;.&quot;),0)
-| eval parent=mvindex(split(query,&quot;.&quot;),-2).&quot;.&quot;.mvindex(split(query,&quot;.&quot;),-1)
-| eval qlen=len(query)
-| stats dc(label) as unique_labels avg(qlen) as avg_len max(qlen) as max_len values(record_type) as rtypes count by src parent
-| where unique_labels &gt;= 50 AND avg_len &gt;= 50
-| sort - unique_labels</code></pre></div></div>
+| regex(&quot;(testinglab\\.ru$)|(^[a-zA-Z0-9+/=_-]{45,}\\.)&quot;, field=DomainName)
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Network_Resolution.DNS by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| eval leftlabel=mvindex(split(query,&quot;.&quot;),0), label_len=len(leftlabel), is_ioc=if(match(query,&quot;testinglab\.ru$&quot;),1,0)
+| where label_len&gt;50 OR is_ioc=1
+| stats sum(count) as query_count dc(query) as distinct_subdomains max(label_len) as max_label_len sum(is_ioc) as ioc_hits by src
+| where ioc_hits&gt;0 OR distinct_subdomains&gt;=50 OR max_label_len&gt;50
+| sort - query_count</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| eval leftlabel=mvindex(split(query,&quot;.&quot;),0), label_len=len(leftlabel), is_ioc=if(match(query,&quot;testinglab\.ru$&quot;),1,0)
+| where label_len&gt;50 OR is_ioc=1
+| stats sum(count) as query_count dc(query) as distinct_subdomains max(label_len) as max_label_len sum(is_ioc) as ioc_hits by src
+| where ioc_hits&gt;0 OR distinct_subdomains&gt;=50 OR max_label_len&gt;50
+| sort - query_count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cde2a68996" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="c20d739c52" data-platforms="falcon,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">DNS queries to unknown/unauthorised resolvers (KATA &#x27;Queries to unknown DNS servers&#x27;)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">DNS exfiltration channel: TXT/NULL queries with many unique encoded subdomains</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="cde2a68996" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c20d739c52" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Implements KATA&#x27;s &#x27;Suspicious Connections — Queries to unknown DNS servers&#x27; rule: an internal host sending DNS (UDP/TCP 53) to a public resolver that is NOT an approved corporate DNS server, a common tunneling/exfil egress path that bypasses monitored internal DNS. Requires setting your approved-resolver list.
+    <div class="uc-desc">Hunts the article&#x27;s DNS &#x27;traffic tunneling and exfiltration&#x27; scenario on the response/record-type dimension. Flags a single host issuing TXT/NULL DNS queries across a large number of distinct subdomains of one registered domain — the encoding pattern of data being chunked out over DNS.
 
-Rationale: Reproduces the article&#x27;s Table 1 &#x27;Queries to unknown DNS servers&#x27; rule directly — DNS egress to a resolver outside the approved set is the exact &#x27;Suspicious Connections&#x27; anomaly KATA flags, and it complements the tunneling UCs by catching the transport rather than the payload shape.
+Rationale: Targets the exfiltration/record-type pivot the article calls out (&#x27;signs of traffic tunneling and exfiltration&#x27;), differentiated from UC4 by keying on TXT/NULL record types and distinct-subdomain fan-out to one registered domain — the specific shape of DNS data exfil per MITRE T1048.003.
 
 Cross-checked against:
-  • https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  • https://attack.mitre.org/techniques/T1572/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Protocol Tunneling">T1572</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Users with hardcoded public DNS (8.8.8.8/1.1.1.1) in adapter settings — extend ApprovedResolvers</li><li>DoH/DoT clients falling back to plain 53 to public resolvers</li><li>Roaming laptops off-VPN using ISP/hotspot DNS</li><li>IoT/printers shipping with baked-in public resolver config</li><li>Browsers with built-in DNS-over-HTTPS bootstrap to public resolvers</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;) // browser DoH bootstrap; keep for service/LOLBin sources</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the source host should only use corporate DNS; identify the initiating process (a service/LOLBin talking to a random public resolver is far more suspicious than chrome.exe). 2) Contain: block outbound 53 to non-approved resolvers at the egress firewall and, if a rogue process is involved, isolate the host. 3) Hunt: for confirmed rogue resolvers, pull the DNS content (UC3/UC4) and check the host for Kerberoasting precursors and beaconing intervals.</div></details>
+  • https://attack.mitre.org/techniques/T1071/004/
+  • https://attack.mitre.org/detectionstrategies/DET0400/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol">T1048.003</span> <span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate high-volume TXT lookups (SPF/DKIM/DMARC validators, mail security gateways)</li><li>Domain-verification or ACME/DNS-01 certificate automation issuing many TXT queries</li><li>Security tooling that performs bulk TXT reputation lookups</li><li>Anti-spam appliances resolving many unique RBL/DNSBL subdomains</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RegDomain !in~ (&quot;_dmarc&quot;, &quot;spf.protection.outlook.com&quot;, &quot;amazonses.com&quot;)
+| where ClientIP !in (&quot;10.20.0.10&quot;)   // mail security gateway</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the client isn&#x27;t a mail gateway / cert-automation host (these legitimately do bulk TXT). Inspect the distinct subdomains — high-entropy rotating labels under one non-mail domain indicate exfil. 2) Contain: block the registered domain at the resolver, isolate the host, and preserve DNS logs for the exfil-volume estimate. 3) Hunt: quantify data volume (bytes ≈ label bytes × query count), determine what was staged on the host, and correlate the same host/domain with UC4 tunneling and any prior credential-access activity.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc4-datadog">Datadog</button>
+      <button class="tab-btn active" data-target="art-103-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Internal host doing DNS to a public resolver that is not corporate DNS.
-// Replace the ApprovedResolvers set with your sanctioned DNS server IPs.
-let ApprovedResolvers = dynamic([&quot;8.8.8.8&quot;,&quot;8.8.4.4&quot;,&quot;1.1.1.1&quot;]);
-DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemotePort == 53
-| where RemoteIPType == &quot;Public&quot;
-| where RemoteIP !in (ApprovedResolvers)
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-            by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let ApprovedResolvers = dynamic([&quot;8.8.8.8&quot;,&quot;8.8.4.4&quot;,&quot;1.1.1.1&quot;]);
-DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where RemotePort == 53
-| where RemoteIPType == &quot;Public&quot;
-| where RemoteIP !in (ApprovedResolvers)
-| summarize ConnCount = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
-            by DeviceName, InitiatingProcessFileName, RemoteIP
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: DNS Traffic to Unauthorised External Resolver
-id: 4c7e9a12-8b3d-4f60-a2e1-5d9c7b0e3f21
-description: Detects an endpoint sending DNS (port 53) to a public resolver outside the approved corporate DNS set, per KATA &#x27;Queries to unknown DNS servers&#x27; rule. Tune the filter to your sanctioned resolvers.
-references:
-  - https://securelist.com/tr/network-anomaly-detection-in-kata/120892/
-  - https://attack.mitre.org/techniques/T1572/
-author: SOC Detection Engineering
-date: 2026/08/05
-tags:
-  - attack.command_and_control
-  - attack.t1071.004
-  - attack.t1572
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection:
-    DestinationPort: 53
-  filter_approved:
-    DestinationIp:
-      - &#x27;8.8.8.8&#x27;
-      - &#x27;8.8.4.4&#x27;
-      - &#x27;1.1.1.1&#x27;
-  filter_internal:
-    DestinationIp|cidr:
-      - &#x27;10.0.0.0/8&#x27;
-      - &#x27;172.16.0.0/12&#x27;
-      - &#x27;192.168.0.0/16&#x27;
-  condition: selection and not filter_approved and not filter_internal
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:53 -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) -@DestinationIp:(8.8.8.8 OR 8.8.4.4 OR 1.1.1.1)</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=53
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT RemoteAddressIP4=/^(8\.8\.8\.8|8\.8\.4\.4|1\.1\.1\.1)$/
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.dest_category!=&quot;internal_dns&quot; (All_Traffic.dest!=&quot;8.8.8.8&quot; AND All_Traffic.dest!=&quot;8.8.4.4&quot; AND All_Traffic.dest!=&quot;1.1.1.1&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(&quot;All_Traffic&quot;)`
-| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,dest) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,dest) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,dest)
-| sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.dest_category!=&quot;internal_dns&quot; (All_Traffic.dest!=&quot;8.8.8.8&quot; AND All_Traffic.dest!=&quot;8.8.4.4&quot; AND All_Traffic.dest!=&quot;1.1.1.1&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(&quot;All_Traffic&quot;)`
-| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,dest) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,dest) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,dest)
-| sort - count</code></pre></div></div>
+    <div class="tab-content active" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DnsEvents
+| where TimeGenerated &gt; ago(1d)
+| where QueryTypeName in (&quot;TXT&quot;, &quot;NULL&quot;, &quot;CNAME&quot;)
+| extend RegDomain = strcat(tostring(split(Name, &quot;.&quot;)[-2]), &quot;.&quot;, tostring(split(Name, &quot;.&quot;)[-1]))
+| summarize TxtQueries = count(), DistinctSubdomains = dcount(Name), IOCHits = countif(Name endswith &quot;testinglab.ru&quot;), Samples = make_set(Name, 15)
+    by ClientIP, RegDomain, QueryTypeName, bin(TimeGenerated, 1h)
+| where IOCHits &gt; 0 or DistinctSubdomains &gt;= 30   // 30+ unique encoded labels via TXT/NULL to one domain in 1h = exfil channel
+| order by DistinctSubdomains desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| (RequestType=&quot;TXT&quot; OR RequestType=16 OR RequestType=&quot;NULL&quot; OR RequestType=10)
+| groupBy([aid, ComputerName], function=count(field=DomainName, distinct=true), as=distinct_subdomains)
+| distinct_subdomains&gt;=30</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where (DNS.record_type=&quot;TXT&quot; OR DNS.record_type=&quot;NULL&quot;) by DNS.src, DNS.query, DNS.record_type
+| `drop_dm_object_name(DNS)`
+| eval is_ioc=if(match(query,&quot;testinglab\.ru$&quot;),1,0)
+| stats sum(count) as txt_queries dc(query) as distinct_subdomains sum(is_ioc) as ioc_hits by src, record_type
+| where ioc_hits&gt;0 OR distinct_subdomains&gt;=30
+| sort - distinct_subdomains</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS where (DNS.record_type=&quot;TXT&quot; OR DNS.record_type=&quot;NULL&quot;) by DNS.src, DNS.query, DNS.record_type
+| `drop_dm_object_name(DNS)`
+| eval is_ioc=if(match(query,&quot;testinglab\.ru$&quot;),1,0)
+| stats sum(count) as txt_queries dc(query) as distinct_subdomains sum(is_ioc) as ioc_hits by src, record_type
+| where ioc_hits&gt;0 OR distinct_subdomains&gt;=30
+| sort - distinct_subdomains</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">

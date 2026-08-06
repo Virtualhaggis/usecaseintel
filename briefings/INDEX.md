@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-05
+- [canadian pleads guilty to snowflake cloud data theft attacks](./2026-08-05/canadian-pleads-guilty-to-snowflake-cloud-data-theft-attacks.md)
 - [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
 - [cisa kev cve 2026 63077 jetbrains teamcity deserialization o](./2026-08-05/cisa-kev-cve-2026-63077-jetbrains-teamcity-deserialization-o.md)
 - [cisa warns of hackers exploiting langflow n central apache t](./2026-08-05/cisa-warns-of-hackers-exploiting-langflow-n-central-apache-t.md)
@@ -26,6 +27,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [paperclip ai flaws let attackers run host commands via malic](./2026-08-05/paperclip-ai-flaws-let-attackers-run-host-commands-via-malic.md)
 - [poison claude sells discounted claude access while its opera](./2026-08-05/poison-claude-sells-discounted-claude-access-while-its-opera.md)
 - [quickfox supply chain attack delivers fdmtp backdoor via tro](./2026-08-05/quickfox-supply-chain-attack-delivers-fdmtp-backdoor-via-tro.md)
+- [ransom cartel ransomware creator sentenced to 16 years in pr](./2026-08-05/ransom-cartel-ransomware-creator-sentenced-to-16-years-in-pr.md)
 - [trojanized npm packages employ nullreceiver tactic to decode](./2026-08-05/trojanized-npm-packages-employ-nullreceiver-tactic-to-decode.md)
 - [who was behind the attack possibly nobody](./2026-08-05/who-was-behind-the-attack-possibly-nobody.md)
 
@@ -76,8 +78,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
 - [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
 - [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
-- [new doublecup clickfix service hides malware in browser cach](./2026-08-03/new-doublecup-clickfix-service-hides-malware-in-browser-cach.md)
-- [new pass ta key attacks let malware hijack google synced pas](./2026-08-03/new-pass-ta-key-attacks-let-malware-hijack-google-synced-pas.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 - [pnld breach exposes u k police and government contact detail](./2026-08-03/pnld-breach-exposes-u-k-police-and-government-contact-detail.md)
 

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### COLDCARD security-audit phishing lure from coldcardteamnews.com / coldcardcompliance.com
 
-`UC_5_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -78,7 +78,7 @@ EmailEvents
 
 ### certutil decodes embedded setup.msi / docusign.exe from Coldcard batch dropper
 
-`UC_5_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### Coldcard_Diagnostic_Tool.bat self-elevates via PowerShell UAC relaunch
 
-`UC_5_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_7_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### ScreenConnect C2 beacon to activeretirementrelocation.com (COLDCARD campaign)
 
-`UC_5_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -501,7 +501,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — COLDCARD security audit phishing attack installs remote access tool
 
-`UC_5_11` · phase: **exploit** · confidence: **High**
+`UC_7_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
