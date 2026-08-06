@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Spoofed RingCentral email delivered to inbox despite SPF/DMARC failure (whitelist abuse)
 
-`UC_50_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_51_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -72,7 +72,7 @@ EmailEvents
 
 ### Microsoft 365 device-code authorization grant redeemed (Greatness device-code phishing)
 
-`UC_50_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -86,7 +86,7 @@ AADSignInEventsBeta
 
 ### M365 token replay / sign-in from Greatness IOC IP and VPS/VPN hosting ASNs
 
-`UC_50_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_51_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -100,7 +100,7 @@ AADSignInEventsBeta
 
 ### Bulk Microsoft Graph / M365 workload enumeration in a single session (post-compromise discovery)
 
-`UC_50_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_51_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -116,7 +116,7 @@ CloudAppEvents
 
 ### Endpoint/proxy connections to Greatness AiTM phishing infrastructure
 
-`UC_50_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

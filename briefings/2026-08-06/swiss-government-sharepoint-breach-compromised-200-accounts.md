@@ -11,15 +11,9 @@ By Lawrence Abrams
 August 6, 2026
 02:14 PM
 0 
-
-
 Switzerland’s federal IT office says hackers exploited vulnerabilities to breach its Microsoft SharePoint servers and compromised approximately 200 accounts.
-
-
 The Federal Office for Information Technology and Telecommunication (BIT) detected the cyberattack after security specialists noticed unusual activity on its SharePoint servers on July 28.
-
-
-After confirming the breach, BIT …
+After confirming the breach, BIT blocked exte…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous POST to SharePoint ToolPane/_trust exploit endpoints (CVE-2026-50522/56164)
 
-`UC_0_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### SharePoint IIS worker (w3wp.exe) spawning command interpreter — ToolShell RCE
 
-`UC_0_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +75,7 @@ DeviceProcessEvents
 
 ### SharePoint MachineKey / web.config credential theft via w3wp child process
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +97,7 @@ DeviceProcessEvents
 
 ### Webshell/.aspx written into SharePoint LAYOUTS by w3wp.exe (ToolShell persistence)
 
-`UC_0_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

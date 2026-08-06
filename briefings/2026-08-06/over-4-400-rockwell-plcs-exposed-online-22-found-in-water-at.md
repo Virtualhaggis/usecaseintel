@@ -27,10 +27,11 @@ Its August 3 scan counted 4,407 exposed Rockwell controllers worldwide, includin
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1133** — External Remote Services
-- **T0886** — Remote Services (ICS)
-- **T1499** — Endpoint Denial of Service
-- **T0814** — Denial of Service (ICS)
-- **T0855** — Unauthorized Command Message (ICS)
+- **T1595** — Active Scanning
+- **T1046** — Network Service Discovery
+- **T0845** — Program Upload
+- **T0843** — Program Download
+- **T1119** — Automated Collection
 
 ## Kill chain phases observed
 
@@ -38,17 +39,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inbound external connections to exposed Rockwell EtherNet/IP OT ports (44818/2222/102)
+### Internet-facing inbound access to Rockwell EtherNet/IP & Modbus OT ports (44818/2222/502)
 
-`UC_10_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (44818, 2222, 102) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (44818, 2222, 502) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.action
 | `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch("10.0.0.0/8", src) OR cidrmatch("172.16.0.0/12", src) OR cidrmatch("192.168.0.0/16", src))
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16 OR src=127.0.0.0/8 OR src=169.254.0.0/16)
+| search (dest=10.0.0.0/8 OR dest=172.16.0.0/12 OR dest=192.168.0.0/16)
+| where action!="blocked" AND action!="denied" AND action!="dropped"
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 | sort - count
 ```
 
@@ -56,35 +58,62 @@ _(none detected from narrative keywords)_
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(24h)
-| where RemotePort in (44818, 2222, 102)
+| where RemotePort in (44818, 2222, 502)
+| where RemoteIPType == "Public"
 | where ActionType == "ConnectionSuccess"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Ports=make_set(RemotePort), Targets=dcount(RemoteIP) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
-| order by Conns desc
+| where InitiatingProcessAccountName !endswith "$"
+| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort) by DeviceName, RemoteIP, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by Connections desc
 ```
 
-### External Modbus TCP (502) to MicroLogix 1400 — CVE-2017-16740 exploitation surface
+### External or internal enumeration of Rockwell OT services (EtherNet/IP / Modbus port sweep)
 
-`UC_10_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=502 by All_Traffic.src All_Traffic.dest All_Traffic.action
+| tstats `summariesonly` dc(All_Traffic.dest) as distinct_dests, dc(All_Traffic.dest_port) as distinct_ports, count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (44818, 2222, 502, 102, 22) by All_Traffic.src, _time span=10m
 | `drop_dm_object_name(All_Traffic)`
-| where NOT (cidrmatch("10.0.0.0/8", src) OR cidrmatch("172.16.0.0/12", src) OR cidrmatch("192.168.0.0/16", src))
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - count
+| search NOT (src=10.0.0.0/8 OR src=172.16.0.0/12 OR src=192.168.0.0/16)
+| where distinct_dests>=10 OR distinct_ports>=4
+| sort - distinct_dests
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(24h)
-| where RemotePort == 502
+| where Timestamp > ago(1h)
+| where RemotePort in (44818, 2222, 502, 102)
 | where ActionType == "ConnectionSuccess"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
-| where Conns > 50 // repeated 502 volume matches CVE-2017-16740 malformed-packet DoS; tune to plant baseline
-| order by Conns desc
+| summarize DistinctTargets=dcount(RemoteIP), Targets=make_set(RemoteIP, 50), Ports=make_set(RemotePort), Total=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, bin(Timestamp, 10m)
+| where DistinctTargets >= 10
+| order by DistinctTargets desc
+```
+
+### Rockwell/Schneider/Siemens engineering software reaching a PLC over the public internet
+
+`UC_11_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(All_Traffic.dest) as dest, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (44818, 2222, 502) All_Traffic.app IN ("LogixDesigner.exe","Studio 5000.exe","RSLogix 5000.exe","RS5000.exe","RSLogix 500.exe","RSLogix500.exe","RSLinx.exe","Siemens.Automation.Portal.exe") by All_Traffic.src, All_Traffic.app, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| search NOT (dest=10.0.0.0/8 OR dest=172.16.0.0/12 OR dest=192.168.0.0/16 OR dest=127.0.0.0/8)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+let EngExe = dynamic(["LogixDesigner.exe","Studio 5000.exe","RSLogix 5000.exe","RS5000.exe","RSLogix 500.exe","RSLogix500.exe","RSLinx.exe","Siemens.Automation.Portal.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort in (44818, 2222, 502)
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName in~ (EngExe)
+    or InitiatingProcessVersionInfoCompanyName has_any ("Rockwell","Schneider Electric","Siemens")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessVersionInfoCompanyName, InitiatingProcessCommandLine, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -273,4 +302,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

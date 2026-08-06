@@ -37,9 +37,9 @@ Anyone who visited a site carrying the aff…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1571** — Non-Standard Port
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1189** — Drive-by Compromise
+- **T1571** — Non-Standard Port
 
 ## Kill chain phases observed
 
@@ -47,63 +47,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Adform crypto-swap stealer C2/exfil beacon to 84.32.102.230:7744
+### Adform crypto-swap C2 beacon to 84.32.102.230:7744
 
 `UC_101_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" All_Traffic.dest_port=7744 by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(30d)
 | where RemoteIP == "84.32.102.230"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Browser egress to non-standard port 7744 (Adform beacon shape, IP-rotation resilient)
+
+`UC_101_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=7744 All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process
+| `drop_dm_object_name(All_Traffic)`
+| where NOT cidrmatch("10.0.0.0/8", dest) AND NOT cidrmatch("172.16.0.0/12", dest) AND NOT cidrmatch("192.168.0.0/16", dest)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
 | where RemotePort == 7744
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
-| order by Timestamp desc
-```
-
-### Confirmed Adform supply-chain victim: poisoned script load + beacon to attacker IP
-
-`UC_101_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Web.Web where Web.url="*trackpoint-async.js*" AND Web.site="*adform*" by Web.src Web.url | `drop_dm_object_name(Web)` | join type=inner src [ | tstats summariesonly=true count as beaconCount from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" AND All_Traffic.dest_port=7744 by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename src as src ] | table src url count beaconCount
-```
-
-**Defender KQL:**
-```kql
-let ScriptLoaders = DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where RemoteUrl has "trackpoint-async.js" and RemoteUrl has "adform"
-    | distinct DeviceId, DeviceName;
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteIP == "84.32.102.230" and RemotePort == 7744
-| join kind=inner ScriptLoaders on DeviceId
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Exposure scoping: hosts that loaded poisoned Adform trackpoint-async.js (Jul 26-28 2026)
-
-`UC_101_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*trackpoint-async.js*" AND Web.site="*adform*" by Web.src Web.site Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp between (datetime(2026-07-26) .. datetime(2026-07-28))
-| where RemoteUrl has "trackpoint-async.js" and RemoteUrl has "adform"
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count() by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| summarize Connections=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleRemoteIP=any(RemoteIP) by DeviceName, InitiatingProcessFileName, RemotePort
 | order by LastSeen desc
 ```
 
@@ -454,4 +439,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

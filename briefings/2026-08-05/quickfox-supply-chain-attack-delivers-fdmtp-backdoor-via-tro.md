@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### QuickFox trojanized installer beacons to look-alike CDN cdns3.51quickfox.cn
 
-`UC_44_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_45_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### QuickFox Electron renderer downloads firebase-app-compat.js JS loader
 
-`UC_44_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### tasklist process fingerprinting spawned by QuickFox app (Steam/wallet evasion check)
 
-`UC_44_14` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_45_14` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### FDMTP DLL side-load: Client.dll / update.bin dropped in user-writable path
 
-`UC_44_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_45_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### FDMTP backdoor C2 beacon to icloud-cdn.net
 
-`UC_44_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_45_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -503,7 +503,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — QuickFox Supply Chain Attack Delivers FDMTP Backdoor via Trojanized Windows Inst
 
-`UC_44_11` · phase: **exploit** · confidence: **High**
+`UC_45_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

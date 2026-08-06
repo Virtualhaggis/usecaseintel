@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Open VSX evil-twin extension exfil to mangorbit[.]com / npm-cache[.]com
 
-`UC_40_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_41_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Malicious Open VSX evil-twin extension install (named IDs, version 0.0.1)
 
-`UC_40_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_41_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### ChainDrop npm preinstall dropper (setup.mjs / Bun runtime / Math_Symbol.js)
 
-`UC_40_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_41_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### ChainDrop persistence via .claude / .vscode autostart injection by node/bun
 
-`UC_40_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_41_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -361,7 +361,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Open VSX Removes 77 Malicious Evil Twin Extensions Exfiltrating Developer Data
 
-`UC_40_8` · phase: **exploit** · confidence: **High**
+`UC_41_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

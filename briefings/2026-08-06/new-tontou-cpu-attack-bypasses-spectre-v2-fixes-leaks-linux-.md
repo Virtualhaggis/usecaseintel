@@ -11,12 +11,8 @@ By Ionut Ilascu
 August 6, 2026
 02:03 PM
 0 
-
-
 Researchers found a way to bypass recent mitigations for Spectre v2 speculative execution side-channel attacks and developed an exploit to leak secrets from Linux machines.
-
-
-​The method works against Spectre v2 defenses on AMD and Intel processors that rely on sanitizing or isolating branch predictors, which researchers generically refer to as neutralization-based miti…
+​The method works against Spectre v2 defenses on AMD and Intel processors that rely on sanitizing or isolating branch predictors, which researchers generically refer to as neutralization-based mitigations.…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -35,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — New TONTOU CPU attack bypasses Spectre v2 fixes, leaks Linux password hashes
 
-`UC_1_1` · phase: **install** · confidence: **High**
+`UC_2_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
