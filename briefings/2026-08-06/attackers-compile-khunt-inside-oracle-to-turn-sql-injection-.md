@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle database engine spawning Windows command shell (khunt KhuntCmd)
 
-`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Registry hive (SAM/SECURITY/SYSTEM) dump staged in F:\Oracle via reg.exe / esentutl.exe
 
-`UC_1_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### khunt file artifacts: khunttasks.txt and hive files staged under F:\Oracle
 
-`UC_1_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -307,7 +307,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Attackers Compile khunt Inside Oracle to Turn SQL Injection Into Windows SYSTEM
 
-`UC_1_6` · phase: **exploit** · confidence: **High**
+`UC_5_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

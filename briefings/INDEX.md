@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2614 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-06
+- [ai recommendation poisoning how ask ai buttons silently alte](./2026-08-06/ai-recommendation-poisoning-how-ask-ai-buttons-silently-alte.md)
+- [apple icloud private relay can expose real ips through webki](./2026-08-06/apple-icloud-private-relay-can-expose-real-ips-through-webki.md)
 - [attackers compile khunt inside oracle to turn sql injection ](./2026-08-06/attackers-compile-khunt-inside-oracle-to-turn-sql-injection-.md)
 - [aws google and vercel agent flaws let attackers trigger tool](./2026-08-06/aws-google-and-vercel-agent-flaws-let-attackers-trigger-tool.md)
 - [chinese made zbtlink routers ship with backdoor that opens u](./2026-08-06/chinese-made-zbtlink-routers-ship-with-backdoor-that-opens-u.md)
+- [cryptojs weak rng behind 5 7 million in drains affects five ](./2026-08-06/cryptojs-weak-rng-behind-5-7-million-in-drains-affects-five-.md)
+- [over 4 400 rockwell plcs exposed online 22 found in water at](./2026-08-06/over-4-400-rockwell-plcs-exposed-online-22-found-in-water-at.md)
 - [ransom cartel creator gets 16 years in prison for operating ](./2026-08-06/ransom-cartel-creator-gets-16-years-in-prison-for-operating-.md)
 - [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
 - [token jacking cybercriminals could be stealing your ai resou](./2026-08-06/token-jacking-cybercriminals-could-be-stealing-your-ai-resou.md)
@@ -95,11 +99,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hijacked hotel wi fi pushes fake updates to deliver surveill](./2026-08-01/hijacked-hotel-wi-fi-pushes-fake-updates-to-deliver-surveill.md)
 
 ## 2026-07-31
-- [6 reasons why device code phishing is the fastest growing th](./2026-07-31/6-reasons-why-device-code-phishing-is-the-fastest-growing-th.md)
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
 - [captivecrunch midnight blizzard targets travelers worldwide ](./2026-07-31/captivecrunch-midnight-blizzard-targets-travelers-worldwide-.md)
 - [cheap android tv boxes pose as phones and turn owners broadb](./2026-07-31/cheap-android-tv-boxes-pose-as-phones-and-turn-owners-broadb.md)
-- [chinese hacker commands deepseek via telegram to launch auto](./2026-07-31/chinese-hacker-commands-deepseek-via-telegram-to-launch-auto.md)
 - [ghsa critical cve 2026 52855 wings exposes node configuratio](./2026-07-31/ghsa-critical-cve-2026-52855-wings-exposes-node-configuratio.md)
 - [ghsa critical cve 2026 52887 nocobase sql injection in api m](./2026-07-31/ghsa-critical-cve-2026-52887-nocobase-sql-injection-in-api-m.md)
 - [ghsa critical cve 2026 53609 apostrophe has server side prot](./2026-07-31/ghsa-critical-cve-2026-53609-apostrophe-has-server-side-prot.md)

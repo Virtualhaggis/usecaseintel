@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Vercel AI SDK harness sandbox-to-host bypass via host-tool-mcp.mjs impersonation (CoreBreak)
 
-`UC_2_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### CoreBreak vulnerable agent-SDK exposure inventory (AWS/Google/Vercel CVEs + package files)
 
-`UC_2_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_6_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -256,7 +256,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AWS, Google, and Vercel Agent Flaws Let Attackers Trigger Tools Without Running
 
-`UC_2_5` · phase: **exploit** · confidence: **High**
+`UC_6_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

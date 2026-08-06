@@ -1,3 +1,726 @@
+<article class="card" id="art-185" data-art-slug="2026-07-21-ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-20896: Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER` Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER` CVE-2026-20896 T1190 [LLM] Client-supplied X-WEBAUTH-USER header reaching Gitea (CVE-2026-20896 impersonation) [LLM] Privileged Gitea action correlated with client-supplied X-WEBAUTH-USER (CVE-2026-20896) [LLM] Gitea container started with reverse-proxy auth exposing permissive trusted-proxies (CVE-2026-20896) Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-f75j-4cw6-rmx4" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-20896: Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER`</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-21</span>
+    <span>5 use cases</span>
+    <span>1 technique</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER`</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-20896</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">159.26.98.241</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-185-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-185"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-185-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Client-supplied X-WEBAUTH-USER header reaching Gitea (CVE-2026-20896 impersonation)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Gitea container started with reverse-proxy auth exposing permissive trusted-proxies (CVE-2026-20896)</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Privileged Gitea action correlated with client-supplied X-WEBAUTH-USER (CVE-2026-20896)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="86e622177b" data-platforms="def,falcon,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Client-supplied X-WEBAUTH-USER header reaching Gitea (CVE-2026-20896 impersonation)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="86e622177b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts requests carrying an X-WEBAUTH-USER header from a source IP outside the documented trusted-proxy scope (loopback 127.0.0.0/8, ::1), or any direct connection to the Gitea container port that bypasses the intended authenticating reverse proxy. This is the raw exploitation primitive of CVE-2026-20896 where the vulnerable Docker image default REVERSE_PROXY_TRUSTED_PROXIES=* trusts the header from any source, letting an attacker be authenticated as any user with no password or cookie.
+
+Rationale: Uses the exact exploit header string &#x27;X-WEBAUTH-USER&#x27; and the documented safe-default trust scope (127.0.0.0/8, ::1) from the advisory: any non-loopback source presenting the header, or any direct connection to Gitea&#x27;s default port 3000 bypassing the proxy, is the CVE-2026-20896 primitive. Corroborated by BleepingComputer and the public PoC checker.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+  • https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-auth-bypass-in-gitea-docker-image/
+  • https://github.com/szybnev/cve-2026-20896-gitea-poc
+  • https://thehackernews.com/2026/07/threat-actors-probe-gitea-docker-flaw.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Network_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The legitimate authenticating reverse proxy itself injecting X-WEBAUTH-USER from an internal/known appliance IP (should be allow-listed)</li><li>Health-check or monitoring tooling that reaches port 3000 directly without going through the proxy</li><li>Load balancer/service mesh sidecar terminating on a non-loopback interface</li><li>Security scanners (Nessus/Qualys) sending the header during authenticated-bypass testing</li><li>Migration/replication jobs that connect container-to-container</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP != &quot;&lt;insert your reverse-proxy appliance IP&gt;&quot;  // supply your proxy IP to suppress the legitimate injector</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the source IP is NOT your authenticating reverse-proxy appliance; check whether the impersonated username in the header is a privileged account (admin, gitea_admin). Correlate with Gitea audit events in the same window. Step 2 (contain): Set REVERSE_PROXY_TRUSTED_PROXIES to 127.0.0.0/8,::1/128 (or the real proxy CIDR) and restart; upgrade the image to &gt;=1.26.3; block direct external reach to port 3000 at the network layer. Step 3 (hunt): Pivot on the impersonated usernames for token creation, SSH-key additions, repo clones, and secret/webhook reads performed by those accounts during the exposure window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-185-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName has &quot;gitea&quot;
+| where LocalPort == 3000
+| where RemoteIP !startswith &quot;127.&quot; and RemoteIP != &quot;::1&quot;
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(24h)
+| where ProcessName in~ (&quot;nginx&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;gitea&quot;,&quot;gitea-web&quot;)
+| where SyslogMessage has &quot;x-webauth-user&quot;
+| extend webauth_user = extract(&quot;(?i)x-webauth-user:? *([^ ]+)&quot;, 1, SyslogMessage)
+| extend clientip = extract(&quot;([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)&quot;, 1, SyslogMessage)
+| where isnotempty(webauth_user)
+| where isnotempty(clientip) and clientip !startswith &quot;127.&quot; and clientip != &quot;::1&quot;
+| summarize hits=count(), firstseen=min(TimeGenerated), lastseen=max(TimeGenerated), users=make_set(webauth_user, 20) by clientip, ProcessName, Computer
+| order by hits desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ConnectionDirection=1
+| LocalPort=3000
+| ContextImageFileName=/gitea/i
+| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, RemoteAddressIP4, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-185-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>index=web (sourcetype=nginx:plus:access OR sourcetype=apache:access OR sourcetype=gitea)
+| search _raw=&quot;*x-webauth-user*&quot;
+| rex field=_raw &quot;(?i)x-webauth-user:? *(?&lt;webauth_user&gt;[^ ]+)&quot;
+| rex field=_raw &quot;(?&lt;client_ip&gt;[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)&quot;
+| where isnotnull(webauth_user) AND NOT cidrmatch(&quot;127.0.0.0/8&quot;, client_ip)
+| stats count min(_time) AS firstTime max(_time) AS lastTime values(webauth_user) AS impersonated_users by client_ip, host, sourcetype
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4760ab5026" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Privileged Gitea action correlated with client-supplied X-WEBAUTH-USER (CVE-2026-20896)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4760ab5026" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates privileged Gitea audit events (user deletion, access-token creation, admin actions, collaborator/permission changes, password resets) against reverse-proxy access logs showing an X-WEBAUTH-USER header for the same actor from an untrusted (non-loopback) source IP within a short window. This turns the CVE-2026-20896 header-spoof primitive into a confirmed privilege-escalation / account-impersonation event rather than a probe.
+
+Rationale: Ties the article&#x27;s impact statement (&#x27;any source IP impersonate any user&#x27;, admin accounts the obvious target) to concrete Gitea audit action names (token creation, user/repo deletion, collaborator changes) joined to the X-WEBAUTH-USER header value and a non-loopback client IP — a high-fidelity confirmation of exploitation, not just a scan. Corroborated by TheHackerNews reporting active exploitation.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+  • https://thehackernews.com/2026/07/threat-actors-probe-gitea-docker-flaw.html
+  • https://securityaffairs.com/194902/hacking/critical-gitea-docker-bug-under-active-exploitation-exposes-repositories-and-secrets.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Default Accounts">T1078.001</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate reverse-proxy SSO where the header genuinely originates from the trusted proxy appliance IP (excluded by the non-loopback filter only if the proxy is not on loopback — tune to your proxy CIDR)</li><li>Admin performing bulk maintenance via the intended proxy-authenticated path</li><li>Automated tenant provisioning scripts creating tokens for many users</li><li>Log parsing drift where the Gitea &#x27;doer&#x27; field format differs by version, mis-attributing the actor</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Verify the correlated source IP is not the trusted proxy and that the actor account is privileged; pull the full Gitea audit trail for that actor in the window. Step 2 (contain): Revoke any tokens/SSH keys created during the window, force password reset and session invalidation for the impersonated account, restrict trusted-proxies to loopback/proxy CIDR, and patch to &gt;=1.26.3. Step 3 (hunt): Enumerate all repos cloned, secrets/webhook URLs viewed, and CI pipelines triggered by the actor; check for outbound exfil from the Gitea host to the attacker source IP.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 5m;
+let proxyhdr = Syslog
+    | where TimeGenerated &gt; ago(24h)
+    | where ProcessName in~ (&quot;nginx&quot;,&quot;apache2&quot;,&quot;httpd&quot;)
+    | where SyslogMessage has &quot;x-webauth-user&quot;
+    | extend webauth_user = extract(&quot;(?i)x-webauth-user:? *([^ ]+)&quot;, 1, SyslogMessage)
+    | extend clientip = extract(&quot;([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)&quot;, 1, SyslogMessage)
+    | where isnotempty(webauth_user) and clientip !startswith &quot;127.&quot; and clientip != &quot;::1&quot;
+    | project proxytime=TimeGenerated, webauth_user, clientip;
+Syslog
+| where TimeGenerated &gt; ago(24h)
+| where ProcessName in~ (&quot;gitea&quot;,&quot;gitea-web&quot;)
+| where SyslogMessage has_any (&quot;delete_user&quot;,&quot;create_token&quot;,&quot;delete_repo&quot;,&quot;add_collaborator&quot;,&quot;reset_password&quot;,&quot;admin&quot;)
+| extend actor = extract(&quot;(?i)(?:doer|user)[=: ]+([^ ,]+)&quot;, 1, SyslogMessage)
+| where isnotempty(actor)
+| join kind=inner proxyhdr on $left.actor == $right.webauth_user
+| where proxytime between (TimeGenerated - win .. TimeGenerated + win)
+| project TimeGenerated, Computer, actor, clientip, proxytime, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>index=web sourcetype=gitea (delete_user OR create_token OR delete_repo OR add_collaborator OR reset_password)
+| rex field=_raw &quot;(?i)(?:doer|user)[=: ]+(?&lt;actor&gt;[^ ,]+)&quot;
+| join type=inner max=0 actor
+    [ search index=web (sourcetype=nginx:plus:access OR sourcetype=apache:access) &quot;x-webauth-user&quot;
+      | rex field=_raw &quot;(?i)x-webauth-user:? *(?&lt;actor&gt;[^ ]+)&quot;
+      | rex field=_raw &quot;(?&lt;client_ip&gt;[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)&quot;
+      | where NOT cidrmatch(&quot;127.0.0.0/8&quot;, client_ip) ]
+| stats count min(_time) AS firstTime max(_time) AS lastTime values(client_ip) AS source_ips by actor, host
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cc8fd30d89" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Gitea container started with reverse-proxy auth exposing permissive trusted-proxies (CVE-2026-20896)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="cc8fd30d89" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the vulnerable deployment state itself: launch of a gitea/gitea Docker container with ENABLE_REVERSE_PROXY_AUTHENTICATION=true, which under the shipped image default REVERSE_PROXY_TRUSTED_PROXIES=* trusts X-WEBAUTH-USER from any source IP. Because the wildcard is baked into the image template (not the loopback-only default of app.example.ini), enabling reverse-proxy auth on any unpatched image (&lt;=1.26.2) is sufficient to be exposed.
+
+Rationale: Uses the article&#x27;s exact image name (gitea/gitea, verified 1.26.2) and the reproduction environment variable GITEA__service__ENABLE_REVERSE_PROXY_AUTHENTICATION=true — the combination that, with the baked-in REVERSE_PROXY_TRUSTED_PROXIES=* image default, produces the vulnerable state. Fixed version 1.26.3 confirmed via BleepingComputer and the GitLab advisory mirror.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-20896/
+  • https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-auth-bypass-in-gitea-docker-image/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Deployment already patched to &gt;=1.26.3 where the image template no longer hard-codes the wildcard</li><li>Admin who has explicitly set GITEA__security__REVERSE_PROXY_TRUSTED_PROXIES to a correct CIDR alongside enabling auth (safe config)</li><li>CI/CD test harness spinning up throwaway gitea/gitea containers that are never internet-exposed</li><li>IaC dry-run/plan output echoing the env var without actually launching a container</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ActingProcessCommandLine !has &quot;gitea/gitea:1.26.3&quot; and ActingProcessCommandLine !has &quot;REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the running image tag is &lt;=1.26.2 and inspect the effective app.ini for REVERSE_PROXY_TRUSTED_PROXIES (exec into container: cat /data/gitea/conf/app.ini). If it is &#x27;*&#x27; or absent, the instance is exposed. Step 2 (contain): Set REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8,::1/128 (or the real proxy CIDR), pull gitea/gitea:1.26.3+, redeploy, and ensure port 3000 is not directly internet-reachable. Step 3 (hunt): Review reverse-proxy and Gitea audit logs since container start for X-WEBAUTH-USER usage from untrusted IPs and any privileged actions on admin accounts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-185-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-185-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-185-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where ProcessCommandLine has &quot;gitea/gitea&quot;
+| where ProcessCommandLine has &quot;ENABLE_REVERSE_PROXY_AUTHENTICATION&quot;
+| where ProcessCommandLine has &quot;true&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, FileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessCommandLine has &quot;gitea/gitea&quot;
+| where ActingProcessCommandLine has &quot;enable_reverse_proxy_authentication&quot;
+| where ActingProcessCommandLine has &quot;true&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessCommandLine, ActingProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Docker Container Started With Reverse-Proxy Authentication (CVE-2026-20896)
+id: 3f2a9c14-8b7e-4d21-9a6f-0c5e1b2d7a90
+status: experimental
+description: Detects launch of a gitea/gitea Docker container with ENABLE_REVERSE_PROXY_AUTHENTICATION enabled, which under the vulnerable image default (REVERSE_PROXY_TRUSTED_PROXIES=*) trusts X-WEBAUTH-USER from any source IP (CVE-2026-20896).
+references:
+    - https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+    - https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-auth-bypass-in-gitea-docker-image/
+author: SOC Detection Engineering
+date: 2026/08/04
+tags:
+    - attack.initial_access
+    - attack.t1556
+    - attack.t1190
+logsource:
+    category: process_creation
+detection:
+    selection:
+        CommandLine|contains|all:
+            - &#x27;gitea/gitea&#x27;
+            - &#x27;ENABLE_REVERSE_PROXY_AUTHENTICATION&#x27;
+            - &#x27;true&#x27;
+    condition: selection
+falsepositives:
+    - Deployments already patched to &gt;= 1.26.3 with a correctly scoped REVERSE_PROXY_TRUSTED_PROXIES
+level: high</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*gitea/gitea* AND *ENABLE_REVERSE_PROXY_AUTHENTICATION*)</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| CommandLine=/gitea\/gitea/i
+| CommandLine=/ENABLE_REVERSE_PROXY_AUTHENTICATION/i
+| CommandLine=/true/i
+| groupBy([aid, ComputerName, UserName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-185-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-185-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-185-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process=&quot;*gitea/gitea*&quot; Processes.process=&quot;*ENABLE_REVERSE_PROXY_AUTHENTICATION*&quot; Processes.process=&quot;*true*&quot; BY Processes.dest, Processes.user, Processes.process, Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-185-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process=&quot;*gitea/gitea*&quot; Processes.process=&quot;*ENABLE_REVERSE_PROXY_AUTHENTICATION*&quot; Processes.process=&quot;*true*&quot; BY Processes.dest, Processes.user, Processes.process, Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20896&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20896&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-185-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-185-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-185-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20896&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-185-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20896&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-185-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;159.26.98.241&quot;) or RemoteUrl has_any (&quot;&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-185-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;159.26.98.241&quot;]);
+let BadDomains = dynamic([&quot;&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-185-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-185-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-185-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;159.26.98.241&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-185-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;159.26.98.241&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-186" data-art-slug="2026-07-21-ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio"
+  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,network"
+  data-targets="linux,vcs,web-app,windows"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-22874: Gitea: Incomplete SSRF Protection in Webhook and Migration Allow-list Default Filter Gitea: Incomplete SSRF Protection in Webhook and Migration Allow-list Default Filter CVE-2026-22874  [LLM] Gitea webhook/migration SSRF reaching cloud metadata endpoints (IMDS / Azure WireServer) [LLM] Gitea process egress to SSRF allow-list bypass internal ranges (CGNAT / 172.32.0.0/11) [LLM] Vulnerable Gitea version exposed to CVE-2026-22874 SSRF (pre-1.26.4) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-22874-gitea-incomplete-ssrf-protectio" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-2r5c-gw76-rh3w" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-22874: Gitea: Incomplete SSRF Protection in Webhook and Migration Allow-list Default Filter</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-21</span>
+    <span>4 use cases</span>
+    <span>0 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Gitea: Incomplete SSRF Protection in Webhook and Migration Allow-list Default Filter</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-22874</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-186-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-186"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-186-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Gitea process egress to SSRF allow-list bypass internal ranges (CGNAT / 172.32.0.0/11) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable Gitea version exposed to CVE-2026-22874 SSRF (pre-1.26.4)</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Gitea webhook/migration SSRF reaching cloud metadata endpoints (IMDS / Azure WireServer)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="42878e4b51" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,web-app,windows" open>
+  <summary>
+    <span class="uc-title">Gitea webhook/migration SSRF reaching cloud metadata endpoints (IMDS / Azure WireServer)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="42878e4b51" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the Gitea server process making outbound connections to cloud instance-metadata endpoints (AWS/GCP IMDS 169.254.169.254, Azure WireServer 168.63.129.16, or the NAT64-embedded IMDS 64:ff9b::a9fe:a9fe) as a result of the CVE-2026-22874 SSRF allow-list bypass. A Gitea web application never legitimately queries instance metadata, so any such egress from the gitea binary is high-fidelity exploitation of the webhook/migration SSRF.
+
+Rationale: Uses the exact bypass IPs the advisory calls out (Azure WireServer 168.63.129.16, IMDS 169.254.169.254, NAT64 64:ff9b::a9fe:a9fe) scoped to the gitea process; a source-code host reaching IMDS is unambiguous SSRF exploitation. Cross-checked the go-gitea security advisory and Hive Security / cybersecurity-help write-ups confirming the non-blind SSRF and metadata reachability.
+
+Cross-checked against:
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-2r5c-gw76-rh3w
+  • https://www.cybersecurity-help.cz/vdb/SB2026062240
+  • https://blog.gitea.com/release-of-1.26.3-and-1.26.4/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security team validating the CVE-2026-22874 fix by intentionally pointing a webhook at 169.254.169.254</li><li>Authenticated vulnerability scanner running under the gitea service account probing metadata endpoints</li><li>A cloud-native monitoring/agent binary that happens to contain &#x27;gitea&#x27; in its path also querying IMDS on the same host</li><li>Internal chaos/red-team exercise deliberately exercising the SSRF path</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the Gitea webhook history UI and repo migration logs for the affected instance around the connection time; identify which authenticated user created/edited the webhook or triggered the migration and the target URL. 2) Contain: disable the offending webhook/migration, force-rotate any cloud instance-role credentials or Azure managed-identity tokens the metadata endpoint could have leaked, and confirm Gitea is on 1.26.4+. 3) Hunt: review CloudTrail/Azure sign-in activity for use of the potentially stolen role credentials from unexpected IPs, and search for other Gitea egress to the SSRF bypass ranges (100.64.0.0/10, 172.32.0.0/11).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-186-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-186-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-186-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-186-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-186-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-186-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-186-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName has &quot;gitea&quot;
+| where RemoteIP in (&quot;169.254.169.254&quot;,&quot;168.63.129.16&quot;,&quot;64:ff9b::a9fe:a9fe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-186-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where InitiatingProcessFileName has &quot;gitea&quot;
+| where RemoteIP in (&quot;169.254.169.254&quot;,&quot;168.63.129.16&quot;,&quot;64:ff9b::a9fe:a9fe&quot;)
+| project TimeGenerated, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-186-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea SSRF Egress to Cloud Metadata Endpoint (CVE-2026-22874)
+id: 6b1e9a44-2c7f-4d0e-9a3b-8f21e0c7d5a1
+description: Gitea process connecting to instance-metadata / Azure WireServer IPs, indicating exploitation of the incomplete SSRF allow-list in webhook delivery or repository migration.
+references:
+  - https://github.com/advisories/GHSA-2r5c-gw76-rh3w
+  - https://github.com/go-gitea/gitea/security/advisories/GHSA-2r5c-gw76-rh3w
+author: SOC Detection Engineering
+date: 2026/07/21
+tags:
+  - attack.t1552.005
+  - attack.t1190
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    Image|contains: &#x27;gitea&#x27;
+    DestinationIp:
+      - &#x27;169.254.169.254&#x27;
+      - &#x27;168.63.129.16&#x27;
+      - &#x27;64:ff9b::a9fe:a9fe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-186-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\gitea.exe OR *\gitea OR *\Gitea.exe) (@DestinationIp:169.254.169.254 OR @DestinationIp:168.63.129.16 OR @DestinationIp:64\:ff9b\:\:a9fe\:a9fe)</code></pre></div>
+    <div class="tab-content" id="art-186-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/gitea/i | (RemoteAddressIP4=&quot;169.254.169.254&quot; OR RemoteAddressIP4=&quot;168.63.129.16&quot;) | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-186-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-186-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-186-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-186-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process=*gitea* AND (All_Traffic.dest_ip=&quot;169.254.169.254&quot; OR All_Traffic.dest_ip=&quot;168.63.129.16&quot; OR All_Traffic.dest_ip=&quot;64:ff9b::a9fe:a9fe&quot;) by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-186-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process=*gitea* AND (All_Traffic.dest_ip=&quot;169.254.169.254&quot; OR All_Traffic.dest_ip=&quot;168.63.129.16&quot; OR All_Traffic.dest_ip=&quot;64:ff9b::a9fe:a9fe&quot;) by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="30f4de520a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,web-app,windows">
+  <summary>
+    <span class="uc-title">Gitea process egress to SSRF allow-list bypass internal ranges (CGNAT / 172.32.0.0/11)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="30f4de520a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the Gitea server process connecting to internal ranges that Go&#x27;s net.IP.IsPrivate() fails to block — RFC 6598 CGNAT (100.64.0.0/10) and the non-RFC1918 172.32.0.0/11 block — the ranges CVE-2026-22874 lets an authenticated user reach via webhook or migration. Surfaces internal-service probing/exfiltration that isn&#x27;t a cloud-metadata hit.
+
+Rationale: Targets the exact non-RFC1918 ranges the advisory table lists as unblocked (RFC 6598 CGNAT 100.64.0.0/10 and 172.32.0.0/11) scoped to the gitea process — the internal-probing half of the SSRF that a metadata-IP rule would miss. Medium confidence because these ranges have legitimate uses (e.g. Tailscale/CGNAT overlays).
+
+Cross-checked against:
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-2r5c-gw76-rh3w
+  • https://www.cybersecurity-help.cz/vdb/SB2026062240</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Network Service Discovery">T1046</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Organization runs Tailscale or another overlay that legitimately assigns 100.64.0.0/10 addresses to internal services Gitea reaches</li><li>Legitimate self-hosted webhook receiver or CI runner living in a 172.32.0.0/11 internal subnet</li><li>Repository migration from a genuinely internal Git host in these ranges</li><li>CGNAT-addressed reverse proxy sitting in front of an approved webhook target</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteIP startswith &quot;100.100.&quot;)  // exclude Tailscale MagicDNS/coordination if in use; tune to your overlay&#x27;s assigned block</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: correlate the destination IP with the Gitea webhook config / migration target and identify the authenticated user who set it; confirm whether the destination is a sanctioned internal service. 2) Contain: if unrecognized, disable the webhook/migration, and if the response body in webhook history contains sensitive internal data, treat the accessed service as exposed and rotate any secrets it returned. 3) Hunt: enumerate all webhooks and recent migrations across repos for targets in these ranges, and check whether the same user also hit metadata endpoints (UC1).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-186-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-186-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-186-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-186-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-186-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-186-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-186-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName has &quot;gitea&quot;
+| where ipv4_is_in_any_range(RemoteIP, &quot;100.64.0.0/10&quot;, &quot;172.32.0.0/11&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), Ports=make_set(RemotePort,20) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-186-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where ipv4_is_in_any_range(DestinationIP, &quot;100.64.0.0/10&quot;, &quot;172.32.0.0/11&quot;)
+| where ApplicationProtocol has_any (&quot;http&quot;,&quot;https&quot;) or DestinationPort in (80, 443, 8080, 8443)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Connections=count(), DestPorts=make_set(DestinationPort,20) by SourceHostName, SourceIP, DestinationIP
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-186-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea SSRF Egress to Non-RFC1918 Internal Ranges (CVE-2026-22874)
+id: c2f7d3b1-9e64-4a58-b0d2-7a1c4e6f9b30
+description: Gitea process connecting to CGNAT (100.64.0.0/10) or the 172.32.0.0/11 block that the incomplete SSRF allow-list fails to deny, indicating webhook/migration SSRF probing of internal services.
+references:
+  - https://github.com/advisories/GHSA-2r5c-gw76-rh3w
+author: SOC Detection Engineering
+date: 2026/07/21
+tags:
+  - attack.t1046
+  - attack.t1190
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection:
+    Image|contains: &#x27;gitea&#x27;
+    DestinationIp|cidr:
+      - &#x27;100.64.0.0/10&#x27;
+      - &#x27;172.32.0.0/11&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-186-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\gitea.exe OR *\gitea OR *\Gitea.exe) (CIDR(@DestinationIp, 100.64.0.0/10) OR CIDR(@DestinationIp, 172.32.0.0/11))</code></pre></div>
+    <div class="tab-content" id="art-186-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/gitea/i | cidr(&quot;100.64.0.0/10&quot;, field=RemoteAddressIP4) | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-186-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-186-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-186-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-186-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process=*gitea* by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where cidrmatch(&quot;100.64.0.0/10&quot;, dest_ip) OR cidrmatch(&quot;172.32.0.0/11&quot;, dest_ip) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-186-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process=*gitea* by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where cidrmatch(&quot;100.64.0.0/10&quot;, dest_ip) OR cidrmatch(&quot;172.32.0.0/11&quot;, dest_ip) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4ce6b06635" data-platforms="def,sent" data-targets="">
+  <summary>
+    <span class="uc-title">Vulnerable Gitea version exposed to CVE-2026-22874 SSRF (pre-1.26.4)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="4ce6b06635" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Inventory hunt for Gitea installations older than the patched 1.26.4 release that remain exposed to the incomplete SSRF allow-list in webhook delivery and repository migration. Prioritizes patching of internet-reachable Gitea instances before the bypass ranges can be abused.
+
+Rationale: Uses the concrete patched version (1.26.4) confirmed by the Gitea 1.26.3/1.26.4 release blog and the CVE id CVE-2026-22874 so the query flags every unpatched instance without a placeholder. Low FP because it is a deterministic version comparison against software inventory.
+
+Cross-checked against:
+  • https://blog.gitea.com/release-of-1.26.3-and-1.26.4/
+  • https://github.com/go-gitea/gitea/security/advisories/GHSA-2r5c-gw76-rh3w</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A non-standard build/version string (e.g. &#x27;1.26.4+dev&#x27; or a distro backport) that trips the numeric parse but is actually patched</li><li>Forgejo or another Gitea fork carrying its own versioning that the SoftwareName &#x27;gitea&#x27; match catches</li><li>Air-gapped or non-internet-facing Gitea where the SSRF risk is materially lower</li><li>Inventory lag showing an old version after an already-completed upgrade</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reported SoftwareVersion against the live instance and whether it is internet-reachable or accepts webhooks/migrations from low-privilege users. 2) Contain: schedule/execute upgrade to Gitea 1.26.4+; as interim mitigation, restrict webhook and migration creation to trusted users and tighten the ALLOWED_HOST_LIST allow-list. 3) Hunt: for any instance found vulnerable, run UC1 and UC2 retroactively over the exposure window to determine whether the SSRF was already exercised against metadata or internal ranges.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-186-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-186-uc2-sentinel">Sentinel KQL</button>
+    </div>
+    <div class="tab-content active" id="art-186-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where SoftwareName has &quot;gitea&quot;
+| extend Parts = split(SoftwareVersion, &quot;.&quot;)
+| extend Major = toint(Parts[0]), Minor = toint(Parts[1]), Patch = toint(Parts[2])
+| where Major &lt; 1 or (Major == 1 and Minor &lt; 26) or (Major == 1 and Minor == 26 and Patch &lt; 4)
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, EndOfSupportStatus
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-186-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2026-22874&quot; or (SoftwareName has &quot;gitea&quot; and SoftwareVersion !startswith &quot;1.26.4&quot;)
+| summarize arg_max(TimeGenerated, *) by DeviceId, SoftwareName, SoftwareVersion
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-186-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-186-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-186-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-186-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-22874&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-186-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-22874&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-186-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-186-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-186-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-186-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-22874&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-186-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-22874&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-187" data-art-slug="2026-07-21-ghsa-critical-cve-2026-56750-gitea-remember-me-token-theft-n"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -14346,1290 +15069,6 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-215" data-art-slug="2026-07-16-runtime-security-for-third-party-github-actions-runners-bitr"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
-  data-techs="T1190,T1195.002"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="linux,macos,windows"
-  data-uc-count="8" data-llm-uc-count="5"
-  data-search="Runtime Security for Third-Party GitHub Actions Runners: Bitrise, Blacksmith, Depot, Namespace, and Warp Harden-Runner secures third-party GitHub Actions runners. Bitrise macOS runners join Blacksmith, Depot, Namespace, and Warp Build with v2.20.0  T1190 T1195.002 [LLM] Malicious @velora-dex/sdk (9.4.1/9.4.2) pulled into GitHub Actions build runner [LLM] Build runner beacon/exfil to Velora backdoor C2 (89.36.224.5 / datahub.ink) [LLM] Velora macOS backdoor launchctl persistence (com.apple.Terminal.profiler.plist) [LLM] npm/node install-time payload: package manager spawning curl/launchctl/osascript on a runner [LLM] Shai-Hulud worm artifacts written on GitHub Actions runner (shai-hulud-workflow.yml / bundle.js) Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-07-16-runtime-security-for-third-party-github-actions-runners-bitr" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/runtime-security-for-third-party-github-actions-runners" target="_blank" rel="noopener">Runtime Security for Third-Party GitHub Actions Runners: Bitrise, Blacksmith, Depot, Namespace, and Warp</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-07-16</span>
-    <span>8 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Harden-Runner secures third-party GitHub Actions runners. Bitrise macOS runners join Blacksmith, Depot, Namespace, and Warp Build with v2.20.0</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">datahub.ink</span> <span class="ind ">cloud-sync.online</span> <span class="ind ">byte-io.us</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">89.36.224.5</span> <span class="ind ">208.115.220.17</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">0a8ab3d16b12d3a4…</span> <span class="ind ">0b028b7819506418…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-215-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-215"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-215-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Malicious @velora-dex/sdk (9.4.1/9.4.2) pulled into GitHub Actions build runner</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] npm/node install-time payload: package manager spawning curl/launchctl/osascript on a runner · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Velora macOS backdoor launchctl persistence (com.apple.Terminal.profiler.plist) · [LLM] Shai-Hulud worm artifacts written on GitHub Actions runner (shai-hulud-workflow.yml / bundle.js) · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Build runner beacon/exfil to Velora backdoor C2 (89.36.224.5 / datahub.ink) · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="1f30d78bdd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,macos,windows" open>
-  <summary>
-    <span class="uc-title">Malicious @velora-dex/sdk (9.4.1/9.4.2) pulled into GitHub Actions build runner</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1f30d78bdd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts CI/build runners that install the trojanized @velora-dex/sdk npm package — the compromise that dropped a macOS backdoor the moment the SDK was imported. Version 9.4.0 is confirmed clean, so any install of a non-9.4.0 version of this specific package on a runner is suspect.
-
-Rationale: Anchors on the exact compromised package name &#x27;@velora-dex/sdk&#x27; and excludes the confirmed-clean 9.4.0, per Corgea (v9.4.1 published 2026-04-07) and StepSecurity — a named-package/version IOC that only fires on genuinely-affected installs.
-
-Cross-checked against:
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  • https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence
-  • https://github.com/VeloraDEX/sdk/issues/233</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Malicious Package">T1204.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer intentionally installing the clean 9.4.0 pin (excluded, but a lockfile resolving without an explicit version tag may show no version)</li><li>Internal mirror/registry proxy re-fetching the package name in log lines during cache warmup</li><li>Security researchers/DFIR reproducing the compromise in a sandbox runner</li><li>A vendored monorepo referencing &#x27;velora-dex/sdk&#x27; in a path or comment picked up by broad command lines</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has &quot;velora-dex/sdk@9.4.0&quot;) | where AccountName !endswith &quot;$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the exact resolved version from the runner&#x27;s package-lock.json/npm cache and the workflow run; 9.4.1/9.4.2 = confirmed malicious, 9.4.0 = clean. 2) Contain: isolate the runner (especially macOS/Bitrise hosts), revoke any secrets that were in scope for that job (Apple signing certs, App Store Connect keys, registry/deploy tokens), and rebuild the runner from a clean image. 3) Hunt: pivot to UC &#x27;C2 beacon to Velora infra (89.36.224.5)&#x27; and the launchctl-persistence UC on the same DeviceId, and diff lockfiles across all repos for the pinned bad version.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-215-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-215-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where ProcessCommandLine has &quot;velora-dex/sdk&quot; or InitiatingProcessCommandLine has &quot;velora-dex/sdk&quot;
-| where not(ProcessCommandLine has &quot;velora-dex/sdk@9.4.0&quot; or InitiatingProcessCommandLine has &quot;velora-dex/sdk@9.4.0&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessCommandLine has &quot;velora-dex/sdk&quot; or ParentProcessCommandLine has &quot;velora-dex/sdk&quot; or TargetProcessCommandLine has &quot;velora-dex/sdk&quot;
-| where not(ActingProcessCommandLine has &quot;velora-dex/sdk@9.4.0&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious @velora-dex/sdk npm package installed on build host
-id: 6c2f1a4e-8b3d-4d9a-9f0c-1e2a3b4c5d6e
-description: Detects install/import of the compromised @velora-dex/sdk npm package (malicious 9.4.1/9.4.2; 9.4.0 clean) that dropped a macOS backdoor.
-references:
-  - https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  - https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1195.002
-  - attack.t1204.003
-logsource:
-  category: process_creation
-detection:
-  selection:
-    CommandLine|contains: &#x27;velora-dex/sdk&#x27;
-  filter_clean:
-    CommandLine|contains: &#x27;velora-dex/sdk@9.4.0&#x27;
-  condition: selection and not filter_clean
-level: high</code></pre></div>
-    <div class="tab-content" id="art-215-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*velora-dex/sdk* -@process.command_line:*velora-dex/sdk@9.4.0*</code></pre></div>
-    <div class="tab-content" id="art-215-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/velora-dex\/sdk/i
-| NOT CommandLine=/velora-dex\/sdk@9\.4\.0/i
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-215-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*velora-dex/sdk*&quot; NOT Processes.process=&quot;*9.4.0*&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-215-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*velora-dex/sdk*&quot; NOT Processes.process=&quot;*9.4.0*&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2e4027719f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,macos,windows">
-  <summary>
-    <span class="uc-title">Build runner beacon/exfil to Velora backdoor C2 (89.36.224.5 / datahub.ink)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2e4027719f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts any outbound connection from a runner or endpoint to the confirmed Velora-SDK backdoor C2 infrastructure — IP 89.36.224.5 and domains datahub.ink, cloud-sync.online, byte-io.us. These are where the macOS implant fetched its shell script and exfiltrated harvested signing keys and tokens.
-
-Rationale: IP 89.36.224.5 is confirmed as the Velora backdoor C2 by StepSecurity, Corgea and Phoenix Security; the three domains are enumerated verbatim in Corgea&#x27;s IOC list. Direct-hit IOC match, near-zero legitimate reason for a build host to reach these.
-
-Cross-checked against:
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  • https://phoenix.security/velora-dex-sdk-supply-chain-compromise-build-pipeline-injection-delivers-macos-persistent-implant/
-  • https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel enrichment/sandbox tooling actively probing the C2 (verify the initiating process is a scanner)</li><li>A newly-registered legitimate service reusing the 89.36.224.5 host after takedown (re-validate IP ownership)</li><li>Security team detonating the sample in an authorized lab connected to production telemetry</li><li>DNS sinkhole or passive-DNS collector resolving the domains for research</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;threatintel-scanner.exe&quot;,&quot;nessus&quot;,&quot;nmap&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process on the runner (node/npm/curl vs a legit tool) and the direction/volume of traffic to 89.36.224.5. 2) Contain: block the IP and three domains at egress/proxy, isolate the host, and immediately rotate every secret the affected build job could touch (Apple signing certs, provisioning profiles, App Store Connect keys, registry tokens). 3) Hunt: correlate against the @velora-dex/sdk install UC and the launchctl-persistence UC on the same host, and search all runners for prior connections to these indicators.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-215-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-215-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;89.36.224.5&quot;
-   or RemoteUrl has_any (&quot;datahub.ink&quot;,&quot;cloud-sync.online&quot;,&quot;byte-io.us&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union
-(ImNetworkSession | where TimeGenerated &gt; ago(30d) | where DstIpAddr == &quot;89.36.224.5&quot; | project TimeGenerated, DvcHostname, SrcIpAddr, Indicator = DstIpAddr, Detail = Url),
-(ImDnsActivity | where TimeGenerated &gt; ago(30d) | where DnsQuery has_any (&quot;datahub.ink&quot;,&quot;cloud-sync.online&quot;,&quot;byte-io.us&quot;) | project TimeGenerated, DvcHostname, SrcIpAddr, Indicator = DnsQuery, Detail = DnsResponseName)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Connection to Velora SDK backdoor C2 infrastructure
-id: 7d3e2b5f-9c4a-4e0b-a1d2-2f3b4c5d6e70
-description: Detects network/DNS activity to the @velora-dex/sdk macOS backdoor C2 (89.36.224.5, datahub.ink, cloud-sync.online, byte-io.us).
-references:
-  - https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  - https://phoenix.security/velora-dex-sdk-supply-chain-compromise-build-pipeline-injection-delivers-macos-persistent-implant/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1071.001
-  - attack.t1041
-logsource:
-  category: network_connection
-detection:
-  selection_ip:
-    DestinationIp: &#x27;89.36.224.5&#x27;
-  selection_dns:
-    DestinationHostname:
-      - &#x27;datahub.ink&#x27;
-      - &#x27;cloud-sync.online&#x27;
-      - &#x27;byte-io.us&#x27;
-  condition: selection_ip or selection_dns
-level: high</code></pre></div>
-    <div class="tab-content" id="art-215-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) @network.destination.ip:89.36.224.5</code></pre></div>
-    <div class="tab-content" id="art-215-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;89.36.224.5&quot;
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-215-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN (&quot;89.36.224.5&quot;,&quot;datahub.ink&quot;,&quot;cloud-sync.online&quot;,&quot;byte-io.us&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-215-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN (&quot;89.36.224.5&quot;,&quot;datahub.ink&quot;,&quot;cloud-sync.online&quot;,&quot;byte-io.us&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7d35e6a18c" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
-  <summary>
-    <span class="uc-title">Velora macOS backdoor launchctl persistence (com.apple.Terminal.profiler.plist)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7d35e6a18c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the persistence artifacts the Velora SDK backdoor installs on macOS build runners: a masquerading LaunchAgent plist and support directory impersonating Apple&#x27;s Terminal, plus the known payload hashes. Fires on the exact plist name, path, or file hash written to a runner.
-
-Rationale: com.apple.Terminal.profiler.plist and the ~/Library/Application Support/com.apple.Terminal/profiler directory are the exact persistence artifacts documented by Corgea; the plist name masquerades as Apple&#x27;s Terminal but is not a genuine Apple file, so any write is high-fidelity. Payload SHA256s are the article-supplied IOCs, kept alongside the corroborated path artifacts.
-
-Cross-checked against:
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  • https://opensourcemalware.com/blog/velora-hacked
-  • https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create or Modify System Process: Launch Agent">T1543.001</span> <span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A genuine Apple/Terminal update writing legitimately-named plists (the profiler variant is not a real Apple file, so overlap is unlikely)</li><li>EDR/DFIR tooling restoring a quarantined sample onto a lab host</li><li>Backup/restore software rehydrating a previously-infected user Library</li><li>Analyst manually copying the IOC file for reverse-engineering on a monitored host</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: on the flagged macOS runner, confirm the plist exists under ~/Library/LaunchAgents/ and check `launchctl list` for the zsh.profiler service and the com.apple.Terminal/profiler support dir. 2) Contain: unload the LaunchAgent (launchctl bootout / remove plist), kill the profiler binary, isolate the host, and rotate all Apple signing material and CI secrets that lived on it. 3) Hunt: pivot to the 89.36.224.5 C2 UC and the @velora-dex/sdk install UC on the same DeviceId, and sweep the macOS fleet for the plist name and payload hashes.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-215-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where (FolderPath has &quot;/Library/LaunchAgents/&quot; and FileName =~ &quot;com.apple.Terminal.profiler.plist&quot;)
-   or FolderPath has &quot;com.apple.Terminal/profiler&quot;
-   or SHA256 in (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;,&quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where (TargetFileName =~ &quot;com.apple.Terminal.profiler.plist&quot; and TargetFilePath has &quot;/LaunchAgents/&quot;)
-   or TargetFilePath has &quot;com.apple.Terminal/profiler&quot;
-   or TargetFileSHA256 in (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;,&quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Velora macOS backdoor LaunchAgent persistence
-id: 8e4f3c60-ad5b-4f1c-b2e3-3a4b5c6d7e81
-description: Detects the masquerading LaunchAgent plist / support dir and payload hashes dropped by the @velora-dex/sdk macOS backdoor.
-references:
-  - https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  - https://opensourcemalware.com/blog/velora-hacked
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1543.001
-  - attack.t1036.005
-logsource:
-  category: file_event
-  product: macos
-detection:
-  selection_plist:
-    TargetFilename|endswith: &#x27;/Library/LaunchAgents/com.apple.Terminal.profiler.plist&#x27;
-  selection_dir:
-    TargetFilename|contains: &#x27;com.apple.Terminal/profiler&#x27;
-  selection_hash:
-    Hashes|contains:
-      - &#x27;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&#x27;
-      - &#x27;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&#x27;
-  condition: selection_plist or selection_dir or selection_hash
-level: high</code></pre></div>
-    <div class="tab-content" id="art-215-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(com\.apple\.Terminal\.profiler\.plist|com\.apple\.Terminal\/profiler)/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-215-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;com.apple.Terminal.profiler.plist&quot; OR Filesystem.file_path=&quot;*com.apple.Terminal/profiler*&quot; OR Filesystem.file_hash IN (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;,&quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-215-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;com.apple.Terminal.profiler.plist&quot; OR Filesystem.file_path=&quot;*com.apple.Terminal/profiler*&quot; OR Filesystem.file_hash IN (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;,&quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0f8827c174" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
-  <summary>
-    <span class="uc-title">npm/node install-time payload: package manager spawning curl/launchctl/osascript on a runner</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0f8827c174" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Behavioural catch for the Velora-class TTP where importing a poisoned npm package makes node call child_process.exec() to download and persist a payload. Surfaces node/npm/yarn/pnpm/bun spawning curl, wget, osascript, chmod or launchctl during a build — catching variants and future-versioned repackages the static IOCs miss.
-
-Rationale: Models the corroborated execution mechanism (dist/index.js calling child_process.exec() to curl a shell script then launchctl-persist) as a parent/child pivot, so it catches the campaign&#x27;s behaviour beyond the pinned version/IOCs. Kept as hunting because legit postinstall scripts also spawn curl.
-
-Cross-checked against:
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  • https://phoenix.security/velora-dex-sdk-supply-chain-compromise-build-pipeline-injection-delivers-macos-persistent-implant/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Malicious Package">T1204.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate npm postinstall scripts (node-sass, node-gyp, puppeteer, esbuild) that curl/wget a prebuilt binary</li><li>Build scripts that chmod +x downloaded CLI tools</li><li>macOS packaging steps invoking osascript for notarization/UI prompts</li><li>Corporate proxy bootstrap scripts run under node during CI setup</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has_any (&quot;registry.npmjs.org&quot;,&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;nodejs.org&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the child command line — a curl/wget to an unfamiliar host, a launchctl load of an unknown plist, or chmod +x on a freshly-downloaded file is malicious; a fetch to a known package CDN (github.com, npmjs.org) is likely benign. 2) Contain: if the destination or plist is unrecognised, isolate the runner and rotate its secrets. 3) Hunt: pivot on the downloaded host/IP against the C2 UC (89.36.224.5) and check for the launchctl-persistence plist on the same host; diff the repo lockfile for newly-added dependencies.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-215-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;yarn&quot;,&quot;pnpm&quot;,&quot;bun&quot;)
-| where FileName in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;osascript&quot;,&quot;launchctl&quot;,&quot;chmod&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ParentProcessName has_any (&quot;node&quot;,&quot;npm&quot;,&quot;yarn&quot;,&quot;pnpm&quot;,&quot;bun&quot;)
-| where ActingProcessName has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;osascript&quot;,&quot;launchctl&quot;,&quot;chmod&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: npm package manager spawning download/persistence LOLBin
-id: 9f5a4d71-be6c-4a2d-c3f4-4b5c6d7e8f92
-description: Detects node/npm/yarn/pnpm/bun spawning curl, wget, osascript, chmod or launchctl during dependency install - the Velora-class install-time payload pattern.
-references:
-  - https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  - https://www.stepsecurity.io/blog/runtime-security-for-third-party-github-actions-runners
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1059.007
-  - attack.t1204.003
-logsource:
-  category: process_creation
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;/node&#x27;
-      - &#x27;/npm&#x27;
-      - &#x27;/yarn&#x27;
-      - &#x27;/pnpm&#x27;
-      - &#x27;/bun&#x27;
-    Image|endswith:
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/osascript&#x27;
-      - &#x27;/launchctl&#x27;
-      - &#x27;/chmod&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-215-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(node|npm|yarn|pnpm|bun)$/i
-| ImageFileName=/\/(curl|wget|osascript|launchctl|chmod)$/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-215-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;npm&quot;,&quot;yarn&quot;,&quot;pnpm&quot;,&quot;bun&quot;) AND Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;osascript&quot;,&quot;launchctl&quot;,&quot;chmod&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-215-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;npm&quot;,&quot;yarn&quot;,&quot;pnpm&quot;,&quot;bun&quot;) AND Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;osascript&quot;,&quot;launchctl&quot;,&quot;chmod&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="44dd6bff5a" data-platforms="def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Shai-Hulud worm artifacts written on GitHub Actions runner (shai-hulud-workflow.yml / bundle.js)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="44dd6bff5a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the self-replicating Shai-Hulud npm worm&#x27;s on-disk artifacts as they appear on a compromised runner: the shai-hulud-workflow.yml propagation workflow and the known malicious bundle.js payload hash. Distinct filesystem pivot from the Velora backdoor detections.
-
-Rationale: shai-hulud-workflow.yml is the worm&#x27;s signature propagation artifact and 46faab8ab153...628f09 is the documented malicious bundle.js SHA-256, both corroborated by Unit42, Wiz and Datadog Security Labs — filesystem IOCs with no legitimate reason to exist on a runner.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/npm-supply-chain-attack/
-  • https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack
-  • https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security researcher intentionally checking out an infected repo to a monitored host for analysis</li><li>IOC-sweep tooling writing sample copies of shai-hulud-workflow.yml to disk during hunting</li><li>A defensive canary/honeypot repo deliberately seeded with the artifact name</li><li>Backup restoration of a previously-infected repository working tree</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the file path/hash on the runner and identify the initiating process and the repo/workflow it landed in; a true hit means the worm executed and likely harvested tokens. 2) Contain: isolate the runner, revoke npm publish tokens and GitHub PATs the job held, and remove any pushed &#x27;shai-hulud&#x27; branch / shai-hulud-workflow.yml from affected repos before it self-propagates. 3) Hunt: enumerate packages published by the compromised token, search for repos with the description marker &#x27;Sha1-Hulud: The Second Coming&#x27;, and sweep all runners for the workflow filename and bundle.js hash.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-215-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;shai-hulud-workflow.yml&quot;
-   or SHA256 == &quot;46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where TargetFileName =~ &quot;shai-hulud-workflow.yml&quot;
-   or TargetFileSHA256 =~ &quot;46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-215-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Shai-Hulud npm worm artifact written to disk
-id: a06b5e82-cf7d-4b3e-d4a5-5c6d7e8f9a03
-description: Detects the Shai-Hulud worm propagation workflow file or known malicious bundle.js payload hash on a build host.
-references:
-  - https://unit42.paloaltonetworks.com/npm-supply-chain-attack/
-  - https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1195.002
-  - attack.t1546
-logsource:
-  category: file_event
-detection:
-  selection_name:
-    TargetFilename|endswith: &#x27;shai-hulud-workflow.yml&#x27;
-  selection_hash:
-    Hashes|contains: &#x27;46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09&#x27;
-  condition: selection_name or selection_hash
-level: high</code></pre></div>
-    <div class="tab-content" id="art-215-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/shai-hulud-workflow\.yml$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-215-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;shai-hulud-workflow.yml&quot; OR Filesystem.file_hash=&quot;46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-215-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;shai-hulud-workflow.yml&quot; OR Filesystem.file_hash=&quot;46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-215-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-215-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;89.36.224.5&quot;, &quot;208.115.220.17&quot;) or RemoteUrl has_any (&quot;datahub.ink&quot;, &quot;cloud-sync.online&quot;, &quot;byte-io.us&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-215-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;89.36.224.5&quot;, &quot;208.115.220.17&quot;]);
-let BadDomains = dynamic([&quot;datahub.ink&quot;, &quot;cloud-sync.online&quot;, &quot;byte-io.us&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;89.36.224.5&quot;, &quot;208.115.220.17&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;datahub.ink&quot;, &quot;cloud-sync.online&quot;, &quot;byte-io.us&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;datahub.ink&quot;, &quot;cloud-sync.online&quot;, &quot;byte-io.us&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-215-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;89.36.224.5&quot;, &quot;208.115.220.17&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;datahub.ink&quot;, &quot;cloud-sync.online&quot;, &quot;byte-io.us&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;datahub.ink&quot;, &quot;cloud-sync.online&quot;, &quot;byte-io.us&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-215-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-215-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-215-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-215-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-215-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;) or SHA1 in~ (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;) or MD5 in~ (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;) or SHA1 in~ (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;) or MD5 in~ (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-215-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-215-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-215-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-215-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-215-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270&quot;, &quot;0b028b781950641818800fee2b4bf68e4ef2bcee53fe71a21755275ba108783d&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-216" data-art-slug="2026-07-16-harden-runner-block-mode-now-available-for-macos-and-windows"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
-  data-techs="T1190,T1195.002"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="macos,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="Harden-Runner Block Mode Now Available for macOS and Windows GitHub-Hosted Runners Harden-Runner v2.20.0 extends egress block mode to macOS and Windows GitHub-hosted runners, so you can stop secret exfiltration on every OS your pipelines run on, not just observe it.  T1190 T1195.002 [LLM] Compromised @velora-dex/sdk npm package (9.4.1/9.4.2) installed on CI runner [LLM] CI runner egress to MiniRAT C2 89.36.224.5 (Velora SDK backdoor) [LLM] CI runner egress to Megalodon secret-exfil C2 216.126.225.129:8443 [LLM] MiniRAT launchctl persistence established during macOS CI build Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-07-16-harden-runner-block-mode-now-available-for-macos-and-windows" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/harden-runner-block-mode-now-available-for-macos-and-windows-github-hosted-runners" target="_blank" rel="noopener">Harden-Runner Block Mode Now Available for macOS and Windows GitHub-Hosted Runners</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-07-16</span>
-    <span>6 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Harden-Runner v2.20.0 extends egress block mode to macOS and Windows GitHub-hosted runners, so you can stop secret exfiltration on every OS your pipelines run on, not just observe it.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">89.36.224.5</span> <span class="ind ">216.126.225.129</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-216-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-216"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-216-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Compromised @velora-dex/sdk npm package (9.4.1/9.4.2) installed on CI runner</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] MiniRAT launchctl persistence established during macOS CI build</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] CI runner egress to MiniRAT C2 89.36.224.5 (Velora SDK backdoor) · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] CI runner egress to Megalodon secret-exfil C2 216.126.225.129:8443</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="971de17199" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="macos,windows" open>
-  <summary>
-    <span class="uc-title">Compromised @velora-dex/sdk npm package (9.4.1/9.4.2) installed on CI runner</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="971de17199" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the known-trojanized @velora-dex/sdk package landing in node_modules on a macOS/Windows/Linux build runner. Version 9.4.1 injected a base64 loader into dist/index.js that fires on import and pulls a macOS Go RAT (MiniRAT); 9.4.2 was the hurried revert — presence of either on a runner warrants review.
-
-Rationale: Anchors on the exact compromised package path &#x27;@velora-dex/sdk&#x27; confirmed by Corgea, safedep and StepSecurity; on an ephemeral CI runner any occurrence of this known-bad dependency is high-fidelity.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  • https://safedep.io/malicious-velora-dex-sdk-npm-compromised-rat/
-  • https://github.com/VeloraDEX/sdk/issues/233</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher or internal IR team detonating the sample in a sandbox that is also EDR-monitored</li><li>A pinned lockfile deliberately holding 9.4.2 (reverted) for regression testing</li><li>Mirror/proxy cache warming that pre-fetches many package versions including these</li><li>A developer reproducing the advisory locally to confirm exposure</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;cape.exe&quot;,&quot;procmon.exe&quot;) and DeviceName !has &quot;sandbox&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the repo/workflow that pulled @velora-dex/sdk and the exact version from the lockfile; check the runner&#x27;s outbound connections to 89.36.224.5 in the same job window. 2) Contain: fail/cancel the pipeline, rotate every secret the job could touch (Apple signing certs, App Store Connect keys, Windows code-signing certs, OIDC/cloud tokens), and pin the dependency to a known-good pre-9.4.1 version or the vendor-verified fix. 3) Hunt: sweep all runners and developer macOS hosts for MiniRAT launchctl persistence and for egress to 89.36.224.5 / 216.126.225.129.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-216-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-216-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-216-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-216-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-216-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-216-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-216-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where FolderPath has &quot;@velora-dex/sdk&quot; or FolderPath has @&quot;@velora-dex\sdk&quot;
-| where FileName endswith &quot;.js&quot; or FileName =~ &quot;package.json&quot;
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where TargetFilePath has &quot;@velora-dex/sdk&quot; or TargetFilePath has &quot;@velora-dex\\sdk&quot;
-| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine, ActorUsername
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Compromised @velora-dex/sdk npm Package Written to node_modules
-id: 6f2a1c84-9d5e-4b21-8c77-2e9a4f7b0c11
-description: Detects the trojanized @velora-dex/sdk (9.4.1/9.4.2) package being written to disk on a build host.
-references:
-  - https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence
-  - https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1195.002
-  - attack.initial_access
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|contains:
-      - &#x27;@velora-dex/sdk&#x27;
-      - &#x27;@velora-dex\sdk&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-216-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*velora-dex* OR *Velora-Dex* OR *VELORA-DEX*)</code></pre></div>
-    <div class="tab-content" id="art-216-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/velora-dex[\\\/]+sdk/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-216-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-216-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-216-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-216-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*@velora-dex*sdk*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-216-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*@velora-dex*sdk*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1e0bdffdcc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">CI runner egress to MiniRAT C2 89.36.224.5 (Velora SDK backdoor)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="1e0bdffdcc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects any outbound connection from a runner or build host to 89.36.224.5, the C2 that the injected @velora-dex/sdk loader contacts to fetch its architecture-specific macOS shell-script/Go RAT stager. A hard IOC — no legitimate build should reach this host.
-
-Rationale: 89.36.224.5 is the confirmed MiniRAT stager/C2 host (Corgea, safedep) referenced by the article&#x27;s Velora SDK compromise; a single hard-IOC destination match needs no behavioural qualifier.
-
-Cross-checked against:
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  • https://safedep.io/malicious-velora-dex-sdk-npm-compromised-rat/
-  • https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel enrichment/scanning service that actively probes known C2 IPs from a monitored host</li><li>IR sandbox detonation of the sample with live network</li><li>Security team reproducing the advisory to validate blast radius</li><li>Shared NAT egress where a non-runner host on the same egress IP is the real source (verify DeviceName/src)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the initiating process (expect node/npm-spawned sh/curl) and whether @velora-dex/sdk is in the job&#x27;s dependency tree. 2) Contain: block 89.36.224.5 at egress/firewall, isolate the runner/host, and rotate all secrets the pipeline exposed. 3) Hunt: pivot to launchctl persistence (MiniRAT) and to Megalodon C2 216.126.225.129:8443 across the fleet; review recent installs of @velora-dex/sdk org-wide.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-216-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-216-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-216-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-216-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-216-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-216-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-216-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;89.36.224.5&quot;
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstIpAddr == &quot;89.36.224.5&quot;
-| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, DvcAction, Url
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Velora SDK MiniRAT C2 89.36.224.5
-id: b1e7d3c2-4a90-4f18-9c6b-77a1e2f5d8a3
-description: Detects network connections to the MiniRAT C2 fetched by the trojanized @velora-dex/sdk package.
-references:
-  - https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor
-  - https://safedep.io/malicious-velora-dex-sdk-npm-compromised-rat/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1105
-  - attack.command_and_control
-logsource:
-  category: network_connection
-detection:
-  selection:
-    DestinationIp: &#x27;89.36.224.5&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-216-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:89.36.224.5</code></pre></div>
-    <div class="tab-content" id="art-216-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=89.36.224.5
-| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-216-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-216-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-216-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-216-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;89.36.224.5&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-216-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;89.36.224.5&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f47dbff339" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">CI runner egress to Megalodon secret-exfil C2 216.126.225.129:8443</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f47dbff339" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects outbound connections to 216.126.225.129 (notably TCP 8443), the confirmed Megalodon C2 that received compressed archives of harvested CI secrets, cloud creds, SSH keys and OIDC tokens via HTTPS POST across 5,500+ repos. Any runner reaching this host indicates active secret exfiltration.
-
-Rationale: 216.126.225.129:8443 is the corroborated Megalodon HTTPS-POST exfil C2 (StepSecurity, safedep, Phoenix); a destination-IP match is a hard IOC requiring no behavioural context.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/megalodon-mass-github-actions-secret-exfiltration-across-5-500-public-repositories
-  • https://safedep.io/megalodon-mass-github-repo-backdooring-ci-workflows/
-  • https://phoenix.security/megalodon-ci-github-actions-workflow-poisoning-credential-harvesting/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Exfiltration to Cloud Storage">T1567.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TI enrichment scanner probing the known C2 from a monitored host</li><li>IR sandbox detonation with live egress</li><li>Shared-egress NAT attributing another host&#x27;s traffic to a runner (validate src/DeviceName)</li><li>Deliberate purple-team replay of the Megalodon workflow payload</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the runner/repo and confirm whether an injected workflow (e.g. SysDiag / Optimize-Build, forged authors build-bot/auto-ci/ci-bot/pipeline-bot) or malicious dependency initiated the connection; capture bytes sent. 2) Contain: block 216.126.225.129, cancel the pipeline, and treat every secret reachable by that job as compromised — rotate immediately. 3) Hunt: review GitHub Actions workflow files for base64 bash payloads POSTing to :8443, enumerate other repos with the same injected workflow, and correlate with @velora-dex/sdk installs and 89.36.224.5 egress.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-216-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-216-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-216-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-216-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-216-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-216-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-216-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;216.126.225.129&quot;
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstIpAddr == &quot;216.126.225.129&quot;
-| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, NetworkBytes, DvcAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Megalodon Secret-Exfil C2 216.126.225.129
-id: c9a4f0d7-2b31-4e56-88af-11d6c7e39b42
-description: Detects connections to the Megalodon campaign C2 that received exfiltrated GitHub Actions secrets on TCP 8443.
-references:
-  - https://www.stepsecurity.io/blog/megalodon-mass-github-actions-secret-exfiltration-across-5-500-public-repositories
-  - https://safedep.io/megalodon-mass-github-repo-backdooring-ci-workflows/
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1041
-  - attack.exfiltration
-logsource:
-  category: network_connection
-detection:
-  selection:
-    DestinationIp: &#x27;216.126.225.129&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-216-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:216.126.225.129</code></pre></div>
-    <div class="tab-content" id="art-216-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=216.126.225.129
-| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-216-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-216-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-216-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-216-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;216.126.225.129&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-216-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;216.126.225.129&quot; by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="30cdc2141a" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
-  <summary>
-    <span class="uc-title">MiniRAT launchctl persistence established during macOS CI build</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="30cdc2141a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for launchctl registering a LaunchAgent/LaunchDaemon during a build, spawned from a shell/node/curl parent — the persistence step MiniRAT uses after the @velora-dex/sdk loader drops its arch-specific Go binary. Ephemeral GitHub-hosted macOS runners should never establish OS-level persistence mid-job.
-
-Rationale: Maps the MiniRAT launchctl-persistence step (StepSecurity/iru) to the parent chain (node-spawned shell → launchctl load) that a stager uses; on ephemeral runners any mid-build persistence is inherently anomalous.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence
-  • https://www.iru.com/blog/minirat
-  • https://corgea.com/research/velora-dex-sdk-npm-minirat-macos-backdoor</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create or Modify System Process: Launch Agent">T1543.001</span> <span class="ind tech" title="Create or Modify System Process: Launch Daemon">T1543.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Xcode/fastlane or Homebrew setup steps that legitimately load helper LaunchAgents during app-signing jobs</li><li>Self-hosted macOS runner bootstrap scripts registering the runner service via launchctl</li><li>Rosetta/simulator tooling loading daemons on first run</li><li>Developer macOS host installing a legitimate background service via a shell installer</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;actions.runner&quot; and ProcessCommandLine !has &quot;com.github.actions&quot; and ProcessCommandLine !has &quot;fastlane&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the launchctl target plist path and the referenced program binary; confirm the grandparent traces to node/npm and whether @velora-dex/sdk is present or 89.36.224.5 was contacted. 2) Contain: kill the persistence item (launchctl bootout / unload), quarantine the dropped binary, isolate the host, and rotate signing certs/keys handled by that runner. 3) Hunt: search DeviceFileEvents for plist writes to ~/Library/LaunchAgents or /Library/LaunchDaemons during builds and pivot to the two campaign C2 IPs across all macOS hosts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-216-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-216-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-216-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-216-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-216-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-216-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;launchctl&quot;
-| where ProcessCommandLine has_any (&quot;load&quot;,&quot;bootstrap&quot;,&quot;submit&quot;)
-| where InitiatingProcessFileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;node&quot;,&quot;curl&quot;)
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessName endswith &quot;launchctl&quot;
-| where TargetProcessCommandLine has_any (&quot;load&quot;,&quot;bootstrap&quot;,&quot;submit&quot;)
-| where ActingProcessName has_any (&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;node&quot;,&quot;curl&quot;)
-| project TimeGenerated, DvcHostname, TargetUsername, TargetProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-216-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: launchctl Persistence Spawned From Shell/Node During macOS Build
-id: d4b8e1f0-6c72-4a93-9e15-3f88a0c2d517
-description: Detects launchctl load/bootstrap of a persistence item spawned by sh/node/curl, matching MiniRAT persistence after the Velora SDK compromise.
-references:
-  - https://www.stepsecurity.io/blog/velora-dex-sdk-compromised-on-npm-malicious-version-drops-macos-backdoor-via-launchctl-persistence
-  - https://www.iru.com/blog/minirat
-author: SOC Detection Engineering
-date: 2026/07/16
-tags:
-  - attack.t1543.001
-  - attack.persistence
-logsource:
-  category: process_creation
-  product: macos
-detection:
-  selection:
-    Image|endswith: &#x27;/launchctl&#x27;
-    CommandLine|contains:
-      - &#x27;load&#x27;
-      - &#x27;bootstrap&#x27;
-      - &#x27;submit&#x27;
-  parent:
-    ParentImage|endswith:
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;/curl&#x27;
-  condition: selection and parent
-level: high</code></pre></div>
-    <div class="tab-content" id="art-216-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/launchctl$/i CommandLine=/(load|bootstrap|submit)/i ParentBaseFileName=/(bash|sh|zsh|node|curl)$/i
-| groupBy([aid, ComputerName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-216-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-216-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-216-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-216-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;launchctl&quot; (Processes.process=&quot;*load*&quot; OR Processes.process=&quot;*bootstrap*&quot; OR Processes.process=&quot;*submit*&quot;) (Processes.parent_process_name=&quot;bash&quot; OR Processes.parent_process_name=&quot;sh&quot; OR Processes.parent_process_name=&quot;zsh&quot; OR Processes.parent_process_name=&quot;node&quot; OR Processes.parent_process_name=&quot;curl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-216-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;launchctl&quot; (Processes.process=&quot;*load*&quot; OR Processes.process=&quot;*bootstrap*&quot; OR Processes.process=&quot;*submit*&quot;) (Processes.parent_process_name=&quot;bash&quot; OR Processes.parent_process_name=&quot;sh&quot; OR Processes.parent_process_name=&quot;zsh&quot; OR Processes.parent_process_name=&quot;node&quot; OR Processes.parent_process_name=&quot;curl&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-216-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-216-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-216-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-216-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-216-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-216-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-216-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-216-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-216-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-216-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-216-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-216-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-216-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-216-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-216-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-216-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-216-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;89.36.224.5&quot;, &quot;216.126.225.129&quot;) or RemoteUrl has_any (&quot;&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-216-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;89.36.224.5&quot;, &quot;216.126.225.129&quot;]);
-let BadDomains = dynamic([&quot;&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-216-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-216-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-216-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-216-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-216-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;89.36.224.5&quot;, &quot;216.126.225.129&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-216-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;89.36.224.5&quot;, &quot;216.126.225.129&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

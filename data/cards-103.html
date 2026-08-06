@@ -1,3 +1,397 @@
+<article class="card" id="art-3556" data-art-slug="2019-04-15-after-three-years-of-silence-a-new-jquery-prototype-pollutio"
+  data-phases="c2,exploit,install,recon" data-sev="high"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="1"
+  data-search="After three years of silence, a new jQuery prototype pollution vulnerability emerges once again On March 26th, 2019, almost three years after the last jQuery security vulnerability was disclosed, we recently learned about a new security vulnerability affecting the same popular jQuery frontend library.  T1190 [LLM] jQuery prototype pollution payload (__proto__) in inbound HTTP request (CVE-2019-11358) Article-specific behavioural hunt — After three years of silence, a new jQuery prototype pollution vulnerability eme">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2019-04-15-after-three-years-of-silence-a-new-jquery-prototype-pollutio" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/after-three-years-of-silence-a-new-jquery-prototype-pollution-vulnerability-emerges-once-again/" target="_blank" rel="noopener">After three years of silence, a new jQuery prototype pollution vulnerability emerges once again</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-04-15</span>
+    <span>2 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">On March 26th, 2019, almost three years after the last jQuery security vulnerability was disclosed, we recently learned about a new security vulnerability affecting the same popular jQuery frontend library.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3556-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3556"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3556-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] jQuery prototype pollution payload (__proto__) in inbound HTTP request (CVE-2019-11358) · Article-specific behavioural hunt — After three years of silence, a new jQuery prototype pollution vulnerability eme</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="10b33da789" data-platforms="sent,sigma,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">jQuery prototype pollution payload (__proto__) in inbound HTTP request (CVE-2019-11358)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="10b33da789" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound web requests carrying prototype-pollution keys such as __proto__, constructor[ or prototype[ in the URI/query string — the exact injection vector described for the jQuery.extend(true,...) deep-merge flaw fixed in jQuery 3.4.0. Surfaces attackers probing client- or server-side apps that recursively merge attacker-controlled JSON.
+
+Rationale: Anchored on the article&#x27;s exact pollution tokens (__proto__ from the {&quot;__proto__&quot;:{&quot;isAdmin&quot;:true}} PoC and the constructor/prototype nested-access forms) seen in HTTP URI/query strings — high-fidelity because legitimate apps almost never place __proto__ in a query parameter. Maps to jQuery 3.4.0 fix = CVE-2019-11358.
+
+Cross-checked against:
+  • https://nvd.nist.gov/vuln/detail/CVE-2019-11358</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation of Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DAST/web scanners (Burp Suite, OWASP ZAP, Nuclei, Acunetix) running authorized prototype-pollution test payloads</li><li>Security researchers / bug-bounty hunters probing the app</li><li>Internal QA or CI security tests sending __proto__ fuzzing payloads</li><li>Documentation or knowledge-base apps where users legitimately search for the literal term &#x27;constructor&#x27; or &#x27;prototype&#x27; in query params</li><li>Frameworks that URL-encode object graphs containing a &#x27;constructor&#x27; field name</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where cIP !in (&quot;&lt;sanctioned-scanner-ip&gt;&quot;) | where csUserAgent !has_any (&quot;Nuclei&quot;,&quot;ZAP&quot;,&quot;Burp&quot;,&quot;Acunetix&quot;,&quot;sqlmap&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full csUriQuery/uri_query and source IP; confirm the token is __proto__/constructor[/prototype[ in a writable parameter rather than a benign search term, and check scStatus — a 200/500 on a deep-merge endpoint is higher concern than a 404. 2) Contain: if the source is not a sanctioned scanner, block the src IP at the WAF and add a WAF rule rejecting __proto__/constructor/prototype keys in request bodies and query strings. 3) Hunt: inventory apps still shipping jQuery &lt; 3.4.0 (and other vulnerable deep-merge libs), review whether the targeted endpoint reflects user-controlled JSON into jQuery.extend(true,...) or unsafe object merges, and review same src IP for follow-on auth/privilege anomalies (e.g. unexpected isAdmin behavior).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3556-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3556-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-3556-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3556-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csUriQuery has_any (&quot;__proto__&quot;, &quot;%5f%5fproto%5f%5f&quot;, &quot;constructor[&quot;, &quot;prototype[&quot;)
+| where csUriQuery has &quot;__proto__&quot; or csUriQuery has &quot;%5f%5fproto&quot; or csUriQuery matches regex @&quot;(?i)(constructor|prototype)(\[|%5b)&quot;
+| project TimeGenerated, Computer, cIP, csMethod, sSiteName, csUriStem, csUriQuery, csUserAgent, scStatus
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3556-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: jQuery Prototype Pollution Payload in HTTP Request (CVE-2019-11358)
+id: 5b1f2c3e-9a4d-4e7b-8c1a-2f6d3e9b0a11
+description: Detects inbound web requests containing prototype-pollution tokens (__proto__, constructor[, prototype[) in the URI/query string, matching the jQuery.extend deep-merge vector fixed in jQuery 3.4.0.
+references:
+  - https://snyk.io/blog/after-three-years-of-silence-a-new-jquery-prototype-pollution-vulnerability-emerges-once-again/
+  - https://nvd.nist.gov/vuln/detail/CVE-2019-11358
+author: SOC Detection Engineering
+date: 2026/06/30
+tags:
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - &#x27;__proto__&#x27;
+      - &#x27;%5f%5fproto%5f%5f&#x27;
+      - &#x27;constructor[&#x27;
+      - &#x27;prototype[&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-3556-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3556-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3556-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3556-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*%5f%5fproto%5f%5f*&quot; OR Web.uri_query=&quot;*constructor[*&quot; OR Web.uri_query=&quot;*prototype[*&quot;) by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.uri_query, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-3556-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.uri_query=&quot;*__proto__*&quot; OR Web.uri_query=&quot;*%5f%5fproto%5f%5f*&quot; OR Web.uri_query=&quot;*constructor[*&quot; OR Web.uri_query=&quot;*prototype[*&quot;) by Web.src, Web.dest, Web.http_method, Web.uri_path, Web.uri_query, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a57dc680c2" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — After three years of silence, a new jQuery prototype pollution vulnerability eme</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a57dc680c2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3556-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3556-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3556-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3556-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — After three years of silence, a new jQuery prototype pollution vulnerability eme
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3556-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — After three years of silence, a new jQuery prototype pollution vulnerability eme
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3556-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3556-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3556-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3556-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — After three years of silence, a new jQuery prototype pollution vulnerability eme ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3556-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — After three years of silence, a new jQuery prototype pollution vulnerability eme ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-3559" data-art-slug="2019-04-04-securing-bitbucket-cloud-with-snyk"
+  data-phases="c2,exploit,install,recon" data-sev="med"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Securing Bitbucket Cloud with Snyk We are excited to share that starting today, developers can import, test, fix and monitor their Bitbucket Cloud projects for open source vulnerabilities. Being developer-focused, Snyk is the only solution to provide native testing and fixing of open source dependencies for Bitbucket Cloud.  T1190 Article-specific behavioural hunt — Securing Bitbucket Cloud with Snyk">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2019-04-04-securing-bitbucket-cloud-with-snyk" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/securing-bitbucket-cloud-with-snyk/" target="_blank" rel="noopener">Securing Bitbucket Cloud with Snyk</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2019-04-04</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">We are excited to share that starting today, developers can import, test, fix and monitor their Bitbucket Cloud projects for open source vulnerabilities. Being developer-focused, Snyk is the only solution to provide native testing and fixing of open source dependencies for Bitbucket Cloud.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-3559-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-3559"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-3559-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Securing Bitbucket Cloud with Snyk</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="565b275e47" data-platforms="def,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Securing Bitbucket Cloud with Snyk</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="565b275e47" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-3559-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-3559-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-3559-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-3559-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Securing Bitbucket Cloud with Snyk
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-3559-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Securing Bitbucket Cloud with Snyk
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-3559-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3559-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3559-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3559-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Securing Bitbucket Cloud with Snyk ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-3559-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Securing Bitbucket Cloud with Snyk ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-3560" data-art-slug="2019-04-04-malicious-remote-code-execution-backdoor-discovered-in-the-p"
   data-phases="actions,c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -5395,558 +5789,6 @@ level: medium</code></pre></div>
 | ImageFileName=/\\(cmd|powershell|pwsh|bash|sh|wscript|cscript)\.exe$/i
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
     <div class="tab-content" id="art-3622-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3622-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3622-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3622-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-3622-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;jar.exe&quot;,&quot;7z.exe&quot;,&quot;7za.exe&quot;,&quot;tar.exe&quot;,&quot;unzip.exe&quot;,&quot;WinRAR.exe&quot;,&quot;Rar.exe&quot;,&quot;UnRAR.exe&quot;,&quot;cpio.exe&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3627" data-art-slug="2018-04-11-javascript-and-node-js-security-the-common-pitfalls"
-  data-phases="c2,exploit,install" data-sev="med"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="JavaScript and Node.js Security – The Common Pitfalls Guy Podjarny live hacks a Node.js application to exploit vulnerabilities in real world packages. In this edited down video from the JSKongress conference. Guy explains where some of the most common JS security pitfalls exist.  T1190 Article-specific behavioural hunt — JavaScript and Node.js Security – The Common Pitfalls">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2018-04-11-javascript-and-node-js-security-the-common-pitfalls" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/javascript-and-nodejs-security-the-common-pitfalls/" target="_blank" rel="noopener">JavaScript and Node.js Security – The Common Pitfalls</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2018-04-11</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>1 kill-chain phase detected</span>
-  </div>
-  <p class="summary">Guy Podjarny live hacks a Node.js application to exploit vulnerabilities in real world packages. In this edited down video from the JSKongress conference. Guy explains where some of the most common JS security pitfalls exist.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3627-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3627"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3627-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — JavaScript and Node.js Security – The Common Pitfalls</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="7b46f220ce" data-platforms="def,sent,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — JavaScript and Node.js Security – The Common Pitfalls</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7b46f220ce" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3627-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3627-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3627-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3627-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — JavaScript and Node.js Security – The Common Pitfalls
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3627-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — JavaScript and Node.js Security – The Common Pitfalls
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3627-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3627-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3627-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3627-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — JavaScript and Node.js Security – The Common Pitfalls ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3627-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — JavaScript and Node.js Security – The Common Pitfalls ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-3628" data-art-slug="2018-04-04-attacking-an-ftp-client-mgetting-more-than-you-bargained-for"
-  data-phases="actions,c2,exploit,install,recon" data-sev="high"
-  data-techs=""
-  data-sources="Snyk"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,network,web"
-  data-targets="linux,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="Attacking an FTP Client: MGETting more than you bargained for Snyk identified and responsibly disclosed a directory traversal vulnerability found in FTP clients that connect to malicious servers. This post contains the full details of the vulnerability and what you can do to avoid it. CVE-2018-1315  [LLM] FTP client / Hive (commons-net) overwrites Unix auth files via path-traversal LIST (CVE-2018-1315) [LLM] FTP control-channel connection followed by write to Unix system path (CVE-2018-1315 traversal chain) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Attacking an FTP Client: MGETting more than you bargained for">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2018-04-04-attacking-an-ftp-client-mgetting-more-than-you-bargained-for" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/attacking-an-ftp-client/" target="_blank" rel="noopener">Attacking an FTP Client: MGETting more than you bargained for</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2018-04-04</span>
-    <span>4 use cases</span>
-    <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Snyk identified and responsibly disclosed a directory traversal vulnerability found in FTP clients that connect to malicious servers. This post contains the full details of the vulnerability and what you can do to avoid it.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2018-1315</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-3628-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-3628"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-3628-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FTP control-channel connection followed by write to Unix system path (CVE-2018-1315 traversal chain) · Article-specific behavioural hunt — Attacking an FTP Client: MGETting more than you bargained for</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] FTP client / Hive (commons-net) overwrites Unix auth files via path-traversal LIST (CVE-2018-1315)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4d87da4be5" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">FTP client / Hive (commons-net) overwrites Unix auth files via path-traversal LIST (CVE-2018-1315)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="4d87da4be5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts an FTP-download workflow (Apache Hive COPY-FROM-FTP, commons-net, npm/node, or a CLI ftp client) writing to /etc/passwd, /etc/shadow, /etc/sudoers or */.ssh/authorized_keys instead of its intended local sync dir. Per the Snyk disclosure, a malicious FTP server returns traversal filenames (e.g. ../../../../etc/passwd) so the client escapes /var/data/sync/ and overwrites root credential/SSH files — yielding root SSH access. A data-runtime process touching these files is essentially never legitimate.
-
-Rationale: Anchors on the article&#x27;s exact attack outcome — a commons-net/Hive FTP client escaping /var/data/sync/ to overwrite /etc/passwd or root .ssh/authorized_keys — using the concrete target paths plus the FTP/Java/node runtime process names. Cross-checked Snyk&#x27;s CVE-2018-1315 advisory which confirms the authorized_keys overwrite vector.
-
-Cross-checked against:
-  • https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHEHIVE-31662
-  • https://snyk.io/blog/attacking-an-ftp-client/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Ansible/Chef/Puppet runs (often under java/python) legitimately deploying authorized_keys</li><li>cloud-init writing /root/.ssh/authorized_keys during instance bootstrap</li><li>Backup/restore tooling written in Java restoring /etc/passwd from a snapshot</li><li>ssh-copy-id automation pushing keys for service accounts</li><li>Container build steps that template /etc/passwd via a node/python entrypoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;cloud-init&quot; and InitiatingProcessCommandLine !has &quot;ansible&quot; and InitiatingProcessAccountName !in~ (&quot;puppet&quot;,&quot;chef&quot;,&quot;ansible&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the InitiatingProcessCommandLine and confirm it is an FTP-download job (look for COPY FROM FTP / commons-net / a remote FTP host); diff the written file against the last known-good copy and check whether the path resolves outside the intended download dir. 2) Contain: isolate the host, revoke/rotate any SSH keys now present in authorized_keys, and reset accounts in the modified passwd/shadow file; block the remote FTP server IP. 3) Hunt: review FTP control-channel connections (port 21) from this host, search other Hive/data nodes pulling from the same FTP source, and check for inbound SSH logons using the newly-written key.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3628-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-3628-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3628-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3628-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where (FileName in~ (&quot;passwd&quot;,&quot;shadow&quot;,&quot;sudoers&quot;) and FolderPath has &quot;/etc/&quot;)
-     or (FileName =~ &quot;authorized_keys&quot; and FolderPath has &quot;/.ssh&quot;)
-| where InitiatingProcessFileName has_any (&quot;java&quot;,&quot;hive&quot;,&quot;beeline&quot;,&quot;node&quot;,&quot;python&quot;,&quot;ftp&quot;,&quot;lftp&quot;,&quot;ncftp&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3628-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where (TargetFileName in~ (&quot;passwd&quot;,&quot;shadow&quot;,&quot;sudoers&quot;) and TargetFilePath has &quot;/etc/&quot;)
-     or (TargetFileName =~ &quot;authorized_keys&quot; and TargetFilePath has &quot;/.ssh&quot;)
-| where ActingProcessName has_any (&quot;java&quot;,&quot;hive&quot;,&quot;beeline&quot;,&quot;node&quot;,&quot;python&quot;,&quot;ftp&quot;,&quot;lftp&quot;,&quot;ncftp&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, DvcAction
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3628-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: FTP Client Overwrites Unix Auth Files via Path Traversal (CVE-2018-1315)
-id: b3f1c2a4-5d6e-4f70-8a91-2c3d4e5f6071
-status: experimental
-description: Detects an FTP-download runtime (Apache Hive commons-net, node, or CLI ftp client) writing to Unix credential/SSH files, the impact of the CVE-2018-1315 path-traversal LIST response.
-references:
-  - https://snyk.io/blog/attacking-an-ftp-client/
-  - https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHEHIVE-31662
-author: SOC Detection Engineering
-date: 2026/06/30
-tags:
-  - attack.persistence
-  - attack.t1098.004
-  - attack.t1565.001
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection_paths:
-    TargetFilename|endswith:
-      - &#x27;/etc/passwd&#x27;
-      - &#x27;/etc/shadow&#x27;
-      - &#x27;/etc/sudoers&#x27;
-      - &#x27;/.ssh/authorized_keys&#x27;
-  selection_proc:
-    Image|endswith:
-      - &#x27;/java&#x27;
-      - &#x27;/hive&#x27;
-      - &#x27;/beeline&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;/ftp&#x27;
-      - &#x27;/lftp&#x27;
-      - &#x27;/ncftp&#x27;
-  condition: selection_paths and selection_proc
-falsepositives:
-  - Configuration management (Ansible/Chef) deploying authorized_keys
-  - cloud-init bootstrap writing root SSH keys
-level: high</code></pre></div>
-    <div class="tab-content" id="art-3628-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| (TargetFileName=/\/etc\/(passwd|shadow|sudoers)$/i OR TargetFileName=/\/\.ssh\/authorized_keys$/i)
-| ContextImageFileName=/\/(java|hive|beeline|node|python[0-9.]*|ftp|lftp|ncftp)$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3628-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3628-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3628-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3628-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/sudoers&quot; OR Filesystem.file_path=&quot;*/.ssh/authorized_keys&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_guid 
-| `drop_dm_object_name(Filesystem)` 
-| join type=inner process_guid [| tstats `summariesonly` values(Processes.process_name) as process_name values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process_name=java OR Processes.process_name=hive OR Processes.process_name=beeline OR Processes.process_name=node OR Processes.process_name=ftp OR Processes.process_name=lftp OR Processes.process_name=ncftp) by Processes.process_guid | `drop_dm_object_name(Processes)`] 
-| table firstTime lastTime dest user process_name process file_path file_name count</code></pre><pre class="spl-mode-body" id="art-3628-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/sudoers&quot; OR Filesystem.file_path=&quot;*/.ssh/authorized_keys&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_guid 
-| `drop_dm_object_name(Filesystem)` 
-| join type=inner process_guid [| tstats summariesonly=false values(Processes.process_name) as process_name values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process_name=java OR Processes.process_name=hive OR Processes.process_name=beeline OR Processes.process_name=node OR Processes.process_name=ftp OR Processes.process_name=lftp OR Processes.process_name=ncftp) by Processes.process_guid | `drop_dm_object_name(Processes)`] 
-| table firstTime lastTime dest user process_name process file_path file_name count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="041bb0941a" data-platforms="def,falcon,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">FTP control-channel connection followed by write to Unix system path (CVE-2018-1315 traversal chain)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="041bb0941a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates an outbound FTP control connection (TCP/21) from a host with a write to a sensitive system path (/etc/passwd, /etc/shadow, */.ssh/authorized_keys) on that same host within 5 minutes. This captures the full CVE-2018-1315 exploitation arc — client connects to a malicious FTP server, then a traversal filename from the LIST/MGET response lands a downloaded file in a system directory it should never touch.
-
-Rationale: Uses the article&#x27;s two-event signature — an FTP session (port 21, the only control channel commons-net opens) immediately preceding a write to a system path outside the intended sync dir — to catch the traversal exploit even when the writing process name is unusual. Confirmed against Snyk&#x27;s CVE-2018-1315 advisory describing the connect-then-overwrite-authorized_keys flow.
-
-Cross-checked against:
-  • https://security.snyk.io/vuln/SNYK-JAVA-ORGAPACHEHIVE-31662
-  • https://snyk.io/blog/attacking-an-ftp-client/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimate config-sync job that fetches SSH keys or system config over FTP and intentionally writes to /etc or ~/.ssh</li><li>FTP-based backup restore that repopulates /etc/passwd on a rebuilt host</li><li>Monitoring agents that open port-21 health checks while an unrelated admin edits /etc/sudoers in the same 5-minute window (coincidental correlation)</li><li>Internal mirror hosts that pull OS config bundles via FTP during provisioning</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FtpProc !in~ (&quot;rsync&quot;,&quot;duplicity&quot;) and FtpCmd !has &quot;backup-restore&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the FTP RemoteIP is an expected data source; inspect the written file&#x27;s contents and resolved path for traversal artifacts (file landing above the configured download directory). 2) Contain: isolate the host, rotate any SSH keys/accounts in the modified file, and add the FTP server IP to a blocklist pending review. 3) Hunt: enumerate every host that connected to the same FTP IP, check whether their downloaded files also escaped the sync dir, and review SSH/console logons that used credentials matching the overwritten files.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3628-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-3628-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3628-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let Window = 5m;
-let FtpConn = DeviceNetworkEvents
-    | where Timestamp &gt; ago(7d)
-    | where RemotePort == 21
-    | project NetTime = Timestamp, DeviceId, RemoteIP, FtpProc = InitiatingProcessFileName, FtpCmd = InitiatingProcessCommandLine;
-DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where (FileName in~ (&quot;passwd&quot;,&quot;shadow&quot;,&quot;sudoers&quot;) and FolderPath has &quot;/etc/&quot;)
-     or (FileName =~ &quot;authorized_keys&quot; and FolderPath has &quot;/.ssh&quot;)
-| join kind=inner FtpConn on DeviceId
-| where Timestamp between (NetTime .. NetTime + Window)
-| project FileWriteTime = Timestamp, NetTime, DeviceName, DeviceId, InitiatingProcessFileName, FolderPath, FileName, RemoteIP, FtpProc, FtpCmd
-| order by FileWriteTime desc</code></pre></div>
-    <div class="tab-content" id="art-3628-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 5m;
-let FtpConn = ImNetworkSession
-    | where TimeGenerated &gt; ago(7d)
-    | where DstPortNumber == 21
-    | project NetTime = TimeGenerated, DvcHostname, DstIpAddr;
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where (TargetFileName in~ (&quot;passwd&quot;,&quot;shadow&quot;,&quot;sudoers&quot;) and TargetFilePath has &quot;/etc/&quot;)
-     or (TargetFileName =~ &quot;authorized_keys&quot; and TargetFilePath has &quot;/.ssh&quot;)
-| join kind=inner FtpConn on DvcHostname
-| where TimeGenerated between (NetTime .. NetTime + Window)
-| project FileWriteTime = TimeGenerated, NetTime, DvcHostname, ActingProcessName, ActingProcessCommandLine, TargetFilePath, DstIpAddr
-| order by FileWriteTime desc</code></pre></div>
-    <div class="tab-content" id="art-3628-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| (TargetFileName=/\/etc\/(passwd|shadow|sudoers)$/i OR TargetFileName=/\/\.ssh\/authorized_keys$/i)
-| join({#event_simpleName=NetworkConnectIP4 RemotePort=21}, field=aid, include=[RemoteAddressIP4, RemotePort])
-| groupBy([aid, ComputerName, TargetFileName, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-3628-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3628-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3628-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3628-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as fileTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/sudoers&quot; OR Filesystem.file_path=&quot;*/.ssh/authorized_keys&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user _time span=1s 
-| `drop_dm_object_name(Filesystem)` 
-| join type=inner dest [| tstats `summariesonly` count from datamodel=Network_Traffic where All_Traffic.dest_port=21 by All_Traffic.src _time span=1s | `drop_dm_object_name(All_Traffic)` | rename src as dest, _time as net_time, count as ftp_conns] 
-| eval delta=_time-net_time | where delta&gt;=0 AND delta&lt;=300 
-| table fileTime net_time delta dest user file_path file_name</code></pre><pre class="spl-mode-body" id="art-3628-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as fileTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/sudoers&quot; OR Filesystem.file_path=&quot;*/.ssh/authorized_keys&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user _time span=1s 
-| `drop_dm_object_name(Filesystem)` 
-| join type=inner dest [| tstats summariesonly=false count from datamodel=Network_Traffic where All_Traffic.dest_port=21 by All_Traffic.src _time span=1s | `drop_dm_object_name(All_Traffic)` | rename src as dest, _time as net_time, count as ftp_conns] 
-| eval delta=_time-net_time | where delta&gt;=0 AND delta&lt;=300 
-| table fileTime net_time delta dest user file_path file_name</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3628-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3628-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2018-1315&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3628-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2018-1315&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-3628-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3628-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3628-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3628-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2018-1315&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-3628-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2018-1315&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="a92208482e" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Attacking an FTP Client: MGETting more than you bargained for</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a92208482e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-3628-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-3628-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-3628-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Attacking an FTP Client: MGETting more than you bargained for
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;autoexec.bat&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/var/data/sync/&quot;, &quot;/var/data/sync/passwd&quot;, &quot;/etc/passwd&quot;, &quot;/var/data/sync/../../../../etc/passwd&quot;, &quot;/home/root/.ssh/authorized_keys&quot;) or FileName in~ (&quot;autoexec.bat&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-3628-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Attacking an FTP Client: MGETting more than you bargained for
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;autoexec.bat&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/var/data/sync/&quot;, &quot;/var/data/sync/passwd&quot;, &quot;/etc/passwd&quot;, &quot;/var/data/sync/../../../../etc/passwd&quot;, &quot;/home/root/.ssh/authorized_keys&quot;) or FileName in~ (&quot;autoexec.bat&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-3628-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-3628-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-3628-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-3628-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Attacking an FTP Client: MGETting more than you bargained for ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;autoexec.bat&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/var/data/sync/*&quot; OR Filesystem.file_path=&quot;*/var/data/sync/passwd*&quot; OR Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/var/data/sync/../../../../etc/passwd*&quot; OR Filesystem.file_path=&quot;*/home/root/.ssh/authorized_keys*&quot; OR Filesystem.file_name IN (&quot;autoexec.bat&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-3628-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Attacking an FTP Client: MGETting more than you bargained for ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;autoexec.bat&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/var/data/sync/*&quot; OR Filesystem.file_path=&quot;*/var/data/sync/passwd*&quot; OR Filesystem.file_path=&quot;*/etc/passwd*&quot; OR Filesystem.file_path=&quot;*/var/data/sync/../../../../etc/passwd*&quot; OR Filesystem.file_path=&quot;*/home/root/.ssh/authorized_keys*&quot; OR Filesystem.file_name IN (&quot;autoexec.bat&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

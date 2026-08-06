@@ -47,13 +47,12 @@ Token jack…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1102** — Web Service
-- **T1496** — Resource Hijacking
-- **T1552.001** — Credentials In Files
-- **T1528** — Steal Application Access Token
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1562.008** — Impair Defenses: Disable or Modify Cloud Logs
+- **T1102** — Web Service
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1562.008** — Impair Defenses: Disable or Modify Cloud Logs
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -61,13 +60,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound connection to AI token-jacking transfer-station IPs (Unit 42 IOC set)
+### Outbound traffic to known AI token-jacking transfer-station infrastructure (Unit42 IPs)
 
-`UC_0_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("3.235.109.125","116.105.166.148","172.96.142.186","38.46.219.166") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("3.235.109.125","116.105.166.148","172.96.142.186","38.46.219.166") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
 **Defender KQL:**
@@ -75,45 +74,26 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("3.235.109.125","116.105.166.148","172.96.142.186","38.46.219.166")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Attempts=count(), Ports=make_set(RemotePort,15) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count() by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort
 | order by LastSeen desc
 ```
 
-### npm/node lifecycle process reading cloud credential & token stores (Shai-Hulud/Miasma)
+### Transfer-station client fingerprint: Go-http-client/2.0,gzip(gfe) user-agent in web egress
 
-`UC_0_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*/.aws/credentials","*/.npmrc","*/.ssh/*","*/.git-credentials","*/.config/gcloud/*","*/.docker/config.json") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | search process_name IN ("node.exe","node","npm*","yarn*","pnpm*") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","node")
-| where FolderPath has_any (@"\.aws\credentials", @"\.npmrc", @"\.ssh\", @"\.git-credentials", @"\.config\gcloud", @"\.docker\config.json", "/.aws/credentials", "/.npmrc", "/.ssh/", "/.git-credentials", "/.config/gcloud")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ActionType
-| order by Timestamp desc
-```
-
-### Go-http-client User-Agent calling frontier AI API endpoints (transfer-station proxy)
-
-`UC_0_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_user_agent="Go-http-client*" AND Web.url IN ("*api.openai.com*","*api.anthropic.com*","*generativelanguage.googleapis.com*","*api.mistral.ai*","*api.cohere.ai*","*api.cohere.com*") by Web.src Web.user Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_user_agent="Go-http-client/2.0,gzip(gfe)" by Web.src Web.dest Web.dest_ip Web.url_domain Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
 ```
 
-### Azure AI key regeneration paired with logging/alert/budget teardown by same caller
+### AI resource key creation paired with logging/alert teardown in cloud control plane
 
-`UC_0_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`azure_activity` (operationName.value IN ("Microsoft.CognitiveServices/accounts/regenerateKey/action","Microsoft.CognitiveServices/accounts/listKeys/action","Microsoft.Insights/diagnosticSettings/delete","Microsoft.Insights/metricAlerts/delete","Microsoft.Insights/scheduledQueryRules/delete","Microsoft.Consumption/budgets/delete")) (activityStatusValue="Success" OR activityStatusValue="Succeeded" OR activityStatusValue="Accepted") | stats values(operationName.value) as ops dc(operationName.value) as opTypes min(_time) as firstTime max(_time) as lastTime by caller callerIpAddress resourceGroupName | where opTypes>=2 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true allow_old_summaries=true values(All_Changes.command) as commands min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where (All_Changes.object="*CognitiveServices*" OR All_Changes.command IN ("*regenerateKey*","*diagnosticSettings/delete*","*ModelInvocationLoggingConfiguration*","CreateAccessKey")) by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(Change)` | where match(commands,"(?i)(regenerateKey|CreateAccessKey)") AND match(commands,"(?i)(diagnosticSettings/delete|DeleteModelInvocationLoggingConfiguration)") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -390,4 +370,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
