@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2615 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -67,7 +67,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 70478 flowise unauthenticated oauth2 ](./2026-08-04/ghsa-critical-cve-2026-70478-flowise-unauthenticated-oauth2-.md)
 - [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
 - [greatness phaas adds device code phishing to bypass mfa and ](./2026-08-04/greatness-phaas-adds-device-code-phishing-to-bypass-mfa-and-.md)
-- [hotel wi fi attacks use custom malware to breach microsoft 3](./2026-08-04/hotel-wi-fi-attacks-use-custom-malware-to-breach-microsoft-3.md)
 - [how legitimate cloud platforms enable phishers to bypass mfa](./2026-08-04/how-legitimate-cloud-platforms-enable-phishers-to-bypass-mfa.md)
 - [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)

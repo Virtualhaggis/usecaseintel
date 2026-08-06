@@ -27,11 +27,12 @@ Attackers broke into an organization's Oracle database through a SQL injection f
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
-- **T1505.001** — Server Software Component: SQL Stored Procedures
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1003.002** — OS Credential Dumping: Security Account Manager
-- **T1003.004** — OS Credential Dumping: LSA Secrets
-- **T1074.001** — Data Staged: Local Data Staging
+- **T1059.003** — Windows Command Shell
+- **T1003.002** — Security Account Manager
+- **T1003.004** — LSA Secrets
+- **T1074.001** — Local Data Staging
+- **T1057** — Process Discovery
+- **T1071.001** — Web Protocols
 
 ## Kill chain phases observed
 
@@ -39,64 +40,78 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Oracle database engine spawning Windows command shell (khunt KhuntCmd)
+### Oracle DB engine (oracle.exe) spawning OS command shell / LOLBins
 
-`UC_5_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_6_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("oracle.exe","extproc.exe","extjob.exe","tnslsnr.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","reg.exe","esentutl.exe","tasklist.exe","cscript.exe","wscript.exe","net.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("oracle.exe","extproc.exe","tnslsnr.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","reg.exe","esentutl.exe","tasklist.exe","whoami.exe","cscript.exe","wscript.exe","net.exe","net1.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("oracle.exe","extproc.exe","extjob.exe","tnslsnr.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","whoami.exe","reg.exe","esentutl.exe","tasklist.exe","cscript.exe","wscript.exe","net.exe")
-| project Timestamp, DeviceName, AccountName, ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ ("oracle.exe","extproc.exe","tnslsnr.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","reg.exe","esentutl.exe","tasklist.exe","whoami.exe","cscript.exe","wscript.exe","net.exe","net1.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessIntegrityLevel, SHA256
 | order by Timestamp desc
 ```
 
-### Registry hive (SAM/SECURITY/SYSTEM) dump staged in F:\Oracle via reg.exe / esentutl.exe
+### Registry hive theft via reg.exe/esentutl.exe from Oracle-compromised host
 
-`UC_5_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("reg.exe","esentutl.exe")) AND (Processes.process="*save*" OR Processes.process="*/vss*" OR Processes.process="* /y *") AND (Processes.process="*sam*" OR Processes.process="*security*" OR Processes.process="*system*" OR Processes.process="*Oracle*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=reg.exe AND Processes.process="*save*" AND (Processes.process="*security*" OR Processes.process="*system*" OR Processes.process="*sam*")) OR (Processes.process_name=esentutl.exe AND (Processes.process="*security*" OR Processes.process="*system*" OR Processes.process="*sam*"))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName =~ "reg.exe" and ProcessCommandLine has "save" and ProcessCommandLine has_any ("sam","security","system"))
-    or (FileName =~ "esentutl.exe" and ProcessCommandLine has_any ("/vss","/y") and ProcessCommandLine has_any ("sam","security","system","config"))
-    or (ProcessCommandLine has @"F:\Oracle" and ProcessCommandLine has_any ("sam","security","system"))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where (FileName =~ "reg.exe" and ProcessCommandLine has "save" and ProcessCommandLine has_any ("security","system","sam"))
+    or (FileName =~ "esentutl.exe" and ProcessCommandLine has_any ("security","system","sam"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessIntegrityLevel, SHA256
 | order by Timestamp desc
 ```
 
-### khunt file artifacts: khunttasks.txt and hive files staged under F:\Oracle
+### khunt filesystem artifacts: khunttasks.txt and staged registry hives
 
-`UC_5_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="khunttasks.txt" OR Filesystem.file_name="khunt*" OR Filesystem.file_name="Khunt*" OR (Filesystem.file_path="*Oracle*" AND (Filesystem.file_name="SAM" OR Filesystem.file_name="SECURITY" OR Filesystem.file_name="SYSTEM"))) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="khunttasks.txt" OR (Filesystem.file_name IN ("SAM","SECURITY","SYSTEM") AND Filesystem.process_name IN ("reg.exe","esentutl.exe","cmd.exe"))) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
 | where FileName =~ "khunttasks.txt"
-    or FileName startswith "khunt"
-    or FileName startswith "Khunt"
-    or (FolderPath has @"F:\Oracle" and FileName in~ ("SAM","SECURITY","SYSTEM"))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+    or (InitiatingProcessFileName in~ ("reg.exe","esentutl.exe","cmd.exe") and FileName in~ ("SAM","SECURITY","SYSTEM"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Communication with khunt attacker infrastructure 178.162.151.229
+
+`UC_6_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="178.162.151.229" OR All_Traffic.src_ip="178.162.151.229") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.dvc | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "178.162.151.229"
+| project Timestamp, DeviceName, ActionType, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -307,7 +322,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Attackers Compile khunt Inside Oracle to Turn SQL Injection Into Windows SYSTEM
 
-`UC_5_6` · phase: **exploit** · confidence: **High**
+`UC_6_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -364,4 +379,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

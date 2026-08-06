@@ -1,235 +1,3 @@
-<article class="card" id="art-157" data-art-slug="2026-07-24-ghsa-critical-ghsa-q6x4-v3qx-85qw-budibase-sql-injection-via"
-  data-phases="actions,c2,exploit,install" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="vcs,windows"
-  data-uc-count="2" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] GHSA-q6x4-v3qx-85qw: Budibase: SQL Injection via `multipleStatements: true` Budibase: SQL Injection via `multipleStatements: true`  T1190 [LLM] Stacked SQL-injection payload against Budibase datasource query API (multipleStatements) [LLM] MySQL server (mysqld) writes exfil file via SELECT INTO OUTFILE on Budibase DB host">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-24-ghsa-critical-ghsa-q6x4-v3qx-85qw-budibase-sql-injection-via" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-q6x4-v3qx-85qw" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-q6x4-v3qx-85qw: Budibase: SQL Injection via `multipleStatements: true`</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-24</span>
-    <span>2 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Budibase: SQL Injection via `multipleStatements: true`</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-157-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-157"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-157-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Stacked SQL-injection payload against Budibase datasource query API (multipleStatements)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] MySQL server (mysqld) writes exfil file via SELECT INTO OUTFILE on Budibase DB host</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="d854ba6555" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">Stacked SQL-injection payload against Budibase datasource query API (multipleStatements)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d854ba6555" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests to Budibase&#x27;s datasource/query REST endpoints carrying stacked SQL (a semicolon-separated second statement) with destructive/exfil keywords such as DROP TABLE, DELETE, GRANT ALL or INTO OUTFILE. This is article-specific because the vuln (GHSA-q6x4-v3qx-85qw) is that @budibase/server &lt;=3.38.1 sets multipleStatements:true, so a single injected `;` executes a second attacker-chosen statement.
-
-Rationale: Uses the two invariant tokens of this vuln: the Budibase query API path (/api/queries, /api/datasources) and the stacked-statement pattern (`;` + DROP TABLE / INTO OUTFILE / GRANT ALL) that multipleStatements:true uniquely allows. Cross-checked against the GitLab advisory mirror and OffSeq radar entry.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/npm/@budibase/server/GHSA-q6x4-v3qx-85qw/
-  • https://radar.offseq.com/threat/server-budibase-sql-injection-via-multiplestatements-true-3b00631cb39a1028
-  • https://advisories.gitlab.com/npm/budibase/GHSA-qqf5-x7mj-v43p/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners / DAST tools (Burp, sqlmap, Nessus) probing the Budibase instance in an authorized pentest</li><li>Legitimate Budibase query builder where an admin genuinely writes a query containing the word DELETE or DROP as part of app logic</li><li>WAF learning/tuning mode replaying captured payloads</li><li>A user field legitimately containing text like &#x27;grant all access&#x27; being URL-encoded into the request</li><li>Automated regression tests that exercise datasource CRUD endpoints</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(SourceIP in (&quot;10.0.0.0/8&quot;)) // exclude sanctioned internal scanner ranges; replace with your DAST subnet</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request from the WAF/proxy log and confirm the second statement after `;` is attacker-controlled (DROP/DELETE/OUTFILE/GRANT) rather than app-legitimate text; note source IP, auth state and whether it hit /api/queries/preview. 2) Contain: block the source IP at the WAF, disable the affected MySQL datasource in Budibase, and upgrade @budibase/server past 3.38.1 (or hot-patch multipleStatements:false in packages/server/src/integrations/mysql.ts). 3) Hunt: review MySQL general/audit logs for stacked statements from the Budibase DB user, and run UC-2 to check whether mysqld wrote any INTO OUTFILE dumps to /tmp or the web root.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-157-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-157-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-157-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-157-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let BudibasePaths = dynamic([&quot;/api/queries&quot;,&quot;/api/datasources&quot;]);
-let StackedSqli = dynamic([&quot;DROP TABLE&quot;,&quot;INTO OUTFILE&quot;,&quot;GRANT ALL&quot;,&quot;; DELETE&quot;,&quot;;DELETE&quot;,&quot;; UPDATE&quot;,&quot;; DROP&quot;]);
-union isfuzzy=true
-(CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestURL has_any (BudibasePaths) or DestinationServiceName has &quot;budibase&quot;
-| where RequestURL has_any (StackedSqli) or Message has_any (StackedSqli) or RequestContext has_any (StackedSqli)
-| project TimeGenerated, SourceIP, DestinationIP, RequestURL, RequestMethod, DeviceProduct, Activity, Message),
-(W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem has_any (BudibasePaths)
-| where csUriQuery has_any (StackedSqli)
-| project TimeGenerated, SourceIP = cIP, DestinationIP = Computer, RequestURL = strcat(csUriStem, &quot;?&quot;, csUriQuery), RequestMethod = csMethod, DeviceProduct = &quot;IIS&quot;, Activity = tostring(scStatus), Message = csUserAgent)
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-157-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Stacked SQL Injection Against Budibase Datasource Query API
-id: 6f0a1c2d-8b4e-4a1f-9c3a-2d5e7f1b9a44
-description: Detects HTTP requests to Budibase query/datasource endpoints containing a stacked SQL statement with destructive or exfil keywords, exploiting multipleStatements:true (GHSA-q6x4-v3qx-85qw, @budibase/server &lt;=3.38.1).
-references:
-  - https://github.com/advisories/GHSA-q6x4-v3qx-85qw
-  - https://advisories.gitlab.com/npm/@budibase/server/GHSA-q6x4-v3qx-85qw/
-author: SOC Detection Engineering
-date: 2026/07/27
-tags:
-  - attack.t1190
-logsource:
-  category: webserver
-detection:
-  selection_path:
-    cs-uri-stem|contains:
-      - &#x27;/api/queries&#x27;
-      - &#x27;/api/datasources&#x27;
-  selection_payload:
-    cs-uri|contains:
-      - &#x27;DROP TABLE&#x27;
-      - &#x27;INTO OUTFILE&#x27;
-      - &#x27;GRANT ALL&#x27;
-      - &#x27;; DELETE&#x27;
-      - &#x27;;DELETE&#x27;
-      - &#x27;; DROP&#x27;
-  condition: selection_path and selection_payload
-level: high</code></pre></div>
-    <div class="tab-content" id="art-157-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-157-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-157-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-157-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) (Web.url=&quot;*/api/queries*&quot; OR Web.url=&quot;*/api/datasources*&quot; OR Web.uri_path=&quot;*/api/queries*&quot; OR Web.uri_path=&quot;*/api/datasources*&quot;) (Web.url=&quot;*;*DROP TABLE*&quot; OR Web.url=&quot;*;*DELETE *&quot; OR Web.url=&quot;*INTO OUTFILE*&quot; OR Web.url=&quot;*GRANT ALL*&quot; OR Web.uri_query=&quot;*;*DROP TABLE*&quot; OR Web.uri_query=&quot;*INTO OUTFILE*&quot;) by Web.src Web.dest Web.http_method Web.url Web.uri_path Web.status
-| `drop_dm_object_name(Web)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-157-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) (Web.url=&quot;*/api/queries*&quot; OR Web.url=&quot;*/api/datasources*&quot; OR Web.uri_path=&quot;*/api/queries*&quot; OR Web.uri_path=&quot;*/api/datasources*&quot;) (Web.url=&quot;*;*DROP TABLE*&quot; OR Web.url=&quot;*;*DELETE *&quot; OR Web.url=&quot;*INTO OUTFILE*&quot; OR Web.url=&quot;*GRANT ALL*&quot; OR Web.uri_query=&quot;*;*DROP TABLE*&quot; OR Web.uri_query=&quot;*INTO OUTFILE*&quot;) by Web.src Web.dest Web.http_method Web.url Web.uri_path Web.status
-| `drop_dm_object_name(Web)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0ec6d04ffc" data-platforms="def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">MySQL server (mysqld) writes exfil file via SELECT INTO OUTFILE on Budibase DB host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0ec6d04ffc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the mysqld process creating files outside its data directory — the server-side footprint of a successful SELECT INTO OUTFILE data-theft chain that the Budibase multipleStatements SQL injection enables. Article-specific because the advisory explicitly lists &#x27;Exfiltrate data via SELECT INTO OUTFILE&#x27; as an impact, and mysqld writing to /tmp, a web root, or Temp is anomalous for a normal DB workload.
-
-Rationale: Pivots on the advisory&#x27;s named exfil primitive (SELECT INTO OUTFILE) by detecting mysqld itself creating files outside /var/lib/mysql - a behaviour that normal Budibase-driven MySQL workloads never exhibit. Excludes the datadir to keep the signal clean.
-
-Cross-checked against:
-  • https://advisories.gitlab.com/npm/@budibase/server/GHSA-q6x4-v3qx-85qw/
-  • https://radar.offseq.com/threat/server-budibase-sql-injection-via-multiplestatements-true-3b00631cb39a1028</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DBA using SELECT INTO OUTFILE for a legitimate scheduled data export to a reporting directory</li><li>mysqldump or backup tooling writing dumps to /tmp or a staging path</li><li>MySQL error/slow-query logs configured to write outside the datadir</li><li>Application code that legitimately exports CSVs via the DB engine</li><li>Migration jobs writing .sql files during a maintenance window</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(FolderPath has_any (&quot;/var/backups/&quot;, &quot;/opt/mysql-exports/&quot;)) // exclude sanctioned DBA export/backup directories</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the created file, open it read-only to confirm it contains dumped table rows, and correlate its creation time against UC-1 WAF hits / the Budibase datasource user&#x27;s MySQL query log. 2) Contain: preserve then remove the exfil file, disable the Budibase MySQL datasource, set secure_file_priv to a locked-down path (or NULL to disable OUTFILE), and revoke FILE privilege from the Budibase DB account. 3) Hunt: search web-server and proxy egress for retrieval of the written file, review MySQL logs for other stacked statements from the same session, and confirm no DROP/DELETE (data destruction) statements executed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-157-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-157-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-157-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-157-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-157-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-157-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;mysqld.exe&quot;,&quot;mysqld&quot;)
-| where ActionType == &quot;FileCreated&quot;
-| where FolderPath has_any (@&quot;\Temp\&quot;, &quot;/tmp/&quot;, @&quot;\inetpub\&quot;, &quot;/var/www/&quot;, @&quot;\www\&quot;) or FileName endswith &quot;.csv&quot; or FileName endswith &quot;.sql&quot; or FileName endswith &quot;.txt&quot;
-| where not(FolderPath has_any (&quot;/var/lib/mysql/&quot;, @&quot;\MySQL\&quot;, @&quot;\Data\&quot;))
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessId, FolderPath, FileName, InitiatingProcessCommandLine
-| sort by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-157-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has_any (&quot;mysqld&quot;,&quot;mysqld.exe&quot;)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where TargetFilePath has_any (&quot;/tmp/&quot;,&quot;/var/www/&quot;,&quot;\\Temp\\&quot;,&quot;\\inetpub\\&quot;) or TargetFileName endswith &quot;.csv&quot; or TargetFileName endswith &quot;.sql&quot; or TargetFileName endswith &quot;.txt&quot;
-| where not(TargetFilePath has_any (&quot;/var/lib/mysql/&quot;,&quot;\\Data\\&quot;))
-| project TimeGenerated, DvcHostname, ActingProcessName, TargetFilePath, TargetFileName, ActingProcessCommandLine
-| sort by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-157-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: MySQL Server Writes File Outside Data Directory (SELECT INTO OUTFILE Exfil)
-id: b2e7c9d4-1f6a-4c8b-a0d2-7e3f5a9c1b62
-description: Detects the mysqld process creating a file in /tmp, a web root, or Temp - the server-side artifact of SELECT INTO OUTFILE data theft following the Budibase multipleStatements SQL injection (GHSA-q6x4-v3qx-85qw).
-references:
-  - https://github.com/advisories/GHSA-q6x4-v3qx-85qw
-  - https://advisories.gitlab.com/npm/@budibase/server/GHSA-q6x4-v3qx-85qw/
-author: SOC Detection Engineering
-date: 2026/07/27
-tags:
-  - attack.t1005
-  - attack.t1190
-logsource:
-  category: file_event
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;/mysqld&#x27;
-      - &#x27;\mysqld.exe&#x27;
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;/tmp/&#x27;
-      - &#x27;/var/www/&#x27;
-      - &#x27;\Temp\&#x27;
-      - &#x27;\inetpub\&#x27;
-  filter_datadir:
-    TargetFilename|contains:
-      - &#x27;/var/lib/mysql/&#x27;
-      - &#x27;\Data\&#x27;
-  condition: selection_proc and selection_path and not filter_datadir
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-157-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/mysqld(\.exe)?$/i
-| regex(&quot;(/tmp/|/var/www/|\\\\Temp\\\\|\\\\inetpub\\\\|\\.csv$|\\.sql$|\\.txt$)&quot;, field=TargetFileName)
-| NOT regex(&quot;(/var/lib/mysql/|\\\\Data\\\\)&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())
-| sort(count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-157-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-157-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-157-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-157-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name IN (&quot;mysqld.exe&quot;,&quot;mysqld&quot;) AND (Endpoint.Filesystem.file_path=&quot;*/tmp/*&quot; OR Endpoint.Filesystem.file_path=&quot;*/var/www/*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\Temp\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\inetpub\\*&quot; OR Endpoint.Filesystem.file_name=&quot;*.csv&quot; OR Endpoint.Filesystem.file_name=&quot;*.sql&quot; OR Endpoint.Filesystem.file_name=&quot;*.txt&quot;) AND NOT (Endpoint.Filesystem.file_path=&quot;*/var/lib/mysql/*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\MySQL\\*\\Data\\*&quot;) by Endpoint.Filesystem.dest Endpoint.Filesystem.process_name Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-157-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.process_name IN (&quot;mysqld.exe&quot;,&quot;mysqld&quot;) AND (Endpoint.Filesystem.file_path=&quot;*/tmp/*&quot; OR Endpoint.Filesystem.file_path=&quot;*/var/www/*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\Temp\\*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\inetpub\\*&quot; OR Endpoint.Filesystem.file_name=&quot;*.csv&quot; OR Endpoint.Filesystem.file_name=&quot;*.sql&quot; OR Endpoint.Filesystem.file_name=&quot;*.txt&quot;) AND NOT (Endpoint.Filesystem.file_path=&quot;*/var/lib/mysql/*&quot; OR Endpoint.Filesystem.file_path=&quot;*\\MySQL\\*\\Data\\*&quot;) by Endpoint.Filesystem.dest Endpoint.Filesystem.process_name Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-158" data-art-slug="2026-07-24-ghsa-critical-cve-2026-62379-openam-unauthenticated-remote-c"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -10335,6 +10103,427 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-185" data-art-slug="2026-07-21-ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-20896: Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER` Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER` CVE-2026-20896 T1190 [LLM] Client-supplied X-WEBAUTH-USER header reaching Gitea (CVE-2026-20896 impersonation) [LLM] Privileged Gitea action correlated with client-supplied X-WEBAUTH-USER (CVE-2026-20896) [LLM] Gitea container started with reverse-proxy auth exposing permissive trusted-proxies (CVE-2026-20896) Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-20896-gitea-docker-image-reverse-prox" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-f75j-4cw6-rmx4" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-20896: Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER`</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-21</span>
+    <span>5 use cases</span>
+    <span>1 technique</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Gitea Docker image: `REVERSE_PROXY_TRUSTED_PROXIES = *` default lets any source IP impersonate any user via `X-WEBAUTH-USER`</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-20896</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">159.26.98.241</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-185-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-185"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-185-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Client-supplied X-WEBAUTH-USER header reaching Gitea (CVE-2026-20896 impersonation)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Gitea container started with reverse-proxy auth exposing permissive trusted-proxies (CVE-2026-20896)</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Privileged Gitea action correlated with client-supplied X-WEBAUTH-USER (CVE-2026-20896)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="86e622177b" data-platforms="def,falcon,sent,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Client-supplied X-WEBAUTH-USER header reaching Gitea (CVE-2026-20896 impersonation)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="86e622177b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts requests carrying an X-WEBAUTH-USER header from a source IP outside the documented trusted-proxy scope (loopback 127.0.0.0/8, ::1), or any direct connection to the Gitea container port that bypasses the intended authenticating reverse proxy. This is the raw exploitation primitive of CVE-2026-20896 where the vulnerable Docker image default REVERSE_PROXY_TRUSTED_PROXIES=* trusts the header from any source, letting an attacker be authenticated as any user with no password or cookie.
+
+Rationale: Uses the exact exploit header string &#x27;X-WEBAUTH-USER&#x27; and the documented safe-default trust scope (127.0.0.0/8, ::1) from the advisory: any non-loopback source presenting the header, or any direct connection to Gitea&#x27;s default port 3000 bypassing the proxy, is the CVE-2026-20896 primitive. Corroborated by BleepingComputer and the public PoC checker.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+  • https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-auth-bypass-in-gitea-docker-image/
+  • https://github.com/szybnev/cve-2026-20896-gitea-poc
+  • https://thehackernews.com/2026/07/threat-actors-probe-gitea-docker-flaw.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Network_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The legitimate authenticating reverse proxy itself injecting X-WEBAUTH-USER from an internal/known appliance IP (should be allow-listed)</li><li>Health-check or monitoring tooling that reaches port 3000 directly without going through the proxy</li><li>Load balancer/service mesh sidecar terminating on a non-loopback interface</li><li>Security scanners (Nessus/Qualys) sending the header during authenticated-bypass testing</li><li>Migration/replication jobs that connect container-to-container</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP != &quot;&lt;insert your reverse-proxy appliance IP&gt;&quot;  // supply your proxy IP to suppress the legitimate injector</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the source IP is NOT your authenticating reverse-proxy appliance; check whether the impersonated username in the header is a privileged account (admin, gitea_admin). Correlate with Gitea audit events in the same window. Step 2 (contain): Set REVERSE_PROXY_TRUSTED_PROXIES to 127.0.0.0/8,::1/128 (or the real proxy CIDR) and restart; upgrade the image to &gt;=1.26.3; block direct external reach to port 3000 at the network layer. Step 3 (hunt): Pivot on the impersonated usernames for token creation, SSH-key additions, repo clones, and secret/webhook reads performed by those accounts during the exposure window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-185-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where InitiatingProcessFileName has &quot;gitea&quot;
+| where LocalPort == 3000
+| where RemoteIP !startswith &quot;127.&quot; and RemoteIP != &quot;::1&quot;
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(24h)
+| where ProcessName in~ (&quot;nginx&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;gitea&quot;,&quot;gitea-web&quot;)
+| where SyslogMessage has &quot;x-webauth-user&quot;
+| extend webauth_user = extract(&quot;(?i)x-webauth-user:? *([^ ]+)&quot;, 1, SyslogMessage)
+| extend clientip = extract(&quot;([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)&quot;, 1, SyslogMessage)
+| where isnotempty(webauth_user)
+| where isnotempty(clientip) and clientip !startswith &quot;127.&quot; and clientip != &quot;::1&quot;
+| summarize hits=count(), firstseen=min(TimeGenerated), lastseen=max(TimeGenerated), users=make_set(webauth_user, 20) by clientip, ProcessName, Computer
+| order by hits desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ConnectionDirection=1
+| LocalPort=3000
+| ContextImageFileName=/gitea/i
+| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, RemoteAddressIP4, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-185-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>index=web (sourcetype=nginx:plus:access OR sourcetype=apache:access OR sourcetype=gitea)
+| search _raw=&quot;*x-webauth-user*&quot;
+| rex field=_raw &quot;(?i)x-webauth-user:? *(?&lt;webauth_user&gt;[^ ]+)&quot;
+| rex field=_raw &quot;(?&lt;client_ip&gt;[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)&quot;
+| where isnotnull(webauth_user) AND NOT cidrmatch(&quot;127.0.0.0/8&quot;, client_ip)
+| stats count min(_time) AS firstTime max(_time) AS lastTime values(webauth_user) AS impersonated_users by client_ip, host, sourcetype
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4760ab5026" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Privileged Gitea action correlated with client-supplied X-WEBAUTH-USER (CVE-2026-20896)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4760ab5026" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates privileged Gitea audit events (user deletion, access-token creation, admin actions, collaborator/permission changes, password resets) against reverse-proxy access logs showing an X-WEBAUTH-USER header for the same actor from an untrusted (non-loopback) source IP within a short window. This turns the CVE-2026-20896 header-spoof primitive into a confirmed privilege-escalation / account-impersonation event rather than a probe.
+
+Rationale: Ties the article&#x27;s impact statement (&#x27;any source IP impersonate any user&#x27;, admin accounts the obvious target) to concrete Gitea audit action names (token creation, user/repo deletion, collaborator changes) joined to the X-WEBAUTH-USER header value and a non-loopback client IP — a high-fidelity confirmation of exploitation, not just a scan. Corroborated by TheHackerNews reporting active exploitation.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+  • https://thehackernews.com/2026/07/threat-actors-probe-gitea-docker-flaw.html
+  • https://securityaffairs.com/194902/hacking/critical-gitea-docker-bug-under-active-exploitation-exposes-repositories-and-secrets.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Default Accounts">T1078.001</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate reverse-proxy SSO where the header genuinely originates from the trusted proxy appliance IP (excluded by the non-loopback filter only if the proxy is not on loopback — tune to your proxy CIDR)</li><li>Admin performing bulk maintenance via the intended proxy-authenticated path</li><li>Automated tenant provisioning scripts creating tokens for many users</li><li>Log parsing drift where the Gitea &#x27;doer&#x27; field format differs by version, mis-attributing the actor</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Verify the correlated source IP is not the trusted proxy and that the actor account is privileged; pull the full Gitea audit trail for that actor in the window. Step 2 (contain): Revoke any tokens/SSH keys created during the window, force password reset and session invalidation for the impersonated account, restrict trusted-proxies to loopback/proxy CIDR, and patch to &gt;=1.26.3. Step 3 (hunt): Enumerate all repos cloned, secrets/webhook URLs viewed, and CI pipelines triggered by the actor; check for outbound exfil from the Gitea host to the attacker source IP.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let win = 5m;
+let proxyhdr = Syslog
+    | where TimeGenerated &gt; ago(24h)
+    | where ProcessName in~ (&quot;nginx&quot;,&quot;apache2&quot;,&quot;httpd&quot;)
+    | where SyslogMessage has &quot;x-webauth-user&quot;
+    | extend webauth_user = extract(&quot;(?i)x-webauth-user:? *([^ ]+)&quot;, 1, SyslogMessage)
+    | extend clientip = extract(&quot;([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)&quot;, 1, SyslogMessage)
+    | where isnotempty(webauth_user) and clientip !startswith &quot;127.&quot; and clientip != &quot;::1&quot;
+    | project proxytime=TimeGenerated, webauth_user, clientip;
+Syslog
+| where TimeGenerated &gt; ago(24h)
+| where ProcessName in~ (&quot;gitea&quot;,&quot;gitea-web&quot;)
+| where SyslogMessage has_any (&quot;delete_user&quot;,&quot;create_token&quot;,&quot;delete_repo&quot;,&quot;add_collaborator&quot;,&quot;reset_password&quot;,&quot;admin&quot;)
+| extend actor = extract(&quot;(?i)(?:doer|user)[=: ]+([^ ,]+)&quot;, 1, SyslogMessage)
+| where isnotempty(actor)
+| join kind=inner proxyhdr on $left.actor == $right.webauth_user
+| where proxytime between (TimeGenerated - win .. TimeGenerated + win)
+| project TimeGenerated, Computer, actor, clientip, proxytime, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>index=web sourcetype=gitea (delete_user OR create_token OR delete_repo OR add_collaborator OR reset_password)
+| rex field=_raw &quot;(?i)(?:doer|user)[=: ]+(?&lt;actor&gt;[^ ,]+)&quot;
+| join type=inner max=0 actor
+    [ search index=web (sourcetype=nginx:plus:access OR sourcetype=apache:access) &quot;x-webauth-user&quot;
+      | rex field=_raw &quot;(?i)x-webauth-user:? *(?&lt;actor&gt;[^ ]+)&quot;
+      | rex field=_raw &quot;(?&lt;client_ip&gt;[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)&quot;
+      | where NOT cidrmatch(&quot;127.0.0.0/8&quot;, client_ip) ]
+| stats count min(_time) AS firstTime max(_time) AS lastTime values(client_ip) AS source_ips by actor, host
+| sort - count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cc8fd30d89" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Gitea container started with reverse-proxy auth exposing permissive trusted-proxies (CVE-2026-20896)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="cc8fd30d89" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the vulnerable deployment state itself: launch of a gitea/gitea Docker container with ENABLE_REVERSE_PROXY_AUTHENTICATION=true, which under the shipped image default REVERSE_PROXY_TRUSTED_PROXIES=* trusts X-WEBAUTH-USER from any source IP. Because the wildcard is baked into the image template (not the loopback-only default of app.example.ini), enabling reverse-proxy auth on any unpatched image (&lt;=1.26.2) is sufficient to be exposed.
+
+Rationale: Uses the article&#x27;s exact image name (gitea/gitea, verified 1.26.2) and the reproduction environment variable GITEA__service__ENABLE_REVERSE_PROXY_AUTHENTICATION=true — the combination that, with the baked-in REVERSE_PROXY_TRUSTED_PROXIES=* image default, produces the vulnerable state. Fixed version 1.26.3 confirmed via BleepingComputer and the GitLab advisory mirror.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-20896/
+  • https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-auth-bypass-in-gitea-docker-image/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Deployment already patched to &gt;=1.26.3 where the image template no longer hard-codes the wildcard</li><li>Admin who has explicitly set GITEA__security__REVERSE_PROXY_TRUSTED_PROXIES to a correct CIDR alongside enabling auth (safe config)</li><li>CI/CD test harness spinning up throwaway gitea/gitea containers that are never internet-exposed</li><li>IaC dry-run/plan output echoing the env var without actually launching a container</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ActingProcessCommandLine !has &quot;gitea/gitea:1.26.3&quot; and ActingProcessCommandLine !has &quot;REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the running image tag is &lt;=1.26.2 and inspect the effective app.ini for REVERSE_PROXY_TRUSTED_PROXIES (exec into container: cat /data/gitea/conf/app.ini). If it is &#x27;*&#x27; or absent, the instance is exposed. Step 2 (contain): Set REVERSE_PROXY_TRUSTED_PROXIES=127.0.0.0/8,::1/128 (or the real proxy CIDR), pull gitea/gitea:1.26.3+, redeploy, and ensure port 3000 is not directly internet-reachable. Step 3 (hunt): Review reverse-proxy and Gitea audit logs since container start for X-WEBAUTH-USER usage from untrusted IPs and any privileged actions on admin accounts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-185-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-185-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-185-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where ProcessCommandLine has &quot;gitea/gitea&quot;
+| where ProcessCommandLine has &quot;ENABLE_REVERSE_PROXY_AUTHENTICATION&quot;
+| where ProcessCommandLine has &quot;true&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, FileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessCommandLine has &quot;gitea/gitea&quot;
+| where ActingProcessCommandLine has &quot;enable_reverse_proxy_authentication&quot;
+| where ActingProcessCommandLine has &quot;true&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessCommandLine, ActingProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea Docker Container Started With Reverse-Proxy Authentication (CVE-2026-20896)
+id: 3f2a9c14-8b7e-4d21-9a6f-0c5e1b2d7a90
+status: experimental
+description: Detects launch of a gitea/gitea Docker container with ENABLE_REVERSE_PROXY_AUTHENTICATION enabled, which under the vulnerable image default (REVERSE_PROXY_TRUSTED_PROXIES=*) trusts X-WEBAUTH-USER from any source IP (CVE-2026-20896).
+references:
+    - https://github.com/advisories/GHSA-f75j-4cw6-rmx4
+    - https://www.bleepingcomputer.com/news/security/hackers-exploit-critical-auth-bypass-in-gitea-docker-image/
+author: SOC Detection Engineering
+date: 2026/08/04
+tags:
+    - attack.initial_access
+    - attack.t1556
+    - attack.t1190
+logsource:
+    category: process_creation
+detection:
+    selection:
+        CommandLine|contains|all:
+            - &#x27;gitea/gitea&#x27;
+            - &#x27;ENABLE_REVERSE_PROXY_AUTHENTICATION&#x27;
+            - &#x27;true&#x27;
+    condition: selection
+falsepositives:
+    - Deployments already patched to &gt;= 1.26.3 with a correctly scoped REVERSE_PROXY_TRUSTED_PROXIES
+level: high</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*gitea/gitea* AND *ENABLE_REVERSE_PROXY_AUTHENTICATION*)</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| CommandLine=/gitea\/gitea/i
+| CommandLine=/ENABLE_REVERSE_PROXY_AUTHENTICATION/i
+| CommandLine=/true/i
+| groupBy([aid, ComputerName, UserName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-185-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-185-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-185-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-185-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process=&quot;*gitea/gitea*&quot; Processes.process=&quot;*ENABLE_REVERSE_PROXY_AUTHENTICATION*&quot; Processes.process=&quot;*true*&quot; BY Processes.dest, Processes.user, Processes.process, Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-185-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process=&quot;*gitea/gitea*&quot; Processes.process=&quot;*ENABLE_REVERSE_PROXY_AUTHENTICATION*&quot; Processes.process=&quot;*true*&quot; BY Processes.dest, Processes.user, Processes.process, Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20896&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20896&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-185-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-185-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-185-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20896&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-185-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20896&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-185-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-185-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-185-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-185-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-185-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;159.26.98.241&quot;) or RemoteUrl has_any (&quot;&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-185-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;159.26.98.241&quot;]);
+let BadDomains = dynamic([&quot;&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-185-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-185-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-185-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-185-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;159.26.98.241&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-185-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;159.26.98.241&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>
