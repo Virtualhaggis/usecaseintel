@@ -29,12 +29,12 @@ Designed for input-constrained devices like smart TVs, printers, and so on, the 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 - **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 - **T1098.005** — Account Manipulation: Device Registration
-- **T1606.002** — Forge Web Credentials: SAML/Token
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1598.003** — Phishing for Information: Spearphishing Link
+- **T1114.002** — Email Collection: Remote Email Collection
+- **T1213.002** — Data from Information Repositories: SharePoint
 
 ## Kill chain phases observed
 
@@ -42,110 +42,108 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Successful OAuth device-code grant to a commonly-abused first-party client
+### Entra ID device-code grant to first-time user via Microsoft Authentication Broker
 
-`UC_102_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="deviceCode" (Authentication.app="Microsoft Authentication Broker" OR Authentication.app="Microsoft Office" OR Authentication.app="Azure Active Directory PowerShell" OR Authentication.app="Microsoft Azure CLI" OR Authentication.app="Microsoft Graph Command Line Tools") by Authentication.user Authentication.app Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.signature_id="29d9ed98-a469-4536-ade2-f981bc1d605e" Authentication.action=success by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | `security_content_ctime(firstTime)` | eval isFirstSeen=1 | search app="Microsoft Authentication Broker" OR signature_id="29d9ed98-a469-4536-ade2-f981bc1d605e"
 ```
 
 **Defender KQL:**
 ```kql
-let AbusedFirstPartyClients = dynamic(["29d9ed98-a469-4536-ade2-f981bc1d605e","d3590ed6-52b3-4102-aeff-aad2292ab01c","1950a258-227b-4e31-a9cf-717495945fc2","04b07795-8ddb-461a-bbee-02f9e1bf7b46","14d82eec-204b-4c2f-b7e8-296a70dab67e","aebc6443-996d-45c2-90f0-388ff96faa56"]);
+let AuthBroker = "29d9ed98-a469-4536-ade2-f981bc1d605e";  // Microsoft Authentication Broker (Storm-2372 device-code / PRT registration app)
+let Baseline = AADSignInEventsBeta
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where ErrorCode == 0 and ApplicationId == AuthBroker
+    | summarize by AccountUpn;
 AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0
-| where AdditionalFields has "deviceCode" or tostring(AuthenticationProcessingDetails) contains "Device Code"
-| where ApplicationId in (AbusedFirstPartyClients)
+| where Timestamp > ago(1d)
+| where ErrorCode == 0 and ApplicationId == AuthBroker
 | where AccountUpn !endswith "$"
-| project Timestamp, AccountUpn, AccountObjectId, AppDisplayName, ApplicationId, ResourceDisplayName, IPAddress, Country, City, ClientAppUsed, UserAgent
+| join kind=leftanti Baseline on AccountUpn
+| project Timestamp, AccountUpn, AppDisplayName, ResourceDisplayName, IPAddress, Country, City, UserAgent, ClientAppUsed, DeviceTrustType
 | order by Timestamp desc
 ```
 
-### Device-code grant completed from a country never seen for that user
+### Device-code sign-in from country never seen for the user (stolen-code redemption)
 
-`UC_102_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_103_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="deviceCode" by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | sort - lastTime
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.action=success Authentication.app IN ("Microsoft Authentication Broker","Microsoft Azure CLI","Microsoft Azure PowerShell","Microsoft Office","Visual Studio Code") by Authentication.user Authentication.src Authentication.app _time span=1h | `drop_dm_object_name(Authentication)` | iplocation src | eventstats values(Country) as historicCountries by user | eval newCountry=if(isnull(mvfind(historicCountries,Country)),1,0) | where newCountry=1
 ```
 
 **Defender KQL:**
 ```kql
+let DeviceCodeApps = dynamic(["29d9ed98-a469-4536-ade2-f981bc1d605e","04b07795-8ddb-461a-bbee-02f9e1bf7b46","1950a258-227b-4e31-a9cf-717495945fc2","d3590ed6-52b3-4102-aeff-aad2292ab01c","aebc6443-996d-45c2-90f0-388ff96faa56"]);  // device-code-capable first-party clients
 let Baseline = AADSignInEventsBeta
     | where Timestamp between (ago(30d) .. ago(1d))
-    | where ErrorCode == 0
-    | where isnotempty(Country)
-    | summarize by AccountObjectId, Country;
+    | where ErrorCode == 0 and isnotempty(Country)
+    | summarize by AccountUpn, Country;
 AADSignInEventsBeta
 | where Timestamp > ago(1d)
 | where ErrorCode == 0
-| where AdditionalFields has "deviceCode" or tostring(AuthenticationProcessingDetails) contains "Device Code"
-| where isnotempty(Country)
-| where AccountUpn !endswith "$"
-| join kind=leftanti Baseline on AccountObjectId, Country
-| project Timestamp, AccountUpn, AccountObjectId, AppDisplayName, ApplicationId, Country, City, IPAddress, ClientAppUsed, UserAgent
+| where ApplicationId in (DeviceCodeApps)
+| where isnotempty(Country) and AccountUpn !endswith "$"
+| join kind=leftanti Baseline on AccountUpn, Country
+| project Timestamp, AccountUpn, AppDisplayName, ApplicationId, ResourceDisplayName, IPAddress, Country, City, UserAgent, IsAnonymousProxy
 | order by Timestamp desc
 ```
 
-### Entra device/PRT registration immediately after a device-code sign-in
+### Stolen device-code token fanning out to multiple SSO resources within the hour
 
-`UC_102_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_103_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where Change.action="created" (Change.object_category="device" OR Change.command="Add device" OR Change.command="Register device" OR Change.command="Add registered owner to device") by Change.user Change.src Change.object Change.command | `drop_dm_object_name(Change)` | sort - lastTime
+| tstats `summariesonly` dc(Authentication.dest) as distinctResources values(Authentication.dest) as resources values(Authentication.src) as srcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.app IN ("Microsoft Authentication Broker","Microsoft Azure CLI","Microsoft Azure PowerShell","Microsoft Office","Visual Studio Code") by Authentication.user _time span=1h | `drop_dm_object_name(Authentication)` | where distinctResources>=5
 ```
 
 **Defender KQL:**
 ```kql
-let DeviceCode = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ErrorCode == 0
-    | where AdditionalFields has "deviceCode" or tostring(AuthenticationProcessingDetails) contains "Device Code"
-    | project SigninTime = Timestamp, AccountObjectId, AccountUpn, SigninIP = IPAddress, AppDisplayName;
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType has_any ("Add registered owner to device","Add registered users to device","Register device","Add device")
-| join kind=inner DeviceCode on AccountObjectId
-| where Timestamp between (SigninTime .. SigninTime + 1h)
-| project Timestamp, SigninTime, AccountObjectId, AccountDisplayName, ActionType, RegistrationIP = IPAddress, SigninIP, AppDisplayName
-| order by Timestamp desc
-```
-
-### Non-interactive token fan-out to multiple M365 resources after device-code grant
-
-`UC_102_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(Authentication.dest) as ResourceCount values(Authentication.dest) as Resources values(Authentication.src) as SrcIPs from datamodel=Authentication where Authentication.action="success" by Authentication.user _time span=2h | `drop_dm_object_name(Authentication)` | where ResourceCount >= 4 | sort - ResourceCount
-```
-
-**Defender KQL:**
-```kql
-let DeviceCodeGrants = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ErrorCode == 0
-    | where AdditionalFields has "deviceCode" or tostring(AuthenticationProcessingDetails) contains "Device Code"
-    | project GrantTime = Timestamp, AccountObjectId, AccountUpn;
+let DeviceCodeApps = dynamic(["29d9ed98-a469-4536-ade2-f981bc1d605e","04b07795-8ddb-461a-bbee-02f9e1bf7b46","1950a258-227b-4e31-a9cf-717495945fc2","d3590ed6-52b3-4102-aeff-aad2292ab01c","aebc6443-996d-45c2-90f0-388ff96faa56"]);
 AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0
-| where IsInteractive == false
-| join kind=inner DeviceCodeGrants on AccountObjectId
-| where Timestamp between (GrantTime .. GrantTime + 2h)
-| summarize ResourceCount = dcount(ResourceDisplayName), Resources = make_set(ResourceDisplayName, 20), IPs = make_set(IPAddress, 10) by AccountUpn, AccountObjectId, GrantTime, bin(Timestamp, 2h)
-| where ResourceCount >= 4
-| order by ResourceCount desc
+| where Timestamp > ago(1d)
+| where ErrorCode == 0 and IsInteractive == false
+| where ApplicationId in (DeviceCodeApps)
+| where AccountUpn !endswith "$"
+| summarize DistinctResources = dcount(ResourceDisplayName), Resources = make_set(ResourceDisplayName, 25), IPs = make_set(IPAddress, 10), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountUpn, bin(Timestamp, 1h)
+| where DistinctResources >= 5   // 1 device-code token hitting >=5 distinct SSO resources in 1h (legit CLI/PS use ~1-3)
+| order by DistinctResources desc
 ```
 
-### Phishing email delivering a Microsoft/GitHub/AWS device-code login link
+### New Entra device registration shortly after a device-code grant (PRT persistence)
 
-`UC_102_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_103_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Change where Change.action=created Change.object_category="device" (Change.command="Add device" OR Change.command="Register device" OR Change.command="Add registered owner to device") by Change.user Change.src _time | `drop_dm_object_name(Change)`
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker
+| where ResourceDisplayName has "Device Registration"
+| where AccountUpn !endswith "$"
+| project Timestamp, AccountUpn, AppDisplayName, ResourceDisplayName, IPAddress, Country, City, UserAgent, DeviceName, AadDeviceId, DeviceTrustType
+| order by Timestamp desc
+```
+
+### Phishing email delivering a Microsoft/GitHub device-login URL
+
+`UC_103_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Email where Email.direction=inbound (Email.url="*devicelogin*" OR Email.url="*oauth2/deviceauth*" OR Email.url="*login/device*" OR Email.url="*aka.ms/devicelogin*") by Email.src_user Email.recipient Email.subject Email.url _time | `drop_dm_object_name(Email)` | sort - _time
+```
 
 **Defender KQL:**
 ```kql
@@ -155,11 +153,30 @@ EmailEvents
 | join kind=inner (
     EmailUrlInfo
     | where Timestamp > ago(7d)
+    | where Url has_any ("devicelogin","oauth2/deviceauth","login/device","aka.ms/devicelogin","amazon.com/verification")
     | project NetworkMessageId, Url, UrlDomain
   ) on NetworkMessageId
-| where Url has_any ("devicelogin","deviceauth") or Url contains "login/device" or Url contains "amazon.com/device"
-| project Timestamp, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain, NetworkMessageId
+| project Timestamp, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryLocation, PhishConfidenceLevel
 | order by Timestamp desc
+```
+
+### Bulk mailbox and SharePoint collection from a device-code-authorized session
+
+`UC_103_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as ops sum(eval(if(Operation=="MailItemsAccessed",1,0))) as mailAccessed sum(eval(if(Operation IN ("FileDownloaded","FileSyncDownloadedFull"),1,0))) as downloads from datamodel=Email where Email.Operation IN ("MailItemsAccessed","FileDownloaded","FileSyncDownloadedFull","SearchQueryPerformed") by Email.user Email.src _time span=1h | `drop_dm_object_name(Email)` | where ops>=50
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("MailItemsAccessed","FileDownloaded","FileSyncDownloadedFull","SearchQueryPerformed")
+| summarize Ops = count(), MailAccessed = countif(ActionType == "MailItemsAccessed"), Downloads = countif(ActionType in ("FileDownloaded","FileSyncDownloadedFull")), Searches = countif(ActionType == "SearchQueryPerformed") by AccountObjectId, AccountDisplayName, IPAddress, bin(Timestamp, 1h)
+| where Ops >= 50   // bulk mailbox/SharePoint burst; correlate account with a recent device-code sign-in (AADSignInEventsBeta AppId 29d9ed98-...)
+| order by Ops desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -397,4 +414,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

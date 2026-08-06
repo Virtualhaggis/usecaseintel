@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Kerberoasting: single account requests TGS tickets for many unique non-system SPNs
 
-`UC_104_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_105_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ source="WinEventLog:Security" EventCode=4769 Service_Name!="*$" Account_Name!="*
 
 ### DNS tunneling: high-volume long/high-entropy subdomain queries to a single parent domain
 
-`UC_104_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceEvents
 
 ### Endpoint issuing DNS directly to unauthorised/external resolvers (resolver bypass)
 
-`UC_104_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### DNS TXT/NULL record C2 & exfiltration: high-volume rare-record-type queries from one host
 
-`UC_104_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_105_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -8,6 +8,9 @@ _2613 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-08-06
+- [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
+
 ## 2026-08-05
 - [canadian pleads guilty to snowflake cloud data theft attacks](./2026-08-05/canadian-pleads-guilty-to-snowflake-cloud-data-theft-attacks.md)
 - [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
@@ -110,7 +113,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 66066 active storage has possible arb](./2026-07-30/ghsa-critical-cve-2026-66066-active-storage-has-possible-arb.md)
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
-- [hackers exploit anysign4pc via hacked korean sites to instal](./2026-07-30/hackers-exploit-anysign4pc-via-hacked-korean-sites-to-instal.md)
 - [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)

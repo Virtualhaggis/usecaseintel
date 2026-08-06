@@ -36,13 +36,16 @@ The operator, t…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1105** — Ingress Tool Transfer
-- **T1102** — Web Service
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1105** — Ingress Tool Transfer
+- **T1102.002** — Web Service: Bidirectional Communication
 - **T1539** — Steal Web Session Cookie
-- **T1595** — Active Scanning
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -50,92 +53,166 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Hermes AI-agent operator host: python3 http.server 8888 from /home/worker + FOFA/exploit scripts
+### Marimo pre-auth RCE (CVE-2026-39987): marimo/python parent spawning a shell (PTY)
 
-`UC_103_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_104_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python","python3") AND Processes.process="*http.server*8888*") OR Processes.process IN ("*fofoapi.py*","*langflow_poc.py*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*marimo*" OR Processes.parent_process="*/terminal/ws*") AND Processes.process_name IN ("sh","bash","dash","zsh","ash") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where user!="root" OR like(parent_process,"%marimo%")
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where (InitiatingProcessCommandLine has "marimo" or InitiatingProcessFolderPath has "marimo")
+| where FileName in~ ("sh","bash","dash","zsh","ash")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Langflow CVE-2026-33017 exploitation: scanner tooling and langflow exec-to-shell
+
+`UC_104_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*langflow_poc.py*" OR Processes.process="*langflow_targets.txt*") OR (Processes.parent_process="*langflow*" AND Processes.process_name IN ("sh","bash","dash","zsh")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("python","python3") and ProcessCommandLine has "http.server" and ProcessCommandLine has "8888")
-    or ProcessCommandLine has_any ("fofoapi.py","langflow_poc.py")
-    or (InitiatingProcessFolderPath startswith "/home/worker" and ProcessCommandLine has "http.server")
+| where ProcessCommandLine has_any ("langflow_poc.py","langflow_targets.txt")
+    or (InitiatingProcessCommandLine has "langflow" and FileName in~ ("sh","bash","dash","zsh","ash"))
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Hermes Agent C2: host beacons to Telegram AND a DeepSeek/Qwen LLM API endpoint
+### n8n exploit chain (CVE-2026-21858 + CVE-2025-68613): node process spawning a shell
 
-`UC_103_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_104_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("api.telegram.org","api.deepseek.com","dashscope.aliyuncs.com","code.newcli.com") by DNS.src DNS.query _time span=1h | `drop_dm_object_name(DNS)` | eval cat=if(match(query,"telegram"),"telegram","llm_api") | stats dc(cat) as cats values(query) as queries by src _time | where cats==2
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*n8n*" AND Processes.parent_process_name IN ("node","node.js")) AND Processes.process_name IN ("sh","bash","dash","zsh","ash") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node","node.js")
+| where (InitiatingProcessCommandLine has "n8n" or InitiatingProcessFolderPath has "n8n")
+| where FileName in~ ("sh","bash","dash","zsh","ash")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, ChildProcess = FileName, ChildCmd = ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Hermes AI agent OPSEC leak: python3 -m http.server 8888 from home directory
+
+`UC_104_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*http.server*8888*" AND Processes.process_name IN ("python3","python") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("python3","python")
+| where ProcessCommandLine has "http.server" and ProcessCommandLine has "8888"
+| extend HighFidelity = iff(AccountName =~ "worker", "worker-account", "other")
+| project Timestamp, DeviceName, AccountName, HighFidelity, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Autonomous attack-agent egress to LLM inference APIs from non-browser process
+
+`UC_104_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("api.deepseek.com","dashscope.aliyuncs.com","code.newcli.com") by DNS.src DNS.query
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("api.telegram.org","api.deepseek.com","dashscope.aliyuncs.com","code.newcli.com")
-| extend Category = iff(RemoteUrl has "telegram", "telegram", "llm_api")
-| summarize Domains=make_set(RemoteUrl), Cats=make_set(Category), Procs=make_set(InitiatingProcessFileName), Conns=count() by DeviceId, DeviceName, bin(Timestamp, 1h)
-| where array_length(Cats) == 2
-| order by Conns desc
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any ("api.deepseek.com","dashscope.aliyuncs.com","code.newcli.com")
+| where InitiatingProcessFileName in~ ("python3","python","node","curl","wget","go","sh","bash")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize Count = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Procs = make_set(InitiatingProcessFileName, 8), Domains = make_set(RemoteUrl, 8) by DeviceName, InitiatingProcessAccountName
+| order by FirstSeen desc
 ```
 
-### Marimo CVE-2026-39987 unauthenticated /terminal/ws PTY RCE
+### Hermes agent C2 fingerprint: Telegram Bot API + LLM inference API from same host
 
-`UC_103_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*/terminal/ws*" by Web.src Web.dest Web.http_user_agent Web.status Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("api.telegram.org","api.deepseek.com","dashscope.aliyuncs.com","code.newcli.com") by DNS.src DNS.query
+| `drop_dm_object_name(DNS)`
+| eval group=if(query=="api.telegram.org","telegram","llm")
+| stats dc(group) as groups values(query) as domains by src
+| where groups>=2
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessCommandLine has "marimo" or InitiatingProcessFileName has "marimo"
-| where FileName in~ ("sh","bash","dash","zsh") or FolderPath in~ ("/bin/sh","/bin/bash")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
-| order by Timestamp desc
+let win = 1h;
+let llm = DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteUrl has_any ("api.deepseek.com","dashscope.aliyuncs.com","code.newcli.com")
+    | project DeviceId, DeviceName, LlmTime = Timestamp, LlmUrl = RemoteUrl, LlmProc = InitiatingProcessFileName;
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has "api.telegram.org"
+| project DeviceId, DeviceName, TgTime = Timestamp, TgProc = InitiatingProcessFileName
+| join kind=inner llm on DeviceId
+| where abs(datetime_diff('minute', TgTime, LlmTime)) <= 60
+| project DeviceName, DeviceId, TgTime, LlmTime, TgProc, LlmProc, LlmUrl
+| order by TgTime desc
 ```
 
-### NetScaler CVE-2026-3055 SAML IdP appliance exposure (add authentication samlIdPProfile)
+### NetScaler CVE-2026-3055 SAML IdP exposure and session-cookie (NSC_AAAC) abuse
 
-`UC_103_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_104_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN ("*/saml/idp*","*/saml/login*","*samlidp*","*/cgi/samlauth*") by Web.src Web.dest Web.status Web.url _time span=10m | `drop_dm_object_name(Web)` | stats sum(count) as Requests dc(url) as DistinctUrls values(status) as statuses by src dest _time | where Requests > 50 | sort - Requests
-```
-
-### Exposed vulnerable Langflow / n8n / Marimo / NetScaler instances for the actor's exploited CVEs
-
-`UC_103_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-33017","CVE-2026-21858","CVE-2025-68613","CVE-2026-39987","CVE-2026-3055") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - severity
+| tstats `summariesonly` count from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-3055" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-33017","CVE-2026-21858","CVE-2025-68613","CVE-2026-39987","CVE-2026-3055")
-| project DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| join kind=leftouter (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
-| project DeviceName, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
-| order by IsInternetFacing desc, CveId asc
+| where CveId == "CVE-2026-3055"
+| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| join kind=leftouter (DeviceInfo | where IsInternetFacing == true | summarize by DeviceId, IsInternetFacing) on DeviceId
+| order by IsInternetFacing desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -316,7 +393,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 
-`UC_103_6` · phase: **install** · confidence: **High**
+`UC_104_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -360,4 +437,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
