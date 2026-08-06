@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### SideWinder ClickOnce app + DLL side-load launched from PDF/browser (Apps\2.0)
 
-`UC_3_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_8_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### SideWinder Rust backdoor C2 to Cloudflare Workers (*.workers.dev) from non-browser
 
-`UC_3_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_8_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### Flooding Dropper npm second-stage: download/write of /pkg/update_win.exe
 
-`UC_3_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_8_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ union NetHits, FileHits
 
 ### Flooding Dropper npm install spawning scheduled task + Run-key persistence
 
-`UC_3_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 Telegram Desktop deletion + malicious replacement (macOS)
 
-`UC_3_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_18` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceFileEvents
 
 ### XCSSET v40 Chrome hijack via Chrome DevTools Protocol remote-debugging port (macOS)
 
-`UC_3_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_19` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -592,7 +592,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Odysseus RCE, Samsung One-Click Takeover, iCloud Backdoor Fight + 27
 
-`UC_3_13` · phase: **exploit** · confidence: **High**
+`UC_8_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### CornFlake RAT self-copy to %APPDATA%\svchost32\svchost32.exe
 
-`UC_100_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### CornFlake service registration 'svchost32' / 'Cloud Sync Service'
 
-`UC_100_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_103_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceRegistryEvents
 
 ### ChocoShell token theft from TokenBroker .tbres cache
 
-`UC_100_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_103_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceFileEvents
 
 ### Microsoft device code authentication flow phishing sign-in
 
-`UC_100_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ AADSignInEventsBeta
 
 ### CaptiveCrunch C2 / phishing infrastructure network callback
 
-`UC_100_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_103_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceNetworkEvents
 
 ### ClickFix fake-update command referencing CaptiveCrunch infrastructure
 
-`UC_100_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_103_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -439,7 +439,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hijacked Hotel Wi-Fi Pushes Fake Updates to Deliver Surveillance Malware
 
-`UC_100_8` · phase: **exploit** · confidence: **High**
+`UC_103_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

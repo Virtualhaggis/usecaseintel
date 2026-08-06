@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Authenticated n8n public REST API access to credential/user endpoints from external source
 
-`UC_34_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_39_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### n8n public API endpoint enumeration / credential-harvest fan-out from single source
 
-`UC_34_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_39_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### n8n API key (X-N8N-API-KEY) exposed on command line or in Claude Code config on endpoint
 
-`UC_34_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_39_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -254,7 +254,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Leaked n8n API Tokens Exposed Live Instances to Credential Theft
 
-`UC_34_5` · phase: **install** · confidence: **High**
+`UC_39_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

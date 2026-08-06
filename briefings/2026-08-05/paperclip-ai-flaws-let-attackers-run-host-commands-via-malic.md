@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Paperclip AI process adapter spawning an interactive shell (host command execution)
 
-`UC_26_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_31_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Malicious .paperclip.yaml agent-import bundle written to a Paperclip host
 
-`UC_26_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_31_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### DNS-rebinding to loopback against local_trusted Paperclip (external hostname resolving to 127.0.0.1)
 
-`UC_26_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_31_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

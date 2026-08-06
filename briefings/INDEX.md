@@ -17,11 +17,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cryptojs weak rng behind 5 7 million in drains affects five ](./2026-08-06/cryptojs-weak-rng-behind-5-7-million-in-drains-affects-five-.md)
 - [ghsa critical cve 2026 65600 traefik authentication bypass v](./2026-08-06/ghsa-critical-cve-2026-65600-traefik-authentication-bypass-v.md)
 - [new interrupt injection attack can bypass spectre v2 defense](./2026-08-06/new-interrupt-injection-attack-can-bypass-spectre-v2-defense.md)
+- [new tontou cpu attack bypasses spectre v2 fixes leaks linux ](./2026-08-06/new-tontou-cpu-attack-bypasses-spectre-v2-fixes-leaks-linux-.md)
+- [new zapscape kvm flaw could let privileged l1 guest code esc](./2026-08-06/new-zapscape-kvm-flaw-could-let-privileged-l1-guest-code-esc.md)
 - [over 4 400 rockwell plcs exposed online 22 found in water at](./2026-08-06/over-4-400-rockwell-plcs-exposed-online-22-found-in-water-at.md)
 - [ransom cartel creator gets 16 years in prison for operating ](./2026-08-06/ransom-cartel-creator-gets-16-years-in-prison-for-operating-.md)
 - [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
+- [swiss government sharepoint breach compromised 200 accounts](./2026-08-06/swiss-government-sharepoint-breach-compromised-200-accounts.md)
 - [threatsday odysseus rce samsung one click takeover icloud ba](./2026-08-06/threatsday-odysseus-rce-samsung-one-click-takeover-icloud-ba.md)
 - [token jacking cybercriminals could be stealing your ai resou](./2026-08-06/token-jacking-cybercriminals-could-be-stealing-your-ai-resou.md)
+- [why metaphor may dictate your security strategy](./2026-08-06/why-metaphor-may-dictate-your-security-strategy.md)
 
 ## 2026-08-05
 - [canadian pleads guilty to snowflake cloud data theft attacks](./2026-08-05/canadian-pleads-guilty-to-snowflake-cloud-data-theft-attacks.md)
@@ -48,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-08-04
 - [128 seconds to disruption microsoft defender stops ransomwar](./2026-08-04/128-seconds-to-disruption-microsoft-defender-stops-ransomwar.md)
-- [77 open vsx extensions found harvesting developer info](./2026-08-04/77-open-vsx-extensions-found-harvesting-developer-info.md)
 - [a first look at evo agentic appsec agentic remediation and m](./2026-08-04/a-first-look-at-evo-agentic-appsec-agentic-remediation-and-m.md)
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
 - [chaindrop npm worm bun loaded ci cd credential harvester wit](./2026-08-04/chaindrop-npm-worm-bun-loaded-ci-cd-credential-harvester-wit.md)
@@ -74,7 +77,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
 - [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
-- [massive chaindrop npm supply chain attack infects hundreds o](./2026-08-04/massive-chaindrop-npm-supply-chain-attack-infects-hundreds-o.md)
 - [new xcsset variant targets macos devs via compromised xcode ](./2026-08-04/new-xcsset-variant-targets-macos-devs-via-compromised-xcode-.md)
 - [openai anthropic ai agents targeted real people and systems ](./2026-08-04/openai-anthropic-ai-agents-targeted-real-people-and-systems-.md)
 - [phishing service spoofs ringcentral to steal microsoft 365 a](./2026-08-04/phishing-service-spoofs-ringcentral-to-steal-microsoft-365-a.md)
@@ -107,9 +109,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 52887 nocobase sql injection in api m](./2026-07-31/ghsa-critical-cve-2026-52887-nocobase-sql-injection-in-api-m.md)
 - [ghsa critical cve 2026 53609 apostrophe has server side prot](./2026-07-31/ghsa-critical-cve-2026-53609-apostrophe-has-server-side-prot.md)
 - [ghsa critical cve 2026 54725 vault addr annotation ssrf webh](./2026-07-31/ghsa-critical-cve-2026-54725-vault-addr-annotation-ssrf-webh.md)
-- [hollowframe loader deploys matryoshka backdoor in spear phis](./2026-07-31/hollowframe-loader-deploys-matryoshka-backdoor-in-spear-phis.md)
 - [network anomaly detection in kata](./2026-07-31/network-anomaly-detection-in-kata.md)
-- [suspected chinese speaking hackers target central asian gove](./2026-07-31/suspected-chinese-speaking-hackers-target-central-asian-gove.md)
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
 ## 2026-07-30

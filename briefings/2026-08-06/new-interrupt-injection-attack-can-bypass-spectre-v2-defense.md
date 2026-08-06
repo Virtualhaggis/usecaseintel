@@ -211,7 +211,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C
 
-`UC_1_5` · phase: **install** · confidence: **High**
+`UC_6_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

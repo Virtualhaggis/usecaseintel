@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound external connections to exposed Rockwell EtherNet/IP OT ports (44818/2222/102)
 
-`UC_5_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### External Modbus TCP (502) to MicroLogix 1400 — CVE-2017-16740 exploitation surface
 
-`UC_5_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
