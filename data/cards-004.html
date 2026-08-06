@@ -4351,8 +4351,8 @@ level: high
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,linux,m365,windows"
-  data-uc-count="14" data-llm-uc-count="7"
-  data-search="Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks Palo Alto Networks&#x27; Unit 42 says a Chinese-speaking threat actor used DeepSeek through the open-source Hermes Agent framework to launch attacks autonomously. After an initial Telegram instruction, the agent found internet-facing systems and selected public exploits. The researchers recovered no further operator input in the session. The operator, tracked through the aliases knaithe and KnYuan, CVE-2026-33017 CVE-2026-21858 CVE-2025-68613 CVE-2026-3055 CVE-2026-39987 CVE-2026-34486 CVE-2026-0300 CVE-2026-33824 T1190 T1566 T1566.002 [LLM] Hermes AI-agent OpSec slip: python3 http.server 8888 from /home/worker [LLM] Marimo CVE-2026-39987: notebook server spawning shell / recon (command execution) [LLM] Langflow CVE-2026-33017 code-injection: langflow/uvicorn spawning shell [LLM] n8n CVE-2026-21858 + CVE-2025-68613 chain: node process spawning shell [LLM] Telegram bot C2: server/agent host beaconing to api.telegram.org [LLM] DeepSeek LLM inference API abuse from an exploitation host [LLM] Autonomous exploit staging: agent host downloading exploits incl. code.newcli.com Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks">
+  data-uc-count="12" data-llm-uc-count="5"
+  data-search="Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks Palo Alto Networks&#x27; Unit 42 says a Chinese-speaking threat actor used DeepSeek through the open-source Hermes Agent framework to launch attacks autonomously. After an initial Telegram instruction, the agent found internet-facing systems and selected public exploits. The researchers recovered no further operator input in the session. The operator, tracked through the aliases knaithe and KnYuan, CVE-2026-33017 CVE-2026-21858 CVE-2025-68613 CVE-2026-3055 CVE-2026-39987 CVE-2026-34486 CVE-2026-0300 CVE-2026-33824 T1190 T1566 T1566.002 [LLM] Hermes AI-agent operator host: python3 http.server 8888 from /home/worker + FOFA/exploit scripts [LLM] Hermes Agent C2: host beacons to Telegram AND a DeepSeek/Qwen LLM API endpoint [LLM] Marimo CVE-2026-39987 unauthenticated /terminal/ws PTY RCE [LLM] NetScaler CVE-2026-3055 SAML IdP appliance exposure (add authentication samlIdPProfile) [LLM] Exposed vulnerable Langflow / n8n / Marimo / NetScaler instances for the actor&#x27;s exploited CVEs Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-31-chinese-hacker-commands-deepseek-via-telegram-to-launch-auto" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -4361,7 +4361,7 @@ level: high
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-07-31</span>
-    <span>14 use cases</span>
+    <span>12 use cases</span>
     <span>3 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -4412,32 +4412,32 @@ level: high
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Autonomous exploit staging: agent host downloading exploits incl. code.newcli.com · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Marimo CVE-2026-39987: notebook server spawning shell / recon (command execution) · [LLM] Langflow CVE-2026-33017 code-injection: langflow/uvicorn spawning shell · [LLM] n8n CVE-2026-21858 + CVE-2025-68613 chain: node process spawning shell · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Marimo CVE-2026-39987 unauthenticated /terminal/ws PTY RCE · [LLM] NetScaler CVE-2026-3055 SAML IdP appliance exposure (add authentication samlIdPProfile) · [LLM] Exposed vulnerable Langflow / n8n / Marimo / NetScaler instances for the actor&#x27;s exploited CVEs · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Hermes AI-agent OpSec slip: python3 http.server 8888 from /home/worker · [LLM] Telegram bot C2: server/agent host beaconing to api.telegram.org · [LLM] DeepSeek LLM inference API abuse from an exploitation host · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Hermes AI-agent operator host: python3 http.server 8888 from /home/worker + FOFA/exploit scripts · [LLM] Hermes Agent C2: host beacons to Telegram AND a DeepSeek/Qwen LLM API endpoint · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="6e02d275ed" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="4c272fb9cd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Hermes AI-agent OpSec slip: python3 http.server 8888 from /home/worker</span>
+    <span class="uc-title">Hermes AI-agent operator host: python3 http.server 8888 from /home/worker + FOFA/exploit scripts</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6e02d275ed" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4c272fb9cd" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Hermes Agent operational artifact Unit 42 used to unmask this campaign: an unintended &#x27;python3 -m http.server 8888&#x27; launched from /home/worker that exposed the operator&#x27;s model configs, API keys, exploit scripts and target lists. Article-specific because the port (8888), module (http.server) and working directory (/home/worker) are all named in the report.
+    <div class="uc-desc">Hunts the Hermes Agent OPSEC failure Unit 42 recovered: a headless Linux host running &#x27;python3 -m http.server 8888&#x27; out of /home/worker (which exposed the actor&#x27;s API keys, target lists, shell history and session logs) alongside offensive tooling fofoapi.py and langflow_poc.py. This is the single most specific host-side signature of the DeepSeek/Hermes autonomous-attack operator box, whether it is the actor&#x27;s staging host or a compromised Linux server running the agent for post-exploitation.
 
-Rationale: Uses the literal &#x27;http.server&#x27; + &#x27;8888&#x27; + python3 combination Unit 42 named as the OpSec failure; a fixed port + ad-hoc file server on a workload host is near-zero legitimately.
+Rationale: Uses the verbatim Unit 42 artifacts &#x27;python3 -m http.server 8888&#x27;, path /home/worker, and the recovered tooling names fofoapi.py / langflow_poc.py - all confirmed in the Unit 42 report and mirrored by BleepingComputer, so this is a high-fidelity host signature rather than a generic Python detection.
 
 Cross-checked against:
   • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
   • https://www.bleepingcomputer.com/news/security/hacker-uses-deepseek-ai-to-autonomously-attack-vulnerable-servers/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer serving build artifacts locally with python -m http.server 8888</li><li>CI/CD job standing up a temporary fixture server on 8888</li><li>Data scientist sharing a notebook export over a quick HTTP server</li><li>Container healthcheck or demo tooling that binds 8888</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;make&quot;) and AccountName in~ (&quot;jenkins&quot;,&quot;gitlab-runner&quot;,&quot;build&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree and cwd for the python3 process; inspect the served directory for exploit scripts, target lists, shell history and API-key files (Hermes artifacts). 2) Contain: isolate the host, kill the listener, and rotate any API keys/tokens found in the exposed directory. 3) Hunt: pivot on the host for outbound api.telegram.org / api.deepseek.com traffic, FOFA queries, and downloads from code.newcli.com to confirm Hermes Agent presence.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer running &#x27;python3 -m http.server&#x27; on an ad-hoc port for quick file sharing (mitigated by requiring port 8888 AND /home/worker or the script names)</li><li>Data-science lab boxes serving notebook artifacts over http.server</li><li>CI/CD build agents that spin up a throwaway static file server</li><li>A security researcher legitimately running FOFA tooling</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has &quot;http.server&quot; and ProcessCommandLine has &quot;8000&quot; and InitiatingProcessFolderPath !startswith &quot;/home/worker&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full process tree and shell history on the host; confirm whether http.server 8888 is serving /home/worker and whether fofoapi.py / langflow_poc.py / API-key files are present. 2) Contain: isolate the host, kill the http.server process, and rotate any API keys / tokens found in the served directory (DeepSeek, Qwen, Telegram bot token). 3) Hunt: from the exposed target lists and shell history, enumerate every downstream victim the agent touched; pivot to UC2 (Telegram/LLM egress) and UC3/UC4 (Marimo/NetScaler exploitation) on those targets.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
@@ -4447,444 +4447,236 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where FileName in~ (&quot;python3&quot;,&quot;python&quot;)
-| where ProcessCommandLine has &quot;http.server&quot; and ProcessCommandLine has &quot;8888&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;python&quot;,&quot;python3&quot;) and ProcessCommandLine has &quot;http.server&quot; and ProcessCommandLine has &quot;8888&quot;)
+    or ProcessCommandLine has_any (&quot;fofoapi.py&quot;,&quot;langflow_poc.py&quot;)
+    or (InitiatingProcessFolderPath startswith &quot;/home/worker&quot; and ProcessCommandLine has &quot;http.server&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where TargetProcessName in~ (&quot;python3&quot;,&quot;python&quot;)
-| where TargetProcessCommandLine has &quot;http.server&quot; and TargetProcessCommandLine has &quot;8888&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
+| where TimeGenerated &gt; ago(30d)
+| where (ActingProcessName has_any (&quot;python&quot;,&quot;python3&quot;) and ActingProcessCommandLine has &quot;http.server&quot; and ActingProcessCommandLine has &quot;8888&quot;)
+    or ActingProcessCommandLine has_any (&quot;fofoapi.py&quot;,&quot;langflow_poc.py&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Python http.server on port 8888 (Hermes AI-agent staging server)
-id: 5c1a7f2e-9b44-4a1e-8c0d-3f2b6e7a1d90
-description: Detects an ad-hoc python3 -m http.server bound to 8888, the Hermes Agent artifact that exposed the DeepSeek operator&#x27;s exploit scripts and API keys.
+    <div class="tab-content" id="art-103-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hermes AI Agent HTTP File Server Exposure (python3 http.server 8888)
+id: 7a1c4e02-3b9d-4f21-9c6a-8e2f1d0a5b34
+description: Detects the Hermes Agent OPSEC failure documented by Unit 42 - a headless host running python3 -m http.server on port 8888, and/or the actor&#x27;s FOFA and Langflow exploitation scripts.
 references:
   - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
   - https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
-  - attack.t1105
   - attack.t1071.001
+  - attack.t1059.006
+  - attack.t1105
 logsource:
   category: process_creation
   product: linux
 detection:
-  selection:
-    Image|endswith:
-      - &#x27;/python3&#x27;
-      - &#x27;/python&#x27;
+  selection_httpserver:
     CommandLine|contains|all:
       - &#x27;http.server&#x27;
       - &#x27;8888&#x27;
-  condition: selection
+  selection_scripts:
+    CommandLine|contains:
+      - &#x27;fofoapi.py&#x27;
+      - &#x27;langflow_poc.py&#x27;
+  condition: selection_httpserver or selection_scripts
 level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*http.server* AND @process.command_line:*8888*)</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/python3?$/i | regex(&quot;http\.server&quot;, field=CommandLine) | regex(&quot;8888&quot;, field=CommandLine) | groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;python3&quot;,&quot;python&quot;) AND Processes.process=&quot;*http.server*&quot; AND Processes.process=&quot;*8888*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;python3&quot;,&quot;python&quot;) AND Processes.process=&quot;*http.server*&quot; AND Processes.process=&quot;*8888*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:(*http.server*8888* OR *fofoapi.py* OR *langflow_poc.py*) OR @process.executable.path:/home/worker/*)</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| regex(&quot;(http\\.server\\s+8888|fofoapi\\.py|langflow_poc\\.py|/home/worker)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;) AND Processes.process=&quot;*http.server*8888*&quot;) OR Processes.process IN (&quot;*fofoapi.py*&quot;,&quot;*langflow_poc.py*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;python&quot;,&quot;python3&quot;) AND Processes.process=&quot;*http.server*8888*&quot;) OR Processes.process IN (&quot;*fofoapi.py*&quot;,&quot;*langflow_poc.py*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="ed49c70d6d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="274e2073b1" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Marimo CVE-2026-39987: notebook server spawning shell / recon (command execution)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ed49c70d6d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts post-exploitation of the Marimo pre-auth RCE (unauthenticated /terminal/ws WebSocket granting a PTY shell) that this actor used for command execution on 11 Marimo instances. Article- and CVE-specific: a marimo/python notebook process spawning an interactive shell or download utility.
-
-Rationale: Second-source confirmed that CVE-2026-39987 exploitation yields a PTY shell via /terminal/ws, so a marimo-parented shell/download child is the exact post-exploit signal; parent-command-line &#x27;marimo&#x27; scopes it to the notebook server.
-
-Cross-checked against:
-  • https://thehackernews.com/2026/04/marimo-rce-flaw-cve-2026-39987.html
-  • https://www.sysdig.com/blog/marimo-oss-python-notebook-rce-from-disclosure-to-exploitation-in-under-10-hours</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Analyst legitimately using the Marimo terminal feature to run shell commands in a notebook</li><li>Marimo notebook cell that shells out to git/pip during normal development</li><li>Container entrypoint wrapping marimo that execs a shell on startup</li><li>Jupyter-style %%bash magic ported into a marimo workflow</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (AccountName in~ (&quot;datascience&quot;,&quot;jupyter&quot;) and ProcessCommandLine has_any (&quot;git &quot;,&quot;pip &quot;,&quot;conda &quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Marimo version (&lt;0.23.0 is vulnerable) and inspect the child shell&#x27;s descendant commands for whoami/id, credential-file reads, or outbound downloads. 2) Contain: block the Marimo port at the edge, take the host off the network if creds were read, and patch to &gt;=0.23.0. 3) Hunt: check for inbound WebSocket requests to /terminal/ws in front-end/proxy logs and pivot to any api.telegram.org or code.newcli.com egress from the same host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessCommandLine has &quot;marimo&quot;
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python3&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessCommandLine has &quot;marimo&quot;
-| where TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python3&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Marimo notebook server spawning shell (CVE-2026-39987 pre-auth RCE)
-id: a2f0c1b7-6d38-4e22-9a11-77c4e9b30e51
-description: Detects a marimo notebook process spawning a shell or download utility, indicative of exploitation of the unauthenticated /terminal/ws PTY endpoint (CVE-2026-39987).
-references:
-  - https://thehackernews.com/2026/04/marimo-rce-flaw-cve-2026-39987.html
-  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-author: SOC Detection Engineering
-date: 2026/08/06
-tags:
-  - attack.t1190
-  - attack.t1059.004
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    ParentCommandLine|contains: &#x27;marimo&#x27;
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/nc&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*marimo*) AND (@process.name:(sh OR bash OR dash OR curl OR wget OR nc OR ncat))</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 | regex(&quot;marimo&quot;, field=ParentCommandLine) | ImageFileName=/\/(sh|bash|dash|zsh|curl|wget|nc|ncat)$/i | groupBy([aid, ComputerName, ParentCommandLine, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*marimo*&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*marimo*&quot; AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d647829c8c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Langflow CVE-2026-33017 code-injection: langflow/uvicorn spawning shell</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Hermes Agent C2: host beacons to Telegram AND a DeepSeek/Qwen LLM API endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d647829c8c" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="274e2073b1" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts exploitation of the Langflow code-injection flaw (CVE-2026-33017, fixed in 1.9.0) that DeepSeek attempted after enumerating 84 instances via FOFA and finding version 1.3.4. Article-specific: a Langflow (python/uvicorn) worker spawning a shell or Python one-liner rather than normal flow execution.
+    <div class="uc-desc">Hunts the Hermes command channel: a server/headless host that within the same hour resolves or connects to api.telegram.org (the operator command channel) AND an LLM inference endpoint the agent reasons through (api.deepseek.com, dashscope.aliyuncs.com, or the proxy code.newcli.com). Requiring BOTH categories from one source suppresses benign standalone DeepSeek or Telegram usage.
 
-Rationale: Anchors on Langflow&#x27;s server process (parent cmdline &#x27;langflow&#x27;) spawning a shell/inline-python child — the observable footprint of CVE-2026-33017 code injection the article names, without over-fitting to a single PoC string.
+Rationale: Domains api.deepseek.com, dashscope.aliyuncs.com and the proxy code.newcli.com were pulled directly from the Unit 42 report&#x27;s config/API-key dump, and api.telegram.org is the article&#x27;s stated command channel; requiring Telegram + LLM-API co-occurrence from one host is what makes it Hermes-specific rather than generic AI-API usage.
 
 Cross-checked against:
   • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
   • https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Langflow custom component that legitimately shells out to an external CLI</li><li>Flow that runs a python subprocess node as designed</li><li>Admin restarting/patching Langflow via a wrapper shell script</li><li>Container init shelling out during Langflow startup</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (AccountName in~ (&quot;langflow&quot;,&quot;appsvc&quot;) and ProcessCommandLine has_any (&quot;git &quot;,&quot;pip install&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check the Langflow build (1.3.4 vulnerable; 1.9.0 patched) and review the child process command line for recon/download behavior. 2) Contain: remove public exposure of the Langflow UI/API, isolate if code execution confirmed, and upgrade to &gt;=1.9.0. 3) Hunt: look for auto_login-enabled misconfig, FOFA-style scanning hitting the instance, and the same host reaching api.telegram.org / code.newcli.com.</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Web Service">T1102</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A developer workstation that legitimately uses the DeepSeek/Qwen API and also runs a personal Telegram bot in the same hour</li><li>Marketing/ops automation servers that push notifications via api.telegram.org while a colocated service calls an LLM API</li><li>AI-integration test rigs exercising multiple model providers</li><li>Corporate proxy that aggregates many users&#x27; traffic behind one source IP (tune by scoping to server/headless subnets)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Procs !has_any (&quot;telegram.exe&quot;,&quot;telegramdesktop.exe&quot;,&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the initiating process on the host - a python3/curl/headless service (not Telegram Desktop or a browser) contacting both is high-signal; capture the process command line and parent. 2) Contain: block egress to code.newcli.com and revoke the Telegram bot token / LLM API keys if the host is confirmed to be running an agent framework. 3) Hunt: cross-reference the host against UC1 (http.server 8888 / offensive scripts) and inspect FOFA queries and target lists to scope which internal or external systems the agent was directed against.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-103-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl has_any (&quot;api.telegram.org&quot;,&quot;api.deepseek.com&quot;,&quot;dashscope.aliyuncs.com&quot;,&quot;code.newcli.com&quot;)
+| extend Category = iff(RemoteUrl has &quot;telegram&quot;, &quot;telegram&quot;, &quot;llm_api&quot;)
+| summarize Domains=make_set(RemoteUrl), Cats=make_set(Category), Procs=make_set(InitiatingProcessFileName), Conns=count() by DeviceId, DeviceName, bin(Timestamp, 1h)
+| where array_length(Cats) == 2
+| order by Conns desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+| where TimeGenerated &gt; ago(30d)
+| where DnsQuery has_any (&quot;api.telegram.org&quot;,&quot;api.deepseek.com&quot;,&quot;dashscope.aliyuncs.com&quot;,&quot;code.newcli.com&quot;)
+| extend Category = iff(DnsQuery has &quot;telegram&quot;, &quot;telegram&quot;, &quot;llm_api&quot;)
+| summarize Domains=make_set(DnsQuery), Cats=make_set(Category), Hosts=make_set(SrcHostname), Queries=count() by SrcIpAddr, bin(TimeGenerated, 1h)
+| where array_length(Cats) == 2
+| order by Queries desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(api.telegram.org OR api.deepseek.com OR dashscope.aliyuncs.com OR code.newcli.com)</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(api\.telegram\.org|api\.deepseek\.com|dashscope\.aliyuncs\.com|code\.newcli\.com)$/i
+| case { DomainName=/telegram/i | cat := &quot;telegram&quot; ; * | cat := &quot;llm_api&quot; }
+| groupBy([aid, ComputerName], function={ collect([DomainName, cat]) | count(cat, distinct=true, as=cats) })
+| cats&gt;=2</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;api.telegram.org&quot;,&quot;api.deepseek.com&quot;,&quot;dashscope.aliyuncs.com&quot;,&quot;code.newcli.com&quot;) by DNS.src DNS.query _time span=1h | `drop_dm_object_name(DNS)` | eval cat=if(match(query,&quot;telegram&quot;),&quot;telegram&quot;,&quot;llm_api&quot;) | stats dc(cat) as cats values(query) as queries by src _time | where cats==2</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;api.telegram.org&quot;,&quot;api.deepseek.com&quot;,&quot;dashscope.aliyuncs.com&quot;,&quot;code.newcli.com&quot;) by DNS.src DNS.query _time span=1h | `drop_dm_object_name(DNS)` | eval cat=if(match(query,&quot;telegram&quot;),&quot;telegram&quot;,&quot;llm_api&quot;) | stats dc(cat) as cats values(query) as queries by src _time | where cats==2</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f5a13da7e6" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Marimo CVE-2026-39987 unauthenticated /terminal/ws PTY RCE</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f5a13da7e6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts exploitation of the Marimo notebook pre-auth RCE the actor used to run commands on 11 instances: unauthenticated access to the WebSocket terminal endpoint /terminal/ws (patched in 0.23.0), and the follow-on shell spawned by the marimo server process. Web-tier logs catch the request; endpoint logs catch the marimo-&gt;/bin/sh child.
+
+Rationale: The endpoint /terminal/ws is the exact unauthenticated WebSocket terminal Sysdig and SentinelOne document for CVE-2026-39987 and which Unit 42 ties to the actor&#x27;s &#x27;web-terminal-exploitation&#x27; skill; the marimo-&gt;shell child pivot corroborates successful RCE on Linux notebook hosts.
+
+Cross-checked against:
+  • https://www.sysdig.com/blog/marimo-oss-python-notebook-rce-from-disclosure-to-exploitation-in-under-10-hours
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-39987/
+  • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An authenticated Marimo user legitimately opening the in-notebook terminal (verify auth context and source IP)</li><li>Internal vulnerability scanners (Tenable/Qualys/Nuclei) probing /terminal/ws as part of a CVE-2026-39987 check</li><li>Uptime/health-check monitors hitting the WebSocket endpoint</li><li>Security team validating the 0.23.0 patch</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SrcIpAddr !in (&quot;10.0.0.0&quot;) and UAs !has_any (&quot;Nuclei&quot;,&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;masscan&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Marimo version (vulnerable &lt;=0.20.4), whether the /terminal/ws request came from an unauthenticated external IP, and whether the marimo process spawned a shell shortly after. 2) Contain: take the notebook off the public internet, patch to 0.23.0 (or block /terminal/ws at the proxy), and kill any attacker shells. 3) Hunt: review shell history and outbound connections from the notebook host; look for the Hermes egress pattern (UC2) and any files staged via http.server (UC1).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-103-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessCommandLine has &quot;langflow&quot;
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;) or (FileName in~ (&quot;python3&quot;,&quot;python&quot;) and ProcessCommandLine has_any (&quot;-c&quot;,&quot;import os&quot;,&quot;import subprocess&quot;,&quot;os.system&quot;))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessCommandLine has &quot;marimo&quot; or InitiatingProcessFileName has &quot;marimo&quot;
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;) or FolderPath in~ (&quot;/bin/sh&quot;,&quot;/bin/bash&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessCommandLine has &quot;langflow&quot;
-| where TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;) or (TargetProcessName in~ (&quot;python3&quot;,&quot;python&quot;) and TargetProcessCommandLine has_any (&quot;-c&quot;,&quot;os.system&quot;,&quot;import subprocess&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow worker spawning shell or python -c (CVE-2026-33017 code injection)
-id: b7e4d290-1c55-4d3a-8e6f-0a9b2c4d1e73
-description: Detects a Langflow server process spawning a shell, download utility, or inline python, consistent with exploitation of the Langflow code-injection flaw CVE-2026-33017.
+    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where Url has &quot;/terminal/ws&quot;
+| summarize Requests=count(), Statuses=make_set(HttpStatusCode), UAs=make_set(HttpRequestHeaderUserAgent), Dsts=make_set(DstHostname) by SrcIpAddr, bin(TimeGenerated, 10m)
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Marimo Notebook Unauthenticated Terminal WebSocket Access (CVE-2026-39987)
+id: b2e9f7c1-6a34-4d80-9f12-3c5e8a1b7d60
+description: Detects requests to the Marimo /terminal/ws WebSocket endpoint abused for pre-auth RCE (CVE-2026-39987), used by the DeepSeek/Hermes operator to run commands on exposed notebook instances.
 references:
+  - https://www.sysdig.com/blog/marimo-oss-python-notebook-rce-from-disclosure-to-exploitation-in-under-10-hours
   - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  - https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html
-author: SOC Detection Engineering
-date: 2026/08/06
-tags:
-  - attack.t1190
-  - attack.t1059.006
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    ParentCommandLine|contains: &#x27;langflow&#x27;
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/nc&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*langflow*) AND (@process.name:(sh OR bash OR dash OR curl OR wget OR nc))</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 | regex(&quot;langflow&quot;, field=ParentCommandLine) | ImageFileName=/\/(sh|bash|dash|curl|wget|nc|ncat)$/i | groupBy([aid, ComputerName, ParentCommandLine, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process=&quot;*langflow*&quot; OR Processes.parent_process=&quot;*uvicorn*langflow*&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python3&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.parent_process=&quot;*langflow*&quot; OR Processes.parent_process=&quot;*uvicorn*langflow*&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python3&quot;,&quot;nc&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="994d5887fa" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">n8n CVE-2026-21858 + CVE-2025-68613 chain: node process spawning shell</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="994d5887fa" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the two-CVE n8n chain (unauthenticated file-access CVE-2026-21858 + expression-injection CVE-2025-68613) DeepSeek assembled against 25,209 FOFA-discovered n8n systems. Article-specific: an n8n (node) workflow process spawning an OS shell or download utility, the expected footprint of expression-injection RCE.
-
-Rationale: Targets the node/n8n parent spawning a shell — the RCE outcome of the CVE-2025-68613 expression-injection half of the chain the article details; scoping on ParentCommandLine &#x27;n8n&#x27; keeps it product-specific.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  • https://gbhackers.com/hacker-uses-deepseek-agent/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>n8n Execute Command node used legitimately in a workflow</li><li>n8n Code node shelling out via child_process by design</li><li>Admin script restarting the n8n service through a shell wrapper</li><li>Community node that invokes curl/wget as part of normal automation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;n8n workflow&quot;,&quot;execute command node&quot;) and AccountName in~ (&quot;n8n&quot;,&quot;automation&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm n8n version (patched at 1.121.1 for both CVEs) and inspect the spawned shell&#x27;s arguments and any created form/webhook endpoints. 2) Contain: remove public access to n8n editor/webhook interfaces, isolate the host if RCE confirmed, upgrade to &gt;=1.121.1. 3) Hunt: review inbound requests to unauthenticated file-access paths, check for the Execute Command node abuse pattern, and pivot on egress to api.telegram.org / code.newcli.com.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;node.js&quot;) and InitiatingProcessCommandLine has &quot;n8n&quot;
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessName in~ (&quot;node&quot;,&quot;node.js&quot;) and ActingProcessCommandLine has &quot;n8n&quot;
-| where TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: n8n node process spawning shell (CVE-2026-21858 + CVE-2025-68613 chain)
-id: c9a1b3e6-2f47-4b18-9d0a-5e6f7a8b9c01
-description: Detects an n8n (node) workflow process spawning an OS shell or download tool, consistent with the file-access + expression-injection RCE chain used against n8n.
-references:
-  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  - https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
   - attack.t1190
   - attack.t1059.004
 logsource:
-  category: process_creation
-  product: linux
+  category: webserver
 detection:
   selection:
-    ParentImage|endswith: &#x27;/node&#x27;
-    ParentCommandLine|contains: &#x27;n8n&#x27;
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/nc&#x27;
+    cs-uri-stem|contains: &#x27;/terminal/ws&#x27;
   condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:(*n8n*) AND (@process.name:(sh OR bash OR dash OR curl OR wget OR nc))</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/node(\.js)?$/i | regex(&quot;n8n&quot;, field=ParentCommandLine) | ImageFileName=/\/(sh|bash|dash|curl|wget|nc|ncat)$/i | groupBy([aid, ComputerName, ParentCommandLine, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*n8n*&quot; AND Processes.parent_process_name IN (&quot;node&quot;,&quot;node.js&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process=&quot;*n8n*&quot; AND Processes.parent_process_name IN (&quot;node&quot;,&quot;node.js&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+level: high</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.syslog OR linux.auditd) &quot;/terminal/ws&quot;</code></pre></div>
+    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/terminal/ws*&quot; by Web.src Web.dest Web.http_user_agent Web.status Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/terminal/ws*&quot; by Web.src Web.dest Web.http_user_agent Web.status Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="eb41c3725a" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="03e400664e" data-platforms="datadog,sent,spl" data-targets="linux">
   <summary>
-    <span class="uc-title">Telegram bot C2: server/agent host beaconing to api.telegram.org</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">NetScaler CVE-2026-3055 SAML IdP appliance exposure (add authentication samlIdPProfile)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="eb41c3725a" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="03e400664e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Hermes Agent command-and-control channel — the framework is documented to operate over Telegram, and a single Telegram instruction kicked off the autonomous session. Detects non-interactive server/agent processes (python, node, curl) resolving/contacting api.telegram.org, which is anomalous on an exploitation workload host.
+    <div class="uc-desc">Surfaces customer-managed NetScaler ADC/Gateway appliances configured as SAML identity providers - the exact prerequisite for CVE-2026-3055, the memory-overread flaw the actor used to exfiltrate data from three organizations by harvesting NSC_AAAC= session cookies. Inventories vulnerable-configured appliances from their config/audit syslog and flags anomalous bursts against SAML IdP endpoints.
 
-Rationale: api.telegram.org is the documented Hermes Agent C2 endpoint; contact from a non-messaging server process (python/node/curl) on an exploitation host is the article&#x27;s specific C2 behavior. DNS chosen because it survives TLS.
+Rationale: The config string &#x27;add authentication samlIdPProfile&#x27; is the exact marker Citrix and Unit 42 give for identifying appliances vulnerable to CVE-2026-3055, and NSC_AAAC= is the session cookie the overread leaks - both are concrete, article-sourced, and low-hallucination.
 
 Cross-checked against:
   • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  • https://www.bleepingcomputer.com/news/security/hacker-uses-deepseek-ai-to-autonomously-attack-vulnerable-servers/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Web Service">T1102</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate app using a Telegram bot for alerting/notifications from a server</li><li>Monitoring stack pushing alerts to a Telegram channel via curl</li><li>CI pipeline posting build status to Telegram</li><li>Developer test script hitting the Telegram Bot API</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;alertmanager&quot;,&quot;notify&quot;,&quot;monitoring&quot;,&quot;prometheus&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the process and bot token in the command line/config; determine whether a sanctioned Telegram-notification integration exists for this host. 2) Contain: block api.telegram.org egress from server subnets, revoke the bot token, isolate the host if paired with exploit activity. 3) Hunt: correlate Telegram contact timestamps with exploitation/recon spikes on the same host and look for python3 http.server 8888, FOFA queries, and api.deepseek.com traffic.</div></details>
+  • https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate high-volume SAML SSO authentication during business-hours login peaks</li><li>An internal IdP-federation health monitor polling the SAML endpoint</li><li>A sanctioned pentest/scan of the NetScaler SAML surface</li><li>Config-audit syslog echoing samlIdPProfile from a routine change window rather than a live exposure</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: from the Syslog hits, list every NetScaler configured with samlIdPProfile and confirm build against Citrix&#x27;s fixed-build bulletin for CVE-2026-3055; check the appliance&#x27;s SAML endpoint access logs for anomalous external source IPs and repeated/oversized responses. 2) Contain: apply the fixed NetScaler build, invalidate active AAA sessions (rotate NSC_AAAC session material), and restrict management/SAML exposure. 3) Hunt: search for exfiltration and downstream auth using any stolen session cookie; correlate probing source IPs with the Hermes egress and http.server indicators (UC1/UC2).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(30d)
+| where SyslogMessage has &quot;add authentication samlIdPProfile&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Sample=any(SyslogMessage) by Computer, HostIP
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;add authentication samlIdPProfile&quot;</code></pre></div>
+    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN (&quot;*/saml/idp*&quot;,&quot;*/saml/login*&quot;,&quot;*samlidp*&quot;,&quot;*/cgi/samlauth*&quot;) by Web.src Web.dest Web.status Web.url _time span=10m | `drop_dm_object_name(Web)` | stats sum(count) as Requests dc(url) as DistinctUrls values(status) as statuses by src dest _time | where Requests &gt; 50 | sort - Requests</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN (&quot;*/saml/idp*&quot;,&quot;*/saml/login*&quot;,&quot;*samlidp*&quot;,&quot;*/cgi/samlauth*&quot;) by Web.src Web.dest Web.status Web.url _time span=10m | `drop_dm_object_name(Web)` | stats sum(count) as Requests dc(url) as DistinctUrls values(status) as statuses by src dest _time | where Requests &gt; 50 | sort - Requests</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0d1f7ee0b2" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Exposed vulnerable Langflow / n8n / Marimo / NetScaler instances for the actor&#x27;s exploited CVEs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0d1f7ee0b2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Exposure-management hunt that inventories internet-facing assets carrying the exact CVEs this operator selected: Langflow CVE-2026-33017 (fixed 1.9.0), n8n CVE-2026-21858 + CVE-2025-68613 (fixed 1.121.1), Marimo CVE-2026-39987 (fixed 0.23.0) and NetScaler CVE-2026-3055. Directly actions Unit 42&#x27;s guidance to patch these specific exposed workflow/notebook/gateway systems before an autonomous agent finds them via FOFA.
+
+Rationale: Uses the five exact CVE identifiers and fixed versions named in the article/Unit 42 report (Langflow 1.9.0, n8n 1.121.1, Marimo 0.23.0, NetScaler CVE-2026-3055), joined to IsInternetFacing to prioritise the exposed workflow/notebook interfaces the agent enumerated via FOFA - concrete and non-hallucinatory.
+
+Cross-checked against:
+  • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
+  • https://www.cycognito.com/blog/emerging-threat-cve-2026-21858-cve-2025-68613-cve-2026-21877-n8n-workflow-automation-vulnerabilities/
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-39987/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Active Scanning">T1595</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Instances already mitigated by a WAF or network ACL but still reporting the vulnerable version</li><li>Decommissioned/lab hosts flagged as vulnerable but not internet-reachable</li><li>TVM version-parse errors reporting a patched build as vulnerable</li><li>Air-gapped internal-only n8n/Langflow deployments that FOFA could never reach</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: sort results by IsInternetFacing and severity; confirm each exposed instance&#x27;s running version against the fixed release (Langflow 1.9.0 / n8n 1.121.1 / Marimo 0.23.0 / Citrix bulletin build). 2) Contain: patch or remove public access to the workflow and notebook interfaces per Unit 42&#x27;s guidance; for NetScaler apply the fixed build and audit samlIdPProfile config. 3) Hunt: for any instance that was internet-facing, pivot to the runtime detections (UC3 /terminal/ws, UC4 SAML probing) and web logs to determine whether exploitation was attempted before patching.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-103-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where RemoteUrl has &quot;api.telegram.org&quot;
-| where InitiatingProcessFileName in~ (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
-| where TimeGenerated &gt; ago(14d)
-| where DnsQuery has &quot;telegram.org&quot;
-| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, DnsQuery, DnsResponseName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Server-side process resolving api.telegram.org (Hermes Agent Telegram C2)
-id: d0b2c4e8-3a59-4c27-8f1b-6a7c8d9e0f12
-description: Detects DNS resolution of Telegram API infrastructure by a workload host, the C2 channel the Hermes AI-agent framework uses to receive operator commands.
-references:
-  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  - https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html
-author: SOC Detection Engineering
-date: 2026/08/06
-tags:
-  - attack.t1071.001
-  - attack.t1102
-logsource:
-  category: dns
-  product: linux
-detection:
-  selection:
-    query|contains: &#x27;api.telegram.org&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/telegram\.org$/i | ContextImageFileName=/\/(python3?|node|curl|wget|sh|bash)$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*api.telegram.org*&quot; OR All_Traffic.app=&quot;*telegram*&quot;) AND All_Traffic.process_name IN (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;curl&quot;,&quot;wget&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*api.telegram.org*&quot; OR All_Traffic.app=&quot;*telegram*&quot;) AND All_Traffic.process_name IN (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;curl&quot;,&quot;wget&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6ee4bea490" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">DeepSeek LLM inference API abuse from an exploitation host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="6ee4bea490" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the reasoning engine of the campaign — server/agent processes calling DeepSeek&#x27;s inference API (api.deepseek.com) from the same host running exploitation tooling. Article-specific because DeepSeek was the primary model inside Hermes Agent driving code generation and target selection.
-
-Rationale: DeepSeek was named as the primary reasoning model inside Hermes Agent; api.deepseek.com contact from a server process co-located with exploit tooling is the campaign&#x27;s execution/reasoning signal, distinct from ordinary developer LLM use on workstations.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  • https://www.helpnetsecurity.com/2026/08/03/deepseek-ai-autonomous-cyberattacks-hermes-agent/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate application using DeepSeek API for a product feature</li><li>Data-processing job calling DeepSeek for summarization</li><li>Developer test harness on a shared server</li><li>Sanctioned internal AI agent using DeepSeek for benign automation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;prod-inference&quot;,&quot;approved-ai&quot;,&quot;llm-gateway&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the calling process, its config/API key, and whether DeepSeek use is sanctioned on this host class. 2) Contain: if unsanctioned, block deepseek.com egress from server subnets, revoke the exposed API key, isolate if co-located with exploitation. 3) Hunt: on the same host, look for api.telegram.org C2, python3 http.server 8888, FOFA enumeration, and downloads from code.newcli.com to confirm Hermes Agent.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc5-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where RemoteUrl has &quot;deepseek.com&quot;
-| where InitiatingProcessFileName in~ (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;sh&quot;,&quot;bash&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
-| where TimeGenerated &gt; ago(14d)
-| where DnsQuery has &quot;deepseek.com&quot;
-| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, DnsQuery, DnsResponseName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Workload host calling DeepSeek inference API (Hermes Agent reasoning engine)
-id: e1c3d5f9-4b6a-4d38-9021-7b8c9d0e1f23
-description: Detects DNS resolution of DeepSeek API infrastructure by a server process, indicating an LLM-driven agent reasoning loop on an exploitation host.
-references:
-  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  - https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html
-author: SOC Detection Engineering
-date: 2026/08/06
-tags:
-  - attack.t1071.001
-  - attack.t1105
-logsource:
-  category: dns
-  product: linux
-detection:
-  selection:
-    query|contains: &#x27;deepseek.com&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/deepseek\.com$/i | ContextImageFileName=/\/(python3?|node|curl|wget|sh|bash)$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*api.deepseek.com*&quot; OR All_Traffic.dest=&quot;*deepseek.com*&quot;) AND All_Traffic.process_name IN (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;curl&quot;,&quot;wget&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*api.deepseek.com*&quot; OR All_Traffic.dest=&quot;*deepseek.com*&quot;) AND All_Traffic.process_name IN (&quot;python3&quot;,&quot;python&quot;,&quot;node&quot;,&quot;curl&quot;,&quot;wget&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="5dac3ab3c8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Autonomous exploit staging: agent host downloading exploits incl. code.newcli.com</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5dac3ab3c8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the autonomous exploit-acquisition step Unit 42 described — the agent &#x27;checked versions, downloaded exploits&#x27; via GitHub/PoC pulls, with actor infrastructure at code.newcli.com. Detects server/agent processes fetching exploit code, elevated to alerting when the named IOC domain code.newcli.com is contacted.
-
-Rationale: code.newcli.com is a concrete IOC domain from the article&#x27;s IOC set, tied to the autonomous exploit-download stage; any contact is high-fidelity, so it is an alerting tier detection.
-
-Cross-checked against:
-  • https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  • https://www.bleepingcomputer.com/news/security/hacker-uses-deepseek-ai-to-autonomously-attack-vulnerable-servers/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Obtain Capabilities: Exploits">T1588.005</span> <span class="ind tech" title="Active Scanning">T1595</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Extremely unlikely benign hit — a security researcher intentionally sandboxing the actor&#x27;s infrastructure</li><li>A threat-intel platform sinkholing/crawling the domain from a scanning host</li><li>Passive-DNS or URL-scanning service resolving the domain for enrichment</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the process and host that contacted code.newcli.com and pull all files written shortly after the connection (likely exploit scripts). 2) Contain: block the domain org-wide, isolate the host, and preserve the downloaded artifacts for analysis. 3) Hunt: sweep all hosts for prior/other resolutions of code.newcli.com, then pivot to python3 http.server 8888, api.telegram.org, and api.deepseek.com activity to scope the Hermes Agent footprint.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc6-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-103-uc6-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-103-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;code.newcli.com&quot; or RemoteIP == &quot;&quot;
-| where RemoteUrl has &quot;code.newcli.com&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
-| where TimeGenerated &gt; ago(30d)
-| where DnsQuery has &quot;code.newcli.com&quot;
-| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, DnsQuery, DnsResponseName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Contact to code.newcli.com (DeepSeek/Hermes autonomous-attack actor infrastructure)
-id: f2d4e6a0-5c7b-4e49-8132-8c9d0e1f2a34
-description: Detects DNS resolution or network contact to code.newcli.com, infrastructure attributed to the Chinese-speaking operator running DeepSeek via Hermes Agent.
-references:
-  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
-  - https://thehackernews.com/2026/07/chinese-hacker-commands-deepseek-via.html
-author: SOC Detection Engineering
-date: 2026/08/06
-tags:
-  - attack.t1105
-  - attack.t1588.005
-logsource:
-  category: dns
-  product: linux
-detection:
-  selection:
-    query|contains: &#x27;code.newcli.com&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.command_line:(*code.newcli.com*)</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/code\.newcli\.com$/i | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-103-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*code.newcli.com*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;*code.newcli.com*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content active" id="art-103-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId in (&quot;CVE-2026-33017&quot;,&quot;CVE-2026-21858&quot;,&quot;CVE-2025-68613&quot;,&quot;CVE-2026-39987&quot;,&quot;CVE-2026-3055&quot;)
+| project DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| join kind=leftouter (DeviceInfo | where Timestamp &gt; ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project DeviceName, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, CveId asc</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId in (&quot;CVE-2026-33017&quot;,&quot;CVE-2026-21858&quot;,&quot;CVE-2025-68613&quot;,&quot;CVE-2026-39987&quot;,&quot;CVE-2026-3055&quot;)
+| summarize arg_max(TimeGenerated, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate) by DeviceName, CveId
+| join kind=leftouter (DeviceInfo | where TimeGenerated &gt; ago(1d) | summarize arg_max(TimeGenerated, IsInternetFacing, PublicIP) by DeviceName) on DeviceName
+| project DeviceName, CveId, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, CveId asc</code></pre></div>
+    <div class="tab-content" id="art-103-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-33017&quot;,&quot;CVE-2026-21858&quot;,&quot;CVE-2025-68613&quot;,&quot;CVE-2026-39987&quot;,&quot;CVE-2026-3055&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-33017&quot;,&quot;CVE-2026-21858&quot;,&quot;CVE-2025-68613&quot;,&quot;CVE-2026-39987&quot;,&quot;CVE-2026-3055&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - severity</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -4902,11 +4694,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-103-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -4915,7 +4707,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-103-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -4927,12 +4719,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-33017&quot;, &quot;CVE-2026-21858&quot;, &quot;CVE-2025-68613&quot;, &quot;CVE-2026-3055&quot;, &quot;CVE-2026-39987&quot;, &quot;CVE-2026-34486&quot;, &quot;CVE-2026-0300&quot;, &quot;CVE-2026-33824&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-33017&quot;, &quot;CVE-2026-21858&quot;, &quot;CVE-2025-68613&quot;, &quot;CVE-2026-3055&quot;, &quot;CVE-2026-39987&quot;, &quot;CVE-2026-34486&quot;, &quot;CVE-2026-0300&quot;, &quot;CVE-2026-33824&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -4964,11 +4756,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-103-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -5008,7 +4800,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-103-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -5033,7 +4825,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-103-uc6-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -5065,7 +4857,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-103-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-103-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -5115,11 +4907,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc9-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-103-uc7-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -5133,7 +4925,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-103-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-103-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -5156,7 +4948,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-103-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -5167,7 +4959,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-103-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-103-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -5196,18 +4988,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-103-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-103-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-103-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -5230,7 +5022,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-103-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -5274,13 +5066,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-103-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-103-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -5304,19 +5096,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-103-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-103-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-103-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -5330,7 +5122,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-103-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -5374,7 +5166,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -5382,7 +5174,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-103-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-103-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -5408,17 +5200,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc12-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc12-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc12-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-103-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;code.newcli.com&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-103-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+    <div class="tab-content" id="art-103-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
 let BadDomains = dynamic([&quot;code.newcli.com&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -5427,7 +5219,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-103-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -5457,7 +5249,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc12-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc10-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -5471,7 +5263,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;code.newcli.com&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-103-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-103-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -5503,11 +5295,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc13-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc13-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc13-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc13-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
+    <div class="tab-content active" id="art-103-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -5520,7 +5312,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-103-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
@@ -5536,14 +5328,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc13-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks ```
+    <div class="tab-content" id="art-103-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc11-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/home/worker.*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-103-uc13-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-103-uc11-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)

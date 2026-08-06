@@ -1627,9 +1627,9 @@ level: critical
   data-sources="The Hacker News|Microsoft Security Blog"
   data-platforms="def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
-  data-targets="azure,linux,m365,macos,windows"
+  data-targets="azure,m365,macos,windows"
   data-uc-count="15" data-llm-uc-count="3"
-  data-search="Over 250 ClickFix Domains Use Browser Fingerprinting to Hide macOS Malware Lures A macOS ClickFix campaign shifted tactics from openly serving infostealer lures to hiding them behind a browser-fingerprinting gate. The change makes malicious infrastructure harder to detect while giving defenders new hunting opportunities. The post From open lures to cloaked gates: How a macOS ClickFix campaign learned to hide appeared first on Microsoft Security Blog .  T1027 T1176 T1190 T1195.002 T1204.004 T1486 T1555.003 [LLM] macOS ClickFix staging access: /curl/&lt;id&gt; path on &#x27;file&#x27;-token look-alike domains [LLM] macOS ClickFix execution: curl (insecure) piped to shell with base64 decode [LLM] macOS Gatekeeper/quarantine strip via xattr -c in shell download chain Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children">
+  data-search="Over 250 ClickFix Domains Use Browser Fingerprinting to Hide macOS Malware Lures A macOS ClickFix campaign shifted tactics from openly serving infostealer lures to hiding them behind a browser-fingerprinting gate. The change makes malicious infrastructure harder to detect while giving defenders new hunting opportunities. The post From open lures to cloaked gates: How a macOS ClickFix campaign learned to hide appeared first on Microsoft Security Blog .  T1027 T1176 T1190 T1195.002 T1204.004 T1486 T1555.003 [LLM] macOS ClickFix delivery-domain contact (file+dictionary cluster incl. apricotfilepoint[.]com) [LLM] macOS ClickFix Terminal one-liner: curl fetching /curl/ staging piped to shell [LLM] macOS infostealer credential theft: shell-spawned osascript password prompt + keychain access Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Suspicious browser extension installation Infostealer — non-browser process accessing browser cookie/login DBs Crypto-wallet file/keystore access by non-wallet process Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Trusted vendor binary / installer launching unusual children">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-05-over-250-clickfix-domains-use-browser-fingerprinting-to-hide" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1688,33 +1688,32 @@ level: critical
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] macOS ClickFix staging access: /curl/&lt;id&gt; path on &#x27;file&#x27;-token look-alike domains · Phishing-link click correlated to endpoint execution</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] macOS ClickFix delivery-domain contact (file+dictionary cluster incl. apricotfilepoint[.]com) · Phishing-link click correlated to endpoint execution</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] macOS ClickFix execution: curl (insecure) piped to shell with base64 decode · [LLM] macOS Gatekeeper/quarantine strip via xattr -c in shell download chain · Suspicious browser extension installation</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] macOS ClickFix Terminal one-liner: curl fetching /curl/ staging piped to shell · Suspicious browser extension installation</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs · Crypto-wallet file/keystore access by non-wallet process · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] macOS infostealer credential theft: shell-spawned osascript password prompt + keychain access · Infostealer — non-browser process accessing browser cookie/login DBs · Crypto-wallet file/keystore access by non-wallet process · Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="69a60ba6a0" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="db9514d319" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows" open>
   <summary>
-    <span class="uc-title">macOS ClickFix staging access: /curl/&lt;id&gt; path on &#x27;file&#x27;-token look-alike domains</span>
+    <span class="uc-title">macOS ClickFix delivery-domain contact (file+dictionary cluster incl. apricotfilepoint[.]com)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="69a60ba6a0" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="db9514d319" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts network/DNS access to the ClickFix domain cluster Microsoft tracked (apricotfilepoint[.]com and the mass-produced &#x27;file&#x27;+dictionary-word domains) and the shared /curl/&lt;id&gt; staging path that serves the second-stage loader. Microsoft&#x27;s own guidance is to pivot on the /curl/ staging path and shared infra rather than the throwaway front-end domains, so this UC prioritises the path signal.
+    <div class="uc-desc">Hunts endpoint/DNS contact to the algorithmically-named ClickFix front-end domains Microsoft attributes to this macOS infostealer cluster, anchored on the confirmed domain apricotfilepoint[.]com and the named &#x27;file&#x27;+dictionary domain stems. Because a cloaked gate serves benign decoys to non-macOS visitors, any resolution/connection from a managed macOS host to these domains is suspicious regardless of the response.
 
-Rationale: Uses the confirmed IOC apricotfilepoint[.]com, the specific &#x27;file&#x27;-token domain examples named in the article, and the /curl/&lt;id&gt; staging path Microsoft and Datadog Security Labs both call out as the durable pivot over throwaway front-end domains.
+Rationale: Anchored on the one confirmed domain (apricotfilepoint[.]com) plus the exact &#x27;file&#x27;+dictionary domain stems the article enumerates; MS blog confirms the same cluster and the cloaking means even a benign response still indicates malicious infra contact.
 
 Cross-checked against:
   • https://www.microsoft.com/en-us/security/blog/2026/08/05/macos-clickfix-campaign-learned-hide/
-  • https://securitylabs.datadoghq.com/articles/tech-impersonators-clickfix-and-macos-infostealers/
-  • https://circleid.com/posts/macos-clickfix-campaign-delivers-amos-and-other-infostealers-a-dns-deep-dive</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.All_Traffic</span> <span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate SaaS/file-sharing services that happen to include &#x27;/curl/&#x27; in an API path</li><li>A benign vendor domain that coincidentally contains a &#x27;file&#x27;+word substring (e.g. filevault-related Apple support pages)</li><li>Security researchers or the SOC itself intentionally browsing the cluster for analysis</li><li>Threat-intel enrichment tooling resolving the domains for reputation lookups</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the host and user, and confirm whether the URL contained &#x27;/curl/&lt;hex&gt;&#x27; (high fidelity) vs only a domain-name match (pivot-grade). Check the initiating process — a browser vs curl/Terminal materially changes severity. 2) Contain: block the domain/IP at proxy and DNS sinkhole; if a /curl/ fetch by curl/Terminal is confirmed, isolate the endpoint. 3) Hunt: on the same host pivot to DeviceProcessEvents for curl piped to zsh/bash, base64 -d, and xattr -c within +/-5 min, and to DeviceFileEvents for newly written executables in ~/Downloads, /tmp, or /private/tmp.</div></details>
+  • https://thehackernews.com/2026/08/over-250-clickfix-domains-use-browser.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="Acquire Infrastructure: Domains">T1583.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / threat-intel analyst deliberately visiting the domain from a managed macOS host</li><li>URL-detonation or sandbox appliance sharing the corporate DNS resolver</li><li>Typosquat collision where a legitimate &#x27;filevault&#x27;/&#x27;smartfile&#x27; SaaS domain matches a substring stem</li><li>Proxy/DLP prefetch expanding a link inside a quarantined email</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;com.apple.WebKit.Networking&quot;,&quot;mDNSResponder&quot;) or RemoteUrl has &quot;/curl/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the macOS host and the process that made the request (InitiatingProcessFileName/ContextImageFileName) and confirm the full RemoteUrl — a &#x27;/curl/&lt;id&gt;&#x27; path is a strong install indicator. 2) Contain: block the domain/IP at proxy+DNS, isolate the host if a Terminal/curl process is tied to the connection, and snapshot ~/Library for triage. 3) Hunt: pivot on the host for curl piping to a shell (see execution UC) and for osascript password-prompt / keychain access (credential UC); sweep the org for any other &#x27;file&#x27;+dictionary domain resolutions in the last 30 days.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc0-sentinel">Sentinel KQL</button>
@@ -1723,72 +1722,69 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-04-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has &quot;/curl/&quot;
-   or RemoteUrl has_any (&quot;apricotfilepoint.com&quot;,&quot;filecopperbasket&quot;,&quot;filevelvettractor&quot;,&quot;fileoceanhammer&quot;,&quot;filemarblegarden&quot;,&quot;applefilevault&quot;,&quot;bananafastfile&quot;,&quot;orangesmartfile&quot;,&quot;cloudsendhub&quot;,&quot;syncdatavault&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(14d)
-| where Url has &quot;/curl/&quot;
-   or Url has_any (&quot;apricotfilepoint.com&quot;,&quot;filecopperbasket&quot;,&quot;filevelvettractor&quot;,&quot;fileoceanhammer&quot;,&quot;filemarblegarden&quot;,&quot;applefilevault&quot;,&quot;bananafastfile&quot;,&quot;orangesmartfile&quot;,&quot;cloudsendhub&quot;,&quot;syncdatavault&quot;)
-| project TimeGenerated, SrcHostname, SrcIpAddr, SrcUsername, Url, HttpUserAgent = HttpRequestHeaderUserAgent, DstIpAddr
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: macOS ClickFix Staging Path or File-Token Domain Access
-id: 5b8d2a41-3e6c-4f2a-9c1d-7a0e6f4b2c33
-description: Detects access to the macOS ClickFix /curl/ staging path or the mass-produced &#x27;file&#x27;+dictionary-word look-alike domains Microsoft tracked distributing MacSync/AMOS.
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl has_any (&quot;apricotfilepoint.com&quot;,&quot;filecopperbasket&quot;,&quot;filevelvettractor&quot;,&quot;fileoceanhammer&quot;,&quot;filemarblegarden&quot;,&quot;applefilevault&quot;,&quot;bananafastfile&quot;,&quot;orangesmartfile&quot;,&quot;cloudsendhub&quot;,&quot;syncdatavault&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImDnsActivity
+| where TimeGenerated &gt; ago(30d)
+| where DnsQuery has_any (&quot;apricotfilepoint.com&quot;,&quot;filecopperbasket&quot;,&quot;filevelvettractor&quot;,&quot;fileoceanhammer&quot;,&quot;filemarblegarden&quot;,&quot;applefilevault&quot;,&quot;bananafastfile&quot;,&quot;orangesmartfile&quot;,&quot;cloudsendhub&quot;,&quot;syncdatavault&quot;)
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Hits=count() by SrcIpAddr, SrcHostname, DnsQuery
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: macOS ClickFix Infostealer Delivery Domain Contact
+id: 6f2a1c94-8d3e-4f77-9b12-2a5c0e7f1d84
+description: DNS resolution to Microsoft-tracked macOS ClickFix front-end domains (file+dictionary cluster incl. apricotfilepoint[.]com)
 references:
   - https://www.microsoft.com/en-us/security/blog/2026/08/05/macos-clickfix-campaign-learned-hide/
+  - https://thehackernews.com/2026/08/over-250-clickfix-domains-use-browser.html
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
+  - attack.initial_access
   - attack.t1566.002
-  - attack.t1105
 logsource:
   category: dns
 detection:
   selection:
-    QueryName|contains:
-      - apricotfilepoint.com
-      - filecopperbasket
-      - filevelvettractor
-      - fileoceanhammer
-      - filemarblegarden
-      - applefilevault
-      - bananafastfile
-      - orangesmartfile
-      - cloudsendhub
-      - syncdatavault
+    query|contains:
+      - &#x27;apricotfilepoint.com&#x27;
+      - &#x27;filecopperbasket&#x27;
+      - &#x27;filevelvettractor&#x27;
+      - &#x27;fileoceanhammer&#x27;
+      - &#x27;filemarblegarden&#x27;
+      - &#x27;applefilevault&#x27;
+      - &#x27;bananafastfile&#x27;
+      - &#x27;orangesmartfile&#x27;
+      - &#x27;cloudsendhub&#x27;
+      - &#x27;syncdatavault&#x27;
   condition: selection
-level: medium</code></pre></div>
+level: high</code></pre></div>
     <div class="tab-content" id="art-04-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
 | DomainName=/(apricotfilepoint\.com|filecopperbasket|filevelvettractor|fileoceanhammer|filemarblegarden|applefilevault|bananafastfile|orangesmartfile|cloudsendhub|syncdatavault)/i
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/curl/*&quot;) OR (Web.dest IN (&quot;apricotfilepoint.com&quot;,&quot;filecopperbasket*&quot;,&quot;filevelvettractor*&quot;,&quot;fileoceanhammer*&quot;,&quot;filemarblegarden*&quot;,&quot;applefilevault*&quot;,&quot;bananafastfile*&quot;,&quot;orangesmartfile*&quot;,&quot;cloudsendhub*&quot;,&quot;syncdatavault*&quot;)) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/curl/*&quot;) OR (Web.dest IN (&quot;apricotfilepoint.com&quot;,&quot;filecopperbasket*&quot;,&quot;filevelvettractor*&quot;,&quot;fileoceanhammer*&quot;,&quot;filemarblegarden*&quot;,&quot;applefilevault*&quot;,&quot;bananafastfile*&quot;,&quot;orangesmartfile*&quot;,&quot;cloudsendhub*&quot;,&quot;syncdatavault*&quot;)) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;apricotfilepoint.com&quot;,&quot;*apricotfilepoint.com&quot;,&quot;*filecopperbasket*&quot;,&quot;*filevelvettractor*&quot;,&quot;*fileoceanhammer*&quot;,&quot;*filemarblegarden*&quot;,&quot;*applefilevault*&quot;,&quot;*bananafastfile*&quot;,&quot;*orangesmartfile*&quot;,&quot;*cloudsendhub*&quot;,&quot;*syncdatavault*&quot;)) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN (&quot;apricotfilepoint.com&quot;,&quot;*apricotfilepoint.com&quot;,&quot;*filecopperbasket*&quot;,&quot;*filevelvettractor*&quot;,&quot;*fileoceanhammer*&quot;,&quot;*filemarblegarden*&quot;,&quot;*applefilevault*&quot;,&quot;*bananafastfile*&quot;,&quot;*orangesmartfile*&quot;,&quot;*cloudsendhub*&quot;,&quot;*syncdatavault*&quot;)) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="25a53baeb5" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,macos,windows">
+<details class="uc" data-uc-slug="4128bda785" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
   <summary>
-    <span class="uc-title">macOS ClickFix execution: curl (insecure) piped to shell with base64 decode</span>
+    <span class="uc-title">macOS ClickFix Terminal one-liner: curl fetching /curl/ staging piped to shell</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="25a53baeb5" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4128bda785" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the ClickFix in-memory execution signature on macOS — an obfuscated curl one-liner (often curl -k / --insecure to a /curl/ path) piped directly into zsh/bash/sh, frequently with base64 -d, which retrieves and runs the MacSync/AMOS loader without writing an app bundle to disk. This is the exact suspicious sequence (curl piped to zsh, base64 -d) Microsoft flagged.
+    <div class="uc-desc">Detects the ClickFix execution step where a user-pasted Terminal command runs curl against the campaign&#x27;s front-end domains (or the confirmed /curl/&lt;id&gt; staging path) and pipes the response into bash/sh/zsh to launch MacSync or Atomic Stealer (AMOS). This is the article&#x27;s core tradecraft shift: remote script retrieval from Terminal rather than a downloaded app bundle.
 
-Rationale: Anchors on the exact suspicious sequence Microsoft named (curl piped to zsh, base64 -d), the curl -k/--insecure flag and /curl/&lt;id&gt; staging path confirmed by Datadog Security Labs and CircleID — a combination that legitimate software rarely uses all at once and that is the defining ClickFix macOS loader behaviour.
+Rationale: Uses the article&#x27;s domain stems plus the MS-blog-confirmed &#x27;/curl/&lt;id&gt;&#x27; staging path, requiring a shell/Terminal parent — the exact ClickFix paste-to-Terminal shape that distinguishes it from ordinary curl usage.
 
 Cross-checked against:
   • https://www.microsoft.com/en-us/security/blog/2026/08/05/macos-clickfix-campaign-learned-hide/
-  • https://securitylabs.datadoghq.com/articles/tech-impersonators-clickfix-and-macos-infostealers/
-  • https://www.jamf.com/blog/clickfix-macos-script-editor-atomic-stealer/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious Copy and Paste">T1204.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+  • https://www.sophos.com/en-us/blog/why-amos-matters-the-macos-malware-stealing-data-at-scale</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Homebrew / rustup / nvm install one-liners that curl a script and pipe to bash (but these use HTTPS without -k and not a /curl/ path)</li><li>Internal DevOps bootstrap scripts fetching config via curl | sh</li><li>CI/CD agent provisioning on developer macOS fleet</li><li>A developer testing an install script against a self-signed staging server with -k</li><li>Security tooling that legitimately pipes curl output to a shell</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;brew.sh&quot;,&quot;raw.githubusercontent.com&quot;,&quot;sh.rustup.rs&quot;,&quot;get.docker.com&quot;,&quot;deb.nodesource.com&quot;,&quot;install.python-poetry.org&quot;) and not ProcessCommandLine has_any (&quot;-k&quot;,&quot;--insecure&quot;,&quot;/curl/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and the parent (Terminal/zsh); confirm the URL host against the ClickFix domain cluster and whether -k or /curl/ is present. Check user awareness — ClickFix requires the user to have pasted a command. 2) Contain: isolate the endpoint, kill the curl/zsh chain, and block the resolved staging host/IP; capture ~/Library/LaunchAgents and running processes before reboot. 3) Hunt: look for follow-on xattr -c quarantine clearing, credential/browser/wallet file access (~/Library/Application Support, Keychain), and outbound C2 from the spawned process; sweep the fleet for the same curl|shell command shape.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer running a legitimate curl|bash installer (Homebrew/nvm/rustup) — but not against these domains</li><li>Internal automation that pulls scripts via curl from a corporate host</li><li>Red-team / purple-team ClickFix simulation</li><li>Security analyst manually reproducing the reported command in a lab</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine has_any (&quot;apricotfilepoint.com&quot;,&quot;/curl/&quot;) or not (ProcessCommandLine has_any (&quot;brew.sh&quot;,&quot;raw.githubusercontent.com&quot;,&quot;rustup.rs&quot;,&quot;nvm.sh&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full ProcessCommandLine and resolve the staging URL; check the parent shell&#x27;s history and whether a stealer binary was written to /tmp, ~/Library, or a hidden path within seconds. 2) Contain: isolate the host, kill the shell/curl tree, block the domain, and force-reset the user&#x27;s credentials, browser sessions, and any crypto-wallet secrets. 3) Hunt: look for follow-on osascript password prompts and keychain access (credential UC), outbound POST to the same infra, and other hosts resolving the domain cluster.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc1-sentinel">Sentinel KQL</button>
@@ -1797,82 +1793,86 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-04-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where FileName in~ (&quot;curl&quot;,&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;)
-| where ProcessCommandLine has &quot;curl&quot;
-| where ProcessCommandLine matches regex @&quot;(?i)\|\s*(zsh|bash|/bin/sh|sh)\b&quot;
-   or ProcessCommandLine has &quot;base64&quot;
-| where ProcessCommandLine has_any (&quot;-k&quot;,&quot;--insecure&quot;,&quot;/curl/&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| where Timestamp &gt; ago(30d)
+| where FileName =~ &quot;curl&quot;
+| where ProcessCommandLine has_any (&quot;apricotfilepoint.com&quot;,&quot;/curl/&quot;,&quot;filecopperbasket&quot;,&quot;filevelvettractor&quot;,&quot;fileoceanhammer&quot;,&quot;filemarblegarden&quot;,&quot;applefilevault&quot;,&quot;bananafastfile&quot;,&quot;orangesmartfile&quot;,&quot;cloudsendhub&quot;,&quot;syncdatavault&quot;)
+| where InitiatingProcessFileName in~ (&quot;bash&quot;,&quot;zsh&quot;,&quot;sh&quot;,&quot;Terminal&quot;,&quot;dash&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessName has_any (&quot;curl&quot;,&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;) or ParentProcessName has_any (&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;Terminal&quot;)
-| where ActingProcessCommandLine has &quot;curl&quot; or ParentProcessCommandLine has &quot;curl&quot;
-| where (ActingProcessCommandLine matches regex @&quot;(?i)\|\s*(zsh|bash|/bin/sh|sh)\b&quot; or ActingProcessCommandLine has &quot;base64&quot;)
-| where ActingProcessCommandLine has_any (&quot;-k&quot;,&quot;--insecure&quot;,&quot;/curl/&quot;) or ParentProcessCommandLine has_any (&quot;-k&quot;,&quot;--insecure&quot;,&quot;/curl/&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessName has &quot;curl&quot;
+| where TargetProcessCommandLine has_any (&quot;apricotfilepoint.com&quot;,&quot;/curl/&quot;,&quot;filecopperbasket&quot;,&quot;filevelvettractor&quot;,&quot;fileoceanhammer&quot;,&quot;filemarblegarden&quot;,&quot;applefilevault&quot;,&quot;bananafastfile&quot;,&quot;orangesmartfile&quot;,&quot;cloudsendhub&quot;,&quot;syncdatavault&quot;)
+| where ActingProcessName has_any (&quot;bash&quot;,&quot;zsh&quot;,&quot;sh&quot;,&quot;Terminal&quot;,&quot;dash&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: macOS ClickFix curl Piped to Shell (In-Memory AMOS/MacSync Loader)
-id: c1f7a904-2d33-4a8e-b6c2-9e0d4f715a22
-description: Detects the macOS ClickFix execution pattern of an obfuscated curl one-liner (insecure or /curl/ staging path) piped into zsh/bash/sh, optionally with base64 -d, to fetch and run an infostealer in memory.
+    <div class="tab-content" id="art-04-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: macOS ClickFix curl-to-shell Payload Retrieval
+id: b1e7d3a2-4c56-4a9f-8e21-7f0c9d6b2a55
+description: curl fetching macOS ClickFix staging URL (/curl/ path or campaign domains) under a shell/Terminal parent, delivering MacSync/AMOS
 references:
   - https://www.microsoft.com/en-us/security/blog/2026/08/05/macos-clickfix-campaign-learned-hide/
-  - https://securitylabs.datadoghq.com/articles/tech-impersonators-clickfix-and-macos-infostealers/
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
-  - attack.t1204.004
+  - attack.execution
+  - attack.t1204.001
   - attack.t1059.004
   - attack.t1105
 logsource:
   category: process_creation
   product: macos
 detection:
-  selection_curl:
-    CommandLine|contains: &#x27;curl&#x27;
-  selection_pipe:
+  selection_img:
+    Image|endswith: &#x27;/curl&#x27;
+  selection_cmd:
     CommandLine|contains:
-      - &#x27;| zsh&#x27;
-      - &#x27;|zsh&#x27;
-      - &#x27;| bash&#x27;
-      - &#x27;| sh&#x27;
-      - &#x27;base64 -d&#x27;
-  selection_evasion:
-    CommandLine|contains:
-      - &#x27; -k&#x27;
-      - &#x27;--insecure&#x27;
+      - &#x27;apricotfilepoint.com&#x27;
       - &#x27;/curl/&#x27;
-  condition: selection_curl and selection_pipe and selection_evasion
+      - &#x27;filecopperbasket&#x27;
+      - &#x27;filevelvettractor&#x27;
+      - &#x27;fileoceanhammer&#x27;
+      - &#x27;filemarblegarden&#x27;
+      - &#x27;applefilevault&#x27;
+      - &#x27;bananafastfile&#x27;
+      - &#x27;orangesmartfile&#x27;
+      - &#x27;cloudsendhub&#x27;
+      - &#x27;syncdatavault&#x27;
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/bash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/Terminal&#x27;
+  condition: selection_img and selection_cmd and selection_parent
 level: high</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| CommandLine=/curl/i
-| regex(&quot;(?i)\|\s*(zsh|bash|sh)&quot;, field=CommandLine)
-| CommandLine=/(-k|--insecure|\/curl\/|base64\s+-d)/i
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*curl*&quot; AND (Processes.process=&quot;*| zsh*&quot; OR Processes.process=&quot;*|zsh*&quot; OR Processes.process=&quot;*| bash*&quot; OR Processes.process=&quot;*| sh*&quot; OR Processes.process=&quot;*base64 -d*&quot;) AND (Processes.process=&quot;*-k*&quot; OR Processes.process=&quot;*--insecure*&quot; OR Processes.process=&quot;*/curl/*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*curl*&quot; AND (Processes.process=&quot;*| zsh*&quot; OR Processes.process=&quot;*|zsh*&quot; OR Processes.process=&quot;*| bash*&quot; OR Processes.process=&quot;*| sh*&quot; OR Processes.process=&quot;*base64 -d*&quot;) AND (Processes.process=&quot;*-k*&quot; OR Processes.process=&quot;*--insecure*&quot; OR Processes.process=&quot;*/curl/*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/curl$/i
+| CommandLine=/(apricotfilepoint\.com|\/curl\/|filecopperbasket|filevelvettractor|fileoceanhammer|filemarblegarden|applefilevault|bananafastfile|orangesmartfile|cloudsendhub|syncdatavault)/i
+| ParentBaseFileName=/(bash|zsh|sh|dash|Terminal)/i
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=curl OR Processes.process=&quot;*curl*&quot;) (Processes.process=&quot;*apricotfilepoint.com*&quot; OR Processes.process=&quot;*/curl/*&quot; OR Processes.process=&quot;*filecopperbasket*&quot; OR Processes.process=&quot;*filevelvettractor*&quot; OR Processes.process=&quot;*fileoceanhammer*&quot; OR Processes.process=&quot;*filemarblegarden*&quot; OR Processes.process=&quot;*applefilevault*&quot; OR Processes.process=&quot;*bananafastfile*&quot; OR Processes.process=&quot;*orangesmartfile*&quot; OR Processes.process=&quot;*cloudsendhub*&quot; OR Processes.process=&quot;*syncdatavault*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=curl OR Processes.process=&quot;*curl*&quot;) (Processes.process=&quot;*apricotfilepoint.com*&quot; OR Processes.process=&quot;*/curl/*&quot; OR Processes.process=&quot;*filecopperbasket*&quot; OR Processes.process=&quot;*filevelvettractor*&quot; OR Processes.process=&quot;*fileoceanhammer*&quot; OR Processes.process=&quot;*filemarblegarden*&quot; OR Processes.process=&quot;*applefilevault*&quot; OR Processes.process=&quot;*bananafastfile*&quot; OR Processes.process=&quot;*orangesmartfile*&quot; OR Processes.process=&quot;*cloudsendhub*&quot; OR Processes.process=&quot;*syncdatavault*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="2c42e90489" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
+<details class="uc" data-uc-slug="e8008ab77c" data-platforms="def,falcon,sent,sigma,spl" data-targets="macos,windows">
   <summary>
-    <span class="uc-title">macOS Gatekeeper/quarantine strip via xattr -c in shell download chain</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">macOS infostealer credential theft: shell-spawned osascript password prompt + keychain access</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2c42e90489" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="e8008ab77c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects removal of the com.apple.quarantine attribute via xattr (notably &#x27;xattr -c&#x27;) by a shell or curl-spawned process, a step in the macOS ClickFix chain that neutralises Gatekeeper before the staged MacSync/AMOS payload runs. Microsoft explicitly lists &#x27;xattr -c&#x27; alongside curl-piped-to-zsh as a suspicious sequence for this campaign.
+    <div class="uc-desc">Detects the post-execution credential-access stage of MacSync/AMOS delivered by this ClickFix chain: a shell/Terminal-spawned osascript throwing a fake &#x27;display dialog&#x27; password prompt, or the &#x27;security&#x27; binary dumping the login keychain. This captures the stealer&#x27;s harvest of the macOS user password, Keychain, browser data and wallet secrets that the campaign exists to steal.
 
-Rationale: Uses the specific &#x27;xattr -c&#x27; artifact Microsoft named for this campaign and constrains the parent to shell/curl/Terminal/osascript, which is what separates ClickFix Gatekeeper-strip from a developer manually de-quarantining a downloaded app in Finder or a build script.
+Rationale: The article states the chain delivers MacSync/AMOS to steal credentials, Keychain, browser data and wallets; the osascript &#x27;display dialog&#x27; password-prompt and &#x27;security&#x27; keychain dump are the corroborated AMOS harvest primitives, constrained to a shell/Terminal parent to keep fidelity high.
 
 Cross-checked against:
-  • https://www.microsoft.com/en-us/security/blog/2026/08/05/macos-clickfix-campaign-learned-hide/
-  • https://www.jamf.com/blog/clickfix-macos-script-editor-atomic-stealer/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Subvert Trust Controls: Gatekeeper Bypass">T1553.001</span> <span class="ind tech" title="File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification">T1222.002</span></div>
+  • https://www.trendmicro.com/en_us/research/25/i/an-mdr-analysis-of-the-amos-stealer-campaign.html
+  • https://techcommunity.microsoft.com/blog/microsoftsecurityexperts/hunting-infostealers---macos-threats/4494435</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Input Capture: GUI Input Capture">T1056.002</span> <span class="ind tech" title="Credentials from Password Stores: Keychain">T1555.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers running &#x27;xattr -cr MyApp.app&#x27; to launch an unsigned local build</li><li>Homebrew casks / installer scripts clearing quarantine on downloaded binaries</li><li>CI runners de-quarantining artifacts on self-hosted macOS build agents</li><li>IT provisioning scripts that batch-clear quarantine on approved software</li><li>Power users stripping quarantine to open a file blocked by Gatekeeper</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;Xcode&quot;,&quot;Finder&quot;,&quot;installer&quot;,&quot;brew&quot;) or InitiatingProcessCommandLine has_any (&quot;xattr -cr&quot;,&quot;.app&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify what file/path the xattr targeted and the parent command line; a parent of curl or a zsh loader (vs Finder/Xcode) is the differentiator. Correlate with any curl|shell execution on the same host in the preceding minutes. 2) Contain: if tied to the ClickFix curl chain, isolate the host and preserve ~/Downloads, /tmp, and LaunchAgents; block the staging host. 3) Hunt: enumerate binaries whose quarantine was just cleared, check for subsequent execution of those paths, credential/wallet/browser store access, and outbound connections to the ClickFix domain cluster.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin script using osascript &#x27;display dialog&#x27; to request a password for a sudo/install step</li><li>Enterprise MDM or packaging tool invoking &#x27;security find-generic-password&#x27; for credential retrieval</li><li>Developer debugging a keychain integration from Terminal</li><li>Password-manager or backup utility enumerating generic passwords</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;/usr/local/bin/jamf&quot;,&quot;munki&quot;,&quot;AutoPkg&quot;) or InitiatingProcessFileName in~ (&quot;installer&quot;,&quot;jamf&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the parent chain traces back to a Terminal/curl ClickFix invocation and inspect the osascript dialog text for social-engineering wording; check for a preceding curl to the campaign domains. 2) Contain: isolate the host, terminate the process tree, and treat the macOS login password, all Keychain items, browser cookies/sessions and crypto-wallet seeds as compromised — force rotation. 3) Hunt: search for exfil POSTs, &#x27;security dump-keychain&#x27;, ditto/openssl staging of ~/Library data, and the delivery-domain and curl UCs across the fleet.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
@@ -1881,54 +1881,60 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where FileName =~ &quot;xattr&quot;
-| where ProcessCommandLine has_any (&quot;-c&quot;,&quot;-d com.apple.quarantine&quot;,&quot;com.apple.quarantine&quot;)
-| where InitiatingProcessFileName in~ (&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;curl&quot;,&quot;Terminal&quot;,&quot;osascript&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;bash&quot;,&quot;zsh&quot;,&quot;sh&quot;,&quot;Terminal&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;osascript&quot;)
+| where (FileName =~ &quot;osascript&quot; and ProcessCommandLine has &quot;display dialog&quot; and ProcessCommandLine has &quot;password&quot;)
+     or (FileName =~ &quot;security&quot; and ProcessCommandLine has_any (&quot;find-generic-password&quot;,&quot;dump-keychain&quot;))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessName =~ &quot;xattr&quot;
-| where ActingProcessCommandLine has_any (&quot;-c&quot;,&quot;-d com.apple.quarantine&quot;,&quot;com.apple.quarantine&quot;)
-| where ParentProcessName in~ (&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;curl&quot;,&quot;Terminal&quot;,&quot;osascript&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| where TimeGenerated &gt; ago(30d)
+| where ActingProcessName has_any (&quot;bash&quot;,&quot;zsh&quot;,&quot;sh&quot;,&quot;Terminal&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;osascript&quot;)
+| where (TargetProcessName has &quot;osascript&quot; and TargetProcessCommandLine has &quot;display dialog&quot; and TargetProcessCommandLine has &quot;password&quot;)
+     or (TargetProcessName has &quot;security&quot; and TargetProcessCommandLine has_any (&quot;find-generic-password&quot;,&quot;dump-keychain&quot;))
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: macOS Quarantine Attribute Removal via xattr in Shell Chain
-id: 9a2e6b17-84c5-4d0f-a3b9-1c7e5f2048d6
-description: Detects xattr clearing the com.apple.quarantine attribute (xattr -c / xattr -d com.apple.quarantine) when spawned by a shell, curl, Terminal, or osascript, consistent with the macOS ClickFix Gatekeeper-bypass step preceding AMOS/MacSync execution.
+    <div class="tab-content" id="art-04-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: macOS Infostealer Fake Password Prompt / Keychain Dump via Shell
+id: 3c9f5b71-2e08-4d6a-a4f3-1b7c8e90a6d2
+description: Shell/Terminal-spawned osascript fake password dialog or security keychain dump consistent with MacSync/AMOS credential theft
 references:
   - https://www.microsoft.com/en-us/security/blog/2026/08/05/macos-clickfix-campaign-learned-hide/
+  - https://www.trendmicro.com/en_us/research/25/i/an-mdr-analysis-of-the-amos-stealer-campaign.html
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
-  - attack.t1553.001
-  - attack.t1222.002
+  - attack.credential_access
+  - attack.t1056.002
+  - attack.t1555.001
 logsource:
   category: process_creation
   product: macos
 detection:
-  selection:
-    Image|endswith: &#x27;/xattr&#x27;
-    CommandLine|contains:
-      - &#x27; -c&#x27;
-      - &#x27;-d com.apple.quarantine&#x27;
-      - &#x27;com.apple.quarantine&#x27;
+  selection_parent:
     ParentImage|endswith:
-      - &#x27;/zsh&#x27;
       - &#x27;/bash&#x27;
+      - &#x27;/zsh&#x27;
       - &#x27;/sh&#x27;
-      - &#x27;/curl&#x27;
+      - &#x27;/dash&#x27;
       - &#x27;/Terminal&#x27;
+      - &#x27;/curl&#x27;
       - &#x27;/osascript&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/\/xattr$/i
-| CommandLine=/(-c|-d\s+com\.apple\.quarantine|com\.apple\.quarantine)/i
-| ParentBaseFileName=/(zsh|bash|sh|curl|Terminal|osascript)$/i
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;xattr&quot; AND (Processes.process=&quot;*-c*&quot; OR Processes.process=&quot;*com.apple.quarantine*&quot;) AND Processes.parent_process_name IN (&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;curl&quot;,&quot;Terminal&quot;,&quot;osascript&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;xattr&quot; AND (Processes.process=&quot;*-c*&quot; OR Processes.process=&quot;*com.apple.quarantine*&quot;) AND Processes.parent_process_name IN (&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;curl&quot;,&quot;Terminal&quot;,&quot;osascript&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  selection_prompt:
+    Image|endswith: &#x27;/osascript&#x27;
+    CommandLine|contains|all:
+      - &#x27;display dialog&#x27;
+      - &#x27;password&#x27;
+  selection_keychain:
+    Image|endswith: &#x27;/security&#x27;
+    CommandLine|contains:
+      - &#x27;find-generic-password&#x27;
+      - &#x27;dump-keychain&#x27;
+  condition: selection_parent and (selection_prompt or selection_keychain)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(bash|zsh|sh|dash|Terminal|curl|osascript)/i
+| (ImageFileName=/\/osascript$/i AND CommandLine=/display dialog/i AND CommandLine=/password/i) OR (ImageFileName=/\/security$/i AND CommandLine=/(find-generic-password|dump-keychain)/i)
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=osascript AND Processes.process=&quot;*display dialog*&quot; AND (Processes.process=&quot;*password*&quot; OR Processes.process=&quot;*Password*&quot;)) OR (Processes.process_name=security AND (Processes.process=&quot;*find-generic-password*&quot; OR Processes.process=&quot;*dump-keychain*&quot;))) (Processes.parent_process_name=bash OR Processes.parent_process_name=zsh OR Processes.parent_process_name=sh OR Processes.parent_process_name=Terminal OR Processes.parent_process_name=curl) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=osascript AND Processes.process=&quot;*display dialog*&quot; AND (Processes.process=&quot;*password*&quot; OR Processes.process=&quot;*Password*&quot;)) OR (Processes.process_name=security AND (Processes.process=&quot;*find-generic-password*&quot; OR Processes.process=&quot;*dump-keychain*&quot;))) (Processes.parent_process_name=bash OR Processes.parent_process_name=zsh OR Processes.parent_process_name=sh OR Processes.parent_process_name=Terminal OR Processes.parent_process_name=curl) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">

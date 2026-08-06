@@ -3,10 +3,10 @@
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
+  data-splunk-cats="application,cloud,endpoint,network"
   data-targets="kubernetes,linux,vcs,windows"
-  data-uc-count="8" data-llm-uc-count="6"
-  data-search="[GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration injection that allows remote code execution Logging operator has Fluentd configuration injection that allows remote code execution CVE-2026-54680 T1190 [LLM] Logging-operator Flow/Output CRD injecting Fluentd @type exec / system_cmd plugin [LLM] Fluentd aggregator pod spawning shell via out_exec (config-injection RCE) [LLM] Fluentd aggregator reaching cloud IMDS 169.254.169.254 (post-RCE SSRF) [LLM] Kube-logging Flow/Output CRD created in a system namespace [LLM] RBAC grant on flows/outputs immediately followed by exec-injected Flow (CVE-2026-54680) [LLM] Fluentd config-injection breakout signature in Flow record_transformer (&lt;/record&gt;&lt;/filter&gt;&lt;match&gt;) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj">
+  data-uc-count="7" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration injection that allows remote code execution Logging operator has Fluentd configuration injection that allows remote code execution CVE-2026-54680 T1190 [LLM] Logging-operator Flow/Output CRD injects Fluentd @type exec block (CVE-2026-54680) [LLM] Fluentd aggregator pod spawns shell/curl via injected out_exec (CVE-2026-54680 RCE) [LLM] Fluentd aggregator pod reaches EKS Instance Metadata Service (169.254.169.254) [LLM] Unexpected write to Fluentd fluent.conf introducing exec/block-close directives [LLM] Fluentd RCE pod fans out to internal cluster ranges (post-exploitation lateral movement) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-07-29-ghsa-critical-cve-2026-54680-logging-operator-has-fluentd-co" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15,7 +15,7 @@
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-07-29</span>
-    <span>8 use cases</span>
+    <span>7 use cases</span>
     <span>1 technique</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -65,33 +65,32 @@
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Kube-logging Flow/Output CRD created in a system namespace</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Logging-operator Flow/Output CRD injecting Fluentd @type exec / system_cmd plugin · [LLM] RBAC grant on flows/outputs immediately followed by exec-injected Flow (CVE-2026-54680) · [LLM] Fluentd config-injection breakout signature in Flow record_transformer (&lt;/record&gt;&lt;/filter&gt;&lt;match&gt;)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Fluentd aggregator pod spawning shell via out_exec (config-injection RCE) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Logging-operator Flow/Output CRD injects Fluentd @type exec block (CVE-2026-54680)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Fluentd aggregator pod spawns shell/curl via injected out_exec (CVE-2026-54680 RCE)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Unexpected write to Fluentd fluent.conf introducing exec/block-close directives · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Fluentd aggregator reaching cloud IMDS 169.254.169.254 (post-RCE SSRF)</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Fluentd aggregator pod reaches EKS Instance Metadata Service (169.254.169.254) · [LLM] Fluentd RCE pod fans out to internal cluster ranges (post-exploitation lateral movement)</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="d46c06f41a" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="6cd1cbd4e5" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
   <summary>
-    <span class="uc-title">Logging-operator Flow/Output CRD injecting Fluentd @type exec / system_cmd plugin</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Logging-operator Flow/Output CRD injects Fluentd @type exec block (CVE-2026-54680)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d46c06f41a" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="6cd1cbd4e5" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts Kubernetes API audit records where a user creates/updates/patches a logging.banzaicloud.io Flow or Output CRD whose spec embeds a Fluentd command-execution plugin (@type exec / @type system_cmd). Per CVE-2026-54680 these plugins are never legitimate inside a logging routing config and their presence in a tenant-created CRD is a direct RCE-injection indicator.
+    <div class="uc-desc">Hunts creation/modification of logging.banzaicloud.io Flow/Output/ClusterFlow/ClusterOutput resources whose record_transformer.records value carries injected Fluentd config — block-close tags (&lt;/record&gt;, &lt;/filter&gt;), a new &lt;match **&gt; block, or an @type exec directive. This is the exact CVE-2026-54680 injection vector at the Kubernetes API layer, before the malicious config is ever rendered to fluent.conf.
 
-Rationale: Uses the exact CVE-2026-54680 injection primitive: a logging.banzaicloud.io Flow/Output CRD carrying Fluentd&#x27;s core @type exec / @type system_cmd plugin, which cannot appear in a benign logging pipeline. Cross-checked against the GHSA advisory and independent write-ups confirming the plugin-injection path.
+Rationale: Uses the exact CVE-2026-54680 vector: record_transformer.records value carrying &lt;/record&gt;/&lt;/filter&gt;/&lt;match **&gt;/@type exec inside a logging.banzaicloud.io Flow/Output CRD. Kubernetes audit RequestObject captures the raw injected payload before rendering. Corroborated by GitLab GLAD and cvereports.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-mjqf-28ph-426h
-  • https://cvereports.com/reports/CVE-2026-54680
-  • https://gbhackers.com/fluentd-security-flaws/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Container Administration Command">T1609</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+  • https://advisories.gitlab.com/golang/github.com/kube-logging/logging-operator/CVE-2026-54680/
+  • https://cvereports.com/reports/CVE-2026-54680</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Container Administration Command">T1609</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A platform engineer legitimately (but unwisely) using @type exec in a central ClusterFlow for an approved log-forwarding integration</li><li>GitOps controller (ArgoCD/Flux) re-applying a pre-existing Flow that already contained an exec block prior to remediation</li><li>Security team red-team / validation exercise applying the PoC manifest in a lab namespace</li><li>Backup/restore tooling re-hydrating CRDs from an etcd snapshot that predates the patch</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Username !in (&quot;system:serviceaccount:argocd:argocd-application-controller&quot;, &quot;system:serviceaccount:flux-system:kustomize-controller&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestObject and identify the injected command string and the subjectAccessReview username/serviceaccount plus source IP; confirm the namespace is a tenant/watched namespace. 2) Contain: delete the malicious Flow/Output CRD, revoke the creator&#x27;s create/update RBAC on flows/outputs, and restart the Fluentd aggregator pod to flush the injected config; upgrade logging-operator to &gt;=6.6.0. 3) Hunt: inspect the generated &lt;logging&gt;-fluentd-app Secret for @type exec, check the aggregator pod for shell children (out_exec) and IMDS calls, and review who else holds create rights on flows/outputs.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Flow using record_transformer with an XML/HTML-like string value that happens to contain angle-bracket tags</li><li>A security team deploying a benign PoC/test Flow in a lab namespace to validate the patch</li><li>Operators migrating configs that legitimately reference an out_exec pipeline (rare but possible)</li><li>GitOps controller (ArgoCD/Flux) re-applying a stored Flow manifest, causing repeated update events</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Payload has_any (&quot;@type exec&quot;,&quot;&lt;match **&gt;&quot;) // require the exec/match directive, not just any angle bracket, to drop benign XML-in-value FPs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full RequestObject from the audit event and confirm record_transformer.records contains a block-close (&lt;/record&gt;) followed by &lt;match **&gt; and @type exec — that structure is not legitimate config. Identify the User.username and source namespace. 2) Contain: delete the malicious Flow/Output, cordon the affected tenant namespace&#x27;s ability to create logging CRDs (RBAC), and restart/inspect the Fluentd aggregator pod for the rendered fluent.conf and any dropped files (e.g. /tmp/pwned). 3) Hunt: pivot to UC on fluentd process spawning shells and IMDS access from the aggregator pod within the same window; review all Flow/Output creates by that principal over 30d.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-128-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-128-uc0-sigma">Sigma</button>
@@ -101,65 +100,72 @@ Cross-checked against:
     <div class="tab-content active" id="art-128-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
 | where TimeGenerated &gt; ago(7d)
 | where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where tostring(ObjectRef.resource) in (&quot;flows&quot;,&quot;outputs&quot;,&quot;clusterflows&quot;,&quot;clusteroutputs&quot;)
-| extend Req = tostring(RequestObject)
-| where Req has &quot;@type exec&quot; or Req has &quot;@type system_cmd&quot;
-| project TimeGenerated, Username, Verb, Namespace = tostring(ObjectRef.namespace), Name = tostring(ObjectRef.name), RequestUri, UserAgent, Req
+| where RequestUri has &quot;logging.banzaicloud.io&quot;
+| where RequestUri has_any (&quot;flows&quot;,&quot;outputs&quot;,&quot;clusterflows&quot;,&quot;clusteroutputs&quot;)
+| extend Payload = tostring(RequestObject)
+| where Payload has &quot;record_transformer&quot;
+| where Payload has_any (&quot;@type exec&quot;,&quot;&lt;/record&gt;&quot;,&quot;&lt;/filter&gt;&quot;,&quot;&lt;match **&gt;&quot;)
+| project TimeGenerated, User=tostring(User.username), Verb, RequestUri, ResponseStatus=tostring(ResponseStatus.code), Payload
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Logging-operator Flow/Output CRD injecting Fluentd exec plugin
-id: 8b5f9d2a-3c41-4e7a-9b2f-1a6d0e7c4f11
-description: Detects creation or modification of a kube-logging Flow/Output CRD whose body contains the Fluentd @type exec or @type system_cmd command-execution plugin (CVE-2026-54680 config injection RCE).
+    <div class="tab-content" id="art-128-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Logging-operator Flow CRD with injected Fluentd exec block
+id: 8f2c1a44-6b3e-4d21-9f0a-1c7e5b9d3a20
+description: Detects Kubernetes Flow/Output CRD create/update whose payload contains an injected Fluentd @type exec block (CVE-2026-54680)
 references:
   - https://github.com/advisories/GHSA-mjqf-28ph-426h
-  - https://cvereports.com/reports/CVE-2026-54680
+  - https://advisories.gitlab.com/golang/github.com/kube-logging/logging-operator/CVE-2026-54680/
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
+  - attack.t1190
   - attack.t1609
-  - attack.t1059.004
 logsource:
   product: kubernetes
   service: audit
 detection:
-  selection:
+  selection_verb:
     verb:
       - create
       - update
       - patch
+  selection_res:
+    objectRef.apiGroup: logging.banzaicloud.io
     objectRef.resource:
       - flows
       - outputs
       - clusterflows
       - clusteroutputs
+  selection_payload:
     requestObject|contains:
       - &#x27;@type exec&#x27;
-      - &#x27;@type system_cmd&#x27;
-  condition: selection
+      - &#x27;&lt;/record&gt;&#x27;
+      - &#x27;&lt;/filter&gt;&#x27;
+      - &#x27;&lt;match **&gt;&#x27;
+  condition: selection_verb and selection_res and selection_payload
 level: high</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(flows OR outputs OR clusterflows OR clusteroutputs) (&quot;@type exec&quot; OR &quot;@type system_cmd&quot;)</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`summariesonly` index=kube_audit sourcetype=&quot;kube:apiserver:audit&quot; (verb=create OR verb=update OR verb=patch) (objectRef.resource=flows OR objectRef.resource=outputs OR objectRef.resource=clusterflows OR objectRef.resource=clusteroutputs) apiGroup=&quot;logging.banzaicloud.io&quot; (&quot;@type exec&quot; OR &quot;@type system_cmd&quot;) | table _time user.username verb objectRef.namespace objectRef.name requestURI sourceIPs{} userAgent | sort - _time</code></pre></div>
+    <div class="tab-content" id="art-128-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.apiGroup:logging.banzaicloud.io @objectRef.resource:(flows OR outputs OR clusterflows OR clusteroutputs) (@requestObject.spec.filters:*exec* OR @requestObject.spec.filters:*match* OR @requestObject.spec.filters:*record\&gt;*)</code></pre></div>
+    <div class="tab-content" id="art-128-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc0-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats count from datamodel=Change where nodename=All_Changes.All_Changes All_Changes.object_category=&quot;kubernetes&quot; by All_Changes.user All_Changes.action All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | search command=&quot;*logging.banzaicloud.io*&quot; (command=&quot;*@type exec*&quot; OR command=&quot;*&lt;/record&gt;*&quot; OR command=&quot;*&lt;/filter&gt;*&quot; OR command=&quot;*&lt;match **&gt;*&quot;)</code></pre><pre class="spl-mode-body" id="art-128-uc0-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats count from datamodel=Change where nodename=All_Changes.All_Changes All_Changes.object_category=&quot;kubernetes&quot; by All_Changes.user All_Changes.action All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | search command=&quot;*logging.banzaicloud.io*&quot; (command=&quot;*@type exec*&quot; OR command=&quot;*&lt;/record&gt;*&quot; OR command=&quot;*&lt;/filter&gt;*&quot; OR command=&quot;*&lt;match **&gt;*&quot;)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9fe9778328" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+<details class="uc" data-uc-slug="6e8b521719" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">Fluentd aggregator pod spawning shell via out_exec (config-injection RCE)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Fluentd aggregator pod spawns shell/curl via injected out_exec (CVE-2026-54680 RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9fe9778328" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="6e8b521719" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the endpoint side of CVE-2026-54680: the Fluentd aggregator (ruby/fluentd) process spawning /bin/sh -c to run injected commands when out_exec flushes its buffer. Anchored on the PoC command shapes (id &gt; /tmp/pwned, curl to IMDS).
+    <div class="uc-desc">Detects the Fluentd aggregator (ruby/fluentd process) spawning /bin/sh, curl, wget or id — the observable result of Fluentd&#x27;s core @type exec plugin flushing an injected &lt;match&gt; buffer and running attacker commands. Directly matches the article PoC (&#x27;/bin/sh -c &quot;id &gt; /tmp/pwned&quot;&#x27;).
 
-Rationale: Fluentd is a ruby daemon that never legitimately spawns interactive shells; a ruby/fluentd parent forking /bin/sh -c with the PoC payloads (id &gt; /tmp/pwned, curl 169.254.169.254) is the direct on-host signature of out_exec firing the injected command.
+Rationale: Fluentd out_exec spawns &#x27;/bin/sh -c &quot;&lt;command&gt;&quot;&#x27; from the ruby aggregator process — the article&#x27;s PoC command chain. Parent=fluentd/ruby + child=shell/curl is a combination Fluentd never legitimately produces, making it high-fidelity.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-mjqf-28ph-426h
-  • https://cybersecuritynews.com/fluentd-vulnerabilities/amp/</div>
+  • https://docs.fluentd.org/output/exec
+  • https://advisories.gitlab.com/golang/github.com/kube-logging/logging-operator/CVE-2026-54680/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Container Administration Command">T1609</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A legitimately configured out_exec output plugin invoking a sanctioned wrapper script for downstream forwarding</li><li>Fluentd liveness/exec probe or entrypoint script running shell during container startup</li><li>Operator/debug session where an engineer execs into the pod (parent would be containerd-shim, not ruby — usually filtered out)</li><li>Custom fluentd plugins that legitimately shell out for enrichment</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;containerd-shim&quot; and ProcessCommandLine !has &quot;liveness&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full child command line and the fluentd pod/node; determine whether the command touched /tmp/pwned, IMDS, or spawned a reverse shell. 2) Contain: cordon the node and kill/restart the aggregator pod, then remove the malicious Flow/Output CRD so the injected config is not re-rendered; rotate any node/pod credentials the command could have reached. 3) Hunt: enumerate all child processes and outbound connections from the fluentd pod, review the fluentd Secret for @type exec, and correlate with the CRD-creation audit event to identify the initiating principal.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A custom-built Fluentd image that legitimately uses an exec_filter/out_exec pipeline for enrichment (rare, config-visible)</li><li>Container liveness/exec health probes running sh inside the fluentd pod via kubelet (parent would be runc/containerd, not fluentd — usually excluded)</li><li>Debugging: an operator kubectl-execs into the fluentd pod and runs sh (parent is containerd-shim, not fluentd)</li><li>Fluentd plugin that shells out to gzip/logrotate during buffer rotation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;liveness&quot;,&quot;readiness&quot;,&quot;healthz&quot;) ) // drop probe-driven shells</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full child ProcessCommandLine — if it contains /bin/sh -c with curl to 169.254.169.254, id, or writes to /tmp, treat as confirmed RCE. Confirm the parent is the fluentd aggregator PID. 2) Contain: kill the aggregator pod, snapshot it for forensics, rotate any IAM/instance credentials the node role holds, and freeze logging-CRD create RBAC for tenant namespaces. 3) Hunt: correlate back to the Flow/Output CRD create (UC 1) that seeded the injection and forward to IMDS/lateral-egress UCs for the same pod within the window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-128-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-128-uc1-sentinel">Sentinel KQL</button>
@@ -170,24 +176,22 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-128-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where ProcessCommandLine has_any (&quot;/tmp/pwned&quot;,&quot;169.254.169.254&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;/bin/sh -c&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessId
+| where InitiatingProcessFileName has_any (&quot;fluentd&quot;,&quot;ruby&quot;) or InitiatingProcessCommandLine has &quot;fluentd&quot;
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-128-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;)
-| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where ActingProcessCommandLine has_any (&quot;/tmp/pwned&quot;,&quot;169.254.169.254&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;/bin/sh -c&quot;)
+| where ParentProcessName has_any (&quot;fluentd&quot;,&quot;ruby&quot;) or ParentProcessCommandLine has &quot;fluentd&quot;
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;nc&quot;,&quot;ncat&quot;)
 | project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Fluentd aggregator spawning shell via out_exec (CVE-2026-54680)
-id: 2d7c1a90-6f34-4b28-8e51-77a9c0b3e2d4
-description: Detects the Fluentd/ruby aggregator process spawning a Unix shell to execute injected commands, the on-host RCE result of CVE-2026-54680 config injection.
+    <div class="tab-content" id="art-128-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Fluentd process spawns shell via out_exec plugin
+id: c1d9e772-0a4b-4e6c-8b11-2f6a9d4c7e83
+description: Detects the Fluentd aggregator (ruby/fluentd) spawning a shell or network tool, indicating out_exec RCE (CVE-2026-54680)
 references:
   - https://github.com/advisories/GHSA-mjqf-28ph-426h
-  - https://cvereports.com/reports/CVE-2026-54680
+  - https://docs.fluentd.org/output/exec
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
@@ -199,273 +203,212 @@ logsource:
 detection:
   selection:
     ParentImage|endswith:
-      - &#x27;/ruby&#x27;
       - &#x27;/fluentd&#x27;
+      - &#x27;/ruby&#x27;
     Image|endswith:
       - &#x27;/sh&#x27;
       - &#x27;/bash&#x27;
       - &#x27;/dash&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/id&#x27;
+      - &#x27;/nc&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash) (@process.command_line:*/tmp/pwned* OR @process.command_line:*169.254.169.254* OR @process.command_line:*curl* OR @process.command_line:*wget*)</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(ruby|fluentd|fluent)/i | ImageFileName=/\/(sh|bash|dash)$/i | CommandLine=/(\/tmp\/pwned|169\.254\.169\.254|curl|wget|\/bin\/sh -c)/i | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc1-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND Processes.process IN (&quot;*/tmp/pwned*&quot;,&quot;*169.254.169.254*&quot;,&quot;*curl *&quot;,&quot;*wget *&quot;,&quot;*/bin/sh -c*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-128-uc1-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND Processes.process IN (&quot;*/tmp/pwned*&quot;,&quot;*169.254.169.254*&quot;,&quot;*curl *&quot;,&quot;*wget *&quot;,&quot;*/bin/sh -c*&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-128-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(sh OR bash OR dash OR curl OR wget OR id OR nc OR ncat) @process.command_line:(*fluentd* OR */tmp/pwned* OR *169.254.169.254* OR *&quot;/bin/sh -c&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-128-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(ruby|fluentd)$/i ImageFileName=/\/(sh|bash|dash|curl|wget|id|nc|ncat)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-128-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc1-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;fluentd&quot;,&quot;ruby&quot;) OR Processes.parent_process=&quot;*fluentd*&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;nc&quot;,&quot;ncat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-128-uc1-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;fluentd&quot;,&quot;ruby&quot;) OR Processes.parent_process=&quot;*fluentd*&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;id&quot;,&quot;nc&quot;,&quot;ncat&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="2ee7bef0ee" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+<details class="uc" data-uc-slug="7a28d8f539" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">Fluentd aggregator reaching cloud IMDS 169.254.169.254 (post-RCE SSRF)</span>
+    <span class="uc-title">Fluentd aggregator pod reaches EKS Instance Metadata Service (169.254.169.254)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2ee7bef0ee" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7a28d8f539" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the credential-theft step of CVE-2026-54680: the compromised Fluentd aggregator (or a shell/curl it spawned) connecting to the link-local Instance Metadata Service 169.254.169.254, confirmed reachable on EKS 1.35. Fluentd has no legitimate reason to query IMDS.
+    <div class="uc-desc">Detects a Fluentd aggregator pod (or a shell/curl child spawned by it) connecting to the link-local IMDS endpoint 169.254.169.254 — the article&#x27;s confirmed post-RCE step for stealing node/instance role credentials on EKS. Restricted to shell/curl/wget initiators to separate the injected command path from legitimate ruby-SDK IMDS use.
 
-Rationale: The advisory explicitly demonstrates the injected command curling 169.254.169.254 on EKS; a fluentd/ruby (or child curl/sh) process touching the link-local IMDS address is a high-fidelity SSRF/credential-theft signal because logging aggregators never query node metadata.
+Rationale: 169.254.169.254 IMDS access by a shell/curl child (not the ruby SDK) is the article&#x27;s confirmed EKS 1.35 credential-reach step. Scoping the initiator to sh/curl/wget separates the injected out_exec command from legitimate ruby-based instance-profile use.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-mjqf-28ph-426h
-  • https://gbhackers.com/fluentd-security-flaws/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
+  • https://advisories.gitlab.com/golang/github.com/kube-logging/logging-operator/CVE-2026-54680/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Cloud Infrastructure Discovery">T1580</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Fluentd cloud plugin (e.g. an EC2/EKS metadata enrichment filter) legitimately reading instance-id/region from IMDS</li><li>AWS SDK inside a custom ruby plugin auto-resolving instance credentials via IMDS</li><li>Node bootstrap/CNI tooling sharing the pod network namespace briefly</li><li>Monitoring agents co-located in the pod polling metadata for tagging</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;latest/dynamic/instance-identity&quot; and InitiatingProcessFileName !in~ (&quot;amazon-cloudwatch-agent&quot;,&quot;aws&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the initiating process is fluentd/ruby or a shell child (not an approved cloud plugin) and capture which IMDS path was requested (iam/security-credentials indicates credential theft). 2) Contain: restart the aggregator pod, remove the malicious CRD, and if credentials were fetched, revoke/rotate the node IAM role and enforce IMDSv2 with hop-limit 1. 3) Hunt: search CloudTrail for API calls made with the node role from unusual IPs shortly after, and check for further lateral movement from the stolen identity.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Fluentd S3/CloudWatch output plugin fetching instance-profile creds via the ruby AWS SDK (ruby initiator — excluded by the shell filter)</li><li>A sidecar or node agent using curl against IMDS for legitimate metadata (different pod/process — check pod identity)</li><li>kube2iam/IRSA proxy intercepting IMDS calls on some nodes</li><li>Cluster bootstrap scripts querying IMDS during node join (transient, node-boot window)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ruby&quot;) // ruby AWS SDK IMDS use is legitimate</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the initiating process is a shell/curl child of fluentd and the command targets /latest/meta-data or /latest/api/token — that is credential theft, not SDK use. Capture the node&#x27;s instance-profile role ARN. 2) Contain: revoke/rotate the node role&#x27;s temporary credentials, apply IMDSv2 hop-limit=1 and require tokens, and cordon/drain the node. Kill the fluentd pod. 3) Hunt: pull CloudTrail for the stolen role ARN for anomalous AssumeRole/API use off-node, and check for lateral egress from the same pod (next UC).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-128-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-128-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-128-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-128-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-128-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-128-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-128-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP == &quot;169.254.169.254&quot;
-| where InitiatingProcessFileName in~ (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessId
+| where InitiatingProcessFileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;)
+| where InitiatingProcessParentFileName has_any (&quot;fluentd&quot;,&quot;ruby&quot;) or InitiatingProcessParentFileName in~ (&quot;sh&quot;,&quot;bash&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
+    <div class="tab-content" id="art-128-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
-| where RemoteIP == &quot;169.254.169.254&quot;
-| where InitiatingProcessFileName in~ (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;)
-| project TimeGenerated, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessId
+| where DstIpAddr == &quot;169.254.169.254&quot;
+| project TimeGenerated, SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkApplicationProtocol, Url, DvcAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Fluentd process connecting to cloud IMDS 169.254.169.254 (CVE-2026-54680)
-id: c41e8b7f-9a25-4d63-8c10-5f2b6e91a0c7
-description: Detects the Fluentd aggregator or a shell/curl it spawned connecting to the link-local instance metadata service, the credential-theft step following CVE-2026-54680 RCE.
+    <div class="tab-content" id="art-128-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Fluentd shell child connects to cloud IMDS endpoint
+id: 5b3f0c19-7d2a-4e88-a6c4-9e1b7f34d520
+description: Detects a shell/curl process (spawned by Fluentd) connecting to 169.254.169.254, indicating IMDS credential theft after CVE-2026-54680 RCE
 references:
   - https://github.com/advisories/GHSA-mjqf-28ph-426h
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
   - attack.t1552.005
-  - attack.t1078.004
+  - attack.t1580
 logsource:
   category: network_connection
   product: linux
 detection:
   selection:
     Image|endswith:
-      - &#x27;/ruby&#x27;
-      - &#x27;/fluentd&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
       - &#x27;/sh&#x27;
       - &#x27;/bash&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
     DestinationIp: &#x27;169.254.169.254&#x27;
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-128-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;169.254.169.254&quot; | ContextImageFileName=/(ruby|fluentd|fluent|sh|bash|curl|wget)/i | groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-128-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc2-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;) AND Processes.process=&quot;*169.254.169.254*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-128-uc2-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;ruby&quot;,&quot;fluentd&quot;,&quot;fluent&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;curl&quot;,&quot;wget&quot;) AND Processes.process=&quot;*169.254.169.254*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-128-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(curl OR wget OR sh OR bash) @process.command_line:*169.254.169.254*</code></pre></div>
+    <div class="tab-content" id="art-128-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=169.254.169.254
+| ContextImageFileName=/\/(sh|bash|dash|curl|wget|nc|ncat)$/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-128-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc2-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;169.254.169.254&quot; All_Traffic.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name All_Traffic.user | `drop_dm_object_name(All_Traffic)`</code></pre><pre class="spl-mode-body" id="art-128-uc2-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;169.254.169.254&quot; All_Traffic.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name All_Traffic.user | `drop_dm_object_name(All_Traffic)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="257e555b4f" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+<details class="uc" data-uc-slug="cd010bc511" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">Kube-logging Flow/Output CRD created in a system namespace</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">Unexpected write to Fluentd fluent.conf introducing exec/block-close directives</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="257e555b4f" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="cd010bc511" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts logging.banzaicloud.io Flow/Output CRDs created or modified in Kubernetes system namespaces (kube-system, kube-public, kube-node-lease, default). Legitimate logging pipelines live in tenant/logging namespaces; a routing CRD in a system namespace suggests misconfiguration or an attacker positioning CVE-2026-54680 injection where it is less scrutinised.
+    <div class="uc-desc">Hunts file-write activity against the rendered Fluentd config (fluent.conf under /fluentd/etc or /etc/fluent) inside aggregator pods, and — where content is captured (auditd/AMSI-equivalent script scan) — flags introduction of @type exec or &lt;/record&gt;/&lt;/filter&gt; block-close tags. Catches the CVE-2026-54680 injection at the point the operator writes the poisoned config to disk.
 
-Rationale: Grounded in the article&#x27;s note that the operator watches namespaces and the attack requires Flow/Output creation in a watched namespace; system-namespace placement is anomalous and worth surfacing as a staging/lateral-movement signal for the injection primitive.
+Rationale: Article states injected CRD strings are written &#x27;directly into fluent.conf without escaping&#x27;; the rendered config path (/fluentd/etc/fluent.conf) is the on-disk artifact. File-event telemetry gives metadata (writer process) even where content isn&#x27;t captured, so this is a supporting hunt pivot rather than a content match.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-mjqf-28ph-426h</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Container Administration Command">T1609</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cluster admin deliberately deploying a central logging Flow in kube-system for platform-wide log capture</li><li>Helm chart or bootstrap job that provisions default Flow/Output objects in the default namespace</li><li>GitOps controller reconciling infra-level logging config into system namespaces</li><li>Managed-platform add-on that ships its own logging CRDs cluster-wide</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;argocd&quot; and UserAgent !has &quot;helm&quot; and UserAgent !has &quot;kustomize-controller&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the creating principal and whether the CRD body contains injection markers (@type exec, &lt;/record&gt;, &lt;match); confirm whether system-namespace logging is an approved pattern in this cluster. 2) Contain: if unapproved, delete the CRD and tighten RBAC so tenant identities cannot write flows/outputs in system namespaces. 3) Hunt: review all Flow/Output CRDs across namespaces for injection payloads and check the same principal&#x27;s recent RBAC changes and CRD activity.</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Manipulation: Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate logging-operator reconcile writing an updated fluent.conf after a benign Flow/Output change</li><li>Fluentd config-reload sidecar (e.g. configmap-reload) rewriting the mounted config</li><li>Helm/operator upgrade re-rendering the aggregator config</li><li>Node reboot / pod reschedule re-mounting the config Secret (may appear as a write)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;kubelet&quot;,&quot;containerd&quot;,&quot;runc&quot;,&quot;configmap-reload&quot;) // exclude mount/reload writers</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each write, base64-decode the current fluentd.conf Secret (&lt;logging&gt;-fluentd-app) and grep for &#x27;@type exec&#x27; / injected &lt;match **&gt; — presence confirms a poisoned render. Note the writing process/account. 2) Contain: roll the aggregator back to the last known-good config, delete the offending Flow/Output CRD, and restart the pod. 3) Hunt: correlate to the CRD-create UC (same principal/namespace) and to fluentd shell-spawn / IMDS UCs to confirm whether the injected exec block already fired.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-128-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-128-uc3-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-128-uc3-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-128-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-128-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-128-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-128-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+    <div class="tab-content active" id="art-128-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where FileName == &quot;fluent.conf&quot;
+| where FolderPath has_any (&quot;/fluentd/etc&quot;,&quot;/etc/fluent&quot;)
+| where InitiatingProcessFileName !in~ (&quot;kubelet&quot;,&quot;containerd&quot;,&quot;runc&quot;)
+| project Timestamp, DeviceName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, ActionType
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-128-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where tostring(ObjectRef.resource) in (&quot;flows&quot;,&quot;outputs&quot;,&quot;clusterflows&quot;,&quot;clusteroutputs&quot;)
-| extend ns = tostring(ObjectRef.namespace)
-| where ns in (&quot;kube-system&quot;,&quot;kube-public&quot;,&quot;kube-node-lease&quot;,&quot;default&quot;)
-| project TimeGenerated, Username, Verb, ns, Name = tostring(ObjectRef.name), UserAgent, RequestUri
+| where TargetFileName == &quot;fluent.conf&quot;
+| where TargetFilePath has_any (&quot;/fluentd/etc&quot;,&quot;/etc/fluent&quot;)
+| project TimeGenerated, DvcHostname, TargetFilePath, ActingProcessName, ActingProcessCommandLine, ActorUsername, EventType
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Kube-logging Flow/Output CRD in system namespace
-id: f0a3d61b-2e88-49c5-9b74-3c1e2a5f8d90
-description: Detects creation/modification of a kube-logging Flow or Output CRD in a Kubernetes system namespace, an unusual placement that may indicate misconfiguration or CVE-2026-54680 abuse staging.
+    <div class="tab-content" id="art-128-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Write to Fluentd fluent.conf by unexpected process
+id: 9a71e4c2-3f88-4b0d-bc55-6e2d17a94f61
+description: Detects file writes to the rendered Fluentd fluent.conf, the on-disk landing point for CVE-2026-54680 config injection
 references:
   - https://github.com/advisories/GHSA-mjqf-28ph-426h
 author: SOC Detection Engineering
 date: 2026/08/06
 tags:
-  - attack.t1609
-  - attack.t1078.004
+  - attack.t1565.001
+  - attack.t1059.004
 logsource:
-  product: kubernetes
-  service: audit
+  category: file_event
+  product: linux
 detection:
   selection:
-    verb:
-      - create
-      - update
-      - patch
-    objectRef.resource:
-      - flows
-      - outputs
-      - clusterflows
-      - clusteroutputs
-    objectRef.namespace:
-      - kube-system
-      - kube-public
-      - kube-node-lease
-      - default
-  condition: selection
+    TargetFilename|endswith: &#x27;/fluent.conf&#x27;
+    TargetFilename|contains:
+      - &#x27;/fluentd/etc/&#x27;
+      - &#x27;/etc/fluent/&#x27;
+  filter_mount:
+    Image|endswith:
+      - &#x27;/kubelet&#x27;
+      - &#x27;/containerd&#x27;
+      - &#x27;/runc&#x27;
+  condition: selection and not filter_mount
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-128-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(flows OR outputs OR clusterflows OR clusteroutputs) @objectRef.namespace:(kube-system OR kube-public OR kube-node-lease OR default)</code></pre></div>
-    <div class="tab-content" id="art-128-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`summariesonly` index=kube_audit sourcetype=&quot;kube:apiserver:audit&quot; (verb=create OR verb=update OR verb=patch) (objectRef.resource=flows OR objectRef.resource=outputs) apiGroup=&quot;logging.banzaicloud.io&quot; (objectRef.namespace=kube-system OR objectRef.namespace=kube-public OR objectRef.namespace=kube-node-lease OR objectRef.namespace=default) | table _time user.username verb objectRef.namespace objectRef.name userAgent sourceIPs{} | sort - _time</code></pre></div>
+    <div class="tab-content" id="art-128-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:PATH @file.path:(*/fluentd/etc/fluent.conf OR */etc/fluent/fluent.conf) -@process.name:(kubelet OR containerd OR runc)</code></pre></div>
+    <div class="tab-content" id="art-128-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\/(fluentd\/etc|etc\/fluent)\/fluent\.conf$/i
+| NOT ContextImageFileName=/\/(kubelet|containerd|runc)$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-128-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc3-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where All_Filesystem.file_name=&quot;fluent.conf&quot; (All_Filesystem.file_path=&quot;*/fluentd/etc/*&quot; OR All_Filesystem.file_path=&quot;*/etc/fluent/*&quot;) by All_Filesystem.dest All_Filesystem.file_path All_Filesystem.process_name All_Filesystem.user | `drop_dm_object_name(All_Filesystem)` | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-128-uc3-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where All_Filesystem.file_name=&quot;fluent.conf&quot; (All_Filesystem.file_path=&quot;*/fluentd/etc/*&quot; OR All_Filesystem.file_path=&quot;*/etc/fluent/*&quot;) by All_Filesystem.dest All_Filesystem.file_path All_Filesystem.process_name All_Filesystem.user | `drop_dm_object_name(All_Filesystem)` | `security_content_ctime(firstTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="e6766d6485" data-platforms="sent,spl" data-targets="kubernetes">
+<details class="uc" data-uc-slug="b88796d22e" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">RBAC grant on flows/outputs immediately followed by exec-injected Flow (CVE-2026-54680)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e6766d6485" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Fluentd RCE pod fans out to internal cluster ranges (post-exploitation lateral movement)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b88796d22e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates a Kubernetes RBAC change granting create rights on logging flows/outputs with the same principal then creating a Flow/Output CRD containing @type exec/system_cmd within 30 minutes. This links permission acquisition to exploitation, the RBAC-abuse-to-RCE chain for CVE-2026-54680.
+    <div class="uc-desc">Detects a shell/curl/nc/python child of the Fluentd aggregator making a burst of connections to RFC1918 cluster ranges (10/8, 172.16/12, 192.168/16) — internal service discovery / port-scanning from a compromised aggregator pod after CVE-2026-54680 RCE. Threshold on distinct ports/hosts within a short window separates scanning from normal log routing.
 
-Rationale: Chains two article-grounded events — acquisition of create rights on logging.banzaicloud.io flows/outputs and creation of a Flow carrying the @type exec injection — within a tight window on the same principal, the highest-confidence RBAC-abuse-to-RCE signature.
+Rationale: Article confirms the Fluentd pod has cluster/network reach (used for IMDS). Post-RCE, a shell/curl/nc child of fluentd hitting many distinct internal ports/hosts is service discovery. Parent=fluentd + private-range fan-out + port-count threshold is the discriminator from benign single-destination log routing.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-mjqf-28ph-426h
-  • https://cvereports.com/reports/CVE-2026-54680</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation">T1098</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Container Administration Command">T1609</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Platform onboarding automation that both grants a tenant logging RBAC and applies a sample Flow in quick succession (but exec injection makes this unlikely benign)</li><li>GitOps controller reconciling both a RoleBinding and a Flow from one commit</li><li>Break-glass admin manually setting up a new tenant&#x27;s logging with a legacy exec-based forwarder</li><li>IaC apply (Terraform/Pulumi) creating RBAC and CRDs in the same run</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the grant subject and the Flow creator are the same identity and inspect the injected command; determine if the grantor was authorised. 2) Contain: delete the Flow CRD, revoke the RoleBinding/ClusterRoleBinding, disable the abused identity, and restart the fluentd aggregator; patch to logging-operator &gt;=6.6.0. 3) Hunt: audit all recent RBAC changes touching flows/outputs, review whether the same identity accessed other namespaces, and check the aggregator for shell/IMDS activity.</div></details>
+  • https://github.com/advisories/GHSA-mjqf-28ph-426h</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Network Service Discovery">T1046</span> <span class="ind tech" title="Remote Services">T1021</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Fluentd legitimately forwarding to multiple internal Output endpoints/Elasticsearch/Loki nodes (ruby initiator — excluded by shell filter)</li><li>A service-mesh sidecar (Envoy/Istio) proxying many internal connections on the same pod IP</li><li>Cluster monitoring agent (Prometheus node-exporter scrape targets) sharing the node</li><li>CI/debug tooling temporarily run inside the namespace performing health checks</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;ruby&quot;) and InitiatingProcessParentFileName !in~ (&quot;envoy&quot;,&quot;pilot-agent&quot;) // exclude SDK routing and mesh sidecars</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the initiating process is a non-ruby shell/tool child of fluentd and the destinations are sequential ports or many cluster service IPs — that pattern is discovery, not routing. 2) Contain: apply a NetworkPolicy denying egress from the fluentd pod except its declared Output sinks, kill the pod, and review kube-audit for any subsequent access to secrets/serviceaccount tokens. 3) Hunt: enumerate which internal services responded, check those services for follow-on auth attempts from the pod IP, and tie back to the seeding Flow CRD and IMDS credential theft UCs.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-128-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-128-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-128-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-128-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-128-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-128-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let Grants = AKSAudit
+    <div class="tab-content active" id="art-128-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;)
+| where InitiatingProcessParentFileName has_any (&quot;fluentd&quot;,&quot;ruby&quot;) or InitiatingProcessParentFileName in~ (&quot;sh&quot;,&quot;bash&quot;)
+| where ipv4_is_private(RemoteIP)
+| summarize DistinctPorts=dcount(RemotePort), DistinctHosts=dcount(RemoteIP), SamplePorts=make_set(RemotePort, 20), FirstSeen=min(Timestamp) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 5m)
+| where DistinctPorts &gt; 15 or DistinctHosts &gt; 15  // burst = scanning, not normal log routing
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-128-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where tostring(ObjectRef.resource) in (&quot;rolebindings&quot;,&quot;clusterrolebindings&quot;,&quot;roles&quot;,&quot;clusterroles&quot;)
-| extend Rb = tostring(RequestObject)
-| where Rb has &quot;flows&quot; or Rb has &quot;outputs&quot; or Rb has &quot;logging.banzaicloud.io&quot;
-| project GrantTime = TimeGenerated, GrantUser = Username, Rb;
-AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where tostring(ObjectRef.resource) in (&quot;flows&quot;,&quot;outputs&quot;,&quot;clusterflows&quot;,&quot;clusteroutputs&quot;)
-| extend Req = tostring(RequestObject)
-| where Req has &quot;@type exec&quot; or Req has &quot;@type system_cmd&quot;
-| extend ExecTime = TimeGenerated, ExecUser = Username
-| join kind=inner Grants on $left.ExecUser == $right.GrantUser
-| where ExecTime between (GrantTime .. GrantTime + 30m)
-| project GrantTime, ExecTime, DelayMin = datetime_diff(&#x27;minute&#x27;, ExecTime, GrantTime), ExecUser, ExecNamespace = tostring(ObjectRef.namespace), ExecName = tostring(ObjectRef.name), Req
-| order by ExecTime desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`summariesonly` index=kube_audit sourcetype=&quot;kube:apiserver:audit&quot; (verb=create OR verb=update OR verb=patch) [ search index=kube_audit sourcetype=&quot;kube:apiserver:audit&quot; (objectRef.resource=rolebindings OR objectRef.resource=clusterrolebindings OR objectRef.resource=roles OR objectRef.resource=clusterroles) (&quot;flows&quot; OR &quot;outputs&quot; OR &quot;logging.banzaicloud.io&quot;) | rename user.username as grantUser | fields grantUser ] (objectRef.resource=flows OR objectRef.resource=outputs) (&quot;@type exec&quot; OR &quot;@type system_cmd&quot;) | rename user.username as execUser | where execUser=grantUser | table _time execUser objectRef.namespace objectRef.name requestURI</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="82db64428b" data-platforms="datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
-  <summary>
-    <span class="uc-title">Fluentd config-injection breakout signature in Flow record_transformer (&lt;/record&gt;&lt;/filter&gt;&lt;match&gt;)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="82db64428b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts logging Flow/Output CRDs whose record_transformer.records value contains Fluentd block-close/open tags (&lt;/record&gt;, &lt;/filter&gt;, &lt;match) — the newline-injection breakout at the heart of CVE-2026-54680. This catches the config-injection technique even when the injected plugin is not @type exec (e.g. injecting other output plugins), a distinct pivot from the plugin-name detection.
-
-Rationale: Directly matches the article&#x27;s PoC where a record_transformer value embeds `&lt;/record&gt;` `&lt;/filter&gt;` `&lt;match **&gt;` to close the current block and open a new one; these Fluentd directive tags never legitimately appear inside a record value, making this the config-injection primitive&#x27;s cleanest signature independent of the chosen plugin.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-mjqf-28ph-426h
-  • https://cvereports.com/reports/CVE-2026-54680</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Container Administration Command">T1609</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>An engineer legitimately embedding literal angle-bracket text (e.g. XML log samples) in a record value for testing</li><li>A record_transformer template that intentionally injects markup content into a field for a downstream parser</li><li>GitOps re-apply of a pre-patch Flow that already contained the breakout tags</li><li>Security validation re-running the published PoC in a lab</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Req !has &quot;e2e-test&quot; and Username !has &quot;argocd&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the injected block from RequestObject and identify what plugin/directive was smuggled in (@type exec, out_forward exfil, etc.) plus the creating principal. 2) Contain: delete the CRD, restart the fluentd aggregator to drop the injected config, and upgrade logging-operator to &gt;=6.6.0 which escapes CRD values. 3) Hunt: sweep all flows/outputs for the same breakout tags, inspect the generated fluentd Secret, and check the aggregator pod for shell execution and anomalous outbound forwarding.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-128-uc5-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-128-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-128-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where tostring(ObjectRef.resource) in (&quot;flows&quot;,&quot;outputs&quot;,&quot;clusterflows&quot;,&quot;clusteroutputs&quot;)
-| extend Req = tostring(RequestObject)
-| where Req has &quot;record_transformer&quot;
-| where Req has &quot;&lt;/record&gt;&quot; or Req has &quot;&lt;/filter&gt;&quot; or Req has &quot;&lt;match&quot;
-| project TimeGenerated, Username, Verb, Namespace = tostring(ObjectRef.namespace), Name = tostring(ObjectRef.name), RequestUri, Req
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Fluentd config-injection breakout tags in Flow record_transformer
-id: a9c2e740-51b3-4f8d-8a6c-2d90f1b7e3c5
-description: Detects a kube-logging Flow/Output CRD whose record_transformer records contain Fluentd block open/close tags (&lt;/record&gt;, &lt;/filter&gt;, &lt;match), the newline-breakout primitive of CVE-2026-54680 config injection.
-references:
-  - https://github.com/advisories/GHSA-mjqf-28ph-426h
-  - https://cvereports.com/reports/CVE-2026-54680
-author: SOC Detection Engineering
-date: 2026/08/06
-tags:
-  - attack.t1609
-  - attack.t1027
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    verb:
-      - create
-      - update
-      - patch
-    objectRef.resource:
-      - flows
-      - outputs
-      - clusterflows
-      - clusteroutputs
-    requestObject|contains: &#x27;record_transformer&#x27;
-  breakout:
-    requestObject|contains:
-      - &#x27;&lt;/record&gt;&#x27;
-      - &#x27;&lt;/filter&gt;&#x27;
-      - &#x27;&lt;match&#x27;
-  condition: selection and breakout
-level: high</code></pre></div>
-    <div class="tab-content" id="art-128-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update OR patch) @objectRef.resource:(flows OR outputs OR clusterflows OR clusteroutputs) &quot;record_transformer&quot; (&quot;&lt;/record&gt;&quot; OR &quot;&lt;/filter&gt;&quot; OR &quot;&lt;match&quot;)</code></pre></div>
-    <div class="tab-content" id="art-128-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`summariesonly` index=kube_audit sourcetype=&quot;kube:apiserver:audit&quot; (verb=create OR verb=update OR verb=patch) (objectRef.resource=flows OR objectRef.resource=outputs OR objectRef.resource=clusterflows OR objectRef.resource=clusteroutputs) apiGroup=&quot;logging.banzaicloud.io&quot; &quot;record_transformer&quot; (&quot;&lt;/record&gt;&quot; OR &quot;&lt;/filter&gt;&quot; OR &quot;&lt;match&quot;) | table _time user.username verb objectRef.namespace objectRef.name requestURI | sort - _time</code></pre></div>
+| where ipv4_is_private(DstIpAddr)
+| summarize DistinctPorts=dcount(DstPortNumber), DistinctHosts=dcount(DstIpAddr), FirstSeen=min(TimeGenerated) by SrcHostname, SrcIpAddr, bin(TimeGenerated, 5m)
+| where DistinctPorts &gt; 15 or DistinctHosts &gt; 15  // host-scoped burst; confirm src is the fluentd pod/node
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-128-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.name:(nmap OR nc OR ncat) @process.command_line:(*10.* OR *172.* OR *192.168.*)</code></pre></div>
+    <div class="tab-content" id="art-128-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\/(sh|bash|dash|curl|wget|nc|ncat|python3?)$/i
+| cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) OR cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) OR cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, ContextImageFileName], function=count(field=RemotePort, distinct=true))
+| _count &gt; 15</code></pre></div>
+    <div class="tab-content" id="art-128-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc4-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` tstats dc(All_Traffic.dest_port) as DistinctPorts dc(All_Traffic.dest) as DistinctHosts from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;10.0.0.0/8&quot; OR All_Traffic.dest=&quot;172.16.0.0/12&quot; OR All_Traffic.dest=&quot;192.168.0.0/16&quot;) All_Traffic.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;) by All_Traffic.src All_Traffic.process_name _time span=5m | `drop_dm_object_name(All_Traffic)` | where DistinctPorts &gt; 15 OR DistinctHosts &gt; 15</code></pre><pre class="spl-mode-body" id="art-128-uc4-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false tstats dc(All_Traffic.dest_port) as DistinctPorts dc(All_Traffic.dest) as DistinctHosts from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=&quot;10.0.0.0/8&quot; OR All_Traffic.dest=&quot;172.16.0.0/12&quot; OR All_Traffic.dest=&quot;192.168.0.0/16&quot;) All_Traffic.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;) by All_Traffic.src All_Traffic.process_name _time span=5m | `drop_dm_object_name(All_Traffic)` | where DistinctPorts &gt; 15 OR DistinctHosts &gt; 15</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -483,11 +426,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-128-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-128-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-128-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-128-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-128-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-128-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -496,7 +439,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-128-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-128-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -508,12 +451,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-128-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-128-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54680&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-128-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-128-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54680&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -536,11 +479,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-128-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-128-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-128-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-128-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-128-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj
+    <div class="tab-content active" id="art-128-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -553,7 +496,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-128-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj
@@ -569,14 +512,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj ```
+    <div class="tab-content" id="art-128-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/tmp/pwned*&quot; OR Filesystem.file_path=&quot;*/tmp/imds-poc*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-128-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-128-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54680: Logging operator has Fluentd configuration inj ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
