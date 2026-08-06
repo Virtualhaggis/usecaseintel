@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Anonymous POST to Gitea Org-mode markup endpoint (CVE-2026-59774 file-read)
 
-`UC_19_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_21_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Gitea process spawning unexpected shell/tooling from a hook (CVE-2026-59774 token-to-hook escalation)
 
-`UC_19_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_21_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Container PID 1 environment harvest via /proc/1/environ read
 
-`UC_1489_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1488_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

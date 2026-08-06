@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable snakeyaml < 1.26 exposed to billion-laughs YAML bomb (CVE-2017-18640)
 
-`UC_3203_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3202_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

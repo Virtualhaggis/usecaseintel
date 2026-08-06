@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### durabletask PyPI dropper launches second-stage zipapp (python3 /tmp/managed.pyz)
 
-`UC_448_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_447_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### C2 / payload-host resolution to check.git-service.com (durabletask worm)
 
-`UC_448_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_447_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### FIRESCALE GitHub dead-drop fallback C2 lookup (api.github.com commit search)
 
-`UC_448_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_447_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### Kubernetes propagation via kubectl staged in /tmp (kubectl exec / get secrets)
 
-`UC_448_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_447_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### Single process fan-out reading cloud, Vault, SSH and AI-tool credential files
 
-`UC_448_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_447_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -295,7 +295,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft's durabletask package on PyPi Compromised. Mini Shai Hulud attacks aga
 
-`UC_448_7` · phase: **exploit** · confidence: **High**
+`UC_447_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

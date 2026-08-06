@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Access to ClickFix distribution domains (apricotfilepoint.com + 'file'-token DGA)
 
-`UC_5_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_7_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### macOS ClickFix curl one-liner piped to shell fetching remote payload
 
-`UC_5_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### macOS ClickFix domain access followed by shell payload execution (correlation)
 
-`UC_5_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceProcessEvents
 
 ### macOS Gatekeeper/quarantine bypass via xattr strip before chmod +x (AMOS staging)
 
-`UC_5_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

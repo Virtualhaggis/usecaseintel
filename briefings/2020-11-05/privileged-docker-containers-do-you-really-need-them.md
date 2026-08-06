@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Privileged Docker containers—do you really need them?
 
-`UC_3284_0` · phase: **install** · confidence: **High**
+`UC_3283_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

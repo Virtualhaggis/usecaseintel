@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Marimo pre-auth RCE (CVE-2026-39987): marimo/python parent spawning a shell (PTY)
 
-`UC_104_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_106_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### Langflow CVE-2026-33017 exploitation: scanner tooling and langflow exec-to-shell
 
-`UC_104_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_106_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### n8n exploit chain (CVE-2026-21858 + CVE-2025-68613): node process spawning a shell
 
-`UC_104_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_106_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### Hermes AI agent OPSEC leak: python3 -m http.server 8888 from home directory
 
-`UC_104_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_106_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### Autonomous attack-agent egress to LLM inference APIs from non-browser process
 
-`UC_104_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_106_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceNetworkEvents
 
 ### Hermes agent C2 fingerprint: Telegram Bot API + LLM inference API from same host
 
-`UC_104_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_106_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,7 +197,7 @@ DeviceNetworkEvents
 
 ### NetScaler CVE-2026-3055 SAML IdP exposure and session-cookie (NSC_AAAC) abuse
 
-`UC_104_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_106_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -393,7 +393,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese Hacker Commands DeepSeek via Telegram to Launch Autonomous Attacks
 
-`UC_104_6` · phase: **install** · confidence: **High**
+`UC_106_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — JHipster security scanning with Snyk
 
-`UC_3299_0` · phase: **exploit** · confidence: **High**
+`UC_3298_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

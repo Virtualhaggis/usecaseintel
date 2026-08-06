@@ -9,6 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-06
+- [chinese made zbtlink routers ship with backdoor that opens u](./2026-08-06/chinese-made-zbtlink-routers-ship-with-backdoor-that-opens-u.md)
+- [ransom cartel creator gets 16 years in prison for operating ](./2026-08-06/ransom-cartel-creator-gets-16-years-in-prison-for-operating-.md)
 - [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
 
 ## 2026-08-05
@@ -105,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the xcode assassin returns a deep dive into the latest xcsse](./2026-07-31/the-xcode-assassin-returns-a-deep-dive-into-the-latest-xcsse.md)
 
 ## 2026-07-30
-- [azure cosmos db flaw exposed platform wide key that could ac](./2026-07-30/azure-cosmos-db-flaw-exposed-platform-wide-key-that-could-ac.md)
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [compromised npm packages joyfill components and joyfill layo](./2026-07-30/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
 - [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
@@ -113,7 +114,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 66066 active storage has possible arb](./2026-07-30/ghsa-critical-cve-2026-66066-active-storage-has-possible-arb.md)
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
 - [ghsa critical cve 2026 67429 flyto2 core arbitrary file writ](./2026-07-30/ghsa-critical-cve-2026-67429-flyto2-core-arbitrary-file-writ.md)
-- [microsoft copilot for word can copy hidden prompts into new ](./2026-07-30/microsoft-copilot-for-word-can-copy-hidden-prompts-into-new-.md)
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
 - [the attacker never sleeps neither can your testing](./2026-07-30/the-attacker-never-sleeps-neither-can-your-testing.md)

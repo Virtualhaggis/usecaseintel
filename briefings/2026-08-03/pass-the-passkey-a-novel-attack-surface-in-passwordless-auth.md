@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Non-Chrome process reads Google Password Manager synced-passkey store (Sync Data\LevelDB)
 
-`UC_78_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_80_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ union
 
 ### Non-Chrome access to Chrome passkey enclave/device-key material (passkey_enclave_state)
 
-`UC_78_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_80_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -376,7 +376,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pass the Passkey: A Novel Attack Surface in Passwordless Authentication
 
-`UC_78_7` · phase: **install** · confidence: **High**
+`UC_80_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
