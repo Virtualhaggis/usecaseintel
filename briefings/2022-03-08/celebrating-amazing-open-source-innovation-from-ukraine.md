@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Celebrating amazing open source innovation from Ukraine
 
-`UC_2495_0` · phase: **exploit** · confidence: **High**
+`UC_2496_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

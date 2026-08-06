@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Shai-Hulud npm worm: postinstall bundle.js spawns TruffleHog secret scan
 
-`UC_396_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_397_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ union
 
 ### Shai-Hulud npm worm: malicious GitHub Actions workflow file dropped (.github/workflows/shai-hulud.yaml)
 
-`UC_396_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_397_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### Shai-Hulud npm worm: secret exfiltration to hardcoded webhook.site endpoint
 
-`UC_396_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_397_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### s1ngularity Nx compromise: telemetry.js postinstall harvesting tokens via gh auth token
 
-`UC_396_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_397_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### s1ngularity Nx compromise: results.b64 credential dump written on developer host
 
-`UC_396_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_397_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

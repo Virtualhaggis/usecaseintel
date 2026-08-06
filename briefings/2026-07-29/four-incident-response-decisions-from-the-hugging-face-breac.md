@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Recon tool reading K8s service-account token or /proc/self/environ inside a container
 
-`UC_126_5` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_128_5` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Cloud instance metadata (IMDS 169.254.169.254) queried by a recon tool inside a workload
 
-`UC_126_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_128_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

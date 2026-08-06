@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Faster & improved tests for JavaScript lockfile based projects
 
-`UC_3597_0` · phase: **exploit** · confidence: **High**
+`UC_3598_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

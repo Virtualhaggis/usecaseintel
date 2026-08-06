@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### NullReceiver npm C2 beacon to hardcoded IP 166.88.134.62
 
-`UC_18_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### Install of trojanized npm packages bianira-ui / fluid-type-ui
 
-`UC_18_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_21_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### NullReceiver dead-drop: node queries Ethereum RPC then beacons to a raw IP
 
-`UC_18_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_21_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2613 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2614 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-06
+- [attackers compile khunt inside oracle to turn sql injection ](./2026-08-06/attackers-compile-khunt-inside-oracle-to-turn-sql-injection-.md)
+- [aws google and vercel agent flaws let attackers trigger tool](./2026-08-06/aws-google-and-vercel-agent-flaws-let-attackers-trigger-tool.md)
 - [chinese made zbtlink routers ship with backdoor that opens u](./2026-08-06/chinese-made-zbtlink-routers-ship-with-backdoor-that-opens-u.md)
 - [ransom cartel creator gets 16 years in prison for operating ](./2026-08-06/ransom-cartel-creator-gets-16-years-in-prison-for-operating-.md)
 - [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
+- [token jacking cybercriminals could be stealing your ai resou](./2026-08-06/token-jacking-cybercriminals-could-be-stealing-your-ai-resou.md)
 
 ## 2026-08-05
 - [canadian pleads guilty to snowflake cloud data theft attacks](./2026-08-05/canadian-pleads-guilty-to-snowflake-cloud-data-theft-attacks.md)
@@ -109,7 +112,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-07-30
 - [chinese speaking threat actor harnesses ai models for autono](./2026-07-30/chinese-speaking-threat-actor-harnesses-ai-models-for-autono.md)
 - [compromised npm packages joyfill components and joyfill layo](./2026-07-30/compromised-npm-packages-joyfill-components-and-joyfill-layo.md)
-- [dprk linked macos malvertising uses fake updates to deliver ](./2026-07-30/dprk-linked-macos-malvertising-uses-fake-updates-to-deliver-.md)
 - [ghsa critical cve 2025 4318 aws amplify studio ui component ](./2026-07-30/ghsa-critical-cve-2025-4318-aws-amplify-studio-ui-component-.md)
 - [ghsa critical cve 2026 66066 active storage has possible arb](./2026-07-30/ghsa-critical-cve-2026-66066-active-storage-has-possible-arb.md)
 - [ghsa critical cve 2026 67426 flyto2 core unauthenticated fly](./2026-07-30/ghsa-critical-cve-2026-67426-flyto2-core-unauthenticated-fly.md)
@@ -336,7 +338,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-26
 - [npm now freezes high impact accounts after risky account cha](./2026-06-26/npm-now-freezes-high-impact-accounts-after-risky-account-cha.md)
 - [packagist is now protected by aikido intel and other updates](./2026-06-26/packagist-is-now-protected-by-aikido-intel-and-other-updates.md)
-- [threat brief mitigating large scale credential attacks](./2026-06-26/threat-brief-mitigating-large-scale-credential-attacks.md)
 - [top koi alternatives in 2026](./2026-06-26/top-koi-alternatives-in-2026.md)
 
 ## 2026-06-25

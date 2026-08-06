@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### npm 'preinstall' hook auto-executing ChainDrop setup.mjs dropper
 
-`UC_47_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### ChainDrop Bun runtime executing Math_Symbol.js / math_init.js infostealer
 
-`UC_47_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### ChainDrop exfiltration to npm-cache[.]com domain
 
-`UC_47_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_50_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceNetworkEvents
 
 ### ChainDrop payload files (setup.mjs / Math_Symbol.js / math_init.js) written to node_modules
 
-`UC_47_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_50_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Massive ChainDrop npm supply-chain attack infects hundreds of packages
 
-`UC_47_5` · phase: **exploit** · confidence: **High**
+`UC_50_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

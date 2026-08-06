@@ -82,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### Chrome launched with DevTools/remote-debugging port by shell launcher (XCSSET v40 browser hijack)
 
-`UC_37_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_40_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### macOS security tooling sabotage: tccutil reset + CloudTelemetryService kill + XProtect/softwareupdate tamper (XCSSET v40)
 
-`UC_37_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 C2 beacon to Unit 42 IOC domains / IPs
 
-`UC_37_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_40_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceNetworkEvents
 
 ### XCSSET v40 Telegram trojanizer: /Applications/Telegram.app replacement + ~/.tr config drop
 
-`UC_37_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceFileEvents
 
 ### XCSSET v40 build-time execution: Xcode-spawned osascript loader / /tmp/r payload
 
-`UC_37_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_40_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID device-code grant to first-time user via Microsoft Authentication Broker
 
-`UC_105_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_108_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ AADSignInEventsBeta
 
 ### Device-code sign-in from country never seen for the user (stolen-code redemption)
 
-`UC_105_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_108_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ AADSignInEventsBeta
 
 ### Stolen device-code token fanning out to multiple SSO resources within the hour
 
-`UC_105_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_108_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ AADSignInEventsBeta
 
 ### New Entra device registration shortly after a device-code grant (PRT persistence)
 
-`UC_105_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_108_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ AADSignInEventsBeta
 
 ### Phishing email delivering a Microsoft/GitHub device-login URL
 
-`UC_105_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_108_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ EmailEvents
 
 ### Bulk mailbox and SharePoint collection from a device-code-authorized session
 
-`UC_105_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_108_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
