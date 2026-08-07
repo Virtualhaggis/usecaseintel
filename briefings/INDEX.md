@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2615 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,11 +11,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-08-07
 - [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
 - [claude code and gemini cli flaws let a github issue reach ci](./2026-08-07/claude-code-and-gemini-cli-flaws-let-a-github-issue-reach-ci.md)
+- [ghsa critical ghsa wg23 69c2 gjc8 craft cms passkey login ac](./2026-08-07/ghsa-critical-ghsa-wg23-69c2-gjc8-craft-cms-passkey-login-ac.md)
 - [growing up the hard way](./2026-08-07/growing-up-the-hard-way.md)
 - [malware can abuse windows hello for business keys for persis](./2026-08-07/malware-can-abuse-windows-hello-for-business-keys-for-persis.md)
 - [microsoft 365 aitm phishing hijacks accounts to collect payr](./2026-08-07/microsoft-365-aitm-phishing-hijacks-accounts-to-collect-payr.md)
 - [new natjack attacks hijack tcp sessions and spoof dns by man](./2026-08-07/new-natjack-attacks-hijack-tcp-sessions-and-spoof-dns-by-man.md)
 - [new wordpress pre auth xss could lead to php code execution ](./2026-08-07/new-wordpress-pre-auth-xss-could-lead-to-php-code-execution-.md)
+- [real emails hijacked payments two h1 2026 attack chains](./2026-08-07/real-emails-hijacked-payments-two-h1-2026-attack-chains.md)
 - [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
 
 ## 2026-08-06
@@ -49,7 +51,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
 - [ghsa critical cve 2026 71319 unauthenticated nuxt devtools r](./2026-08-05/ghsa-critical-cve-2026-71319-unauthenticated-nuxt-devtools-r.md)
 - [hackers run khunt post exploitation toolkit from oracle data](./2026-08-05/hackers-run-khunt-post-exploitation-toolkit-from-oracle-data.md)
-- [how ai powered phishing killed blocklists for good](./2026-08-05/how-ai-powered-phishing-killed-blocklists-for-good.md)
 - [kali365 weaponizes microsoft authentication against us compa](./2026-08-05/kali365-weaponizes-microsoft-authentication-against-us-compa.md)
 - [leaked n8n api tokens exposed live instances to credential t](./2026-08-05/leaked-n8n-api-tokens-exposed-live-instances-to-credential-t.md)
 - [new ovswrap linux kernel flaw lets local users gain root via](./2026-08-05/new-ovswrap-linux-kernel-flaw-lets-local-users-gain-root-via.md)
@@ -90,7 +91,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
 - [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
-- [openai anthropic ai agents targeted real people and systems ](./2026-08-04/openai-anthropic-ai-agents-targeted-real-people-and-systems-.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 
 ## 2026-08-03
@@ -304,7 +304,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-06
 - [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
-- [ghsa critical cve 2026 52889 formie hidden field defaults vu](./2026-07-06/ghsa-critical-cve-2026-52889-formie-hidden-field-defaults-vu.md)
 - [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
 - [ghsa critical cve 2026 54496 zebra missing copy constraint i](./2026-07-06/ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i.md)
 - [ghsa critical cve 2026 54769 langroid sandbox escape to remo](./2026-07-06/ghsa-critical-cve-2026-54769-langroid-sandbox-escape-to-remo.md)

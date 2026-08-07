@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Internet-facing inbound access to Rockwell EtherNet/IP & Modbus OT ports (44818/2222/502)
 
-`UC_23_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_26_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### External or internal enumeration of Rockwell OT services (EtherNet/IP / Modbus port sweep)
 
-`UC_23_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_26_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Rockwell/Schneider/Siemens engineering software reaching a PLC over the public internet
 
-`UC_23_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_26_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

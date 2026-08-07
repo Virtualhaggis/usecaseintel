@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### mshta.exe HTA downloader reaching UAT-11795 staging domains (ClickFix)
 
-`UC_217_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_218_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Trojanized software installer spawning embedded Python payload (Starland loader)
 
-`UC_217_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_218_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### Starland RAT / WLDR C2 beaconing to UAT-11795 HWID-parameterized domains
 
-`UC_217_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_218_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceNetworkEvents
 
 ### Starland RAT blockchain fallback C2 via Polygon eth_call (polygon-rpc.com)
 
-`UC_217_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_218_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### Telegram bot C2 / crypto-wallet exfiltration from script-host process
 
-`UC_217_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_218_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -476,7 +476,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — UAT-11795 deploys novel Starland RAT and bespoke WLDR C2 implant in financially
 
-`UC_217_10` · phase: **exploit** · confidence: **High**
+`UC_218_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

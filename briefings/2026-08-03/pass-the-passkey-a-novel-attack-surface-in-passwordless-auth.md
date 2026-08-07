@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Non-Chrome process accessing Google Chrome synced-passkey LevelDB store
 
-`UC_102_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_103_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### Command line referencing Chrome Sync Data LevelDB passkey path (copy/stage for exfil)
 
-`UC_102_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_103_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -362,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pass the Passkey: A Novel Attack Surface in Passwordless Authentication
 
-`UC_102_7` · phase: **install** · confidence: **High**
+`UC_103_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
