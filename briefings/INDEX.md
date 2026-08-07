@@ -8,6 +8,9 @@ _2615 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-08-07
+- [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
+
 ## 2026-08-06
 - [ai recommendation poisoning how ask ai buttons silently alte](./2026-08-06/ai-recommendation-poisoning-how-ask-ai-buttons-silently-alte.md)
 - [apple icloud private relay can expose real ips through webki](./2026-08-06/apple-icloud-private-relay-can-expose-real-ips-through-webki.md)
@@ -100,7 +103,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-08-01
 - [coldcard hardware wallet flaw linked to 70 million bitcoin t](./2026-08-01/coldcard-hardware-wallet-flaw-linked-to-70-million-bitcoin-t.md)
 - [hackers poison adform script to swap crypto wallet addresses](./2026-08-01/hackers-poison-adform-script-to-swap-crypto-wallet-addresses.md)
-- [hijacked hotel wi fi pushes fake updates to deliver surveill](./2026-08-01/hijacked-hotel-wi-fi-pushes-fake-updates-to-deliver-surveill.md)
 
 ## 2026-07-31
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)
