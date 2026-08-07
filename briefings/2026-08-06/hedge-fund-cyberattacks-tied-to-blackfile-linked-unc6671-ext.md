@@ -70,20 +70,16 @@ The attribution comes after Reuters  and Bloomberg reported that Point72 Asset 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
+- **T1566.004** — Phishing: Spearphishing Voice
 - **T1557** — Adversary-in-the-Middle
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1187** — Forced Authentication
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1090.003** — Proxy: Multi-hop Proxy
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1621** — Multi-Factor Authentication Request Generation
-- **T1526** — Cloud Service Discovery
+- **T1550.004** — Use Alternate Authentication Material: Web Session Cookie
 - **T1530** — Data from Cloud Storage
 - **T1119** — Automated Collection
-- **T1041** — Exfiltration Over C2 Channel
-- **T1070.008** — Indicator Removal: Clear Mailbox Data
-- **T1070** — Indicator Removal
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1526** — Cloud Service Discovery
+- **T1070.008** — Email Collection: Clear Mailbox Data
+- **T1070.004** — Indicator Removal: File Deletion
 
 ## Kill chain phases observed
 
@@ -91,121 +87,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UNC6671 AiTM passkey/Okta phishing domain contact from endpoints
+### UNC6671 passkey/Okta AiTM phishing domain resolution from endpoints
 
-`UC_4_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_9_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com") by DNS.src, DNS.dest, DNS.query | `drop_dm_object_name("DNS")` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("myoktasso.com","*.myoktasso.com","mypasskeysso.com","*.mypasskeysso.com","setupssopasskey.com","*.setupssopasskey.com","mspasskey.com","*.mspasskey.com","activatepasskey.com","*.activatepasskey.com","enrollpasskey.com","*.enrollpasskey.com","keyokta.com","*.keyokta.com","oktaenroll.com","*.oktaenroll.com","oktaportalsso.com","*.oktaportalsso.com","passkeyportal.com","*.passkeyportal.com","portalpasskey.com","*.portalpasskey.com","passkeyportalsetup.com","*.passkeyportalsetup.com","addoktapasskey.com","*.addoktapasskey.com","deploypasskey.com","*.deploypasskey.com","passkeydeploy.com","*.passkeydeploy.com","activatemypasskey.com","*.activatemypasskey.com","registerpasskey.com","*.registerpasskey.com","createpasskey.com","*.createpasskey.com","passkeyadd.com","*.passkeyadd.com","passkeyregister.com","*.passkeyregister.com") by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | `ctime(firstTime)` | `ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badDomains = dynamic(["myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com"]);
-let badIps = dynamic(["31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (badDomains) or RemoteIP in (badIps)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
+DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any ("myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com") | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, InitiatingProcessCommandLine | order by Timestamp desc
 ```
 
-### M365/Okta SSO sign-in from UNC6671 AiTM reverse-proxy & residential-proxy IPs
+### M365/Okta sign-in from UNC6671 AiTM proxy & residential-proxy infrastructure
 
-`UC_4_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_9_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Authentication.app) as apps values(Authentication.action) as action min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN ("31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146") by Authentication.user, Authentication.src | `drop_dm_object_name("Authentication")` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN ("31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146") by Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | `ctime(firstTime)` | `ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badIps = dynamic(["31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146"]);
-AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where IPAddress in (badIps)
-| project Timestamp, AccountUpn, Application, ApplicationId, ErrorCode, IPAddress, City, Country, UserAgent, ClientAppUsed
-| order by Timestamp desc
+AADSignInEventsBeta | where Timestamp > ago(30d) | where IPAddress in ("31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146") | project Timestamp, AccountUpn, Application, IPAddress, Country, City, ClientAppUsed, UserAgent, ErrorCode, ConditionalAccessStatus, IsInteractive | order by Timestamp desc
 ```
 
-### Attacker MFA/passkey enrollment after AiTM sign-in (UNC6671 persistence)
+### Automated bulk cloud data exfiltration via python-requests / PowerShell user-agents
 
-`UC_4_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Change.All_Changes where All_Changes.action IN ("created","modified") AND (All_Changes.command IN ("Add registered device","User registered security info","system.multifactor.factor.setup","user.mfa.factor.activate")) by All_Changes.user, All_Changes.src, All_Changes.command, _time | `drop_dm_object_name("All_Changes")` | lookup unc6671_ioc_ips ip AS src OUTPUT ioc_role | where isnotnull(ioc_role)
+| tstats summariesonly=true count values(Web.dest) as dests from datamodel=Web where (Web.http_user_agent IN ("python-requests*","WindowsPowerShell/5.1*") OR Web.src IN ("23.234.75.84","195.140.213.114","195.140.213.115")) AND Web.action="allowed" by Web.user Web.src Web.http_user_agent _time span=15m | `drop_dm_object_name(Web)` | where count >= 50
 ```
 
 **Defender KQL:**
 ```kql
-let badIps = dynamic(["31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146"]);
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("Add registered device","User registered security info","Register device","Add security info","Update user")
-| where IPAddress in (badIps)
-| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, IPAddress, Application, ObjectName, ActivityType
-| order by Timestamp desc
+CloudAppEvents | where Timestamp > ago(14d) | where ActionType has_any ("FileDownloaded","FileSyncDownloadedFull","FileAccessed","Download") | where UserAgent has_any ("python-requests","WindowsPowerShell/5.1","python-httpx") or IPAddress in ("23.234.75.84","195.140.213.114","195.140.213.115") | summarize Downloads = count(), DistinctObjects = dcount(ObjectName), Apps = make_set(Application, 20), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountObjectId, AccountDisplayName, IPAddress, UserAgent, bin(Timestamp, 15m) | where Downloads >= 50
 ```
 
-### Rapid multi-app SSO dashboard fan-out after single login (cloud enumeration)
+### Rapid multi-cloud SSO application enumeration after single sign-in
 
-`UC_4_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Authentication.app) as app_count values(Authentication.app) as apps values(Authentication.src) as src from datamodel=Authentication.Authentication where Authentication.action="success" by Authentication.user, _time span=10m | `drop_dm_object_name("Authentication")` | where app_count >= 5
+| tstats summariesonly=true dc(Authentication.app) as app_count values(Authentication.app) as apps values(Authentication.src) as src from datamodel=Authentication where Authentication.action="success" by Authentication.user _time span=10m | where app_count >= 8
 ```
 
 **Defender KQL:**
 ```kql
-AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0
-| summarize AppCount = dcount(Application), Apps = make_set(Application, 50), IPs = make_set(IPAddress, 20), Countries = make_set(Country, 10) by AccountUpn, bin(Timestamp, 10m)
-| where AppCount >= 5  // 5+ distinct SSO apps in 10 min = dashboard fan-out (P99 human baseline ~3)
-| order by AppCount desc
+AADSignInEventsBeta | where Timestamp > ago(14d) | where ErrorCode == 0 | summarize AppCount = dcount(ApplicationId), Apps = make_set(Application, 50), IPs = make_set(IPAddress, 10), FirstApp = min(Timestamp), LastApp = max(Timestamp) by AccountUpn, bin(Timestamp, 10m) | where AppCount >= 8
 ```
 
-### Automated bulk M365/SaaS data exfiltration via scripted user-agents
+### Post-compromise deletion of security & password-reset emails from mailbox
 
-`UC_4_9` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`o365_management_activity` (Operation=FileAccessed OR Operation=FileDownloaded OR Operation=FileSyncDownloadedFull OR Operation=FilePreviewed) | eval ua=lower(UserAgent) | where match(ua,"python-requests|windowspowershell|powershell/|go-http-client|curl/|axios|okta.android.auth") | bin _time span=10m | stats count as downloads dc(SourceFileName) as distinct_files values(Operation) as ops by UserId, ClientIP, UserAgent, _time | where downloads >= 50
-```
+`UC_9_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileAccessed","FileDownloaded","FileSyncDownloadedFull","FilePreviewed")
-| where UserAgent has_any ("python-requests","WindowsPowerShell","PowerShell/","Go-http-client","curl/","okta.android.auth")
-| summarize DownloadCount = count(), Files = dcount(ObjectName), Apps = make_set(Application, 20) by AccountObjectId, AccountDisplayName, IPAddress, UserAgent, bin(Timestamp, 10m)
-| where DownloadCount >= 50  // bulk automated pull vs human browsing (P99 ~15/10min)
-| order by DownloadCount desc
-```
-
-### Deletion of security/password-reset emails post-compromise (trace erasure)
-
-`UC_4_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`o365_management_activity` (Operation=SoftDelete OR Operation=HardDelete OR Operation=MoveToDeletedItems) | eval subj=lower(Subject) | where match(subj,"password|passkey|mfa|multi-factor|security alert|sign-in|sign in|reset|verification|one-time|authenticator|new device|unusual") | table _time, UserId, ClientIP, Operation, Subject, MailboxOwnerUPN
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("SoftDelete","HardDelete","MoveToDeletedItems","Delete message")
-| where ObjectName has_any ("password","passkey","MFA","multi-factor","security alert","sign-in","reset","verification","one-time","authenticator","new device")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, ObjectName, Application
-| order by Timestamp desc
+CloudAppEvents | where Timestamp > ago(14d) | where Application in~ ("Microsoft Exchange Online","Exchange Online") | where ActionType has_any ("SoftDelete","HardDelete","MoveToDeletedItems","Delete message") | summarize Deletes = count(), Subjects = make_set(ObjectName, 25), Sources = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m) | where Deletes >= 3
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -395,4 +339,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

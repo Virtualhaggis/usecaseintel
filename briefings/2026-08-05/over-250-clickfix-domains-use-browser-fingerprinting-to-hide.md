@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### macOS ClickFix delivery-domain contact (apricotfilepoint + 'file'-token DGA cluster)
 
-`UC_29_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_34_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### macOS ClickFix Terminal curl|base64|gunzip staging execution
 
-`UC_29_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_34_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### macOS Gatekeeper/quarantine bypass (xattr -c) + chmod +x on downloaded ClickFix payload
 
-`UC_29_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_34_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

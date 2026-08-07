@@ -83,13 +83,13 @@ A new analysis has uncovered that the threat actor tracked as TeamPCP has been a
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
-- **T1204.001** — User Execution: Malicious Link/Package
+- **T1105** — Ingress Tool Transfer
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1610** — Deploy Container
-- **T1485** — Data Destruction
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1572** — Protocol Tunneling
-- **T1102** — Web Service
-- **T1219** — Remote Access Software
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1496** — Resource Hijacking
+- **T1595** — Active Scanning
 
 ## Kill chain phases observed
 
@@ -97,86 +97,76 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Install of trojanized LiteLLM 1.82.7/1.82.8 or Telnyx 4.87.1/4.87.2 PyPI packages (TeamPCP)
+### TeamPCP / CanisterWorm / kube.py malware SHA256 hashes on hosts
 
-`UC_0_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*litellm==1.82.7*" OR Processes.process="*litellm==1.82.8*" OR Processes.process="*litellm-1.82.7*" OR Processes.process="*litellm-1.82.8*" OR Processes.process="*telnyx==4.87.1*" OR Processes.process="*telnyx==4.87.2*" OR Processes.process="*telnyx-4.87.1*" OR Processes.process="*telnyx-4.87.2*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("0880819ef821cff918960a39c1c1aada55a5593c61c608ea9215da858a86e349","0c0d206d5e68c0cf64d57ffa8bc5b1dad54f2dda52f24e96e02e237498cb9c3a","0c6a3555c4eb49f240d7e0e3edbfbb3c900f123033b4f6e99ac3724b9b76278f","18a24f83e807479438dcab7a1804c51a00dafc1d526698a66e0640d1e5dd671a","1e559c51f19972e96fcc5a92d710732159cdae72f407864607a513b20729decb","5e2ba7c4c53fa6e0cef58011acdd50682cf83fb7b989712d2fcf1b5173bad956","61ff00a81b19624adaad425b9129ba2f312f4ab76fb5ddc2c628a5037d31a4ba","6328a34b26a63423b555a61f89a6a0525a534e9c88584c815d937910f1ddd538","7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9","7b5cc85e82249b0c452c66563edca498ce9d0c70badef04ab2c52acef4d629ca","7df6cef7ab9aae2ea08f2f872f6456b5d51d896ddda907a238cd6668ccdc4bb7","822dd269ec10459572dfaaefe163dae693c344249a0161953f0d5cdd110bd2a0","887e1f5b5b50162a60bd03b66269e0ae545d0aef0583c1c5b00972152ad7e073","bef7e2c5a92c4fa4af17791efc1e46311c0f304796f1172fce192f5efc40f5d7","c37c0ae9641d2e5329fcdee847a756bf1140fdb7f0b7c78a40fdc39055e7d926","cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3","d5edd791021b966fb6af0ace09319ace7b97d6642363ef27b3d5056ca654a94c","e4edd126e139493d2721d50c3a8c49d3a23ad7766d0b90bc45979ba675f35fea","e6310d8a003d7ac101a6b1cd39ff6c6a88ee454b767c1bdce143e04bc1113243","e64e152afe2c722d750f10259626f357cdea40420c5eedae37969fbf13abbecf") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+let iocHashes = dynamic(["0880819ef821cff918960a39c1c1aada55a5593c61c608ea9215da858a86e349","0c0d206d5e68c0cf64d57ffa8bc5b1dad54f2dda52f24e96e02e237498cb9c3a","0c6a3555c4eb49f240d7e0e3edbfbb3c900f123033b4f6e99ac3724b9b76278f","18a24f83e807479438dcab7a1804c51a00dafc1d526698a66e0640d1e5dd671a","1e559c51f19972e96fcc5a92d710732159cdae72f407864607a513b20729decb","5e2ba7c4c53fa6e0cef58011acdd50682cf83fb7b989712d2fcf1b5173bad956","61ff00a81b19624adaad425b9129ba2f312f4ab76fb5ddc2c628a5037d31a4ba","6328a34b26a63423b555a61f89a6a0525a534e9c88584c815d937910f1ddd538","7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9","7b5cc85e82249b0c452c66563edca498ce9d0c70badef04ab2c52acef4d629ca","7df6cef7ab9aae2ea08f2f872f6456b5d51d896ddda907a238cd6668ccdc4bb7","822dd269ec10459572dfaaefe163dae693c344249a0161953f0d5cdd110bd2a0","887e1f5b5b50162a60bd03b66269e0ae545d0aef0583c1c5b00972152ad7e073","bef7e2c5a92c4fa4af17791efc1e46311c0f304796f1172fce192f5efc40f5d7","c37c0ae9641d2e5329fcdee847a756bf1140fdb7f0b7c78a40fdc39055e7d926","cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3","d5edd791021b966fb6af0ace09319ace7b97d6642363ef27b3d5056ca654a94c","e4edd126e139493d2721d50c3a8c49d3a23ad7766d0b90bc45979ba675f35fea","e6310d8a003d7ac101a6b1cd39ff6c6a88ee454b767c1bdce143e04bc1113243","e64e152afe2c722d750f10259626f357cdea40420c5eedae37969fbf13abbecf"]);
+union DeviceProcessEvents, DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("pip.exe","pip3.exe","pip","pip3","python.exe","python","python3","uv.exe","uv","poetry.exe","poetry")
-| where ProcessCommandLine has_any ("litellm==1.82.7","litellm==1.82.8","litellm-1.82.7","litellm-1.82.8","telnyx==4.87.1","telnyx==4.87.2","telnyx-4.87.1","telnyx-4.87.2")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where SHA256 in (iocHashes)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### TeamPCP kube.py loader / poison_pill execution and known-malware hash sweep
+### TeamPCP C2 domain and IP beaconing (masscan.cloud, trycloudflare, listed IPs)
 
-`UC_0_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*kube.py*" OR Processes.process="*poison_pill*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("23.142.184.129","45.148.10.212","63.251.162.11","83.142.209.11","83.142.209.203","195.5.171.242","209.34.235.18","212.71.124.188","67.217.57.240") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
-let teampcpHashes = dynamic(["0880819ef821cff918960a39c1c1aada55a5593c61c608ea9215da858a86e349","0c0d206d5e68c0cf64d57ffa8bc5b1dad54f2dda52f24e96e02e237498cb9c3a","0c6a3555c4eb49f240d7e0e3edbfbb3c900f123033b4f6e99ac3724b9b76278f","18a24f83e807479438dcab7a1804c51a00dafc1d526698a66e0640d1e5dd671a","1e559c51f19972e96fcc5a92d710732159cdae72f407864607a513b20729decb","5e2ba7c4c53fa6e0cef58011acdd50682cf83fb7b989712d2fcf1b5173bad956","61ff00a81b19624adaad425b9129ba2f312f4ab76fb5ddc2c628a5037d31a4ba","6328a34b26a63423b555a61f89a6a0525a534e9c88584c815d937910f1ddd538","7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9","7b5cc85e82249b0c452c66563edca498ce9d0c70badef04ab2c52acef4d629ca","7df6cef7ab9aae2ea08f2f872f6456b5d51d896ddda907a238cd6668ccdc4bb7","822dd269ec10459572dfaaefe163dae693c344249a0161953f0d5cdd110bd2a0","887e1f5b5b50162a60bd03b66269e0ae545d0aef0583c1c5b00972152ad7e073","bef7e2c5a92c4fa4af17791efc1e46311c0f304796f1172fce192f5efc40f5d7","c37c0ae9641d2e5329fcdee847a756bf1140fdb7f0b7c78a40fdc39055e7d926","cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3","d5edd791021b966fb6af0ace09319ace7b97d6642363ef27b3d5056ca654a94c","e4edd126e139493d2721d50c3a8c49d3a23ad7766d0b90bc45979ba675f35fea","e6310d8a003d7ac101a6b1cd39ff6c6a88ee454b767c1bdce143e04bc1113243","e64e152afe2c722d750f10259626f357cdea40420c5eedae37969fbf13abbecf"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("kube.py","poison_pill") or SHA256 in~ (teampcpHashes)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### TeamPCP / CanisterWorm C2 to Cloudflare tunnels, ICP canister and reverse-shell IPs
-
-`UC_0_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("23.142.184.129","45.148.10.212","63.251.162.11","83.142.209.11","83.142.209.203","195.5.171.242","209.34.235.18","212.71.124.188","67.217.57.240") OR All_Traffic.dest IN ("championships-peoples-point-cassette.trycloudflare.com","create-sensitivity-grad-sequence.trycloudflare.com","investigation-launches-hearings-copying.trycloudflare.com","plug-tab-protective-relay.trycloudflare.com","souls-entire-defined-routes.trycloudflare.com","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io","models.litellm.cloud")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let c2Domains = dynamic(["championships-peoples-point-cassette.trycloudflare.com","create-sensitivity-grad-sequence.trycloudflare.com","investigation-launches-hearings-copying.trycloudflare.com","plug-tab-protective-relay.trycloudflare.com","souls-entire-defined-routes.trycloudflare.com","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io","models.litellm.cloud"]);
-let c2IPs = dynamic(["23.142.184.129","45.148.10.212","63.251.162.11","83.142.209.11","83.142.209.203","195.5.171.242","209.34.235.18","212.71.124.188","67.217.57.240"]);
+let c2Domains = dynamic(["masscan.cloud","checkmarx.zone","models.litellm.cloud","scan.aquasecurtiy.org","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io","championships-peoples-point-cassette.trycloudflare.com","create-sensitivity-grad-sequence.trycloudflare.com","investigation-launches-hearings-copying.trycloudflare.com","plug-tab-protective-relay.trycloudflare.com","souls-entire-defined-routes.trycloudflare.com"]);
+let c2Ips = dynamic(["23.142.184.129","45.148.10.212","63.251.162.11","83.142.209.11","83.142.209.203","195.5.171.242","209.34.235.18","212.71.124.188","67.217.57.240"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl in~ (c2Domains) or RemoteIP in (c2IPs)
+| where RemoteIP in (c2Ips) or RemoteUrl has_any (c2Domains)
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### First-seen *.trycloudflare.com tunnel egress from server/container workloads (TeamPCP rotated C2)
+### redis-server spawning shell/downloader child (Redis RCE to cryptominer)
 
-`UC_0_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_5_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*.trycloudflare.com" by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | where firstTime > relative_time(now(),"-1d@d") | sort - firstTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=redis-server AND Processes.process_name IN ("sh","bash","dash","curl","wget","chmod","crontab","python","python3","perl") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-let Baseline = DeviceNetworkEvents
-| where Timestamp between (ago(30d) .. ago(1d))
-| where RemoteUrl endswith "trycloudflare.com"
-| distinct RemoteUrl;
-DeviceNetworkEvents
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "redis-server"
+| where FileName in~ ("sh","bash","dash","curl","wget","chmod","crontab","python","python3","perl")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### Internet-facing assets exposed to TeamPCP-exploited CVEs (CVE-2025-55182, CVE-2025-66478)
+
+`UC_5_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
 | where Timestamp > ago(1d)
-| where RemoteUrl endswith "trycloudflare.com"
-| where InitiatingProcessFileName in~ ("python","python3","node","redis-server","ray","java","curl","wget","bash","sh","cloudflared")
-| join kind=leftanti Baseline on RemoteUrl
-| summarize FirstSeen=min(Timestamp), Count=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| order by FirstSeen desc
+| where CveId in ("CVE-2025-55182","CVE-2025-66478")
+| summarize by DeviceId, DeviceName, CveId, SoftwareVendor, SoftwareName, SoftwareVersion
+| join kind=inner (DeviceInfo | where Timestamp > ago(1d) | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId | where IsInternetFacing == true) on DeviceId
+| project DeviceName, DeviceId, CveId, SoftwareVendor, SoftwareName, SoftwareVersion
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -527,7 +517,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Linked To Redis Attacks Dating Back To 2020 And Later Supply Chain Campa
 
-`UC_0_13` · phase: **exploit** · confidence: **High**
+`UC_5_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

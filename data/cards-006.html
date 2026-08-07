@@ -1,3 +1,261 @@
+<article class="card" id="art-158" data-art-slug="2026-07-24-ghsa-critical-ghsa-mqhr-6j6h-74p5-budibase-unauthenticated-r"
+  data-phases="actions,c2,exploit,install" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint,web"
+  data-targets="vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource Credential Theft via Cross-Origin Auth Leak Budibase: Unauthenticated REST Datasource Credential Theft via Cross-Origin Auth Leak  T1190 [LLM] Budibase REST query published to PUBLIC role (unauth cred-leak enabler) [LLM] Budibase server leaks datasource auth to first-seen host (undici + Authorization egress) Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-24-ghsa-critical-ghsa-mqhr-6j6h-74p5-budibase-unauthenticated-r" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-mqhr-6j6h-74p5" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource Credential Theft via Cross-Origin Auth Leak</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-24</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Budibase: Unauthenticated REST Datasource Credential Theft via Cross-Origin Auth Leak</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-158-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-158"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-158-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Budibase REST query published to PUBLIC role (unauth cred-leak enabler)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Budibase server leaks datasource auth to first-seen host (undici + Authorization egress)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="68593bf168" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Budibase REST query published to PUBLIC role (unauth cred-leak enabler)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="68593bf168" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the specific enabling step of GHSA-mqhr-6j6h-74p5: an attacker grants the PUBLIC role to a Budibase REST-datasource query (POST /api/permission/PUBLIC/query_.../read|write) so it becomes executable with no session. This is the pivot that turns a stored-credential leak into a fully unauthenticated one-request theft.
+
+Rationale: Uses the exact PoC path /api/permission/PUBLIC/query_&lt;id&gt;/{read,write} (article Line 3). Requiring the &#x27;query_&#x27; resource prefix scopes to REST-query publishing (the vuln&#x27;s precondition) rather than generic public-app tables. Cross-checked GHSA-mqhr-6j6h-74p5 and its predecessor CVE-2026-48152/GHSA-3gp5.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-mqhr-6j6h-74p5
+  • https://advisories.gitlab.com/npm/@budibase/server/GHSA-mqhr-6j6h-74p5/
+  • https://advisories.gitlab.com/npm/@budibase/server/CVE-2026-48152/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A Budibase developer legitimately publishing an intended public app that includes a public REST query</li><li>Staging/QA tenants where public apps are the norm and PUBLIC grants are frequent</li><li>App-deployment/CI pipelines re-applying resource permissions during promotion</li><li>Budibase version upgrade/migration routines re-writing permission documents</li><li>Builder UI bulk permission changes when many resources are set PUBLIC at once</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the query id from the PUBLIC-grant URL and identify its datasource via GET /api/datasources; confirm whether it is a REST datasource holding Bearer/Basic/static-header authConfigs and whether the grant was expected. 2) Contain: revoke PUBLIC on the query (set role back to BASIC/POWER) or unpublish the app; rotate any REST datasource credentials attached to that query as potentially exposed. 3) Hunt: search web/egress logs for subsequent anonymous POST /api/v2/queries/&lt;id&gt; from external IPs and for undici-originated outbound requests to non-datasource hosts (see companion UC) to confirm whether credentials were actually exfiltrated.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-158-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-158-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-158-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-158-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where HttpMethod =~ &quot;POST&quot;
+| where Url has &quot;/api/permission/PUBLIC/query_&quot;          // granting PUBLIC role specifically to a *query* resource
+| where Url endswith &quot;/read&quot; or Url endswith &quot;/write&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Grants=make_set(Url, 25), Count=count()
+         by SrcIpAddr, DstHostname, HttpUserAgent=HttpRequestHeaderUserAgent, HttpStatusCode
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-158-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Budibase REST Query Published to PUBLIC Role
+id: 6b1f9d3a-2c7e-4a58-9f0b-1d2e3c4a5b6c
+description: Detects a Budibase permission grant that makes a REST datasource query executable by unauthenticated PUBLIC users, the enabling step for GHSA-mqhr-6j6h-74p5 cross-origin credential theft.
+references:
+  - https://github.com/advisories/GHSA-mqhr-6j6h-74p5
+  - https://advisories.gitlab.com/npm/@budibase/server/GHSA-mqhr-6j6h-74p5/
+author: SOC Detection Engineering
+date: 2026/07/27
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: POST
+    c-uri|contains: &#x27;/api/permission/PUBLIC/query_&#x27;
+  filter_action:
+    c-uri|endswith:
+      - &#x27;/read&#x27;
+      - &#x27;/write&#x27;
+  condition: selection and filter_action
+falsepositives:
+  - Legitimate publishing of an intentionally public Budibase app/query
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-158-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-158-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-158-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-158-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/permission/PUBLIC/query_*&quot; (Web.url=&quot;*/read&quot; OR Web.url=&quot;*/write&quot;) by Web.src Web.dest Web.url
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-158-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/permission/PUBLIC/query_*&quot; (Web.url=&quot;*/read&quot; OR Web.url=&quot;*/write&quot;) by Web.src Web.dest Web.url
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e516fe19ce" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Budibase server leaks datasource auth to first-seen host (undici + Authorization egress)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="e516fe19ce" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the actual credential exfiltration of GHSA-mqhr-6j6h-74p5: the Budibase server&#x27;s server-side fetch (User-Agent &#x27;undici&#x27;) sends a stored REST datasource Authorization/Bearer header to a destination host it has never contacted before — the attacker-chosen server reached via an absolute-URL {{ parameter }} query path. Because the same undici+Authorization shape is used for legitimate datasource calls, the tell is a first-seen destination host.
+
+Rationale: Pulls the two article-specific artifacts straight from the Line-4 response: User-Agent &#x27;undici&#x27; and an attached &#x27;authorization: Bearer&#x27; header being delivered to an arbitrary host (postman-echo.com in the PoC). Legitimate datasource calls share this shape, so a first-seen/leftanti destination host isolates the cross-origin leak. Defender/Falcon/CloudWatch left empty — the discriminator is outbound HTTP headers, which endpoint EDR and CloudTrail do not carry.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-mqhr-6j6h-74p5
+  • https://advisories.gitlab.com/npm/@budibase/server/GHSA-mqhr-6j6h-74p5/
+  • https://radar.offseq.com/threat/server-budibase-unauthenticated-rest-datasource-credential-theft-via-cross-origin-auth-leak-b3289fddaf47b17b</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials">T1552</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A newly configured legitimate REST datasource pointing at a genuinely new external API (benign first-seen host)</li><li>Budibase calling a third-party SaaS API endpoint that was recently added or changed</li><li>API provider migrating to a new hostname / regional failover changing the datasource base host</li><li>Proxy log gaps or retention rollover making an established host appear &#x27;first-seen&#x27;</li><li>Datasource that legitimately uses templated/dynamic paths spanning multiple partner hosts</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the first-seen DstHostname and whether it maps to any configured Budibase REST datasource; treat unknown/attacker-looking hosts (webhook.site, postman-echo.com, requestbin, raw IPs) as high priority. 2) Contain: block egress to the destination host at the proxy/firewall and immediately rotate the Bearer/Basic tokens and static header secrets for every REST datasource whose credentials could have been attached. 3) Hunt: pivot back to web access logs for the anonymous POST /api/v2/queries/&lt;id&gt; that triggered it and to the companion UC for the preceding PUBLIC-role grant; enumerate all REST datasources on the tenant and rotate any with high-value stored auth.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-158-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-158-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-158-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 14d;
+let baseline = ImWebSession
+    | where TimeGenerated between (ago(lookback) .. ago(1d))
+    | where HttpRequestHeaderUserAgent has &quot;undici&quot;          // Budibase server-side fetch UA
+    | summarize by DstHostname;
+ImWebSession
+| where TimeGenerated &gt; ago(1d)
+| where HttpRequestHeaderUserAgent has &quot;undici&quot;
+| where isnotempty(HttpRequestHeaderAuthorization)          // stored datasource credential is being attached
+| join kind=leftanti baseline on DstHostname               // destination host never before contacted by undici = candidate leak target
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpHostName, Url, HttpMethod, HttpUserAgent=HttpRequestHeaderUserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-158-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-158-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-158-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-158-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` earliest(_time) as firstTime latest(_time) as lastTime count from datamodel=Web where Web.http_user_agent=&quot;undici&quot; by Web.dest
+| `drop_dm_object_name(Web)`
+| where firstTime &gt;= relative_time(now(), &quot;-1d@d&quot;)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-158-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false earliest(_time) as firstTime latest(_time) as lastTime count from datamodel=Web where Web.http_user_agent=&quot;undici&quot; by Web.dest
+| `drop_dm_object_name(Web)`
+| where firstTime &gt;= relative_time(now(), &quot;-1d@d&quot;)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7e048781df" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7e048781df" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-158-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-158-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-158-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-158-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/dev/null&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-158-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/dev/null&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-158-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-158-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-158-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-158-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/dev/null*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-158-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-mqhr-6j6h-74p5: Budibase: Unauthenticated REST Datasource ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/dev/null*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-159" data-art-slug="2026-07-24-ghsa-critical-ghsa-hp6v-6jw7-gv2f-budibase-oidc-sso-account-"
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1190"
@@ -9808,241 +10066,6 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-185-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-50522&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-186" data-art-slug="2026-07-21-ghsa-critical-cve-2026-58443-gitea-public-only-repository-to"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,web"
-  data-targets="vcs"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-58443: Gitea: Public-only repository tokens can update private PR head branches Gitea: Public-only repository tokens can update private PR head branches CVE-2026-58443 T1190 [LLM] Gitea PR head-branch update via API v1 pulls/{index}/update (CVE-2026-58443 exploit vector) [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (≤1.26.4) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-21-ghsa-critical-cve-2026-58443-gitea-public-only-repository-to" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-xxjv-752h-3vp2" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-58443: Gitea: Public-only repository tokens can update private PR head branches</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-21</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Gitea: Public-only repository tokens can update private PR head branches</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-58443</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-186-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-186"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-186-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Gitea PR head-branch update via API v1 pulls/{index}/update (CVE-2026-58443 exploit vector) · [LLM] Vulnerable Gitea instance exposed to CVE-2026-58443 (≤1.26.4)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="52efc1470c" data-platforms="sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">Gitea PR head-branch update via API v1 pulls/{index}/update (CVE-2026-58443 exploit vector)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="52efc1470c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces POST requests to the Gitea REST endpoint POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update, the exact route abused by CVE-2026-58443 where a public-only,write:repository token forces a server-side push into a PRIVATE head branch through a PUBLIC base repo. Programmatic API calls to this route are low-volume (the UI &#x27;Update branch&#x27; button uses the web route, not /api/v1/), so hunting API-path hits and triaging the requesting token&#x27;s scope is the cleanest available discriminator.
-
-Rationale: Uses the exact vulnerable route from the advisory (POST /api/v1/repos/{owner}/{repo}/pulls/{index}/update). Distinguished from the UI &#x27;Update branch&#x27; feature by scoping to the /api/v1/ programmatic path. Defender KQL left empty: Advanced Hunting has no table for inbound web-app request paths; this must run on proxy/WAF/web-access telemetry. Cross-checked GitHub advisory GHSA-xxjv-752h-3vp2 and secondary write-ups (securityonline, gbhackers) confirming the endpoint and CVSS 9.6.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xxjv-752h-3vp2
-  • https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
-  • https://securityonline.info/gitea-vulnerability/
-  • https://gbhackers.com/critical-gitea-flaw-trigger-actions-workflows/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate CI/CD automation calling the PR update API to keep feature branches current with base</li><li>Developers or bots using the Gitea REST API (Tea CLI, custom scripts) to update PRs on repos they legitimately own</li><li>Renovate/Dependabot-style bots invoking pulls/update programmatically</li><li>Mirror/sync tooling that updates PR head branches via API on private repos it is authorized for</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: For each hit, pull the requesting access token from Gitea (admin API /api/v1/admin or DB) and confirm its scope — a public-only,write:repository token hitting this route against a public base repo whose PR head repo is PRIVATE is the exploit signature; note source IP/UA and the PR index. 2) CONTAIN: Revoke the offending token, and upgrade Gitea from any ≤1.26.4 build to 1.27.0 (the fixed release). 3) HUNT: Review the affected private repo&#x27;s git reflog/push events for server-side pushes attributed to the PR-update trigger, and check whether any Gitea Actions push-triggered workflows fired in private repos as a downstream effect of the forced push.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-186-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-186-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-186-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-186-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestMethod == &quot;POST&quot;
-| where RequestURL matches regex @&quot;(?i)/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&quot;
-| project TimeGenerated, SourceIP, SourceUserName, DestinationHostName, RequestURL, RequestMethod, DeviceAction, RequestClientApplication, DeviceVendor, DeviceProduct
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-186-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Gitea API PR Head-Branch Update Endpoint Access (CVE-2026-58443)
-id: 8f1c9d2e-6a4b-4c31-9e7d-2b5f0a7c4d11
-description: Detects POST requests to the Gitea REST endpoint /api/v1/repos/{owner}/{repo}/pulls/{index}/update, the route abused by CVE-2026-58443 to push public base commits into a private PR head branch using a public-only scoped token.
-references:
-  - https://github.com/advisories/GHSA-xxjv-752h-3vp2
-  - https://github.com/go-gitea/gitea/security/advisories/GHSA-xxjv-752h-3vp2
-author: SOC Detection Engineering
-date: 2026/08/04
-tags:
-  - attack.t1068
-  - attack.t1190
-  - attack.t1550.001
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-method: POST
-    cs-uri-stem|re: &#x27;/api/v1/repos/[^/]+/[^/]+/pulls/[0-9]+/update&#x27;
-  condition: selection
-falsepositives:
-  - Legitimate CI automation or clients calling the PR update API on their own repositories
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-186-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-186-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-186-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-186-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-186-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/repos/*/pulls/*/update*&quot; by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="5a4a632e0b" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Vulnerable Gitea instance exposed to CVE-2026-58443 (≤1.26.4)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5a4a632e0b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Exposure hunt that flags managed devices running a Gitea version vulnerable to CVE-2026-58443 (all builds up to and including 1.26.4; fixed in 1.27.0). Prioritises patching of internet-facing or shared self-hosted Gitea servers before the public PoC is weaponised.
-
-Rationale: Concrete CVE id (CVE-2026-58443) and fixed version (1.27.0) confirmed via the GitHub advisory and Gitea security advisory; vulnerable range ≤1.26.4. TVM CveId match is high-fidelity and zero-cmdline-noise. Datadog/Falcon/CloudWatch left empty — Gitea version inventory is not shipped to those platforms in this tenant.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xxjv-752h-3vp2
-  • https://advisories.gitlab.com/golang/code.gitea.io/gitea/CVE-2026-58443/
-  • https://securityonline.info/gitea-vulnerability/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped/internal-only Gitea instances that are not exploitable by untrusted token holders (still worth patching but lower urgency)</li><li>TVM version parsing lag immediately after an upgrade to 1.27.0 shows a stale vulnerable state</li><li>Dev/test Gitea containers spun up transiently that TVM inventories before teardown</li><li>Forks/repackaged Gitea (e.g. Forgejo) mis-attributed to the Gitea CVE by the scanner</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: Confirm the reported SoftwareVersion is ≤1.26.4 and identify whether the host is internet-facing or multi-tenant (shared runners, external contributors) which raises exploitability. 2) CONTAIN: Schedule/emergency-apply the upgrade to Gitea 1.27.0; where patching lags, restrict issuance of public-only scoped tokens and audit existing tokens with write:repository scope. 3) HUNT: Pivot to the endpoint-access UC — search proxy/web logs for POST /api/v1/repos/*/pulls/*/update against this host to determine whether the flaw was already exercised before patching.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-186-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-186-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-186-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-186-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-58443&quot;
-| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-186-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2026-58443&quot;
-| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-186-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-186-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-186-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-186-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-186-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-58443&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-186-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-186-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-186-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-186-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-58443&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-186-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-58443&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-186-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-186-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-186-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-186-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-58443&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-186-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-58443&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

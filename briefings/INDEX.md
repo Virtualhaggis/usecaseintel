@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2615 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-08-07
+- [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
+- [claude code and gemini cli flaws let a github issue reach ci](./2026-08-07/claude-code-and-gemini-cli-flaws-let-a-github-issue-reach-ci.md)
+- [malware can abuse windows hello for business keys for persis](./2026-08-07/malware-can-abuse-windows-hello-for-business-keys-for-persis.md)
+- [microsoft 365 aitm phishing hijacks accounts to collect payr](./2026-08-07/microsoft-365-aitm-phishing-hijacks-accounts-to-collect-payr.md)
+- [new natjack attacks hijack tcp sessions and spoof dns by man](./2026-08-07/new-natjack-attacks-hijack-tcp-sessions-and-spoof-dns-by-man.md)
 - [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
 
 ## 2026-08-06
@@ -94,15 +99,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 18577 n able n central authentication bypa](./2026-08-03/cisa-kev-cve-2026-18577-n-able-n-central-authentication-bypa.md)
 - [ghsa critical cve 2026 69240 sequelize sql injection oracle ](./2026-08-03/ghsa-critical-cve-2026-69240-sequelize-sql-injection-oracle-.md)
 - [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
-- [hugging face diffusers flaws could let model repositories ex](./2026-08-03/hugging-face-diffusers-flaws-could-let-model-repositories-ex.md)
 - [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
-- [n able says attackers take over n central servers after init](./2026-08-03/n-able-says-attackers-take-over-n-central-servers-after-init.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 - [pnld breach exposes u k police and government contact detail](./2026-08-03/pnld-breach-exposes-u-k-police-and-government-contact-detail.md)
-
-## 2026-08-01
-- [coldcard hardware wallet flaw linked to 70 million bitcoin t](./2026-08-01/coldcard-hardware-wallet-flaw-linked-to-70-million-bitcoin-t.md)
-- [hackers poison adform script to swap crypto wallet addresses](./2026-08-01/hackers-poison-adform-script-to-swap-crypto-wallet-addresses.md)
 
 ## 2026-07-31
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)

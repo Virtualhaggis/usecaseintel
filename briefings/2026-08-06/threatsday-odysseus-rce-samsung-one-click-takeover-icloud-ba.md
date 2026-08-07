@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### SideWinder ClickOnce side-load: NGenTask.exe running mscorsvc.dll from Apps\2.0 cache
 
-`UC_13_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_18_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### SideWinder Rust backdoor C2 to Cloudflare Workers (*.workers.dev) from non-browser process
 
-`UC_13_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_18_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceNetworkEvents
 
 ### Flooding Dropper npm second-stage payload drop (update_win.exe)
 
-`UC_13_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_18_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceFileEvents
 
 ### Flooding Dropper Registry Run-key persistence pointing to update_win.exe
 
-`UC_13_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_18_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -544,7 +544,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Odysseus RCE, Samsung One-Click Takeover, iCloud Backdoor Fight + 27
 
-`UC_13_13` · phase: **exploit** · confidence: **High**
+`UC_18_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

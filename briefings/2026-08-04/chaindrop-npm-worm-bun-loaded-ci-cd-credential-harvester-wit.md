@@ -236,7 +236,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ChainDrop npm Worm: Bun-loaded CI/CD credential harvester with Ethereum dead-dro
 
-`UC_54_5` · phase: **exploit** · confidence: **High**
+`UC_59_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
