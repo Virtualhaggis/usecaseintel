@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### UNC5537 Snowflake data-theft: sign-in from attacker infrastructure IPs
 
-`UC_39_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_45_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ AADSignInEventsBeta
 
 ### UNC5537 Snowflake campaign: network connection to attacker IPs
 
-`UC_39_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_45_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

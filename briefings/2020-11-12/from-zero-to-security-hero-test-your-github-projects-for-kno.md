@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — From zero to security hero: test your GitHub projects for known vulnerabilities
 
-`UC_3277_0` · phase: **exploit** · confidence: **High**
+`UC_3278_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

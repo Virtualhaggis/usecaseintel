@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Zip Slip: archive-handler process writes shell script / web shell outside extraction dir
 
-`UC_3623_0` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_3624_0` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceFileEvents
 
 ### Zip Slip RCE: archive-extraction process spawns command interpreter
 
-`UC_3623_1` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_3624_1` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

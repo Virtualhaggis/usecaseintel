@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound connection to Velora DEX npm supply-chain C2 89.36.224.5
 
-`UC_547_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_548_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### node process spawning bash/curl chain to fetch Velora DEX install.sh dropper
 
-`UC_547_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_548_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### launchctl persistence registering zsh.profiler service from non-admin location
 
-`UC_547_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_548_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### macOS file write of profiler binary to com.apple.Terminal masquerade path
 
-`UC_547_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_548_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — @velora-dex/sdk Compromised on npm: Malicious Version Drops macOS Backdoor via l
 
-`UC_547_3` · phase: **exploit** · confidence: **High**
+`UC_548_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

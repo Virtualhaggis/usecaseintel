@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### QR-code PDF phishing attachment resolving to workers.dev / pamconj M365 harvesting page (UAT-11764)
 
-`UC_146_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_149_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -91,7 +91,7 @@ EmailEvents
 
 ### Post-compromise M365 defense-evasion inbox rule creation (UAT-11764 mailbox takeover)
 
-`UC_146_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_149_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -107,7 +107,7 @@ CloudAppEvents
 
 ### OAuth device-code authorization flow sign-in (ARToken/EvilTokens MFA bypass)
 
-`UC_146_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_149_17` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -127,7 +127,7 @@ AADSignInEventsBeta
 
 ### Trojanized MeshAgent installed as SYSTEM auto-start service (Sinobi covert C2)
 
-`UC_146_18` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_149_18` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### Endpoint egress/DNS to UAT-11764 / ARToken IOC infrastructure
 
-`UC_146_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_149_19` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -164,7 +164,7 @@ DeviceNetworkEvents
 
 ### Zoho Assist Unattended Agent deployment for headless remote access (Warlock / Storm-2603)
 
-`UC_146_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_149_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### rclone data-exfiltration staging prior to Sinobi encryption
 
-`UC_146_21` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_149_21` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -201,7 +201,7 @@ DeviceProcessEvents
 
 ### Mass .SINOBI file-extension writes indicating domain-wide encryption
 
-`UC_146_22` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_149_22` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -650,7 +650,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q2 2026: Phishing and weaponized remote management tools drive attack
 
-`UC_146_14` · phase: **exploit** · confidence: **High**
+`UC_149_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Ruby on Rails Docker for local development environment
 
-`UC_1956_0` · phase: **exploit** · confidence: **High**
+`UC_1957_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

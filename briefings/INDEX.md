@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2619 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,14 +12,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
 - [cisa kev cve 2026 8037 progress loadmaster command injection](./2026-08-07/cisa-kev-cve-2026-8037-progress-loadmaster-command-injection.md)
 - [claude code and gemini cli flaws let a github issue reach ci](./2026-08-07/claude-code-and-gemini-cli-flaws-let-a-github-issue-reach-ci.md)
+- [clickfix attacks deliver macos stealer that can drain crypto](./2026-08-07/clickfix-attacks-deliver-macos-stealer-that-can-drain-crypto.md)
+- [ghsa critical cve 2026 63221 codeigniter sql injection in qu](./2026-08-07/ghsa-critical-cve-2026-63221-codeigniter-sql-injection-in-qu.md)
+- [ghsa critical cve 2026 63223 codeigniter uploaded file exten](./2026-08-07/ghsa-critical-cve-2026-63223-codeigniter-uploaded-file-exten.md)
+- [ghsa critical cve 2026 71851 crypto js insufficient entropy ](./2026-08-07/ghsa-critical-cve-2026-71851-crypto-js-insufficient-entropy-.md)
 - [ghsa critical ghsa wg23 69c2 gjc8 craft cms passkey login ac](./2026-08-07/ghsa-critical-ghsa-wg23-69c2-gjc8-craft-cms-passkey-login-ac.md)
 - [growing up the hard way](./2026-08-07/growing-up-the-hard-way.md)
 - [malware can abuse windows hello for business keys for persis](./2026-08-07/malware-can-abuse-windows-hello-for-business-keys-for-persis.md)
 - [microsoft 365 aitm phishing hijacks accounts to collect payr](./2026-08-07/microsoft-365-aitm-phishing-hijacks-accounts-to-collect-payr.md)
+- [nearly 800 malicious npm packages deliver cross platform rat](./2026-08-07/nearly-800-malicious-npm-packages-deliver-cross-platform-rat.md)
 - [new natjack attacks hijack tcp sessions and spoof dns by man](./2026-08-07/new-natjack-attacks-hijack-tcp-sessions-and-spoof-dns-by-man.md)
 - [new wordpress pre auth xss could lead to php code execution ](./2026-08-07/new-wordpress-pre-auth-xss-could-lead-to-php-code-execution-.md)
 - [real emails hijacked payments two h1 2026 attack chains](./2026-08-07/real-emails-hijacked-payments-two-h1-2026-attack-chains.md)
 - [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
+- [unc6671 vishing attacks target personal phones to steal saas](./2026-08-07/unc6671-vishing-attacks-target-personal-phones-to-steal-saas.md)
 
 ## 2026-08-06
 - [ai recommendation poisoning how ask ai buttons silently alte](./2026-08-06/ai-recommendation-poisoning-how-ask-ai-buttons-silently-alte.md)
@@ -101,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 18577 n able n central authentication bypa](./2026-08-03/cisa-kev-cve-2026-18577-n-able-n-central-authentication-bypa.md)
 - [ghsa critical cve 2026 69240 sequelize sql injection oracle ](./2026-08-03/ghsa-critical-cve-2026-69240-sequelize-sql-injection-oracle-.md)
 - [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
-- [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 
 ## 2026-07-31
@@ -174,6 +179,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
+- [ghsa critical cve 2026 16723 fastjson has a remote code exec](./2026-07-23/ghsa-critical-cve-2026-16723-fastjson-has-a-remote-code-exec.md)
 - [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
 - [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
@@ -304,10 +310,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06
-- [ghsa critical cve 2026 49445 cilium vulnerable to sensitive ](./2026-07-06/ghsa-critical-cve-2026-49445-cilium-vulnerable-to-sensitive-.md)
-- [ghsa critical cve 2026 53486 decompress archive extraction c](./2026-07-06/ghsa-critical-cve-2026-53486-decompress-archive-extraction-c.md)
 - [ghsa critical cve 2026 54496 zebra missing copy constraint i](./2026-07-06/ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i.md)
-- [ghsa critical cve 2026 54769 langroid sandbox escape to remo](./2026-07-06/ghsa-critical-cve-2026-54769-langroid-sandbox-escape-to-remo.md)
 - [ghsa critical cve 2026 55500 9routers has exposure of sensit](./2026-07-06/ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit.md)
 - [ghsa critical cve 2026 55615 langroid neo4jchatagent execute](./2026-07-06/ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute.md)
 - [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)

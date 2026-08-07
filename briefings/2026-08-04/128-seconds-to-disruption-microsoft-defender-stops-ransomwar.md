@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### mshta.exe outbound connection to public host (remote HTA C2 retrieval)
 
-`UC_68_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_74_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### mshta.exe launched with inline http/https URL argument
 
-`UC_68_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_74_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### RunMRU registry write launching mshta / URL / PowerShell (ClickFix-style user persistence)
 
-`UC_68_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_74_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceRegistryEvents
 
 ### mshta.exe spawning command interpreter or secondary LOLBin
 
-`UC_68_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_74_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

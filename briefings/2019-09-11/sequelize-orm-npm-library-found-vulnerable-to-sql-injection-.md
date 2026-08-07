@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Sequelize ORM JSON-path SQLi exploitation via ')) AS DECIMAL)' cast-break (CVE-2019-10748)
 
-`UC_3496_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3497_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Sequelize ORM npm library found vulnerable to SQL Injection attacks
 
-`UC_3496_1` · phase: **exploit** · confidence: **High**
+`UC_3497_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

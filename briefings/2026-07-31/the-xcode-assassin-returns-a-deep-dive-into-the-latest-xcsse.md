@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### XCSSET v40 Chrome launched with CDP remote-debugging enabled (browser hijack)
 
-`UC_117_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_120_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 chrome_remote CDP backdoor binary execution
 
-`UC_117_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_120_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 trojanized Xcode build spawning curl-to-shell downloader
 
-`UC_117_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_120_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### XCSSET v40 worming: non-IDE process modifying multiple Xcode .pbxproj files
 
-`UC_117_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_120_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceFileEvents
 
 ### XCSSET v40 outbound retrieval to rotating C2 module/binary paths (/s/, /d/)
 
-`UC_117_13` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_120_13` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -447,7 +447,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Xcode Assassin Returns: A Deep Dive Into the Latest XCSSET Version
 
-`UC_117_8` · phase: **install** · confidence: **High**
+`UC_120_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

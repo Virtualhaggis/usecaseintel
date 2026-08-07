@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### jscrambler npm supply-chain: malicious dist/intro.js binary container drop
 
-`UC_256_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_260_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceFileEvents
 
 ### IronWorm preinstall loader: detached hidden binary executed from OS temp by node.exe
 
-`UC_256_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_260_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### IronWorm cross-platform payload execution by SHA256 (jscrambler stealer binaries)
 
-`UC_256_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_260_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ union
 
 ### IronWorm C2 beacon to hardcoded IPs and Tor endpoints from temp-dir process
 
-`UC_256_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_260_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -293,7 +293,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — jscrambler npm package publishes malicious preinstall binary
 
-`UC_256_8` · phase: **exploit** · confidence: **High**
+`UC_260_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
