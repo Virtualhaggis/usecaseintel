@@ -340,7 +340,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ClickFix Attacks Deliver macOS Stealer That Can Drain Crypto Wallets
 
-`UC_4_9` · phase: **exploit** · confidence: **High**
+`UC_5_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

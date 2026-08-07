@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Craft CMS passkey assertion replay: repeated POST to users/login-with-passkey
 
-`UC_9_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_10_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Craft passkey replay: identical request-body size reposted to login-with-passkey
 
-`UC_9_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

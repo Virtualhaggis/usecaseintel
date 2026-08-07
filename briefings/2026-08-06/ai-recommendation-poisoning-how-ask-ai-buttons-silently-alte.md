@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Web egress to AI-assistant deep-link carrying LLM memory-poisoning instruction
 
-`UC_39_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_40_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Inbound email delivering AI-assistant deep-link with memory-poisoning payload
 
-`UC_39_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

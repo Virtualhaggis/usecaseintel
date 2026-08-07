@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall lifecycle hook launching 'node setup.mjs' (ChainDrop/Shai-Hulud loader)
 
-`UC_69_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_70_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### setup.mjs spawning Bun runtime to execute obfuscated payload from node_modules/bun-dl
 
-`UC_69_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_70_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### ChainDrop known-bad file drop: setup.mjs / Math_*.js hashes on disk
 
-`UC_69_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_70_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceFileEvents
 
 ### ChainDrop C2 exfiltration from node/bun to npm-cache.com / pypi-get.com / js-mirror.com
 
-`UC_69_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_70_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### ChainDrop IMDS credential theft: node/bun reading cloud instance metadata (169.254.169.254 / 169.254.170.2)
 
-`UC_69_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_70_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceNetworkEvents
 
 ### ChainDrop persistence: node/bun injecting .claude and .vscode config files into repositories
 
-`UC_69_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_70_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceFileEvents
 
 ### ChainDrop worm propagation: npm publish spawned from a package-install context
 
-`UC_69_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_70_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ChainDrop supply chain compromise: Anatomy of a self-propagating worm
 
-`UC_69_8` · phase: **exploit** · confidence: **High**
+`UC_70_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,15 +11,9 @@ By Bill Toulas
 August 7, 2026
 03:30 PM
 2 
-
-
 Healthcare software company Unlimited Technology Systems reported that more than 3.8 million people were impacted by a data breach incident that occurred in October 2025.
-
-
 The organization submitted data breach notification samples to the authorities this year on July 1st without revealing the exact number of impacted individuals.
-
-
-An entry on the breach notification portal of the…
+An entry on the breach notification portal of the U.S. Dept. …
 
 ## Indicators of Compromise (high-fidelity only)
 

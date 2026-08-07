@@ -1,28 +1,28 @@
-# [HIGH] How We Added WebAuthn to a Browser-Based RDP Client
+# [CRIT] Inside the Modern SOC: The Identity Front Door
 
 **Source:** Unit 42 (Palo Alto)
-**Published:** 2026-07-02
-**Article:** https://unit42.paloaltonetworks.com/webauthn-added-to-browser-based-rdp/
+**Published:** 2026-08-07
+**Article:** https://unit42.paloaltonetworks.com/soc-identity-front-door/
 
 ## Threat Profile
 
 Threat Research Center 
 Insights 
-General 
-General 
-How We Added WebAuthn to a Browser-Based RDP Client 
-8 min read 
-Related Products Prisma Browser Prisma SASE Secure Access Service Edge (SASE) Unit 42 Incident Response 
-By: Daniel Prizmant 
-Published: July 2, 2026 
-Categories: General 
+Inside the Modern SOC 
+Inside the Modern SOC 
+Inside the Modern SOC: The Identity Front Door 
+3 min read 
+Related Products Cortex Cortex XSIAM Managed Threat Hunting Unit 42 Managed Detection and Response Unit 42 Managed XSIAM 
+By: Sharon Maydar 
+Published: August 7, 2026 
+Categories: Inside the Modern SOC 
 Insights 
-Threat Research 
-Tags: IDA Pro 
-Microsoft 
-RDP 
-The Pitch 
-TL;DR: We built the first RDP client outside of Windows to support WebAuthn redirection, beating Microsoft's own macOS, iOS and Linux clients …
+Tags: AI 
+Identity 
+Social engineering 
+Unit 42 Incident Response Report 
+The Identity Gap: Why Trust Has Become the New Attack Surface 
+In The 72-…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -30,6 +30,8 @@ TL;DR: We built the first RDP client outside of Windows to support WebAuthn redi
 
 ## MITRE ATT&CK Techniques
 
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -37,16 +39,48 @@ TL;DR: We built the first RDP client outside of Windows to support WebAuthn redi
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1566** — Phishing
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
-- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -196,30 +230,114 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
+### MFA fatigue / push-bombing
 
-`UC_TEAMS_VISHING` · phase: **delivery** · confidence: **High**
+`UC_MFA_FATIGUE` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`o365_management_activity`
-  Workload=MicrosoftTeams Operation=MessageSent
-  ExternalParticipants=*
-| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
-| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
-    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
+| tstats `summariesonly` count from datamodel=Authentication.Authentication
+    where Authentication.action="failure" AND Authentication.signature="*MFA*"
+    by _time span=5m, Authentication.user, Authentication.src
+| `drop_dm_object_name(Authentication)`
+| where count > 10
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode in (50074, 50076, 50158, 50125, 50097)
+| extend MfaPrompt = AuthenticationRequirement == "multiFactorAuthentication"
+| where MfaPrompt
+| summarize attempts = count(), distinct_ips = dcount(IPAddress)
+    by AccountUpn, bin(Timestamp, 5m)
+| where attempts > 10
+| order by attempts desc
+```
+
+### Ransomware-style mass file rename / extension change
+
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
 | where Timestamp > ago(7d)
-| where Application == "Microsoft Teams"
-| where ActionType == "MessageSent"
-| where RawEventData has "ExternalParticipants"
-| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
-| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
-| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
@@ -249,80 +367,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### Article-specific behavioural hunt — How We Added WebAuthn to a Browser-Based RDP Client
-
-`UC_303_6` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — How We Added WebAuthn to a Browser-Based RDP Client ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("webauthn.dll","mstsc.exe","mstscax.dll"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("webauthn.dll","mstsc.exe","mstscax.dll"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — How We Added WebAuthn to a Browser-Based RDP Client
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("webauthn.dll", "mstsc.exe", "mstscax.dll"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("webauthn.dll", "mstsc.exe", "mstscax.dll"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

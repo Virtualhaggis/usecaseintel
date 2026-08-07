@@ -18,6 +18,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 71851 crypto js insufficient entropy ](./2026-08-07/ghsa-critical-cve-2026-71851-crypto-js-insufficient-entropy-.md)
 - [ghsa critical ghsa wg23 69c2 gjc8 craft cms passkey login ac](./2026-08-07/ghsa-critical-ghsa-wg23-69c2-gjc8-craft-cms-passkey-login-ac.md)
 - [growing up the hard way](./2026-08-07/growing-up-the-hard-way.md)
+- [inside the modern soc the identity front door](./2026-08-07/inside-the-modern-soc-the-identity-front-door.md)
 - [malware can abuse windows hello for business keys for persis](./2026-08-07/malware-can-abuse-windows-hello-for-business-keys-for-persis.md)
 - [microsoft 365 aitm phishing hijacks accounts to collect payr](./2026-08-07/microsoft-365-aitm-phishing-hijacks-accounts-to-collect-payr.md)
 - [nearly 800 malicious npm packages deliver cross platform rat](./2026-08-07/nearly-800-malicious-npm-packages-deliver-cross-platform-rat.md)
@@ -321,7 +322,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-02
 - [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-07-02/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
-- [how we added webauthn to a browser based rdp client](./2026-07-02/how-we-added-webauthn-to-a-browser-based-rdp-client.md)
 - [stepsecurity maintained actions are now free for public repo](./2026-07-02/stepsecurity-maintained-actions-are-now-free-for-public-repo.md)
 
 ## 2026-07-01
