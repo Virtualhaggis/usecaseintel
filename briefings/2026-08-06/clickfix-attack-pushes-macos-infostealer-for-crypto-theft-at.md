@@ -11,12 +11,8 @@ By Ionut Ilascu
 August 6, 2026
 06:37 PM
 0 
-
-
 A Go-based malware delivered in ClickFix attacks targeting macOS users is stealing cryptocurrency assets, browser-stored passwords, Apple Keychain data, and cached credentials.
-
-
-​The malware can intercept and redirect transactions with various cryptocurrencies. Although it can empty wallets entirely, it can also calculate the total value of a transaction to determine how much to …
+​The malware can intercept and redirect transactions with various cryptocurrencies. Although it can empty wallets entirely, it can also calculate the total value of a transaction to determine how much to divert t…
 
 ## Indicators of Compromise (high-fidelity only)
 
