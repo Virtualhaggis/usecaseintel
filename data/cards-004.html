@@ -5546,11 +5546,11 @@ level: high
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1027,T1190,T1195.002,T1566,T1566.002"
   data-sources="The Hacker News"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
   data-targets="azure,m365,windows"
   data-uc-count="12" data-llm-uc-count="2"
-  data-search="Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sites Attackers modified a JavaScript file served by advertising technology company Adform, turning it into a browser-side tool that rewrites cryptocurrency wallet addresses. Adform detected the incident on July 27, 2026, removed the malicious code, notified affected clients, and reported it to authorities. Anyone who visited a site carrying the affected script on July 27 and copied a Bitcoin,  T1027 T1190 T1195.002 T1566 T1566.002 [LLM] Beacon to Adform crypto-swapper C2 84.32.102.230:7744 [LLM] Supply-chain chain: Adform trackpoint-async.js load followed by C2 beacon Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit">
+  data-search="Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sites Attackers modified a JavaScript file served by advertising technology company Adform, turning it into a browser-side tool that rewrites cryptocurrency wallet addresses. Adform detected the incident on July 27, 2026, removed the malicious code, notified affected clients, and reported it to authorities. Anyone who visited a site carrying the affected script on July 27 and copied a Bitcoin,  T1027 T1190 T1195.002 T1566 T1566.002 [LLM] Adform trackpoint-async.js crypto-swap C2 beacon to 84.32.102.230:7744 [LLM] Adform supply-chain exposure: host loaded s2.adform.net/trackpoint-async.js AND beaconed to C2 Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-01-hackers-poison-adform-script-to-swap-crypto-wallet-addresses" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5610,63 +5610,69 @@ level: high
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Supply-chain chain: Adform trackpoint-async.js load followed by C2 beacon · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Adform supply-chain exposure: host loaded s2.adform.net/trackpoint-async.js AND beaconed to C2 · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Beacon to Adform crypto-swapper C2 84.32.102.230:7744 · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Adform trackpoint-async.js crypto-swap C2 beacon to 84.32.102.230:7744 · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Crypto-wallet file/keystore access by non-wallet process · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="065f1de283" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="23e747cbd8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Beacon to Adform crypto-swapper C2 84.32.102.230:7744</span>
+    <span class="uc-title">Adform trackpoint-async.js crypto-swap C2 beacon to 84.32.102.230:7744</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="065f1de283" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="23e747cbd8" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts endpoints/perimeter egress to the hardcoded command-and-control server 84.32.102.230 on TCP/7744 used by the trojanized Adform trackpoint-async.js. The poisoned script fires a plaintext HTTP request to this raw IP:port on page load carrying the visitor&#x27;s hostname and page path, so any connection to this dedicated malicious IP indicates a user browsed a site serving the compromised ad-tech script.
+    <div class="uc-desc">Hunts the hardcoded exfil/C2 endpoint the poisoned Adform trackpoint-async.js contacted on page load, sending the visitor&#x27;s hostname and path. Any host in the fleet reaching 84.32.102.230 (especially TCP/7744) indicates a browser rendered the trojanized ad-tech script. This is the single corroborated network IOC of the campaign.
 
-Rationale: Anchored on the dedicated C2 IP 84.32.102.230 (port 7744) that the poisoned script beacons to on page load - a single-purpose malicious host with no legitimate use, corroborated by BleepingComputer, Beaumont/DoublePulsar and SC Media, making any connection dispositive.
+Rationale: Anchored on 84.32.102.230:7744, the campaign&#x27;s only network IOC, confirmed no-detection-on-VT at disclosure and cross-checked against BleepingComputer, Beaumont&#x27;s DoublePulsar write-up and SC Media. A fixed attacker IP is a near-zero-FP indicator.
 
 Cross-checked against:
   • https://www.bleepingcomputer.com/news/security/online-ad-firm-adforms-script-compromised-to-steal-cryptocurrency/
-  • https://www.scworld.com/brief/adform-supply-chain-attack-replaced-crypto-wallet-addresses
-  • https://cybersecuritynews.com/adform-advertising-platform-compromised/</div>
+  • https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e
+  • https://www.scworld.com/brief/adform-supply-chain-attack-replaced-crypto-wallet-addresses</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A SOC analyst or threat-intel researcher intentionally connecting to 84.32.102.230 during investigation/validation</li><li>Automated malware-detonation sandbox or URL-scanning appliance replaying the captured sample</li><li>The VPS IP being re-assigned to a benign host after takedown (stale IOC after weeks)</li><li>Threat-intel enrichment tooling actively probing the IOC</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Identify the source host and the initiating process (expect a browser - chrome/msedge/firefox). Pull the user&#x27;s browser history around the connection time to find which website served the poisoned Adform script. 2) Contain: Block 84.32.102.230/32 (all ports) at the firewall/proxy; instruct the affected user to clear browser cache (the malicious file may remain cached) and to verify any crypto wallet address before sending funds - warn them addresses may have been silently swapped in clipboard or on-page. 3) Hunt: Sweep all endpoints for any prior connections to the IP over the July 26-27 window and beyond; pivot to UC2 to map which hosts loaded s2.adform.net/trackpoint-async.js, and review any recent crypto transactions initiated from affected hosts.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel/scanning platforms in your fleet (e.g. a security VM) deliberately connecting to the IOC for validation</li><li>A researcher or IR analyst intentionally curl-ing 84.32.102.230:7744 during triage</li><li>Shared-egress NAT making it hard to attribute the source host — appears as the proxy/firewall IP rather than the real endpoint</li><li>Sinkhole or honeypot infrastructure that has since claimed the IP (verify current ownership before actioning)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;arc.exe&quot;,&quot;iexplore.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm which internal host/user made the connection and whether the initiating process is a browser (chrome.exe/msedge.exe/firefox.exe). Pull the RemoteUrl/RequestURL and any DNS just prior to identify the site that served the poisoned script. 2) Contain: block 84.32.102.230 at the egress firewall/proxy; instruct the user to clear browser cache (the poisoned file may still be cached per Adform&#x27;s notice) and to verify any crypto wallet address they copied/pasted on 2026-07-27 before sending funds. 3) Hunt: pivot on all hosts that loaded s2.adform.net/trackpoint-async.js in the exposure window and any that also hit the C2; alert users who transacted crypto to re-verify destination addresses.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-102-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-102-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-102-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
 | where RemoteIP == &quot;84.32.102.230&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl, LocalIP, Protocol,
+          C2PortMatch = iff(RemotePort == 7744, &quot;default-7744&quot;, &quot;other-port&quot;)
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
 | where DestinationIP == &quot;84.32.102.230&quot;
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourceUserName, DestinationIP, DestinationPort, RequestURL, ApplicationProtocol, DeviceAction
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourceUserName,
+          DestinationIP, DestinationPort, RequestURL, DeviceAction, ApplicationProtocol,
+          C2PortMatch = iff(DestinationPort == 7744, &quot;default-7744&quot;, &quot;other-port&quot;)
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Adform Crypto-Swapper C2 Beacon (84.32.102.230:7744)
-id: a3f1c2d4-5e6b-47a8-9c1d-2f3e4a5b6c7d
-description: Detects outbound connection to the hardcoded C2 IP used by the trojanized Adform trackpoint-async.js supply-chain compromise.
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Adform Crypto-Swap Supply-Chain C2 Connection (84.32.102.230)
+id: 6f2a9c14-7e3b-4d0a-9b21-1c8f4d5a7e02
+description: Detects outbound network connection to the hardcoded C2/exfil endpoint used by the trojanized Adform trackpoint-async.js crypto wallet-swapping script.
 references:
   - https://thehackernews.com/2026/08/hackers-poison-adform-script-to-swap.html
   - https://www.bleepingcomputer.com/news/security/online-ad-firm-adforms-script-compromised-to-steal-cryptocurrency/
-  - https://www.scworld.com/brief/adform-supply-chain-attack-replaced-crypto-wallet-addresses
+  - https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e
 author: SOC Detection Engineering
 date: 2026/08/07
 tags:
+  - attack.command_and_control
   - attack.t1071.001
+  - attack.exfiltration
   - attack.t1041
 logsource:
   category: network_connection
@@ -5679,92 +5685,62 @@ level: high</code></pre></div>
     <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:84.32.102.230</code></pre></div>
     <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;84.32.102.230&quot;
 | groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
-fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
-| filter dstAddr = &quot;84.32.102.230&quot;
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;84.32.102.230&quot; by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app, All_Traffic.action
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;84.32.102.230&quot; by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app, All_Traffic.action
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | eval note=if(dest_port==7744,&quot;Adform C2 default port&quot;,&quot;Adform C2 IP, non-default port&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | eval note=if(dest_port==7744,&quot;Adform C2 default port&quot;,&quot;Adform C2 IP, non-default port&quot;) | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="da0f9ead07" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="b72b430035" data-platforms="def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Supply-chain chain: Adform trackpoint-async.js load followed by C2 beacon</span>
+    <span class="uc-title">Adform supply-chain exposure: host loaded s2.adform.net/trackpoint-async.js AND beaconed to C2</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="da0f9ead07" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="b72b430035" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates endpoints that loaded the poisoned Adform trackpoint-async.js (from s2.adform.net) with a subsequent connection to the crypto-swapper C2 84.32.102.230 on the same host. This confirms the supply-chain kill chain end-to-end and scopes which corporate users were actually exposed - the exact &#x27;how many visitors were exposed&#x27; question the incident left unanswered.
+    <div class="uc-desc">Identifies internal users exposed to the compromise by correlating a request for the poisoned Adform resource (s2.adform.net/trackpoint-async.js) with an outbound connection to the attacker C2 (84.32.102.230) from the same source. Loading the Adform script alone is legitimate and ubiquitous, so the C2 pairing is what converts it into a confirmed exposure/impact signal for crypto-address theft.
 
-Rationale: Ties the poisoned-script fetch (s2.adform.net / trackpoint-async.js - confirmed compromised resource) to the same host&#x27;s beacon to 84.32.102.230 within an hour, confirming the T1195.002 supply-chain path and scoping real exposure rather than just script presence (which is legitimate on thousands of sites).
+Rationale: Pairs the legitimate-but-affected resource host s2.adform.net (and the specific trackpoint-async.js path where proxy full-URL logging exists) with the corroborated C2 IP 84.32.102.230, so it flags only genuinely exposed hosts rather than every Adform-tagged page load. Used to scope victim identification and crypto-theft warnings.
 
 Cross-checked against:
   • https://www.bleepingcomputer.com/news/security/online-ad-firm-adforms-script-compromised-to-steal-cryptocurrency/
-  • https://www.scworld.com/brief/adform-supply-chain-attack-replaced-crypto-wallet-addresses
-  • https://cybersecuritynews.com/adform-advertising-platform-compromised/</div>
+  • https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Drive-by Compromise">T1189</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Analyst manually loading the archived malicious sample from Pastebin/Archive.org while also probing the C2 during investigation</li><li>IP re-assignment: a benign service on 84.32.102.230 coinciding with a routine adform.net script load (stale-IOC drift)</li><li>Security proxy that pre-fetches/detonates URLs generating both the script load and an IP connection</li><li>Correlation window catching an unrelated legitimate adform ad load near an analyst&#x27;s IOC probe</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where BeaconProcess in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;arc.exe&quot;) and LoaderProcess in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;arc.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: For each correlated host confirm the browser is the process on both legs and pull the referring website that embedded the Adform tag, plus the exact ScriptTime-&gt;BeaconTime delay. 2) Contain: Block 84.32.102.230/32 org-wide, force browser cache clear on affected users (cached poisoned file persists post-fix), and flag the users to re-verify any crypto addresses they copied or entered on July 26-27. 3) Hunt: Expand the ScriptLoads set without a beacon to enumerate full exposure; review finance/crypto-related activity from affected users; check for any outbound crypto transfers to unfamiliar wallet addresses in the exposure window and escalate to IR if funds movement is suspected.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A host legitimately loads s2.adform.net on many sites but the C2 join fails to match because egress is NATed — under-counts rather than false-positives, but verify source attribution</li><li>Proxy RequestURL truncated to host only, so the trackpoint-async path clause drops real hits (loosen to host-only if your proxy strips paths)</li><li>Security team replaying the incident in a sandbox for analysis triggers both legs</li><li>IP 84.32.102.230 later reassigned/sinkholed and contacted by unrelated traffic — confirm C2 hit is within the 2026-07-27 exposure window</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each correlated host, confirm the browser process and the timestamp falls in the exposure window (around 2026-07-27, extend earlier per Beaumont&#x27;s longer observation). Identify the user and whether they handle crypto payments. 2) Contain: block 84.32.102.230 at egress, force browser cache clear on the affected endpoints (poisoned file may persist in cache), and notify affected users to re-verify any BTC/ETH/TRON address copied or entered on that date before sending funds. 3) Hunt: enumerate all crypto transactions initiated from these hosts in the window; check finance/treasury workflows for pasted addresses; expand the search to any subsidiary sites embedding Adform and confirm remediation of the served script.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let ScriptLoads = DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;trackpoint-async.js&quot; or RemoteUrl has &quot;s2.adform.net&quot;
-| project ScriptTime = Timestamp, DeviceId, DeviceName, ScriptUrl = RemoteUrl, LoaderProcess = InitiatingProcessFileName;
+    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let C2 = DeviceNetworkEvents
+    | where Timestamp &gt; ago(30d)
+    | where RemoteIP == &quot;84.32.102.230&quot;
+    | project DeviceId, C2Time = Timestamp, RemotePort;
 DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;84.32.102.230&quot;
-| project BeaconTime = Timestamp, DeviceId, DeviceName, RemoteIP, RemotePort, BeaconProcess = InitiatingProcessFileName
-| join kind=inner ScriptLoads on DeviceId
-| where BeaconTime between (ScriptTime .. ScriptTime + 1h)
-| project DeviceName, ScriptTime, BeaconTime, DelaySec = datetime_diff(&#x27;second&#x27;, BeaconTime, ScriptTime), ScriptUrl, RemoteIP, RemotePort, BeaconProcess, LoaderProcess
-| order by BeaconTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let ScriptLoads = ImWebSession
+| where RemoteUrl has &quot;s2.adform.net&quot;
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;arc.exe&quot;,&quot;iexplore.exe&quot;)
+| join kind=inner C2 on DeviceId
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          RemoteUrl, C2Time, C2Port = RemotePort1
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let C2Hits = CommonSecurityLog
+    | where TimeGenerated &gt; ago(30d)
+    | where DestinationIP == &quot;84.32.102.230&quot;
+    | project SourceIP, C2Time = TimeGenerated, DestinationPort;
+CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where Url has &quot;trackpoint-async.js&quot; or HttpHostName has &quot;s2.adform.net&quot;
-| project ScriptTime = TimeGenerated, SrcIpAddr, SrcHostname, ScriptUrl = Url;
-ImNetworkSession
-| where TimeGenerated &gt; ago(30d)
-| where DstIpAddr == &quot;84.32.102.230&quot;
-| project BeaconTime = TimeGenerated, SrcIpAddr, DstIpAddr, DstPortNumber
-| join kind=inner ScriptLoads on SrcIpAddr
-| where BeaconTime between (ScriptTime .. ScriptTime + 1h)
-| project SrcIpAddr, SrcHostname, ScriptTime, BeaconTime, ScriptUrl, DstIpAddr, DstPortNumber
-| order by BeaconTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:84.32.102.230 (@Image:(*\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\MsEdge.exe OR *\\firefox.exe OR *\\Firefox.exe OR *\\brave.exe))</code></pre></div>
+| where RequestURL has &quot;s2.adform.net&quot; and RequestURL has &quot;trackpoint-async&quot;
+| join kind=inner C2Hits on SourceIP
+| project TimeGenerated, SourceIP, SourceUserName, RequestURL, C2Time,
+          DestinationIP = &quot;84.32.102.230&quot;, DestinationPort
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;84.32.102.230&quot;
-| join(query={#event_simpleName=DnsRequest DomainName=/adform\.net$/i}, field=aid, include=[DomainName], mode=left)
+| join({#event_simpleName=DnsRequest DomainName=/s2\.adform\.net/i}, field=aid, include=[DomainName])
 | groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as script_loads min(_time) as firstLoad from datamodel=Web.Web where (Web.url=&quot;*trackpoint-async.js*&quot; OR Web.dest=&quot;s2.adform.net&quot;) by Web.src
-| `drop_dm_object_name(Web)`
-| join type=inner src [
-    | tstats `summariesonly` count as beacon_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;84.32.102.230&quot; by All_Traffic.src
-    | `drop_dm_object_name(All_Traffic)` ]
-| where beacon_count &gt; 0
-| table src, script_loads, beacon_count, firstLoad
-| sort - beacon_count</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as script_loads min(_time) as firstLoad from datamodel=Web.Web where (Web.url=&quot;*trackpoint-async.js*&quot; OR Web.dest=&quot;s2.adform.net&quot;) by Web.src
-| `drop_dm_object_name(Web)`
-| join type=inner src [
-    | tstats summariesonly=false count as beacon_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=&quot;84.32.102.230&quot; by All_Traffic.src
-    | `drop_dm_object_name(All_Traffic)` ]
-| where beacon_count &gt; 0
-| table src, script_loads, beacon_count, firstLoad
-| sort - beacon_count</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web.Web where Web.url=&quot;*s2.adform.net/trackpoint-async.js*&quot; by Web.src Web.user Web.url _time | `drop_dm_object_name(Web)` | rename src as host | join type=inner host [| tstats summariesonly=true count as c2_hits min(_time) as c2_time from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | rename src_ip as host] | table _time host user url c2_hits c2_time | sort - _time</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.url=&quot;*s2.adform.net/trackpoint-async.js*&quot; by Web.src Web.user Web.url _time | `drop_dm_object_name(Web)` | rename src as host | join type=inner host [| tstats summariesonly=false count as c2_hits min(_time) as c2_time from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | rename src_ip as host] | table _time host user url c2_hits c2_time | sort - _time</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
