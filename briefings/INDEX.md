@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2615 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,7 +13,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [apple icloud private relay can expose real ips through webki](./2026-08-06/apple-icloud-private-relay-can-expose-real-ips-through-webki.md)
 - [attackers compile khunt inside oracle to turn sql injection ](./2026-08-06/attackers-compile-khunt-inside-oracle-to-turn-sql-injection-.md)
 - [aws google and vercel agent flaws let attackers trigger tool](./2026-08-06/aws-google-and-vercel-agent-flaws-let-attackers-trigger-tool.md)
+- [chaindrop inside a self propagating npm worm](./2026-08-06/chaindrop-inside-a-self-propagating-npm-worm.md)
 - [chinese made zbtlink routers ship with backdoor that opens u](./2026-08-06/chinese-made-zbtlink-routers-ship-with-backdoor-that-opens-u.md)
+- [clickfix attack pushes macos infostealer for crypto theft at](./2026-08-06/clickfix-attack-pushes-macos-infostealer-for-crypto-theft-at.md)
 - [cryptojs weak rng behind 5 7 million in drains affects five ](./2026-08-06/cryptojs-weak-rng-behind-5-7-million-in-drains-affects-five-.md)
 - [ghsa critical cve 2026 65600 traefik authentication bypass v](./2026-08-06/ghsa-critical-cve-2026-65600-traefik-authentication-bypass-v.md)
 - [hedge fund cyberattacks tied to blackfile linked unc6671 ext](./2026-08-06/hedge-fund-cyberattacks-tied-to-blackfile-linked-unc6671-ext.md)
@@ -79,9 +81,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
 - [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
 - [openai anthropic ai agents targeted real people and systems ](./2026-08-04/openai-anthropic-ai-agents-targeted-real-people-and-systems-.md)
-- [phishing service spoofs ringcentral to steal microsoft 365 a](./2026-08-04/phishing-service-spoofs-ringcentral-to-steal-microsoft-365-a.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
-- [tp link patches omada ztp flaws allowing hackers to breach n](./2026-08-04/tp-link-patches-omada-ztp-flaws-allowing-hackers-to-breach-n.md)
 
 ## 2026-08-03
 - [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
@@ -328,7 +328,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mass npm supply chain attack 20 leo platform packages compro](./2026-07-01/mass-npm-supply-chain-attack-20-leo-platform-packages-compro.md)
 - [maven support comes to github checks and oss package search](./2026-07-01/maven-support-comes-to-github-checks-and-oss-package-search.md)
 - [multiple immobiliarelabs backstage plugins compromised on np](./2026-07-01/multiple-immobiliarelabs-backstage-plugins-compromised-on-np.md)
-- [phantom squatting ai hallucinated domains as a software supp](./2026-07-01/phantom-squatting-ai-hallucinated-domains-as-a-software-supp.md)
 - [secure registry now tells you which machine pulled a comprom](./2026-07-01/secure-registry-now-tells-you-which-machine-pulled-a-comprom.md)
 - [simonecorsi mawesome github action has been compromised](./2026-07-01/simonecorsi-mawesome-github-action-has-been-compromised.md)
 

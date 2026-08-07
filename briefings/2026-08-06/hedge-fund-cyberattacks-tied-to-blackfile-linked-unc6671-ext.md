@@ -11,19 +11,52 @@ By Lawrence Abrams
 August 6, 2026
 04:07 PM
 0 
-
-
 A recent wave of cyberattacks targeting hedge funds, private-equity firms, and other financial organizations has been linked to UNC6671, an extortion group reportedly associated with the BlackFile campaign extortion group.
-
-
-The attribution comes after Reuters  and Bloomberg reported that Point72 Asset Management, Millennium Management, Two Sigma Investments, Citadel, an…
+The attribution comes after Reuters  and Bloomberg reported that Point72 Asset Management, Millennium Management, Two Sigma Investments, Citadel, and severa…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `179.43.185.226`
-- **Domain (defanged):** `enrollms.com`
-- **Domain (defanged):** `passkeyms.com`
-- **Domain (defanged):** `setupsso.com`
+- **IPv4 (defanged):** `31.7.56.61`
+- **IPv4 (defanged):** `31.7.56.52`
+- **IPv4 (defanged):** `193.34.212.132`
+- **IPv4 (defanged):** `185.178.208.153`
+- **IPv4 (defanged):** `23.234.75.84`
+- **IPv4 (defanged):** `195.140.213.114`
+- **IPv4 (defanged):** `195.140.213.115`
+- **IPv4 (defanged):** `107.128.45.122`
+- **IPv4 (defanged):** `76.103.148.180`
+- **IPv4 (defanged):** `38.42.59.171`
+- **IPv4 (defanged):** `47.218.103.146`
+- **Domain (defanged):** `myoktasso.com`
+- **Domain (defanged):** `mypasskeysso.com`
+- **Domain (defanged):** `setupssopasskey.com`
+- **Domain (defanged):** `mspasskey.com`
+- **Domain (defanged):** `activatepasskey.com`
+- **Domain (defanged):** `enrollpasskey.com`
+- **Domain (defanged):** `keyokta.com`
+- **Domain (defanged):** `oktaenroll.com`
+- **Domain (defanged):** `oktaportalsso.com`
+- **Domain (defanged):** `passkeyportal.com`
+- **Domain (defanged):** `portalpasskey.com`
+- **Domain (defanged):** `passkeyportalsetup.com`
+- **Domain (defanged):** `addoktapasskey.com`
+- **Domain (defanged):** `deploypasskey.com`
+- **Domain (defanged):** `passkeydeploy.com`
+- **Domain (defanged):** `activatemypasskey.com`
+- **Domain (defanged):** `registerpasskey.com`
+- **Domain (defanged):** `createpasskey.com`
+- **Domain (defanged):** `passkeyadd.com`
+- **Domain (defanged):** `passkeyregister.com`
+- **Domain (defanged):** `passkeycenter.com`
+- **Domain (defanged):** `secureauthpasskey.com`
+- **Domain (defanged):** `passkeyrollout.com`
+- **Domain (defanged):** `setpasskey.com`
+- **Domain (defanged):** `passkeyokta.com`
+- **Domain (defanged):** `passkeyset.com`
+- **Domain (defanged):** `createmypasskey.com`
+- **Domain (defanged):** `newpasskey.com`
+- **Domain (defanged):** `passkeysupport.com`
+- **Domain (defanged):** `sqfepjvmrd.xyz`
 
 ## MITRE ATT&CK Techniques
 
@@ -37,16 +70,14 @@ The attribution comes after Reuters  and Bloomberg reported that Point72 Asset 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1656** — Impersonation
 - **T1557** — Adversary-in-the-Middle
+- **T1566.004** — Phishing: Spearphishing Voice
 - **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1526** — Cloud Service Discovery
 - **T1530** — Data from Cloud Storage
 - **T1119** — Automated Collection
-- **T1567.002** — Exfiltration to Cloud Storage
 - **T1070.008** — Clear Mailbox Data
-- **T1564.008** — Email Hiding Rules
-- **T1114.001** — Local Email Collection
+- **T1114** — Email Collection
 
 ## Kill chain phases observed
 
@@ -54,68 +85,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UNC6671/BlackFile AiTM passkey-enrollment lookalike domain or actor-IP contact
+### UNC6671 AiTM passkey/Okta phishing domain contact from corporate endpoint
 
-`UC_0_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("enrollms.com","passkeyms.com","setupsso.com","*.enrollms.com","*.passkeyms.com","*.setupsso.com")) by DNS.src DNS.dest DNS.query index host | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+let aitmDomains = dynamic(["myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any ("enrollms.com","passkeyms.com","setupsso.com") or RemoteIP == "179.43.185.226"
+| where RemoteUrl has_any (aitmDomains)
+| where InitiatingProcessAccountName !endswith "$"
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### UNC6671 successful M365/Okta sign-in from AiTM proxy IP 179.43.185.226
+### Successful M365/Okta SSO sign-in from UNC6671 infrastructure IPs
 
-`UC_0_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src IN ("179.43.185.226") Authentication.action="success" by Authentication.user Authentication.src Authentication.app Authentication.dest | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as app values(Authentication.dest) as dest from datamodel=Authentication.Authentication where Authentication.action=success Authentication.src IN ("31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146") by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badIPs = dynamic(["31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146"]);
+AADSignInEventsBeta
+| where Timestamp > ago(30d)
+| where IPAddress in (badIPs)
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, UserAgent, ConditionalAccessStatus
+| order by Timestamp desc
+```
+
+### Post-SSO rapid multi-cloud application enumeration from single session
+
+`UC_3_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Authentication.dest) as DistinctApps values(Authentication.dest) as apps values(Authentication.src) as src from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user _time span=10m | `drop_dm_object_name(Authentication)` | where DistinctApps >= 8 | sort - DistinctApps
 ```
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where IPAddress == "179.43.185.226"
+| where Timestamp > ago(7d)
 | where ErrorCode == 0
-| project Timestamp, AccountUpn, AccountDisplayName, Application, ResourceDisplayName, IPAddress, Country, City, UserAgent, ClientAppUsed, ConditionalAccessStatus, IsInteractive
-| order by Timestamp desc
+| where AccountUpn !endswith "$"
+| summarize DistinctResources = dcount(ResourceDisplayName), Resources = make_set(ResourceDisplayName, 50), IPs = make_set(IPAddress, 10), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountUpn, bin(Timestamp, 10m)
+| where DistinctResources >= 8   // P99 baseline is ~5 distinct SSO apps per 10m; >=8 = fan-out
+| order by DistinctResources desc
 ```
 
-### UNC6671 bulk SharePoint/OneDrive download from actor IP 179.43.185.226
+### Automated bulk cloud data harvest from compromised M365 session
 
-`UC_0_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as DownloadCount dc(Web.uri_path) as DistinctFiles values(Web.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.action=allowed Web.http_method IN ("GET") Web.url IN ("*sharepoint.com*","*onedrive*") by Web.user _time span=10m | `drop_dm_object_name(Web)` | where DownloadCount >= 100 | sort - DownloadCount
+```
 
 **Defender KQL:**
 ```kql
+let dlActions = dynamic(["FileDownloaded","FileSyncDownloadedFull"]);
 CloudAppEvents
-| where Timestamp > ago(30d)
-| where IPAddress == "179.43.185.226"
-| where ActionType in ("FileDownloaded","FileSyncDownloadedFull","FileAccessed","FileDownloadedByCollaborator")
-| summarize DownloadCount = count(), Apps = make_set(Application, 10), Files = make_set(ObjectName, 100), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountDisplayName, AccountObjectId, IPAddress, UserAgent
+| where Timestamp > ago(7d)
+| where ActionType in (dlActions)
+| where AccountType != "Application"
+| summarize DownloadCount = count(), Files = dcount(ObjectName), Apps = make_set(Application, 10), IPs = make_set(IPAddress, 10), UAs = make_set(UserAgent, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
+| where DownloadCount >= 100   // automated recursive harvest; interactive users rarely exceed ~30/10m
 | order by DownloadCount desc
 ```
 
-### UNC6671 mailbox rule / deletion of security & password-reset notifications
+### Post-compromise deletion of MFA/password-reset security emails
 
-`UC_0_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
+let secTerms = dynamic(["password","passkey","multi-factor","multifactor","verification code","security alert","sign-in","MFA","reset your","unusual sign"]);
+let delActions = dynamic(["Delete","HardDelete","SoftDelete","MoveToDeletedItems"]);
 CloudAppEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules","Update-InboxRules")
-| where RawEventData has_any ("password","passkey","security","MFA","authenticator","sign-in","verify","Deleted Items","DeleteMessage","MoveToFolder","Junk")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, UserAgent, ActionType, RawEventData
+| where Timestamp > ago(7d)
+| where ActionType in (delActions)
+| where RawEventData has_any (secTerms)
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, Application, IPAddress, UserAgent, RawEventData
 | order by Timestamp desc
 ```
 
@@ -301,9 +364,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `179.43.185.226`, `enrollms.com`, `passkeyms.com`, `setupsso.com`
+  - IP / domain IOC(s): `31.7.56.61`, `31.7.56.52`, `193.34.212.132`, `185.178.208.153`, `23.234.75.84`, `195.140.213.114`, `195.140.213.115`, `107.128.45.122` _(+33 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

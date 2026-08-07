@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Anonymous bulk Dataverse extraction via Power Pages Web API / legacy OData feed
 
-`UC_94_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_95_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Dataverse table enumeration across Power Pages /_api and /_odata entity sets
 
-`UC_94_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_95_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Inbound phishing leveraging the PNLD / ExfilSquad breach against named officers
 
-`UC_94_11` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_95_11` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

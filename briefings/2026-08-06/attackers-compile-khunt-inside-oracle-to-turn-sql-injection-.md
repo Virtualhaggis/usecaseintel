@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Oracle DB engine (oracle.exe) spawning cmd.exe / LOLBins — khunt KhuntCmd OS execution
 
-`UC_16_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_19_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### SAM/SECURITY/SYSTEM hive dump to F:\Oracle via reg save / esentutl — khunt credential theft
 
-`UC_16_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_19_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### Inbound requests from khunt attacker IP 178.162.151.229 / Oracle Java SQLi tokens against public web app
 
-`UC_16_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_19_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### khunt on-disk artifacts — khunt*.hiv, khunttasks.txt written under F:\Oracle
 
-`UC_16_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_19_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceFileEvents
 
 ### Oracle audit/SQL logs — KHUNT% schema objects and CREATE JAVA SOURCE / dbms_java
 
-`UC_16_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_19_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -355,7 +355,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Attackers Compile khunt Inside Oracle to Turn SQL Injection Into Windows SYSTEM
 
-`UC_16_6` · phase: **exploit** · confidence: **High**
+`UC_19_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

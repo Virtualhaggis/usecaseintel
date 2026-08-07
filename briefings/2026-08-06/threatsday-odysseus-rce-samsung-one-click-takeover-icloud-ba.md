@@ -42,13 +42,13 @@ This week runs on cheap leverage: exposed servers, recycled bugs, poisoned agent
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1574.002** — DLL Side-Loading
 - **T1102** — Web Service
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1105** — Ingress Tool Transfer
+- **T1059.007** — JavaScript
 - **T1547.001** — Registry Run Keys / Startup Folder
-- **T1554** — Compromise Host Software Binary
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 
 ## Kill chain phases observed
 
@@ -56,135 +56,87 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SideWinder ClickOnce app execution from \Apps\2.0\ cache (dfsvc.exe DLL sideload)
+### SideWinder ClickOnce side-load: NGenTask.exe running mscorsvc.dll from Apps\2.0 cache
 
-`UC_9_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_12_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="dfsvc.exe" OR Processes.process_path="*\\AppData\\Local\\Apps\\2.0\\*") Processes.process_name!="conhost.exe" Processes.process_name!="WerFault.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="NGenTask.exe" Processes.process_path="*\\AppData\\Local\\Apps\\2.0\\*" Processes.parent_process_name="dfsvc.exe" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where AccountName !endswith "$"
+| where FileName =~ "NGenTask.exe"
+| where FolderPath has @"\AppData\Local\Apps\2.0\"
 | where InitiatingProcessFileName =~ "dfsvc.exe"
-    or InitiatingProcessCommandLine has "dfshim.dll,ShOpenVerbApplication"
-    or FolderPath has @"\AppData\Local\Apps\2.0\"
-| where FileName !in~ ("conhost.exe","WerFault.exe","dfsvc.exe")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### SideWinder Rust backdoor C2 beacon to Cloudflare Workers (*.workers.dev)
+### SideWinder Rust backdoor C2 to Cloudflare Workers (*.workers.dev) from non-browser process
 
-`UC_9_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*.workers.dev" by DNS.src DNS.dest DNS.query
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| where count < 500
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*.workers.dev" by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | eventstats dc(src) as OrgHostCount by query | where OrgHostCount<=3 | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let Browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe"]);
+let Baseline = DeviceNetworkEvents
+| where Timestamp between (ago(30d) .. ago(1d))
+| where RemoteUrl endswith "workers.dev"
+| summarize by RemoteUrl;
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl endswith ".workers.dev"
-| where InitiatingProcessFileName !in~ (Browsers)
-| where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Apps\2.0\", @"\Temp\", @"\ProgramData\", @"\Public\")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Beacons=count(), Ports=make_set(RemotePort)
-          by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, RemoteUrl
-| order by FirstSeen desc
-```
-
-### Flooding Dropper npm loader pulls /pkg/update_win.exe second stage
-
-`UC_9_16` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="update_win.exe" OR (Processes.parent_process_name="node.exe" AND Processes.process="*update_win.exe*") OR (Processes.parent_process_name="node.exe" AND Processes.process="*/pkg/*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "update_win.exe"
-    or (InitiatingProcessFileName =~ "node.exe"
-        and FileName in~ ("powershell.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe")
-        and ProcessCommandLine has_any ("/pkg/update_win.exe","update_win.exe","/pkg/"))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(1d)
+| where RemoteUrl endswith "workers.dev"
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","code.exe")
+| join kind=leftanti Baseline on RemoteUrl
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Flooding Dropper persistence: Run key written by node.exe / update_win.exe
+### Flooding Dropper npm second-stage payload drop (update_win.exe)
 
-`UC_9_17` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" (Registry.process_name="node.exe" OR Registry.process_name="update_win.exe") by Registry.dest Registry.process_name Registry.registry_path Registry.registry_value_name Registry.registry_value_data
-| `drop_dm_object_name(Registry)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\CurrentVersion\Run"
-| where InitiatingProcessFileName in~ ("node.exe","update_win.exe","npm.exe")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
-| order by Timestamp desc
-```
-
-### XCSSET v40 Telegram trojanizer replaces /Applications/Telegram.app (macOS)
-
-`UC_9_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_16` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*Telegram.app*" (Filesystem.action="deleted" OR Filesystem.action="created" OR Filesystem.action="modified") by Filesystem.dest Filesystem.user Filesystem.action Filesystem.file_path Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="update_win.exe" Filesystem.action=created by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has "Telegram.app"
-| where ActionType in ("FileDeleted","FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("Telegram","Installer","installd","com.apple.installer","launchd")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Actions=make_set(ActionType), Files=count()
-          by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FolderPath
-| where set_has_element(Actions,"FileDeleted") or set_has_element(Actions,"FileCreated")
-| order by FirstSeen desc
+| where ActionType == "FileCreated"
+| where FileName =~ "update_win.exe"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, FileOriginUrl, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Flooding Dropper Registry Run-key persistence pointing to update_win.exe
+
+`UC_12_17` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" Registry.registry_value_data="*update_win.exe*" by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_id | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where RegistryKey has @"\CurrentVersion\Run"
+| where RegistryValueData has "update_win.exe"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -592,7 +544,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay: Odysseus RCE, Samsung One-Click Takeover, iCloud Backdoor Fight + 27
 
-`UC_9_13` · phase: **exploit** · confidence: **High**
+`UC_12_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -649,4 +601,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 19 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 18 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of compromised @joyfill/components or @joyfill/layouts 2773 beta packages
 
-`UC_117_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_118_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### Node.js host callout to Joyfill DEV#POPPER RAT C2 infrastructure
 
-`UC_117_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_118_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### Node.js spawning a shell or detached node -e child (Joyfill RAT execution)
 
-`UC_117_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_118_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Joyfill RAT persistence injection into developer tool modules (VS Code / Discord / GitHub Desktop / npm)
 
-`UC_117_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_118_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceFileEvents
 
 ### Known-malicious Joyfill package bundle hash observed on disk
 
-`UC_117_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_118_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceFileEvents
 
 ### Compromised @joyfill package artifacts written under node_modules or lock files
 
-`UC_117_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_118_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -315,7 +315,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised npm Packages: @joyfill/components and @joyfill/layouts Ship an Obfus
 
-`UC_117_7` · phase: **exploit** · confidence: **High**
+`UC_118_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

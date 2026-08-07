@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID device code authentication flow success (EvilTokens / Kali365 / Storm-2372)
 
-`UC_35_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_38_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ AADSignInEventsBeta
 
 ### AiTM session-cookie replay — interactive vs non-interactive geo/IP split (Tycoon 2FA / Evilginx)
 
-`UC_35_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_38_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ interactive
 
 ### Phishing delivery via abused trusted SaaS hosting (Workers.dev / Vercel / Railway / Firebase / Jotform)
 
-`UC_35_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_38_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
