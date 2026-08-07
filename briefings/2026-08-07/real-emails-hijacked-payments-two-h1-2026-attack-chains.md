@@ -11,12 +11,8 @@ Sponsored by Gen Digital
 August 7, 2026
 10:00 AM
 0 
-
-
 Gen Threat Labs followed two H1 2026 campaigns where attackers used legitimate accounts, browser settings and blockchain data as part of the attack path. 
-
-
-The Gen Threat Report is a twice-yearly examination of the biggest cyber threats shaping the digital landscape, offering an in-depth look at the trends affecting consumers around the world. Gen's H1 2026 Threat Report has its…
+The Gen Threat Report is a twice-yearly examination of the biggest cyber threats shaping the digital landscape, offering an in-depth look at the trends affecting consumers around the world. Gen's H1 2026 Threat Report has its share o…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -55,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Auth-passing inbound shipment/invoice email carrying a script or archive attachment
 
-`UC_1_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_2_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -75,7 +71,7 @@ EmailEvents
 
 ### Script-host JavaScript dropper spawning PowerShell from mail/download path
 
-`UC_1_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +97,7 @@ DeviceProcessEvents
 
 ### Proxy config / AutoConfigURL modified by a scripting or loader process (banking-session interception)
 
-`UC_1_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_2_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +122,7 @@ DeviceRegistryEvents
 
 ### EtherHiding C2 resolution: non-browser process querying Binance Smart Chain RPC nodes
 
-`UC_1_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk Code CLI support now in public beta
 
-`UC_3100_0` · phase: **exploit** · confidence: **High**
+`UC_3101_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

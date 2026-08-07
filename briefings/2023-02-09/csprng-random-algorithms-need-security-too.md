@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — CSPRNG: Random algorithms need security too!
 
-`UC_1864_0` · phase: **install** · confidence: **High**
+`UC_1865_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -213,7 +213,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — XS leaks: What they are and how to avoid them
 
-`UC_1655_4` · phase: **exploit** · confidence: **High**
+`UC_1656_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

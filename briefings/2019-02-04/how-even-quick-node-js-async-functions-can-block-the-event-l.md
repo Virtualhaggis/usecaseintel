@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How even quick Node.js async functions can block the Event-Loop
 
-`UC_3585_1` · phase: **exploit** · confidence: **High**
+`UC_3586_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

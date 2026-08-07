@@ -108,7 +108,7 @@ _(none detected from narrative keywords)_
 
 ### Redis-server RCE: redis-server spawns shell / cron write (TeamPCP TA-NATALSTATUS)
 
-`UC_11_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### TeamPCP kube.py / kamikaze.sh stager pulled from Cloudflare tunnel
 
-`UC_11_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_12_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### TeamPCP destructive Kubernetes DaemonSet (Kamikaze wiper) — Iran-gated node wipe
 
-`UC_11_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_12_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### TeamPCP C2 egress — trycloudflare tunnels, ICP canister, masscan.cloud & typosquat domains
 
-`UC_11_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ DeviceNetworkEvents
 
 ### Linux userland-rootkit persistence — ld.so.preload + chattr immutability + admin-tool masquerade
 
-`UC_11_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -207,7 +207,7 @@ DeviceProcessEvents
 
 ### TeamPCP poison_pill filesystem destruction — rm -rf / --no-preserve-root
 
-`UC_11_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_12_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### TeamPCP supply-chain poisoned CI runner — trivy-action token theft to typosquat + tpcp staging
 
-`UC_11_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -593,7 +593,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Linked To Redis Attacks Dating Back To 2020 And Later Supply Chain Campa
 
-`UC_11_13` · phase: **exploit** · confidence: **High**
+`UC_12_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

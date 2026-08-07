@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2615 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-08-07
 - [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
+- [cisa kev cve 2026 8037 progress loadmaster command injection](./2026-08-07/cisa-kev-cve-2026-8037-progress-loadmaster-command-injection.md)
 - [claude code and gemini cli flaws let a github issue reach ci](./2026-08-07/claude-code-and-gemini-cli-flaws-let-a-github-issue-reach-ci.md)
 - [ghsa critical ghsa wg23 69c2 gjc8 craft cms passkey login ac](./2026-08-07/ghsa-critical-ghsa-wg23-69c2-gjc8-craft-cms-passkey-login-ac.md)
 - [growing up the hard way](./2026-08-07/growing-up-the-hard-way.md)

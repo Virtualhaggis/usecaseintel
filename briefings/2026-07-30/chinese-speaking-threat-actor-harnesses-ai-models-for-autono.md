@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Egress to AI-tool anonymizing proxy code.newcli[.]com (knaithe/KnYuan campaign)
 
-`UC_126_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_127_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Direct egress to Chinese-market LLM APIs (DeepSeek/Qwen) from the estate
 
-`UC_126_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_127_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### Langflow CVE-2026-33017 unauthenticated RCE exploitation (build_public_tmp)
 
-`UC_126_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_127_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### Hermes Agent autonomous attack framework execution (fofoapi.py / FofaMap MCP)
 
-`UC_126_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_127_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### AI coding-tool anti-attribution / permission-bypass config artifacts
 
-`UC_126_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_127_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Autonomous mass-scan burst: langflow_poc.py multi-threaded FOFA target sweep
 
-`UC_126_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_127_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -267,7 +267,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese-Speaking Threat Actor Harnesses AI Models for Autonomous Cyberattacks
 
-`UC_126_5` · phase: **exploit** · confidence: **High**
+`UC_127_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall hook executing node setup.mjs (Shai-Hulud dropper)
 
-`UC_82_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_83_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud payload files setup.mjs / Math_Symbol.js written into node_modules
 
-`UC_82_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_83_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceFileEvents
 
 ### Bun runtime fetched from oven-sh GitHub releases during npm install
 
-`UC_82_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_83_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### Bun runtime executing Shai-Hulud Math_Symbol.js credential stealer
 
-`UC_82_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_83_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +227,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Keyv and friends compromised in active Shai-Hulud supply chain attack
 
-`UC_82_4` · phase: **exploit** · confidence: **High**
+`UC_83_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
