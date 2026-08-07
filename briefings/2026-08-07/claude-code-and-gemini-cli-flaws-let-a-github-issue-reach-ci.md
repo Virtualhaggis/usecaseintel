@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Claude Code validator bypass: git push --receive-pack command injection
 
-`UC_17_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_19_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Claude Code API-key exfil via Hugging Face download-counter (CVE-2026-54316)
 
-`UC_17_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_19_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### Gemini CLI OS command injection via crafted .gemini/.env (CVE-2026-12537)
 
-`UC_17_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_19_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### ChainDrop persistence: Claude Code SessionStart hook / VS Code folderOpen task drop
 
-`UC_17_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_19_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### Codex second-pass hijack: AGENTS.md written inside a CI checkout
 
-`UC_17_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_19_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

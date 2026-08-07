@@ -88,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### UNC6671 passkey/Okta AitM phishing domain & proxy IP callout
 
-`UC_23_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_25_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### Entra/Okta SSO sign-in from UNC6671 AitM reverse-proxy IPs
 
-`UC_23_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_25_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ AADSignInEventsBeta
 
 ### Rapid multi-cloud app fan-out after single SSO sign-in (dashboard enumeration)
 
-`UC_23_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_25_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ AADSignInEventsBeta
 
 ### Bulk deletion of security/password-reset/MFA emails post-SSO-compromise
 
-`UC_23_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_25_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ CloudAppEvents
 
 ### Automated bulk cloud data harvesting from compromised SSO session
 
-`UC_23_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_25_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

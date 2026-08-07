@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2619 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2618 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -26,6 +26,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [real emails hijacked payments two h1 2026 attack chains](./2026-08-07/real-emails-hijacked-payments-two-h1-2026-attack-chains.md)
 - [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
 - [unc6671 vishing attacks target personal phones to steal saas](./2026-08-07/unc6671-vishing-attacks-target-personal-phones-to-steal-saas.md)
+- [unlimited technology systems breach impacts 3 8 million peop](./2026-08-07/unlimited-technology-systems-breach-impacts-3-8-million-peop.md)
 
 ## 2026-08-06
 - [ai recommendation poisoning how ask ai buttons silently alte](./2026-08-06/ai-recommendation-poisoning-how-ask-ai-buttons-silently-alte.md)
@@ -53,8 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [canadian pleads guilty to snowflake cloud data theft attacks](./2026-08-05/canadian-pleads-guilty-to-snowflake-cloud-data-theft-attacks.md)
 - [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
 - [cisa kev cve 2026 63077 jetbrains teamcity deserialization o](./2026-08-05/cisa-kev-cve-2026-63077-jetbrains-teamcity-deserialization-o.md)
-- [cisa warns of hackers exploiting langflow n central apache t](./2026-08-05/cisa-warns-of-hackers-exploiting-langflow-n-central-apache-t.md)
-- [coldcard security audit phishing attack installs remote acce](./2026-08-05/coldcard-security-audit-phishing-attack-installs-remote-acce.md)
 - [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
 - [ghsa critical cve 2026 71319 unauthenticated nuxt devtools r](./2026-08-05/ghsa-critical-cve-2026-71319-unauthenticated-nuxt-devtools-r.md)
 - [hackers run khunt post exploitation toolkit from oracle data](./2026-08-05/hackers-run-khunt-post-exploitation-toolkit-from-oracle-data.md)

@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Exposed hosts vulnerable to NatJack Windows NAT/Hyper-V origin-validation flaw (CVE-2026-56181)
 
-`UC_13_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_15_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Exposed hosts vulnerable to NatJack Linux Netfilter conntrack SYN/RST teardown (CVE-2026-63913)
 
-`UC_13_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_15_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
