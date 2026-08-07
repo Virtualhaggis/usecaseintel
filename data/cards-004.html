@@ -5549,8 +5549,8 @@ level: high
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="12" data-llm-uc-count="2"
-  data-search="Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sites Attackers modified a JavaScript file served by advertising technology company Adform, turning it into a browser-side tool that rewrites cryptocurrency wallet addresses. Adform detected the incident on July 27, 2026, removed the malicious code, notified affected clients, and reported it to authorities. Anyone who visited a site carrying the affected script on July 27 and copied a Bitcoin,  T1027 T1190 T1195.002 T1566 T1566.002 [LLM] Adform wallet-swap skimmer C2 beacon to 84.32.102.230:7744 [LLM] Poisoned Adform trackpoint-async.js fetch correlated with attacker C2 beacon Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit">
+  data-uc-count="13" data-llm-uc-count="3"
+  data-search="Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sites Attackers modified a JavaScript file served by advertising technology company Adform, turning it into a browser-side tool that rewrites cryptocurrency wallet addresses. Adform detected the incident on July 27, 2026, removed the malicious code, notified affected clients, and reported it to authorities. Anyone who visited a site carrying the affected script on July 27 and copied a Bitcoin,  T1027 T1190 T1195.002 T1566 T1566.002 [LLM] Adform crypto-swap malware C2 beacon to 84.32.102.230:7744 [LLM] Poisoned Adform script load correlated with C2 beacon (supply-chain) [LLM] Exposure retro-hunt: Adform trackpoint-async.js loads July 26-28 2026 Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-01-hackers-poison-adform-script-to-swap-crypto-wallet-addresses" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5559,7 +5559,7 @@ level: high
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-08-01</span>
-    <span>12 use cases</span>
+    <span>13 use cases</span>
     <span>5 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -5610,33 +5610,33 @@ level: high
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Poisoned Adform trackpoint-async.js fetch correlated with attacker C2 beacon · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Poisoned Adform script load correlated with C2 beacon (supply-chain) · [LLM] Exposure retro-hunt: Adform trackpoint-async.js loads July 26-28 2026 · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Adform wallet-swap skimmer C2 beacon to 84.32.102.230:7744 · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Adform crypto-swap malware C2 beacon to 84.32.102.230:7744 · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Crypto-wallet file/keystore access by non-wallet process · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="f4e0dfdad0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="1f452b8fe3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Adform wallet-swap skimmer C2 beacon to 84.32.102.230:7744</span>
+    <span class="uc-title">Adform crypto-swap malware C2 beacon to 84.32.102.230:7744</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f4e0dfdad0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1f452b8fe3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the outbound beacon the poisoned Adform trackpoint-async.js fires on page load, which POSTs the visiting page&#x27;s hostname and path to the attacker server at 84.32.102.230 on TCP/7744. Any connection to this IP:port from an internal host is a direct indicator that a browser executed the trojanized crypto-swap script.
+    <div class="uc-desc">Hunts outbound connections to the hardcoded command-and-control host 84.32.102.230 on port 7744 that the poisoned Adform trackpoint-async.js contacts on page load, sending the visitor&#x27;s hostname and path. The IP had zero VirusTotal detections at disclosure and has no legitimate use, making any connection to it high-fidelity.
 
-Rationale: Uses the hard C2 IOC 84.32.102.230:7744 named in the article and confirmed by BleepingComputer, Beaumont&#x27;s DoublePulsar writeup, and SC Media. The non-routine high port plus a Lithuanian hosting IP with no legitimate business use makes any hit a near-certain true positive.
+Rationale: 84.32.102.230:7744 is the single concrete network IOC, confirmed by BleepingComputer and Beaumont&#x27;s DoublePulsar writeup as the beacon endpoint receiving visitor hostname/path; zero VT detections at disclosure means no vendor allowlisting will suppress it.
 
 Cross-checked against:
   • https://www.bleepingcomputer.com/news/security/online-ad-firm-adforms-script-compromised-to-steal-cryptocurrency/
   • https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e
-  • https://www.scworld.com/brief/adform-supply-chain-attack-replaced-crypto-wallet-addresses</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Non-Standard Port">T1571</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+  • https://daily.dev/posts/adform-s-ad-tracking-script-was-compromised-to-swap-cryptocurrency-wallet-addresses-0hio8awyf</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Non-Standard Port">T1571</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A security researcher or malware-analysis sandbox in your estate deliberately detonating the captured trackpoint-async.js sample</li><li>Threat-intel or attack-surface scanners connecting to the IOC IP for validation</li><li>An internal proxy/IDS appliance actively probing the IOC as part of a blocklist-verification job</li><li>A pentest/purple-team exercise replaying the beacon to test egress controls</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName in~ (&quot;sandbox-analyst01&quot;,&quot;malware-detonation01&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the source host and the initiating process; confirm it is a browser (chrome/msedge/firefox). Pull the browser history / proxy logs for that host around the connection time to find which customer website (carrying Adform&#x27;s tag) was open. Step 2 (contain): Block 84.32.102.230 (all ports) at the egress firewall/proxy; instruct the user to clear browser cache/cookies to purge the still-cached poisoned script, and to verify any crypto wallet address before sending funds. Step 3 (hunt): Sweep all network/proxy logs for any other host that reached 84.32.102.230:7744, and for fetches of trackpoint-async.js from s2.adform.net during 20–28 Jul 2026 to scope exposed users who may have paid to a swapped wallet.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / threat-intel sandbox detonating the sample and reaching the C2 deliberately</li><li>Threat-intel enrichment or scanning appliance actively probing the IOC IP</li><li>A different unrelated service later assigned to the same VPS IP after takedown (verify port 7744 and timing against the July 2026 window)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the source host/user and the browser process making the connection; pull the referring page (hostname/path) the malicious script beaconed from and confirm timing against the July 26-27 2026 window. 2) Contain: block 84.32.102.230 at the egress firewall/proxy, isolate the host if a crypto transaction was in progress, and instruct the user to clear browser cache (cached poisoned script persists) and verify any recently-sent wallet addresses. 3) Hunt: pivot on all internal hosts that contacted the IP, then run the exposure retro-hunt for s2.adform.net script loads to scope which sites/users were exposed and whether funds were diverted.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc0-sentinel">Sentinel KQL</button>
@@ -5647,96 +5647,142 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-102-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;84.32.102.230&quot; and RemotePort == 7744
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| where RemoteIP == &quot;84.32.102.230&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-102-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where DestinationIP == &quot;84.32.102.230&quot; and DestinationPort == 7744
-| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourceUserName, DestinationIP, DestinationPort, ApplicationProtocol, RequestURL, DeviceAction
+| where DestinationIP == &quot;84.32.102.230&quot;
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourceHostName, DestinationIP, DestinationPort, RequestURL, DeviceAction
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Adform Wallet-Swap Skimmer C2 Beacon (84.32.102.230:7744)
-id: 3f4b8c1a-2d67-4e9a-9c0b-5a1e77440077
-description: Detects an outbound connection to the Adform supply-chain crypto-skimmer C2 server 84.32.102.230 on TCP/7744, contacted by the poisoned trackpoint-async.js on page load.
+    <div class="tab-content" id="art-102-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Adform Crypto-Swap Malware C2 Beacon to 84.32.102.230
+id: 8f2b1c04-6a3e-4c1d-9b77-2e5f0a91d3ab
+status: experimental
+description: Detects network connections to the hardcoded C2 host used by the trojanized Adform trackpoint-async.js supply-chain crypto-swap malware (July 2026).
 references:
   - https://thehackernews.com/2026/08/hackers-poison-adform-script-to-swap.html
-  - https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e
   - https://www.bleepingcomputer.com/news/security/online-ad-firm-adforms-script-compromised-to-steal-cryptocurrency/
+  - https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e
 author: SOC Detection Engineering
 date: 2026/08/07
 tags:
   - attack.command_and_control
-  - attack.t1571
   - attack.t1071.001
+  - attack.t1571
 logsource:
   category: network_connection
   product: windows
 detection:
   selection:
     DestinationIp: &#x27;84.32.102.230&#x27;
+  selection_port:
     DestinationPort: 7744
-  condition: selection
+  condition: selection or selection_port
+falsepositives:
+  - None expected; IP has no legitimate use
 level: high</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:84.32.102.230 @DestinationPort:7744</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;84.32.102.230&quot; RemotePort=7744
-| groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; All_Traffic.dest_port=7744 by All_Traffic.src_ip All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; All_Traffic.dest_port=7744 by All_Traffic.src_ip All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-102-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:84.32.102.230</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;84.32.102.230&quot;
+| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-102-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="937ad03ac1" data-platforms="def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="d6f69ed558" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Poisoned Adform trackpoint-async.js fetch correlated with attacker C2 beacon</span>
+    <span class="uc-title">Poisoned Adform script load correlated with C2 beacon (supply-chain)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="937ad03ac1" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d6f69ed558" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Scopes supply-chain exposure by finding internal hosts that loaded Adform&#x27;s trackpoint-async.js from s2.adform.net and, on the same host, beaconed to the skimmer C2 at 84.32.102.230:7744. The pairing confirms the browser executed the trojanized shared script rather than the benign version, and enumerates affected users/sites for the incident.
+    <div class="uc-desc">Ties the delivery vector to the C2: surfaces hosts that both loaded the Adform tracking resource from s2.adform.net and beaconed to the malware&#x27;s C2 at 84.32.102.230. The join confirms a single host walked the full supply-chain compromise path rather than either signal alone.
 
-Rationale: Combines the two article-specific network artifacts — the shared poisoned resource path (trackpoint-async.js on s2.adform.net) and the C2 IOC 84.32.102.230:7744 — on the same host, which distinguishes true skimmer execution from the millions of benign Adform tag loads and directly enumerates exposed users for scoping.
+Rationale: Combines the two article-specific network artifacts — the poisoned resource host s2.adform.net/trackpoint-async.js and the C2 IP 84.32.102.230 — so a match confirms a host both received the trojanized script and reached attacker infrastructure, eliminating the residual FP of the IP being reused post-takedown.
 
 Cross-checked against:
-  • https://thehackernews.com/2026/08/hackers-poison-adform-script-to-swap.html
   • https://www.bleepingcomputer.com/news/security/online-ad-firm-adforms-script-compromised-to-steal-cryptocurrency/
   • https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Drive-by Compromise">T1189</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A host loads a legitimate Adform tag AND independently connects to 84.32.102.230 for an unrelated reason (extremely unlikely given the dedicated malicious IP)</li><li>TLS inspection is absent so the proxy only logs the s2.adform.net hostname, not the trackpoint-async.js path — reduces recall, not precision</li><li>Sandbox/researcher host that fetched the captured sample and replayed the beacon</li><li>Shared NAT egress IP causes the script fetch and beacon to appear under the same source IP from different physical users (Sentinel SrcIpAddr join)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each matched host, confirm the browser process fetched the Adform script and later beaconed; extract the exact customer website(s) open from proxy referrer/URL fields. Step 2 (contain): Block 84.32.102.230 at egress, force cache/cookie clear on affected endpoints, and warn impacted users to re-verify any Bitcoin/Ethereum/Tron address they copied or entered on 27 Jul 2026 before transacting. Step 3 (hunt): Expand the proxy hunt to ALL hosts that fetched trackpoint-async.js from s2.adform.net during 20–28 Jul 2026 (with or without a beacon, since egress filtering may have blocked the C2) to build the full exposure list, and check finance/crypto-handling users first.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Host legitimately loads Adform ads AND independently contacts the C2 IP for an unrelated reason (extremely unlikely given the IP&#x27;s exclusivity)</li><li>TLS hides the trackpoint-async.js path so proxy only records the s2.adform.net hostname — join still holds but URL column may be blank</li><li>Post-incident IR host that visited the archived sample and the C2 during analysis</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each correlated host, confirm the browser process and the customer site (referring hostname) that served the poisoned Adform tag, and establish the load timestamp. 2) Contain: block 84.32.102.230, force browser cache clear on the host, and notify the affected downstream website owner(s) that their embedded Adform tag was serving the malicious variant. 3) Hunt: enumerate every internal wallet transaction on the host during the exposure window and reconcile destination addresses; expand the s2.adform.net exposure hunt fleet-wide.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-102-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-102-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-102-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let Beacon = DeviceNetworkEvents
+    <div class="tab-content active" id="art-102-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let C2Hosts = DeviceNetworkEvents
     | where Timestamp &gt; ago(30d)
-    | where RemoteIP == &quot;84.32.102.230&quot; and RemotePort == 7744
-    | project BeaconTime = Timestamp, DeviceId, DeviceName, BeaconProc = InitiatingProcessFileName;
+    | where RemoteIP == &quot;84.32.102.230&quot;
+    | distinct DeviceId;
 DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (&quot;s2.adform.net&quot;,&quot;trackpoint-async.js&quot;)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| join kind=inner Beacon on DeviceId
-| where BeaconTime between (Timestamp .. Timestamp + 1h)
-| project ScriptFetchTime = Timestamp, BeaconTime, DeviceName, BrowserProc = InitiatingProcessFileName, RemoteUrl
-| order by BeaconTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Beacon = ImNetworkSession
+| where RemoteUrl has &quot;s2.adform.net&quot;
+| where DeviceId in (C2Hosts)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count() by DeviceName, DeviceId, InitiatingProcessFileName, RemoteUrl
+| order by FirstSeen asc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let C2Hosts = CommonSecurityLog
     | where TimeGenerated &gt; ago(30d)
-    | where DstIpAddr == &quot;84.32.102.230&quot; and DstPortNumber == 7744
-    | project BeaconTime = TimeGenerated, SrcIpAddr, DstIpAddr;
-ImWebSession
+    | where DestinationIP == &quot;84.32.102.230&quot;
+    | distinct SourceIP;
+CommonSecurityLog
 | where TimeGenerated &gt; ago(30d)
-| where Url has &quot;trackpoint-async.js&quot; and Url has &quot;adform&quot;
-| join kind=inner Beacon on SrcIpAddr
-| where BeaconTime between (TimeGenerated .. TimeGenerated + 1h)
-| project ScriptFetchTime = TimeGenerated, BeaconTime, SrcIpAddr, SrcHostname, SrcUsername, Url, DstIpAddr
-| order by BeaconTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/s2\.adform\.net/i
-| join({#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;84.32.102.230&quot; RemotePort=7744}, field=aid, include=[ComputerName])
-| groupBy([aid, ComputerName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; All_Traffic.dest_port=7744 by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename count as beacon_count | join type=inner src [| tstats summariesonly=t count from datamodel=Web.Web where Web.url=&quot;*trackpoint-async.js*&quot; Web.url=&quot;*adform*&quot; by Web.src Web.url | `drop_dm_object_name(Web)` | rename count as script_count] | table src url beacon_count script_count firstTime | `security_content_ctime(firstTime)` | sort - firstTime</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; All_Traffic.dest_port=7744 by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename count as beacon_count | join type=inner src [| tstats summariesonly=false count from datamodel=Web.Web where Web.url=&quot;*trackpoint-async.js*&quot; Web.url=&quot;*adform*&quot; by Web.src Web.url | `drop_dm_object_name(Web)` | rename count as script_count] | table src url beacon_count script_count firstTime | `security_content_ctime(firstTime)` | sort - firstTime</code></pre></div></div>
+| where DestinationHostName has &quot;s2.adform.net&quot; or RequestURL has &quot;trackpoint-async.js&quot;
+| where SourceIP in (C2Hosts)
+| summarize FirstSeen=min(TimeGenerated), Hits=count() by SourceIP, SourceHostName, DestinationHostName, RequestURL
+| order by FirstSeen asc</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:84.32.102.230</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;84.32.102.230&quot;
+| join({#event_simpleName=DnsRequest DomainName=/s2\.adform\.net/i | groupBy([aid], function=count(as=dnsCount))}, field=aid, include=[dnsCount])
+| groupBy([aid, ComputerName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | rename src_ip as beacon_src | join type=inner beacon_src [ | tstats `summariesonly` count from datamodel=Web where Web.dest=&quot;*s2.adform.net*&quot; Web.url=&quot;*trackpoint-async.js*&quot; by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | rename src as beacon_src ] | table beacon_src dest url count</code></pre><pre class="spl-mode-body" id="art-102-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;84.32.102.230&quot; by All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | rename src_ip as beacon_src | join type=inner beacon_src [ | tstats summariesonly=false count from datamodel=Web where Web.dest=&quot;*s2.adform.net*&quot; Web.url=&quot;*trackpoint-async.js*&quot; by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | rename src as beacon_src ] | table beacon_src dest url count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3c0f588cd8" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Exposure retro-hunt: Adform trackpoint-async.js loads July 26-28 2026</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="3c0f588cd8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Scopes organizational exposure by listing every host that loaded the Adform tracking script from s2.adform.net during the known compromise window (26-27 July 2026). Not a threat detection — an incident-response exposure query to identify potentially-affected users who should verify wallet addresses and clear cache.
+
+Rationale: Uses the article&#x27;s exact affected resource (s2.adform.net / trackpoint-async.js) and Adform&#x27;s stated affected date (July 27, extended to the July 26 archived-sample start) to bound an otherwise-noisy legitimate-traffic query into a defensible exposure list.
+
+Cross-checked against:
+  • https://thehackernews.com/2026/08/hackers-poison-adform-script-to-swap.html
+  • https://doublepulsar.com/adform-compromised-to-serve-crypto-stealer-via-supply-chain-attack-2f1ec024f33e</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>The vast majority of hits are benign — s2.adform.net is a legitimate ad-tech resource loaded by any site running Adform tags; only hosts loading it in-window were potentially exposed</li><li>Cached script served after the 27 July fix still executed maliciously but may not generate a fresh network fetch (users must clear cache)</li><li>Corporate ad-blockers may suppress the load entirely, producing false-negative gaps in the exposure list</li><li>TLS inspection off means proxy shows only the hostname, not the trackpoint-async.js path</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: treat the output as an exposure roster, not alerts — rank by hosts/users who also transact cryptocurrency. 2) Contain: broadcast guidance to all listed users to clear browser cache and re-verify any wallet address copied or entered on 26-27 July before sending funds; cross-reference against the C2-beacon detection to identify confirmed-active infections. 3) Hunt: for any host appearing in both this roster and the C2 detection, perform full wallet-transaction reconciliation and check for diverted funds.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-102-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp between (datetime(2026-07-26T00:00:00Z) .. datetime(2026-07-28T00:00:00Z))
+| where RemoteUrl has &quot;s2.adform.net&quot;
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;iexplore.exe&quot;)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count() by DeviceName, InitiatingProcessFileName, RemoteUrl
+| order by FirstSeen asc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated between (datetime(2026-07-26T00:00:00Z) .. datetime(2026-07-28T00:00:00Z))
+| where DestinationHostName has &quot;s2.adform.net&quot; or RequestURL has &quot;trackpoint-async.js&quot;
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Hits=count() by SourceIP, SourceHostName, DestinationHostName, RequestURL
+| order by FirstSeen asc</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:*s2.adform.net*</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/s2\.adform\.net/i
+| groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where earliest=&quot;07/26/2026:00:00:00&quot; latest=&quot;07/28/2026:00:00:00&quot; Web.dest=&quot;*s2.adform.net*&quot; by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where earliest=&quot;07/26/2026:00:00:00&quot; latest=&quot;07/28/2026:00:00:00&quot; Web.dest=&quot;*s2.adform.net*&quot; by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
@@ -5754,19 +5800,19 @@ ImWebSession
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
 | where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
 | where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
@@ -5778,7 +5824,7 @@ ImWebSession
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
+    <div class="tab-content" id="art-102-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
 status: experimental
 description: |
@@ -5819,7 +5865,7 @@ falsepositives:
     - Backup software
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
         OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
@@ -5830,7 +5876,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
       AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
         OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
@@ -5859,12 +5905,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessAccountName !endswith &quot;$&quot;
 | where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
@@ -5872,7 +5918,7 @@ level: high
 | where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
 ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where ActorUsername !endswith &quot;$&quot;
@@ -5884,7 +5930,7 @@ ImFileEvent
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
           TargetFilePath, TargetFileName, EventType
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+    <div class="tab-content" id="art-102-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
 status: experimental
 description: |
@@ -5928,7 +5974,7 @@ falsepositives:
     - Browser sync agents from non-stock vendors
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -5937,7 +5983,7 @@ level: high
         OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
       AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
     by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
         OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
@@ -5973,11 +6019,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -6017,7 +6063,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -6042,7 +6088,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -6074,7 +6120,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-102-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -6124,11 +6170,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-102-uc6-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -6142,7 +6188,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-102-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-102-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -6165,7 +6211,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-102-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -6176,7 +6222,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-102-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-102-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -6205,18 +6251,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -6239,7 +6285,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-102-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -6283,13 +6329,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-102-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-102-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -6313,19 +6359,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -6339,7 +6385,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-102-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -6383,7 +6429,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -6391,7 +6437,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -6417,19 +6463,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-102-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -6440,7 +6486,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-102-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -6486,7 +6532,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -6495,7 +6541,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -6522,18 +6568,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-102-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-102-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -6553,7 +6599,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-102-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -6595,12 +6641,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-102-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -6623,17 +6669,17 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-102-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-102-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-102-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;84.32.102.230&quot;) or RemoteUrl has_any (&quot;adform.net&quot;, &quot;s2.adform.net&quot;, &quot;npmcdn.com&quot;, &quot;kjur.github.io&quot;, &quot;github.io&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-102-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;84.32.102.230&quot;]);
+    <div class="tab-content" id="art-102-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;84.32.102.230&quot;]);
 let BadDomains = dynamic([&quot;adform.net&quot;, &quot;s2.adform.net&quot;, &quot;npmcdn.com&quot;, &quot;kjur.github.io&quot;, &quot;github.io&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -6642,7 +6688,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-102-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -6672,7 +6718,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-102-uc10-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-102-uc11-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;84.32.102.230&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -6686,7 +6732,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;adform.net&quot;, &quot;s2.adform.net&quot;, &quot;npmcdn.com&quot;, &quot;kjur.github.io&quot;, &quot;github.io&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-102-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-102-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;84.32.102.230&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -6718,11 +6764,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-102-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-102-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-102-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-102-uc12-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc12-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-102-uc12-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-102-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
+    <div class="tab-content active" id="art-102-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -6742,7 +6788,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-102-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit
@@ -6765,7 +6811,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-102-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc11-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit ```
+    <div class="tab-content" id="art-102-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc12-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;trackpoint-async.js&quot;))
@@ -6781,7 +6827,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-102-uc11-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit ```
+]</code></pre><pre class="spl-mode-body" id="art-102-uc12-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Poison Adform Script to Swap Crypto Wallet Addresses Across Customer Sit ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;trackpoint-async.js&quot;))

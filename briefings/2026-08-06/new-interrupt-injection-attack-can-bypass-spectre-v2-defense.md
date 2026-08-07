@@ -26,12 +26,27 @@ MIT CSAIL researchers Daniël Trujillo and Mengjia Yan named the technique INTER
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1212** — Exploitation for Credential Access
+- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Exposure hunt: AMD hosts still vulnerable to Inception (CVE-2023-20569), the Interrupt Injection training gadget
+
+`UC_10_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
+| where CveId == "CVE-2023-20569"
+| summarize LastSeen = max(Timestamp) by DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by LastSeen desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -252,4 +267,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

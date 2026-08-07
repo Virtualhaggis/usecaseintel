@@ -70,14 +70,15 @@ The attribution comes after Reuters  and Bloomberg reported that Point72 Asset 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
-- **T1557** — Adversary-in-the-Middle
 - **T1566.004** — Phishing: Spearphishing Voice
+- **T1557** — Adversary-in-the-Middle
 - **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1526** — Cloud Service Discovery
 - **T1530** — Data from Cloud Storage
-- **T1119** — Automated Collection
-- **T1070.008** — Clear Mailbox Data
-- **T1114** — Email Collection
+- **T1537** — Transfer Data to Cloud Account
+- **T1005** — Data from Local System
+- **T1070.008** — Indicator Removal: Clear Mailbox Data
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
 
 ## Kill chain phases observed
 
@@ -85,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### UNC6671 AiTM passkey/Okta phishing domain contact from corporate endpoint
+### UNC6671/BlackFile passkey & Okta AiTM phishing-domain resolution
 
 `UC_3_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
@@ -96,42 +97,40 @@ _(none detected from narrative keywords)_
 
 **Defender KQL:**
 ```kql
-let aitmDomains = dynamic(["myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com"]);
+let PhishDomains = dynamic(["myoktasso.com","mypasskeysso.com","setupssopasskey.com","mspasskey.com","activatepasskey.com","enrollpasskey.com","keyokta.com","oktaenroll.com","oktaportalsso.com","passkeyportal.com","portalpasskey.com","passkeyportalsetup.com","addoktapasskey.com","deploypasskey.com","passkeydeploy.com","activatemypasskey.com","registerpasskey.com","createpasskey.com","passkeyadd.com","passkeyregister.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any (aitmDomains)
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| where RemoteUrl has_any (PhishDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Successful M365/Okta SSO sign-in from UNC6671 infrastructure IPs
+### Cloud sign-in from UNC6671 attacker infrastructure IPs
 
 `UC_3_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as app values(Authentication.dest) as dest from datamodel=Authentication.Authentication where Authentication.action=success Authentication.src IN ("31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146") by Authentication.user Authentication.src | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN ("31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146") by Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let badIPs = dynamic(["31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146"]);
+let BadIPs = dynamic(["31.7.56.61","31.7.56.52","193.34.212.132","185.178.208.153","23.234.75.84","195.140.213.114","195.140.213.115","107.128.45.122","76.103.148.180","38.42.59.171","47.218.103.146"]);
 AADSignInEventsBeta
 | where Timestamp > ago(30d)
-| where IPAddress in (badIPs)
-| where ErrorCode == 0
-| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, ClientAppUsed, UserAgent, ConditionalAccessStatus
+| where IPAddress in (BadIPs)
+| project Timestamp, AccountUpn, Application, ResourceDisplayName, IPAddress, Country, ErrorCode, ClientAppUsed, UserAgent, ConditionalAccessStatus
 | order by Timestamp desc
 ```
 
-### Post-SSO rapid multi-cloud application enumeration from single session
+### Rapid SSO dashboard fan-out across linked cloud apps
 
 `UC_3_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Authentication.dest) as DistinctApps values(Authentication.dest) as apps values(Authentication.src) as src from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user _time span=10m | `drop_dm_object_name(Authentication)` | where DistinctApps >= 8 | sort - DistinctApps
+| tstats `summariesonly` dc(Authentication.app) as DistinctApps values(Authentication.app) as Apps values(Authentication.src) as SrcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user _time span=10m | `drop_dm_object_name(Authentication)` | where DistinctApps>=8 | convert ctime(firstTime) ctime(lastTime) | sort - DistinctApps
 ```
 
 **Defender KQL:**
@@ -139,47 +138,50 @@ AADSignInEventsBeta
 AADSignInEventsBeta
 | where Timestamp > ago(7d)
 | where ErrorCode == 0
-| where AccountUpn !endswith "$"
-| summarize DistinctResources = dcount(ResourceDisplayName), Resources = make_set(ResourceDisplayName, 50), IPs = make_set(IPAddress, 10), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountUpn, bin(Timestamp, 10m)
-| where DistinctResources >= 8   // P99 baseline is ~5 distinct SSO apps per 10m; >=8 = fan-out
-| order by DistinctResources desc
+| where isnotempty(ResourceDisplayName)
+| summarize DistinctApps = dcount(ResourceDisplayName), Apps = make_set(ResourceDisplayName, 25), IPs = make_set(IPAddress, 5), Countries = make_set(Country, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountUpn, bin(Timestamp, 10m)
+| where DistinctApps >= 8    // 8 = rapid dashboard fan-out across SSO-linked apps in 10 min; tune to your app catalog
+| order by DistinctApps desc
 ```
 
-### Automated bulk cloud data harvest from compromised M365 session
+### Automated bulk cloud data exfiltration from SSO-linked services
 
 `UC_3_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count as DownloadCount dc(Web.uri_path) as DistinctFiles values(Web.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.action=allowed Web.http_method IN ("GET") Web.url IN ("*sharepoint.com*","*onedrive*") by Web.user _time span=10m | `drop_dm_object_name(Web)` | where DownloadCount >= 100 | sort - DownloadCount
+| tstats `summariesonly` count as Downloads dc(Web.uri_path) as DistinctObjects values(Web.src) as SrcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.action="FileDownloaded" OR Web.action="FileSyncDownloadedFull" by Web.user _time span=10m | `drop_dm_object_name(Web)` | where Downloads>=100 | convert ctime(firstTime) ctime(lastTime) | sort - Downloads
 ```
 
 **Defender KQL:**
 ```kql
-let dlActions = dynamic(["FileDownloaded","FileSyncDownloadedFull"]);
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where ActionType in (dlActions)
-| where AccountType != "Application"
-| summarize DownloadCount = count(), Files = dcount(ObjectName), Apps = make_set(Application, 10), IPs = make_set(IPAddress, 10), UAs = make_set(UserAgent, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
-| where DownloadCount >= 100   // automated recursive harvest; interactive users rarely exceed ~30/10m
-| order by DownloadCount desc
+| where ActionType in ("FileDownloaded","FileSyncDownloadedFull","FileDownloadedFromSharePoint")
+| summarize Downloads = count(), Objects = dcount(ObjectName), IPs = make_set(IPAddress, 5), Apps = make_set(Application, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
+| where Downloads >= 100    // 100 = automated recursive harvest vs human browse in 10 min; tune per tenant
+| order by Downloads desc
 ```
 
-### Post-compromise deletion of MFA/password-reset security emails
+### Post-compromise purge of security & password-reset emails
 
 `UC_3_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
+**Splunk SPL (CIM):**
+```spl
+`o365_management_activity` Workload=Exchange Operation IN ("HardDelete","SoftDelete","MoveToDeletedItems","Move") | eval subj=lower(Subject) | where match(subj,"password reset|reset your password|security alert|new sign-in|unusual sign-in|mfa|multi-factor|passkey|verification code|account was") | bin _time span=15m | stats count as Deletes values(Subject) as Subjects values(ClientIP) as SrcIPs min(_time) as firstTime max(_time) as lastTime by UserId _time | where Deletes>=3 | convert ctime(firstTime) ctime(lastTime) | sort - Deletes
+```
+
 **Defender KQL:**
 ```kql
-let secTerms = dynamic(["password","passkey","multi-factor","multifactor","verification code","security alert","sign-in","MFA","reset your","unusual sign"]);
-let delActions = dynamic(["Delete","HardDelete","SoftDelete","MoveToDeletedItems"]);
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where ActionType in (delActions)
-| where RawEventData has_any (secTerms)
-| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, Application, IPAddress, UserAgent, RawEventData
-| order by Timestamp desc
+| where Application in ("Microsoft Exchange Online","Office 365 Exchange Online")
+| where ActionType in ("MoveToDeletedItems","SoftDelete","HardDelete","Delete message")
+| where ObjectName has_any ("password reset","reset your password","security alert","sign-in","unusual sign","MFA","multi-factor","passkey","verification","verify your")
+| summarize Deletes = count(), Subjects = make_set(ObjectName, 20), IPs = make_set(IPAddress, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 15m)
+| where Deletes >= 3    // 3 = targeted purge of security notices, not bulk routine cleanup
+| order by Deletes desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -369,4 +371,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
