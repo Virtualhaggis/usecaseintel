@@ -38,7 +38,7 @@ Anyone who visited a site carrying the aff…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1571** — Non-Standard Port
+- **T1041** — Exfiltration Over C2 Channel
 - **T1189** — Drive-by Compromise
 
 ## Kill chain phases observed
@@ -47,13 +47,17 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Adform crypto-swap malware C2 beacon to 84.32.102.230:7744
+### Beacon to Adform crypto-swapper C2 84.32.102.230:7744
 
 `UC_102_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport, All_Traffic.app, All_Traffic.action
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -61,50 +65,40 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "84.32.102.230"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, ActionType
 | order by Timestamp desc
 ```
 
-### Poisoned Adform script load correlated with C2 beacon (supply-chain)
+### Supply-chain chain: Adform trackpoint-async.js load followed by C2 beacon
 
-`UC_102_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_102_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.32.102.230" by All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | rename src_ip as beacon_src | join type=inner beacon_src [ | tstats `summariesonly` count from datamodel=Web where Web.dest="*s2.adform.net*" Web.url="*trackpoint-async.js*" by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | rename src as beacon_src ] | table beacon_src dest url count
+| tstats `summariesonly` count as script_loads min(_time) as firstLoad from datamodel=Web.Web where (Web.url="*trackpoint-async.js*" OR Web.dest="s2.adform.net") by Web.src
+| `drop_dm_object_name(Web)`
+| join type=inner src [
+    | tstats `summariesonly` count as beacon_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="84.32.102.230" by All_Traffic.src
+    | `drop_dm_object_name(All_Traffic)` ]
+| where beacon_count > 0
+| table src, script_loads, beacon_count, firstLoad
+| sort - beacon_count
 ```
 
 **Defender KQL:**
 ```kql
-let C2Hosts = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIP == "84.32.102.230"
-    | distinct DeviceId;
+let ScriptLoads = DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "trackpoint-async.js" or RemoteUrl has "s2.adform.net"
+| project ScriptTime = Timestamp, DeviceId, DeviceName, ScriptUrl = RemoteUrl, LoaderProcess = InitiatingProcessFileName;
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "s2.adform.net"
-| where DeviceId in (C2Hosts)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count() by DeviceName, DeviceId, InitiatingProcessFileName, RemoteUrl
-| order by FirstSeen asc
-```
-
-### Exposure retro-hunt: Adform trackpoint-async.js loads July 26-28 2026
-
-`UC_102_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where earliest="07/26/2026:00:00:00" latest="07/28/2026:00:00:00" Web.dest="*s2.adform.net*" by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp between (datetime(2026-07-26T00:00:00Z) .. datetime(2026-07-28T00:00:00Z))
-| where RemoteUrl has "s2.adform.net"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count() by DeviceName, InitiatingProcessFileName, RemoteUrl
-| order by FirstSeen asc
+| where RemoteIP == "84.32.102.230"
+| project BeaconTime = Timestamp, DeviceId, DeviceName, RemoteIP, RemotePort, BeaconProcess = InitiatingProcessFileName
+| join kind=inner ScriptLoads on DeviceId
+| where BeaconTime between (ScriptTime .. ScriptTime + 1h)
+| project DeviceName, ScriptTime, BeaconTime, DelaySec = datetime_diff('second', BeaconTime, ScriptTime), ScriptUrl, RemoteIP, RemotePort, BeaconProcess, LoaderProcess
+| order by BeaconTime desc
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -454,4 +448,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

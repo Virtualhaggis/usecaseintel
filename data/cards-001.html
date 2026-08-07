@@ -2293,11 +2293,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1190,T1539,T1566"
   data-sources="BleepingComputer"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
-  data-targets="azure,m365,okta,windows"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint,network,web"
+  data-targets="azure,m365,windows"
   data-uc-count="10" data-llm-uc-count="5"
-  data-search="Hedge fund cyberattacks tied to BlackFile-linked UNC6671 extortion group A recent wave of cyberattacks targeting hedge funds, private-equity firms, and other financial organizations has been linked to UNC6671, an extortion group reportedly associated with the BlackFile threat actors. [...]  T1190 T1539 T1566 [LLM] UNC6671/BlackFile passkey &amp; Okta AiTM phishing-domain resolution [LLM] Cloud sign-in from UNC6671 attacker infrastructure IPs [LLM] Rapid SSO dashboard fan-out across linked cloud apps [LLM] Automated bulk cloud data exfiltration from SSO-linked services [LLM] Post-compromise purge of security &amp; password-reset emails Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Network connections to article IPs / domains">
+  data-search="Hedge fund cyberattacks tied to BlackFile-linked UNC6671 extortion group A recent wave of cyberattacks targeting hedge funds, private-equity firms, and other financial organizations has been linked to UNC6671, an extortion group reportedly associated with the BlackFile threat actors. [...]  T1190 T1539 T1566 [LLM] UNC6671/BlackFile AiTM passkey-themed phishing infrastructure contact [LLM] Successful M365/Okta SSO sign-in from UNC6671 attacker IP infrastructure [LLM] Rapid multi-cloud SSO application fan-out from single session [LLM] Automated bulk cloud data download from compromised SSO session [LLM] Bulk deletion of security-notification and password-reset emails post-compromise Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-06-hedge-fund-cyberattacks-tied-to-blackfile-linked-unc6671-ext" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2357,32 +2357,32 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] UNC6671/BlackFile passkey &amp; Okta AiTM phishing-domain resolution · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Cloud sign-in from UNC6671 attacker infrastructure IPs · Office app spawning script/LOLBin child process</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] UNC6671/BlackFile AiTM passkey-themed phishing infrastructure contact · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Successful M365/Okta SSO sign-in from UNC6671 attacker IP infrastructure · Office app spawning script/LOLBin child process</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Rapid SSO dashboard fan-out across linked cloud apps · [LLM] Automated bulk cloud data exfiltration from SSO-linked services · [LLM] Post-compromise purge of security &amp; password-reset emails · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Rapid multi-cloud SSO application fan-out from single session · [LLM] Automated bulk cloud data download from compromised SSO session · [LLM] Bulk deletion of security-notification and password-reset emails post-compromise · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="650c26bfa4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="303ce36f20" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">UNC6671/BlackFile passkey &amp; Okta AiTM phishing-domain resolution</span>
+    <span class="uc-title">UNC6671/BlackFile AiTM passkey-themed phishing infrastructure contact</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="650c26bfa4" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="303ce36f20" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts endpoint DNS/HTTP resolution to the specific credential-harvesting domains UNC6671 registered to impersonate corporate Okta/passkey enrollment portals. Article-specific: these 20 domains are the AiTM landing pages victims are vished into visiting on their personal/corporate devices.
+    <div class="uc-desc">Hunts endpoint/network contact with the specific passkey- and Okta-impersonation domains and IP infrastructure UNC6671 uses to host adversary-in-the-middle kits that steal M365/Okta credentials and session cookies in real time. Article-specific because it pins the exact registered domains and hosting IPs from the campaign rather than a generic phishing pattern.
 
-Rationale: Uses the 20 named UNC6671 phishing domains from the article&#x27;s IOC bundle (all impersonating Okta/passkey enrollment). Tucows-registered credential-harvest domains corroborated by GTIG. Any org host resolving these is a direct vishing-victim signal.
+Rationale: Uses the exact UNC6671 phishing domains (passkey/okta lure theme) and 11 hosting IPs from the article&#x27;s IOC bundle; GTIG&#x27;s write-ups corroborate the passkey-subdomain AiTM pattern. IOC-anchored, so near-zero FP.
 
 Cross-checked against:
   • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments
   • https://cloud.google.com/blog/topics/threat-intelligence/blackfile-vishing-extortion-operation/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Voice">T1566.004</span> <span class="ind tech" title="Adversary-in-the-Middle">T1557</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher/threat-intel analyst detonating the IOC in a sandbox host</li><li>Proxy/SWG pre-fetch or URL-reputation scanner resolving the domain to categorize it</li><li>SOAR enrichment job auto-resolving article IOCs</li><li>Sinkholed domain now pointing at a takedown provider still generating resolutions</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MpCmdRun.exe&quot;,&quot;SenseIR.exe&quot;) and DeviceName !has &quot;sandbox&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the user/device that resolved the domain; check whether an actual browser session followed (proxy logs, DeviceNetworkEvents to the resolved IP) versus a passive scanner. 2) Contain: force-revoke the user&#x27;s M365/Okta sessions and tokens, reset credentials, and re-enroll a phishing-resistant FIDO2 authenticator; block all 20 domains + the 11 IOC IPs at the egress proxy/DNS. 3) Hunt: pull that user&#x27;s SigninLogs/Okta logs for the following 24h for logins from the IOC IPs and rapid multi-app SSO fan-out (see companion UCs).</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="Adversary-in-the-Middle: AiTM">T1557.002</span> <span class="ind tech" title="Phishing for Information: Spearphishing Voice">T1598.004</span> <span class="ind tech" title="Forced Authentication">T1187</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher or TI analyst detonating/browsing the phishing URL in a sandbox VM</li><li>Automated URL-detonation appliance resolving the domain</li><li>An IP later re-assigned to a legitimate CDN/hoster after the campaign</li><li>Threat-intel enrichment tooling performing passive DNS lookups of the domains</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;SenseIR.exe&quot;) and DeviceName !has &quot;sandbox&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the user/host that contacted the domain/IP and pull their M365/Okta sign-in log for the surrounding 30 min for a successful AiTM sign-in from a foreign IP. 2) Contain: revoke all active sessions/tokens for that user, force password reset, and remove any attacker-registered MFA/passkey. 3) Hunt: pivot on the source IP across all sign-in logs for other victims, and check the mailbox for deleted password-reset/MFA notification emails.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-03-uc0-sentinel">Sentinel KQL</button>
@@ -2391,34 +2391,33 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-03-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-03-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-03-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let PhishDomains = dynamic([&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;]);
+    <div class="tab-content active" id="art-03-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+let badDomains = dynamic([&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;]);
 DeviceNetworkEvents
 | where Timestamp &gt; ago(30d)
-| where RemoteUrl has_any (PhishDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where RemoteIP in (badIPs) or RemoteUrl has_any (badDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let PhishDomains = dynamic([&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;]);
-DnsEvents
-| where TimeGenerated &gt; ago(30d)
-| where Name has_any (PhishDomains)
-| project TimeGenerated, Computer, ClientIP, Name, QueryType, Result
+    <div class="tab-content" id="art-03-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+let badDomains = dynamic([&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;]);
+union isfuzzy=true
+  (ImWebSession | where TimeGenerated &gt; ago(30d) | where Url has_any (badDomains) or DstIpAddr in (badIPs) | project TimeGenerated, SrcIpAddr, SrcUsername, Url, DstIpAddr, HttpHostName),
+  (ImDnsActivity | where TimeGenerated &gt; ago(30d) | where DnsQuery has_any (badDomains) | project TimeGenerated, SrcIpAddr, SrcUsername=SrcHostname, Url=DnsQuery, DstIpAddr, HttpHostName=DnsQuery)
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: UNC6671 BlackFile Passkey/Okta AiTM Phishing Domain Resolution
-id: 3f9c2a71-8e4d-4b1a-9c2e-7a1b6d0f4e21
-status: experimental
-description: Detects DNS resolution to UNC6671 credential-harvesting domains impersonating Okta/passkey enrollment portals
+    <div class="tab-content" id="art-03-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: UNC6671 BlackFile AiTM Passkey-Themed Phishing Domain Resolution
+id: 5f2c9b41-8e6d-4a17-9c3e-2b7f0d4a1e88
+description: Detects DNS resolution of the passkey/Okta-impersonation domains used by UNC6671 (BlackFile) to host AiTM credential-theft kits.
 references:
   - https://www.bleepingcomputer.com/news/security/hedge-fund-cyberattacks-tied-to-blackfile-linked-unc6671-extortion-group/
   - https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments
 author: SOC Detection Engineering
 date: 2026/08/07
 tags:
-  - attack.t1566.004
-  - attack.t1557
-  - attack.credential_access
+  - attack.t1566.002
+  - attack.t1557.002
+  - attack.t1187
 logsource:
   category: dns
-  product: windows
 detection:
   selection:
     query:
@@ -2444,68 +2443,70 @@ detection:
       - passkeyregister.com
   condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationHostname:(myoktasso.com OR mypasskeysso.com OR setupssopasskey.com OR mspasskey.com OR activatepasskey.com OR enrollpasskey.com OR keyokta.com OR oktaenroll.com OR oktaportalsso.com OR passkeyportal.com OR portalpasskey.com OR passkeyportalsetup.com OR addoktapasskey.com OR deploypasskey.com OR passkeydeploy.com OR activatemypasskey.com OR registerpasskey.com OR createpasskey.com OR passkeyadd.com OR passkeyregister.com)</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(myoktasso|mypasskeysso|setupssopasskey|mspasskey|activatepasskey|enrollpasskey|keyokta|oktaenroll|oktaportalsso|passkeyportal|portalpasskey|passkeyportalsetup|addoktapasskey|deploypasskey|passkeydeploy|activatemypasskey|registerpasskey|createpasskey|passkeyadd|passkeyregister)\.com$/i
+    <div class="tab-content" id="art-03-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:(31.7.56.61 OR 31.7.56.52 OR 193.34.212.132 OR 185.178.208.153 OR 23.234.75.84 OR 195.140.213.114 OR 195.140.213.115 OR 107.128.45.122 OR 76.103.148.180 OR 38.42.59.171 OR 47.218.103.146)</code></pre></div>
+    <div class="tab-content" id="art-03-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| DomainName=/(myoktasso|mypasskeysso|setupssopasskey|mspasskey|activatepasskey|enrollpasskey|keyokta|oktaenroll|oktaportalsso|passkeyportal|portalpasskey|passkeyportalsetup|addoktapasskey|deploypasskey|passkeydeploy|activatemypasskey|registerpasskey|createpasskey|passkeyadd|passkeyregister)\.com$/i
 | groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-03-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-03-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN (&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-03-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN (&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;)) OR (All_Traffic.dest IN (&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-03-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN (&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;)) OR (All_Traffic.dest IN (&quot;myoktasso.com&quot;,&quot;mypasskeysso.com&quot;,&quot;setupssopasskey.com&quot;,&quot;mspasskey.com&quot;,&quot;activatepasskey.com&quot;,&quot;enrollpasskey.com&quot;,&quot;keyokta.com&quot;,&quot;oktaenroll.com&quot;,&quot;oktaportalsso.com&quot;,&quot;passkeyportal.com&quot;,&quot;portalpasskey.com&quot;,&quot;passkeyportalsetup.com&quot;,&quot;addoktapasskey.com&quot;,&quot;deploypasskey.com&quot;,&quot;passkeydeploy.com&quot;,&quot;activatemypasskey.com&quot;,&quot;registerpasskey.com&quot;,&quot;createpasskey.com&quot;,&quot;passkeyadd.com&quot;,&quot;passkeyregister.com&quot;)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7991dc6b2b" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="azure">
+<details class="uc" data-uc-slug="9350a94628" data-platforms="datadog,def,sent,sigma,spl" data-targets="azure">
   <summary>
-    <span class="uc-title">Cloud sign-in from UNC6671 attacker infrastructure IPs</span>
+    <span class="uc-title">Successful M365/Okta SSO sign-in from UNC6671 attacker IP infrastructure</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7991dc6b2b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="9350a94628" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts successful or attempted M365/Okta/AWS-federated sign-ins sourced from the 11 IP addresses tied to UNC6671&#x27;s AiTM proxy/exfil infrastructure. Article-specific: these IPs are the campaign&#x27;s session-replay origins after cookie theft.
+    <div class="uc-desc">Hunts successful sign-ins originating from the 11 IP addresses tied to UNC6671&#x27;s AiTM proxy infrastructure, indicating a session-cookie/credential replay after the vishing lure. Article-specific because it uses the campaign&#x27;s exact source IPs rather than a generic impossible-travel heuristic.
 
-Rationale: Uses the 11 IOC IPs from the article&#x27;s bundle across every SSO surface the campaign abuses (Entra, Okta, and AWS via federated SSO the article says the dashboard links). A hit is a direct session-replay/attacker-login signal.
+Rationale: Directly matches the article&#x27;s 11 attacker IPs against successful Entra/Okta sign-ins; a success from this infrastructure is a high-confidence session-replay/ATO signal.
 
 Cross-checked against:
-  • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments
-  • https://thehackernews.com/2026/01/mandiant-finds-shinyhunters-using.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Adversary-in-the-Middle">T1557</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
+  • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Adversary-in-the-Middle: AiTM">T1557.002</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IP reassigned by hosting provider (31.7.x, 195.140.x ranges are VPS providers) to a benign tenant since the report</li><li>Corporate VPN/proxy egress coincidentally sharing a subnet with the IOC</li><li>Threat-intel enrichment tooling test-authenticating from a sinkhole</li><li>Shared cloud-provider NAT IP producing legitimate traffic</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the sign-in was successful (ResultType==0 / responseElements success) and note the resource accessed; check the account&#x27;s normal geo/ASN baseline. 2) Contain: revoke sessions/refresh tokens for the account, disable then re-enroll with FIDO2, and add all 11 IPs to a Conditional Access / firewall block. 3) Hunt: expand to any other account that authenticated from these IPs, then pivot to multi-app SSO fan-out and mailbox-rule/deletion activity for the same identity.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IP later re-assigned to a residential/VPN pool a legitimate remote employee uses</li><li>Corporate egress via a shared VPN/proxy overlapping a re-used hosting IP</li><li>Security team replaying captured attacker session during IR validation from the same IP</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the sign-in succeeded (ResultType 0), note MFA method and Conditional Access outcome, flag new device/UserAgent. 2) Contain: revoke sessions and refresh tokens, disable or require re-registration, block the IP at IdP and perimeter. 3) Hunt: enumerate every account with a successful sign-in from any of the 11 IPs and run the fan-out and email-deletion UCs against them.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-03-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-03-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-03-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-03-uc1-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-03-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-03-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let BadIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+    <div class="tab-content active" id="art-03-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
 AADSignInEventsBeta
 | where Timestamp &gt; ago(30d)
-| where IPAddress in (BadIPs)
-| project Timestamp, AccountUpn, Application, ResourceDisplayName, IPAddress, Country, ErrorCode, ClientAppUsed, UserAgent, ConditionalAccessStatus
+| where IPAddress in (badIPs)
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, Application, IPAddress, Country, City, ClientAppUsed, UserAgent, ConditionalAccessStatus, RiskLevelDuringSignIn
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+    <div class="tab-content" id="art-03-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
 SigninLogs
 | where TimeGenerated &gt; ago(30d)
-| where IPAddress in (BadIPs)
-| project TimeGenerated, UserPrincipalName, AppDisplayName, ResourceDisplayName, IPAddress, Location, ResultType, ClientAppUsed, UserAgent, ConditionalAccessStatus
+| where IPAddress in (badIPs)
+| where ResultType == 0
+| project TimeGenerated, UserPrincipalName, AppDisplayName, IPAddress, Location, ClientAppUsed, UserAgent, ConditionalAccessStatus, RiskLevelDuringSignIn
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: UNC6671 Cloud Sign-in From Attacker Infrastructure IP
-id: b7d41e02-2c9a-4f7e-8a10-5f3c9e21a4d8
-status: experimental
-description: Detects Entra ID sign-ins originating from UNC6671 AiTM/exfil infrastructure IPs
+    <div class="tab-content" id="art-03-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: UNC6671 BlackFile Successful Sign-in From Known AiTM Proxy IP
+id: b1d84f27-6a90-4c3b-8f21-9e0a5c7d2f10
+description: Detects a successful Entra ID sign-in sourced from an IP tied to UNC6671 AiTM infrastructure.
 references:
   - https://www.bleepingcomputer.com/news/security/hedge-fund-cyberattacks-tied-to-blackfile-linked-unc6671-extortion-group/
 author: SOC Detection Engineering
 date: 2026/08/07
 tags:
   - attack.t1078.004
-  - attack.initial_access
+  - attack.t1557.002
+  - attack.t1539
 logsource:
   product: azure
   service: signinlogs
 detection:
   selection:
+    ResultType: 0
     IPAddress:
       - 31.7.56.61
       - 31.7.56.52
@@ -2521,33 +2522,28 @@ detection:
   condition: selection
 level: high</code></pre></div>
     <div class="tab-content" id="art-03-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot; @network.client.ip:(31.7.56.61 OR 31.7.56.52 OR 193.34.212.132 OR 185.178.208.153 OR 23.234.75.84 OR 195.140.213.114 OR 195.140.213.115 OR 107.128.45.122 OR 76.103.148.180 OR 38.42.59.171 OR 47.218.103.146)</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, eventSource
-| filter sourceIPAddress in [&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN (&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;) by Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-03-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.src IN (&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;) by Authentication.user Authentication.src Authentication.app Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-03-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success AND Authentication.src IN (&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;) by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-03-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success AND Authentication.src IN (&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;) by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="f0838e0749" data-platforms="datadog,def,sent,spl" data-targets="azure,okta">
+<details class="uc" data-uc-slug="1c50259ca6" data-platforms="datadog,def,sent,spl" data-targets="azure">
   <summary>
-    <span class="uc-title">Rapid SSO dashboard fan-out across linked cloud apps</span>
+    <span class="uc-title">Rapid multi-cloud SSO application fan-out from single session</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="f0838e0749" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="1c50259ca6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts a single identity authenticating to an anomalously high number of distinct SSO-linked cloud applications inside a 10-minute window — the behaviour the article describes when attackers log into the Okta/M365 dashboard and pivot to every linked platform. Post-AiTM cloud-service enumeration.
+    <div class="uc-desc">Hunts a single user accessing an anomalously high number of distinct SSO-linked cloud applications within minutes of a sign-in, matching UNC6671&#x27;s behaviour of logging into the SSO dashboard and pivoting into every linked cloud platform. Prioritised when the originating sign-in came from the campaign&#x27;s attacker IPs.
 
-Rationale: Grounded in the article&#x27;s explicit statement that after SSO theft the attackers &#x27;log into the SSO dashboard, which gives access to all the cloud platforms linked to the account&#x27; — modelled as distinct-app fan-out per identity in a tight window rather than any single app.
+Rationale: Encodes the article&#x27;s &#x27;log into the SSO dashboard which gives access to all linked cloud platforms&#x27; behaviour as a distinct-app fan-out within a 15m window; the attacker-IP set sharpens it. Threshold-based so no Sigma.
 
 Cross-checked against:
   • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Cloud Service Discovery">T1526</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Cloud Service Dashboard">T1538</span> <span class="ind tech" title="Cloud Service Discovery">T1526</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>New-hire onboarding day where a user first opens every provisioned app</li><li>Power user / executive with genuinely broad app access starting their morning</li><li>SSO catalog migration or IdP re-federation forcing bulk re-auth</li><li>Automated app-inventory or SSO health-check bot running under a user identity</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// suppress known automation/service identities
-| where AccountUpn !startswith &quot;svc-&quot; and AccountUpn !has &quot;automation&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check whether the fan-out originated from the user&#x27;s normal device/IP/geo or a new one; correlate the window&#x27;s IPs against the UNC6671 IOC list. 2) Contain: if the source is anomalous, revoke tokens and suspend the account, then review which of the fanned-out apps hold sensitive data (finance, HR, code). 3) Hunt: for each accessed app, pull that session&#x27;s data-access/download volume and any subsequent mailbox-deletion activity for the same user.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer/platform-admin whose daily workflow touches many SaaS apps in quick succession</li><li>SSO session warm-up where the portal pre-authenticates tiles/apps automatically</li><li>Automated provisioning/deprovisioning service account iterating over linked apps</li><li>Onboarding day where a new hire&#x27;s apps are all first-accessed in one session</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserPrincipalName !has &quot;svc-&quot; and UserPrincipalName !has &quot;provisioning&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: check whether the burst came from an attacker IP or new device/UserAgent and compare to the user&#x27;s 30-day app baseline. 2) Contain: if anomalous, revoke sessions/tokens and disable the account pending review. 3) Hunt: for each app in the fan-out set, pull data-access/download logs to scope what was harvested.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-03-uc2-sentinel">Sentinel KQL</button>
@@ -2555,112 +2551,118 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-03-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-03-uc2-kql"><pre><button class="copy-btn">COPY</button><code>AADSignInEventsBeta
-| where Timestamp &gt; ago(7d)
+| where Timestamp &gt; ago(14d)
 | where ErrorCode == 0
-| where isnotempty(ResourceDisplayName)
-| summarize DistinctApps = dcount(ResourceDisplayName), Apps = make_set(ResourceDisplayName, 25), IPs = make_set(IPAddress, 5), Countries = make_set(Country, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountUpn, bin(Timestamp, 10m)
-| where DistinctApps &gt;= 8    // 8 = rapid dashboard fan-out across SSO-linked apps in 10 min; tune to your app catalog
-| order by DistinctApps desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SigninLogs
-| where TimeGenerated &gt; ago(7d)
+| summarize AppCount = dcount(Application), Apps = make_set(Application, 50), IPs = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+         by AccountUpn, bin(Timestamp, 15m)
+| where AppCount &gt;= 8   // &gt;=8 distinct SSO apps in 15m; tune to your P99 baseline of dashboard fan-out
+| order by AppCount desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+SigninLogs
+| where TimeGenerated &gt; ago(14d)
 | where ResultType == 0
-| where isnotempty(ResourceDisplayName)
-| summarize DistinctApps = dcount(ResourceDisplayName), Apps = make_set(ResourceDisplayName, 25), IPs = make_set(IPAddress, 5), Locations = make_set(Location, 5), StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by UserPrincipalName, bin(TimeGenerated, 10m)
-| where DistinctApps &gt;= 8    // 8 = rapid dashboard fan-out across SSO-linked apps in 10 min; tune to your app catalog
-| order by DistinctApps desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:okta @evt.name:user.authentication.sso @outcome.result:SUCCESS</code></pre></div>
-    <div class="tab-content" id="art-03-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` dc(Authentication.app) as DistinctApps values(Authentication.app) as Apps values(Authentication.src) as SrcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user _time span=10m | `drop_dm_object_name(Authentication)` | where DistinctApps&gt;=8 | convert ctime(firstTime) ctime(lastTime) | sort - DistinctApps</code></pre><pre class="spl-mode-body" id="art-03-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Authentication.app) as DistinctApps values(Authentication.app) as Apps values(Authentication.src) as SrcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user _time span=10m | `drop_dm_object_name(Authentication)` | where DistinctApps&gt;=8 | convert ctime(firstTime) ctime(lastTime) | sort - DistinctApps</code></pre></div></div>
+| summarize AppCount = dcount(AppDisplayName), Apps = make_set(AppDisplayName, 50), IPs = make_set(IPAddress, 10),
+            FromAttackerIP = make_set(iff(IPAddress in (badIPs), IPAddress, &quot;&quot;), 5),
+            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
+         by UserPrincipalName, bin(TimeGenerated, 15m)
+| where AppCount &gt;= 8   // &gt;=8 distinct SSO apps in 15m; tune to org P99 of legitimate dashboard fan-out
+| order by AppCount desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot; @properties.status.errorCode:0</code></pre></div>
+    <div class="tab-content" id="art-03-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t dc(Authentication.app) as appCount values(Authentication.app) as apps min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src _time span=15m | where appCount &gt;= 8 | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-03-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Authentication.app) as appCount values(Authentication.app) as apps min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.user Authentication.src _time span=15m | where appCount &gt;= 8 | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9c1232c583" data-platforms="cloudwatch,def,sent,spl" data-targets="azure,m365">
+<details class="uc" data-uc-slug="12ccf2c2cb" data-platforms="def,sent" data-targets="azure,m365">
   <summary>
-    <span class="uc-title">Automated bulk cloud data exfiltration from SSO-linked services</span>
+    <span class="uc-title">Automated bulk cloud data download from compromised SSO session</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="9c1232c583" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="12ccf2c2cb" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts high-volume, machine-speed downloads from SharePoint/OneDrive (and S3 for AWS-federated tenants) by a single identity in a short window — the article&#x27;s &#x27;automated tools to steal data from all cloud services they gain access to&#x27;. Distinguishes recursive harvest from human browsing.
+    <div class="uc-desc">Hunts high-volume, machine-speed file downloads/exports from M365 services (SharePoint/OneDrive/Teams) by a single user in a short window, matching UNC6671&#x27;s use of automated tooling to harvest data from every linked cloud service after SSO takeover. Sharpened when correlated with sign-ins from the campaign&#x27;s attacker IPs.
 
-Rationale: Directly models the article&#x27;s &#x27;automated tools to steal data from all cloud services&#x27; and GTIG&#x27;s corroboration of Python/PowerShell bulk-exfil scripts — expressed as machine-speed download volume per identity/window across M365 and S3, the platforms the SSO dashboard links.
+Rationale: Encodes &#x27;automated tools to steal data from all cloud services&#x27; as a per-user download-rate spike over 10m across SharePoint/OneDrive; the attacker-IP correlation column raises fidelity. Aggregation-based, so no Sigma or IOC-only source.
+
+Cross-checked against:
+  • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Cloud Storage">T1530</span> <span class="ind tech" title="Data from Information Repositories: SharePoint">T1213.002</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>OneDrive/SharePoint client performing a full initial sync on a new laptop</li><li>Legitimate bulk export ahead of a data-migration or eDiscovery project</li><li>Backup/DLP tooling or a service account crawling document libraries</li><li>Analyst pulling a large research dataset for legitimate work</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserId !has &quot;svc-&quot; and UserId !has &quot;backup&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the burst maps to a human session vs a sync client (UserAgent/ClientIP) and whether the IP is an attacker IP or new geo. 2) Contain: revoke sessions/tokens, suspend the account, apply a sensitivity-label/DLP hold on affected sites. 3) Hunt: enumerate which libraries/sites were touched, check for downstream external sharing-link creation, and scope other accounts hitting the same sites.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-03-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-03-uc3-sentinel">Sentinel KQL</button>
+    </div>
+    <div class="tab-content active" id="art-03-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(14d)
+| where ActionType in~ (&quot;FileDownloaded&quot;, &quot;FileSyncDownloadedFull&quot;, &quot;FileAccessed&quot;, &quot;FileDownloadedFromSharePoint&quot;)
+| summarize DownloadCount = count(), DistinctFiles = dcount(ObjectName), Apps = make_set(Application, 20),
+            IPs = make_set(IPAddress, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+         by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
+| where DownloadCount &gt;= 100   // machine-speed harvest; tune to org P99 of legitimate sync bursts
+| order by DownloadCount desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+OfficeActivity
+| where TimeGenerated &gt; ago(14d)
+| where Operation in~ (&quot;FileDownloaded&quot;, &quot;FileSyncDownloadedFull&quot;, &quot;FileAccessed&quot;)
+| summarize DownloadCount = count(), DistinctFiles = dcount(SourceFileName), Sites = make_set(Site_Url, 20),
+            IPs = make_set(ClientIP, 10), FromAttackerIP = countif(ClientIP in (badIPs)),
+            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
+         by UserId, bin(TimeGenerated, 10m)
+| where DownloadCount &gt;= 100   // machine-speed harvest threshold; tune to org P99
+| order by DownloadCount desc</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="382ddd0de2" data-platforms="def,sent" data-targets="azure,m365">
+  <summary>
+    <span class="uc-title">Bulk deletion of security-notification and password-reset emails post-compromise</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="382ddd0de2" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts a burst of mailbox delete/soft-delete operations by a user shortly after an anomalous sign-in, matching UNC6671&#x27;s tradecraft of deleting security notifications and password-reset emails to hide the takeover. Correlated with sign-ins from the campaign&#x27;s attacker IPs to raise fidelity.
+
+Rationale: Encodes the article&#x27;s explicit &#x27;delete security notifications and password-reset emails&#x27; step as a mailbox-delete burst within 6h of a sign-in from the campaign&#x27;s exact attacker IPs, which strips generic-cleanup false positives. Threshold/correlation, so no Sigma.
 
 Cross-checked against:
   • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments
   • https://cloud.google.com/blog/topics/threat-intelligence/blackfile-vishing-extortion-operation/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Cloud Storage">T1530</span> <span class="ind tech" title="Transfer Data to Cloud Account">T1537</span> <span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>OneDrive/SharePoint full-sync on a newly enrolled device pulling an entire library</li><li>Legal e-discovery or compliance export job running under a user account</li><li>Backup/DLP crawler with delegated access enumerating a site</li><li>Data-migration tooling (ShareGate, Mover) during a tenant move</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where AccountDisplayName !has &quot;migration&quot; and AccountObjectId !in (dynamic([]))  // populate with approved DLP/backup service principal object IDs</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the download burst&#x27;s source IP/device is anomalous for the user and correlate against the UNC6671 IOC IPs and a preceding SSO fan-out; identify what data left. 2) Contain: revoke the session, suspend the account, and apply a sensitivity-label / conditional-access download block on the affected sites; preserve audit logs for IR. 3) Hunt: check for subsequent transfer of the data to external cloud accounts and for security-email deletion covering the attacker&#x27;s tracks.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-03-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-03-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-03-uc3-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-03-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-03-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileDownloaded&quot;,&quot;FileSyncDownloadedFull&quot;,&quot;FileDownloadedFromSharePoint&quot;)
-| summarize Downloads = count(), Objects = dcount(ObjectName), IPs = make_set(IPAddress, 5), Apps = make_set(Application, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
-| where Downloads &gt;= 100    // 100 = automated recursive harvest vs human browse in 10 min; tune per tenant
-| order by Downloads desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>OfficeActivity
-| where TimeGenerated &gt; ago(7d)
-| where Operation in (&quot;FileDownloaded&quot;,&quot;FileSyncDownloadedFull&quot;)
-| summarize Downloads = count(), Objects = dcount(ObjectId), Sites = dcount(Site_Url), IPs = make_set(ClientIP, 5), StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by UserId, bin(TimeGenerated, 10m)
-| where Downloads &gt;= 100    // 100 = automated recursive harvest vs human browse in 10 min; tune per tenant
-| order by Downloads desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail/dataevents
-fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.bucketName, requestParameters.key
-| filter eventSource = &quot;s3.amazonaws.com&quot; and eventName = &quot;GetObject&quot; and not isPresent(errorCode)
-| stats count(*) as objects, count_distinct(requestParameters.key) as distinctKeys, count_distinct(requestParameters.bucketName) as buckets by userIdentity.arn, sourceIPAddress, bin(10m)
-| sort objects desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-03-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-03-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-03-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as Downloads dc(Web.uri_path) as DistinctObjects values(Web.src) as SrcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.action=&quot;FileDownloaded&quot; OR Web.action=&quot;FileSyncDownloadedFull&quot; by Web.user _time span=10m | `drop_dm_object_name(Web)` | where Downloads&gt;=100 | convert ctime(firstTime) ctime(lastTime) | sort - Downloads</code></pre><pre class="spl-mode-body" id="art-03-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as Downloads dc(Web.uri_path) as DistinctObjects values(Web.src) as SrcIPs min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.action=&quot;FileDownloaded&quot; OR Web.action=&quot;FileSyncDownloadedFull&quot; by Web.user _time span=10m | `drop_dm_object_name(Web)` | where Downloads&gt;=100 | convert ctime(firstTime) ctime(lastTime) | sort - Downloads</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="25d1361a3a" data-platforms="datadog,def,sent,spl" data-targets="azure,m365,okta">
-  <summary>
-    <span class="uc-title">Post-compromise purge of security &amp; password-reset emails</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="25d1361a3a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts targeted deletion of MFA/passkey, sign-in-alert and password-reset notification emails from a compromised mailbox — the article&#x27;s &#x27;delete security notifications and password-reset emails from compromised inboxes&#x27; anti-forensic step. Subject-scoped deletion bursts distinguish it from routine inbox cleanup.
-
-Rationale: Directly implements the article&#x27;s explicit anti-forensic behaviour (deleting password-reset and security-notification emails), scoped by security-notification subject keywords so it targets the attacker&#x27;s cover-up rather than generic mailbox activity.
-
-Cross-checked against:
-  • https://cloud.google.com/blog/topics/threat-intelligence/unc6671-targets-financial-services-and-enterprise-cloud-environments</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Indicator Removal: Clear Mailbox Data">T1070.008</span> <span class="ind tech" title="Hide Artifacts: Email Hiding Rules">T1564.008</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User genuinely clearing a backlog of MFA/security notification emails during inbox cleanup</li><li>Retention/DLP policy auto-purging aged notification mail</li><li>Mailbox migration moving items between folders (Operation=Move)</li><li>Newsletter/marketing mail with &#x27;verify&#x27; in subject deleted in bulk</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserId !startswith &quot;svc-&quot; and Operation != &quot;Move&quot;  // Move alone is often benign folder reorg; keep only if paired with delete ops in the window</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the deletions cluster in time and correlate the ClientIP/session with an anomalous SSO login or the UNC6671 IOC IPs; check whether matching password-reset/MFA events actually fired for that user. 2) Contain: revoke tokens, reset credentials with FIDO2 re-enrollment, place the mailbox on litigation hold to stop further HardDelete, and recover deleted items. 3) Hunt: look for a preceding inbox rule creation that auto-deletes/moves security mail, and pivot to the same user&#x27;s data-download volume and cross-app SSO fan-out.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>User doing genuine bulk inbox cleanup / unsubscribing purge</li><li>Mailbox retention policy or auto-archive moving many items at once</li><li>Shared/role mailbox where a team routinely triages and deletes alerts</li><li>Mobile mail client re-syncing and reconciling deletions in bulk</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: recover the deleted items (Deleted Items / Recoverable Items) and confirm they are security/MFA/password-reset notifications; check whether the burst followed an attacker-IP sign-in. 2) Contain: revoke sessions/tokens, reset credentials, remove any attacker-created inbox rules that auto-delete security mail. 3) Hunt: correlate with password-reset or MFA-registration events for the same user, and check other compromised accounts for the same delete pattern.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-03-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-03-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-03-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-03-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-03-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where Application in (&quot;Microsoft Exchange Online&quot;,&quot;Office 365 Exchange Online&quot;)
-| where ActionType in (&quot;MoveToDeletedItems&quot;,&quot;SoftDelete&quot;,&quot;HardDelete&quot;,&quot;Delete message&quot;)
-| where ObjectName has_any (&quot;password reset&quot;,&quot;reset your password&quot;,&quot;security alert&quot;,&quot;sign-in&quot;,&quot;unusual sign&quot;,&quot;MFA&quot;,&quot;multi-factor&quot;,&quot;passkey&quot;,&quot;verification&quot;,&quot;verify your&quot;)
-| summarize Deletes = count(), Subjects = make_set(ObjectName, 20), IPs = make_set(IPAddress, 5), StartTime = min(Timestamp), EndTime = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 15m)
-| where Deletes &gt;= 3    // 3 = targeted purge of security notices, not bulk routine cleanup
-| order by Deletes desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>OfficeActivity
-| where TimeGenerated &gt; ago(7d)
-| where OfficeWorkload == &quot;Exchange&quot;
-| where Operation in (&quot;HardDelete&quot;,&quot;SoftDelete&quot;,&quot;MoveToDeletedItems&quot;,&quot;Move&quot;)
-| where Subject has_any (&quot;password reset&quot;,&quot;reset your password&quot;,&quot;security alert&quot;,&quot;new sign-in&quot;,&quot;unusual sign-in&quot;,&quot;MFA&quot;,&quot;multi-factor&quot;,&quot;passkey&quot;,&quot;verification code&quot;,&quot;account was&quot;)
-| summarize Deletes = count(), Subjects = make_set(Subject, 20), IPs = make_set(ClientIP, 5), StartTime = min(TimeGenerated), EndTime = max(TimeGenerated) by UserId, bin(TimeGenerated, 15m)
-| where Deletes &gt;= 3    // 3 = targeted purge of security notices, not bulk routine cleanup
-| order by Deletes desc</code></pre></div>
-    <div class="tab-content" id="art-03-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:okta @evt.name:user.account.update_password</code></pre></div>
-    <div class="tab-content" id="art-03-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>`o365_management_activity` Workload=Exchange Operation IN (&quot;HardDelete&quot;,&quot;SoftDelete&quot;,&quot;MoveToDeletedItems&quot;,&quot;Move&quot;) | eval subj=lower(Subject) | where match(subj,&quot;password reset|reset your password|security alert|new sign-in|unusual sign-in|mfa|multi-factor|passkey|verification code|account was&quot;) | bin _time span=15m | stats count as Deletes values(Subject) as Subjects values(ClientIP) as SrcIPs min(_time) as firstTime max(_time) as lastTime by UserId _time | where Deletes&gt;=3 | convert ctime(firstTime) ctime(lastTime) | sort - Deletes</code></pre></div>
+    <div class="tab-content active" id="art-03-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+CloudAppEvents
+| where Timestamp &gt; ago(14d)
+| where ActionType in~ (&quot;MoveToDeletedItems&quot;, &quot;SoftDelete&quot;, &quot;HardDelete&quot;, &quot;Delete message&quot;)
+| summarize DeleteCount = count(), IPs = make_set(IPAddress, 10), FromAttackerIP = countif(IPAddress in (badIPs)),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+         by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
+| where DeleteCount &gt;= 15   // burst of deletions in 10m; tune to org baseline of manual inbox cleanup
+| order by DeleteCount desc</code></pre></div>
+    <div class="tab-content" id="art-03-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let badIPs = dynamic([&quot;31.7.56.61&quot;,&quot;31.7.56.52&quot;,&quot;193.34.212.132&quot;,&quot;185.178.208.153&quot;,&quot;23.234.75.84&quot;,&quot;195.140.213.114&quot;,&quot;195.140.213.115&quot;,&quot;107.128.45.122&quot;,&quot;76.103.148.180&quot;,&quot;38.42.59.171&quot;,&quot;47.218.103.146&quot;]);
+let CompromisedSessions = SigninLogs
+    | where TimeGenerated &gt; ago(14d)
+    | where IPAddress in (badIPs) and ResultType == 0
+    | project SignInTime = TimeGenerated, UserId = tolower(UserPrincipalName), AttackerIP = IPAddress;
+OfficeActivity
+| where TimeGenerated &gt; ago(14d)
+| where Operation in~ (&quot;MoveToDeletedItems&quot;, &quot;SoftDelete&quot;, &quot;HardDelete&quot;, &quot;Move message&quot;)
+| extend UserIdLower = tolower(UserId)
+| summarize DeleteCount = count(), ClientIPs = make_set(ClientIP, 10), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)
+         by UserIdLower, bin(TimeGenerated, 10m)
+| where DeleteCount &gt;= 15   // burst threshold; tune to org baseline
+| join kind=inner CompromisedSessions on $left.UserIdLower == $right.UserId
+| where FirstSeen between (SignInTime .. SignInTime + 6h)
+| project FirstSeen, LastSeen, UserIdLower, DeleteCount, ClientIPs, AttackerIP, SignInTime
+| order by FirstSeen desc</code></pre></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
@@ -5612,11 +5614,11 @@ level: high
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
+  data-platforms="def,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
   data-targets="vcs,windows"
   data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-65600: Traefik: Authentication Bypass via Path Traversal in ReplacePathRegex Middleware Traefik: Authentication Bypass via Path Traversal in ReplacePathRegex Middleware CVE-2026-65600 CVE-2026-48020 T1190 [LLM] Traefik CVE-2026-65600 path-traversal auth bypass attempt via un-normalized proxy URL [LLM] Traefik CVE-2026-65600 confirmed auth bypass — 2xx response on traversal path to protected route [LLM] Vulnerable Traefik version exposed to CVE-2026-65600 in software inventory Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-65600: Traefik: Authentication Bypass via Path Traver">
+  data-search="[GHSA / CRITICAL] CVE-2026-65600: Traefik: Authentication Bypass via Path Traversal in ReplacePathRegex Middleware Traefik: Authentication Bypass via Path Traversal in ReplacePathRegex Middleware CVE-2026-65600 CVE-2026-48020 T1190 [LLM] Traefik ReplacePathRegex auth-bypass: prefix-traversal request (/api../ , /api%2e%2e/) [LLM] Traefik path-traversal auth bypass SUCCESS: dot-dot path returns 2xx on protected route [LLM] Traefik deployment exposed to CVE-2026-65600 (vulnerable version in software inventory) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-65600: Traefik: Authentication Bypass via Path Traver">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-06-ghsa-critical-cve-2026-65600-traefik-authentication-bypass-v" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -5673,165 +5675,146 @@ level: high
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable Traefik version exposed to CVE-2026-65600 in software inventory · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Traefik deployment exposed to CVE-2026-65600 (vulnerable version in software inventory) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Traefik CVE-2026-65600 path-traversal auth bypass attempt via un-normalized proxy URL · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-65600: Traefik: Authentication Bypass via Path Traver</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Traefik ReplacePathRegex auth-bypass: prefix-traversal request (/api../ , /api%2e%2e/) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-65600: Traefik: Authentication Bypass via Path Traver</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Traefik CVE-2026-65600 confirmed auth bypass — 2xx response on traversal path to protected route</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Traefik path-traversal auth bypass SUCCESS: dot-dot path returns 2xx on protected route</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="8ca8c17c5b" data-platforms="datadog,sent,sigma,spl" data-targets="vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="e8958afbaf" data-platforms="sent,sigma,spl" data-targets="vcs" open>
   <summary>
-    <span class="uc-title">Traefik CVE-2026-65600 path-traversal auth bypass attempt via un-normalized proxy URL</span>
+    <span class="uc-title">Traefik ReplacePathRegex auth-bypass: prefix-traversal request (/api../ , /api%2e%2e/)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8ca8c17c5b" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e8958afbaf" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests whose path carries an implicit or encoded &#x27;..&#x27; traversal (e.g. /api../admin, /api%2e%2e/admin) that Traefik&#x27;s ReplacePathRegex forwards un-normalized to the backend. Article-specific because it keys on the exact exploit shape: a prefix segment immediately followed by dot-dot with no slash separator, plus the percent-encoded variant.
+    <div class="uc-desc">Hunts inbound HTTP requests exploiting CVE-2026-65600 — a path whose prefix segment is immediately followed by a dot-dot traversal with no separator (e.g. /api../admin or the encoded /api%2e%2e/admin). Legitimate traffic essentially never contains a `&lt;prefix&gt;..` token, so this is the high-fidelity signature of an unauthenticated attacker reaching auth-protected routers through the ReplacePathRegex middleware.
 
-Rationale: Keys on the article&#x27;s exact PoC strings (/api../admin, /api%2e%2e/admin, %2e%2e) and the structural signature the advisory calls out — a path segment directly followed by dot-dot without a separator — which is what ReplacePathRegex forwards un-normalized. Cross-checked against the Traefik GHSA advisory and Hunt-Benito write-up.
+Rationale: Uses the article&#x27;s verbatim PoC strings /api../admin and /api%2e%2e/admin — the un-normalized `prefix..` token is the defining, non-legitimate artifact of CVE-2026-65600. Cross-checked GHSA-cxjq-mrr5-89rv and the GitLab advisory which confirm both the literal and percent-encoded (%2e%2e) exploit forms.
 
 Cross-checked against:
   • https://github.com/traefik/traefik/security/advisories/GHSA-cxjq-mrr5-89rv
-  • https://www.sentinelone.com/vulnerability-database/cve-2026-48020/
-  • https://www.hunt-benito.com/blog/stripprefix-and-the-one-slash-that-broke-auth-cve-2026-48020-traefik-route-level-authentication-bypass/</div>
+  • https://advisories.gitlab.com/golang/github.com/traefik/traefik/v2/CVE-2026-65600/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Defense Evasion">T1211</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized vulnerability scanners (Nessus, Qualys, Burp, Nuclei) probing for path traversal</li><li>Legitimate API paths that legitimately contain &#x27;..&#x27; as a literal token in a query parameter</li><li>Security team / pentest exercises replaying the PoC against a patched Traefik</li><li>Web crawlers fuzzing encoded characters in URLs</li><li>Client apps that double-encode legitimate path components</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpRequestHeaderUserAgent !has_any (&quot;Nessus&quot;, &quot;Qualys&quot;, &quot;Nuclei&quot;, &quot;nmap&quot;, &quot;Burp&quot;, &quot;masscan&quot;, &quot;zgrab&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the matching Url plus HttpStatusCode and source IP; a 4xx/401 means Traefik/backend rejected it (patched or non-traversable), a 2xx means the bypass likely succeeded — escalate. Check the source IP against scanner allowlists. 2) Contain: if 2xx and source is untrusted, block the IP at the edge/WAF and confirm the Traefik version is patched (v2.11.52 / v3.6.23 / v3.7.7); roll the affected router config to use a mandatory slash separator (^/api/(.*)) as an immediate mitigation. 3) Hunt: pivot on the source IP for other traversal requests, enumerate every Traefik router using ReplacePathRegex without a slash separator, and review backend access logs for protected routes reached without a preceding auth event.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security scanners / DAST tools (Nuclei, Burp, Nessus) probing for path-traversal on the same reverse proxy</li><li>Internal red-team or vuln-management validation of the CVE-2026-65600 patch</li><li>Poorly-written API clients that literally build paths like /api..something as a relative-path bug</li><li>Legitimate apps that expose a route segment named with a trailing double-dot (rare) behind the /api prefix</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpRequestHeaderUserAgent !has_any (&quot;Nuclei&quot;,&quot;nuclei&quot;,&quot;Nessus&quot;,&quot;Burp&quot;,&quot;sqlmap&quot;,&quot;nmap&quot;) and SrcIpAddr !in (&quot;&lt;known-scanner-ips-managed-elsewhere&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full request log for the source IP — note the final resolved path (e.g. /admin) and the HTTP status returned. A 2xx on a normally 401/403 route confirms the bypass; a 400 means a patched Traefik rejected it. 2) Contain: if 2xx, block the source IP at the edge/WAF and add an interim WAF rule rejecting any path containing `..` or `%2e%2e`; schedule the Traefik upgrade to v2.11.52 / v3.6.23 / v3.7.7. 3) Hunt: sweep all reverse-proxy logs for the same `prefix..` pattern across every PathPrefix router, and review backend admin-route access logs for unauthenticated 2xx hits during the window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-09-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-09-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-09-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-09-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(24h)
-| where Url has_any (&quot;%2e%2e&quot;, &quot;%2E%2E&quot;, &quot;/..&quot;) or Url matches regex @&quot;(?i)/[A-Za-z0-9]+\.\.&quot;
-| project TimeGenerated, SrcIpAddr, DstIpAddr, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent, DvcHostname
+| where TimeGenerated &gt; ago(7d)
+| where Url matches regex @&quot;(?i)/[A-Za-z0-9_-]+(\.\.|%2e%2e)&quot;
+| where Url matches regex @&quot;(?i)/api(\.\.|%2e%2e)&quot;   // article&#x27;s concrete exploitable prefix; broaden the first regex to cover other stripped prefixes
+| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Traefik ReplacePathRegex Path Traversal Auth Bypass Attempt (CVE-2026-65600)
-id: 6f3b1c2a-9d4e-4a11-b8c7-1e2f3a4b5c6d
-description: Detects inbound HTTP requests carrying implicit or percent-encoded path traversal that Traefik ReplacePathRegex forwards un-normalized, bypassing auth middleware.
+    <div class="tab-content" id="art-09-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Traefik ReplacePathRegex Prefix Path-Traversal Auth Bypass (CVE-2026-65600)
+id: 6f0a2c14-9d3e-4f27-8b6a-2e1c7d5a4b90
+description: Detects HTTP requests where a URL prefix segment is immediately followed by a dot-dot traversal (literal or percent-encoded), the signature of the Traefik ReplacePathRegex authentication bypass CVE-2026-65600.
 references:
+  - https://github.com/advisories/GHSA-cxjq-mrr5-89rv
   - https://github.com/traefik/traefik/security/advisories/GHSA-cxjq-mrr5-89rv
-  - https://www.hunt-benito.com/blog/stripprefix-and-the-one-slash-that-broke-auth-cve-2026-48020-traefik-route-level-authentication-bypass/
 author: SOC Detection Engineering
 date: 2026/08/07
 tags:
   - attack.t1190
   - attack.t1211
 logsource:
-  category: proxy
+  category: webserver
 detection:
-  encoded:
+  selection:
     c-uri|contains:
-      - &#x27;%2e%2e&#x27;
-      - &#x27;%2E%2E&#x27;
-      - &#x27;/..&#x27;
-  implicit:
-    c-uri|re: &#x27;(?i)/[A-Za-z0-9]+\.\.&#x27;
-  condition: encoded or implicit
+      - &#x27;api..&#x27;
+      - &#x27;api%2e%2e&#x27;
+      - &#x27;api%2E%2E&#x27;
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:traefik (@http.url_details.path:(*%2e%2e* OR *%2E%2E* OR */..*) OR @http.url:(*%2e%2e* OR *%2E%2E* OR */..*))</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2E%2E*&quot; OR Web.url=&quot;*/..*&quot;) by Web.src Web.dest Web.http_user_agent Web.url Web.status Web.http_method | `drop_dm_object_name(Web)` | regex url=&quot;(?i)/[A-Za-z0-9]+\.\.|%2e%2e|/\.\.&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2E%2E*&quot; OR Web.url=&quot;*/..*&quot;) by Web.src Web.dest Web.http_user_agent Web.url Web.status Web.http_method | `drop_dm_object_name(Web)` | regex url=&quot;(?i)/[A-Za-z0-9]+\.\.|%2e%2e|/\.\.&quot; | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-09-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where (Web.uri_path=&quot;*api..*&quot; OR Web.uri_path=&quot;*api%2e%2e*&quot; OR Web.uri_path=&quot;*api%2E%2E*&quot; OR Web.url=&quot;*api..*&quot; OR Web.url=&quot;*api%2e%2e*&quot;) by Web.src Web.dest Web.dest_port Web.uri_path Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where (Web.uri_path=&quot;*api..*&quot; OR Web.uri_path=&quot;*api%2e%2e*&quot; OR Web.uri_path=&quot;*api%2E%2E*&quot; OR Web.url=&quot;*api..*&quot; OR Web.url=&quot;*api%2e%2e*&quot;) by Web.src Web.dest Web.dest_port Web.uri_path Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="6cf0a65572" data-platforms="datadog,sent,sigma,spl" data-targets="vcs">
+<details class="uc" data-uc-slug="f642cca86c" data-platforms="sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Traefik CVE-2026-65600 confirmed auth bypass — 2xx response on traversal path to protected route</span>
+    <span class="uc-title">Traefik path-traversal auth bypass SUCCESS: dot-dot path returns 2xx on protected route</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6cf0a65572" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f642cca86c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Confirms successful exploitation by flagging requests where the URL contains a traversal sequence AND the backend returned a 2xx after Traefik forwarded the un-normalized path. A success code on a dot-dot path is the article&#x27;s post-exploitation success signal: normalization resolved it to a protected route that answered without auth.
+    <div class="uc-desc">Confirms post-exploitation success of CVE-2026-65600 by isolating reverse-proxy requests whose path carries a traversal sequence (../ or %2e%2e) AND that returned an HTTP 2xx. A vulnerable Traefik forwards the un-normalized path and the backend serves protected content (200); a patched Traefik returns 400. A 2xx on a traversal path is a direct impact indicator that an unauthenticated attacker reached an auth-protected resource.
 
-Rationale: Combines the article&#x27;s traversal signature with the success-code condition the advisory implies (backend normalizes /../admin to /admin and serves it). A 2xx on a dot-dot path is high-fidelity because normal traffic never legitimately returns success on such a path.
+Rationale: Builds on the article statement that the un-normalized `/../admin` is forwarded and the backend returns ADMIN_SECRET_DATA with HTTP 200, whereas the patch rejects with HTTP 400 — so `traversal-in-path AND status 2xx` cleanly separates successful bypass from blocked/patched attempts. Confirmed against GHSA-cxjq-mrr5-89rv PoC output.
 
 Cross-checked against:
   • https://github.com/traefik/traefik/security/advisories/GHSA-cxjq-mrr5-89rv
-  • https://advisories.gitlab.com/golang/github.com/traefik/traefik/v2/CVE-2026-48020/</div>
+  • https://www.hunt-benito.com/blog/stripprefix-and-the-one-slash-that-broke-auth-cve-2026-48020-traefik-route-level-authentication-bypass/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Defense Evasion">T1211</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized pentest / red-team confirming the bypass against a lab instance</li><li>Vulnerability scanner that follows through and receives a 2xx from an unprotected test route</li><li>A backend that legitimately serves a route whose literal name contains &#x27;..&#x27; and returns 200</li><li>Patched Traefik that still 200s but returns a generic error body (verify content, not just code)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where HttpRequestHeaderUserAgent !has_any (&quot;Nessus&quot;, &quot;Qualys&quot;, &quot;Nuclei&quot;, &quot;nmap&quot;, &quot;Burp&quot;, &quot;masscan&quot;, &quot;zgrab&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full Url, the responding backend (DstIpAddr), and response size; confirm the route is one guarded by BasicAuth/ForwardAuth/DigestAuth on a separate router. Verify there was no preceding successful auth event for the source IP. 2) Contain: block the source IP, take the affected router offline or hot-patch the ReplacePathRegex to require a slash separator (^/api/(.*)), and upgrade Traefik to v2.11.52 / v3.6.23 / v3.7.7. Treat any data returned on the protected route as exposed. 3) Hunt: enumerate all 2xx traversal hits from this IP and others over the retention window, review what protected endpoints answered, and check backend logs for state-changing methods (POST/PUT/DELETE) delivered via the bypass.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WebDAV / file-management endpoints that legitimately accept `..` in paths and return 200</li><li>Static-content servers that resolve relative paths and 200 on normalized results</li><li>Authorized pentest confirming exploitability (will also 2xx)</li><li>APIs that percent-encode dots in query strings unrelated to path traversal</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DstHostname has_any (&quot;webdav&quot;,&quot;files&quot;) or Url has_any (&quot;/dav/&quot;,&quot;/webdav/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the resolved backend route is one that should be behind auth middleware (compare against the dynamic.yml router→middleware map). Verify no valid session/Authorization header accompanied the 2xx. 2) Contain: block the source IP, rotate any secrets/credentials exposed on the reached admin/internal route, and enforce the interim WAF `..` rejection rule pending upgrade to the patched Traefik build. 3) Hunt: enumerate every distinct protected route reached this way, review those backends for write operations (POST/PUT/DELETE also bypass per the advisory), and check for follow-on data access or config changes from the same IP.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-09-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-09-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-09-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(24h)
-| where Url has_any (&quot;%2e%2e&quot;, &quot;%2E%2E&quot;, &quot;/..&quot;) or Url matches regex @&quot;(?i)/[A-Za-z0-9]+\.\.&quot;
-| extend Status = toint(HttpStatusCode)
-| where Status &gt;= 200 and Status &lt; 300   // 2xx on a traversal path = bypass resolved to a live protected route
-| project TimeGenerated, SrcIpAddr, DstIpAddr, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent, DvcHostname
+| where TimeGenerated &gt; ago(7d)
+| where Url matches regex @&quot;(?i)(\.\.|%2e%2e)&quot;
+| where HttpStatusCode &gt;= 200 and HttpStatusCode &lt; 300   // 2xx = backend served it; a patched Traefik would return 400
+| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Traefik ReplacePathRegex Auth Bypass Succeeded - 2xx on Traversal Path (CVE-2026-65600)
-id: 8a2d4f61-0b7c-4e93-a1d2-3c4e5f6a7b8c
-description: Detects a successful (2xx) HTTP response to a request whose path contained a traversal sequence, indicating the Traefik ReplacePathRegex auth bypass resolved to a live protected route.
-references:
-  - https://github.com/traefik/traefik/security/advisories/GHSA-cxjq-mrr5-89rv
-author: SOC Detection Engineering
-date: 2026/08/07
-tags:
-  - attack.t1190
-  - attack.t1211
-logsource:
-  category: proxy
-detection:
-  traversal:
-    c-uri|contains:
-      - &#x27;%2e%2e&#x27;
-      - &#x27;%2E%2E&#x27;
-      - &#x27;/..&#x27;
-  success:
-    sc-status|re: &#x27;2[0-9][0-9]&#x27;
-  condition: traversal and success
-level: high</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:traefik (@http.url_details.path:(*%2e%2e* OR *%2E%2E* OR */..*) OR @http.url:(*%2e%2e* OR *%2E%2E* OR */..*)) @http.status_code:[200 TO 299]</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2E%2E*&quot; OR Web.url=&quot;*/..*&quot;) (Web.status&gt;=200 Web.status&lt;300) by Web.src Web.dest Web.url Web.status Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | regex url=&quot;(?i)/[A-Za-z0-9]+\.\.|%2e%2e|/\.\.&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=&quot;*%2e%2e*&quot; OR Web.url=&quot;*%2E%2E*&quot; OR Web.url=&quot;*/..*&quot;) (Web.status&gt;=200 Web.status&lt;300) by Web.src Web.dest Web.url Web.status Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | regex url=&quot;(?i)/[A-Za-z0-9]+\.\.|%2e%2e|/\.\.&quot; | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-09-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as uri_path from datamodel=Web where (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.uri_path=&quot;*..*&quot; OR Web.uri_path=&quot;*%2e%2e*&quot;) (Web.status&gt;=200 AND Web.status&lt;300) by Web.src Web.dest Web.http_method Web.url Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as uri_path from datamodel=Web where (Web.url=&quot;*..*&quot; OR Web.url=&quot;*%2e%2e*&quot; OR Web.uri_path=&quot;*..*&quot; OR Web.uri_path=&quot;*%2e%2e*&quot;) (Web.status&gt;=200 AND Web.status&lt;300) by Web.src Web.dest Web.http_method Web.url Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="0290528ceb" data-platforms="def,sent" data-targets="">
+<details class="uc" data-uc-slug="33707fff5e" data-platforms="def,sent" data-targets="">
   <summary>
-    <span class="uc-title">Vulnerable Traefik version exposed to CVE-2026-65600 in software inventory</span>
+    <span class="uc-title">Traefik deployment exposed to CVE-2026-65600 (vulnerable version in software inventory)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0290528ceb" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="33707fff5e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts running a Traefik build in the vulnerable ranges for CVE-2026-65600 so the ReplacePathRegex bypass can be remediated before exploitation. Article-specific because it pins the exact fixed versions (2.11.52, 3.6.23, 3.7.7) and CVE ID rather than a generic &#x27;update Traefik&#x27; check.
+    <div class="uc-desc">Proactive exposure hunt: surfaces hosts whose software inventory reports a Traefik version in the vulnerable range for CVE-2026-65600 (&lt;=2.11.51, 3.6.0–3.6.22, 3.7.0–3.7.6) — and the related StripPrefix CVE-2026-48020 — so they can be patched to v2.11.52 / v3.6.23 / v3.7.7 before the ReplacePathRegex bypass is exploited.
 
-Rationale: Uses the exact CVE ID (CVE-2026-65600) and, via TVM, the affected version ranges confirmed by the GHSA advisory and GitLab advisory DB (&lt;=2.11.51, 3.6.0-3.6.22, 3.7.0-3.7.6, v1&lt;=1.7.34). Internet-facing join prioritizes the reachable, exploitable instances.
+Rationale: Uses the two concrete CVE IDs and the patched-version boundaries from the advisory (v2.11.52 / v3.6.23 / v3.7.7) to identify still-vulnerable Traefik installs from managed software inventory — a clean, zero-FP exposure pivot that maps directly to the reviewer&#x27;s version-enumeration suggestion. Version ranges cross-checked against the GitLab and SentinelOne advisories.
 
 Cross-checked against:
-  • https://github.com/traefik/traefik/security/advisories/GHSA-cxjq-mrr5-89rv
-  • https://app.opencve.io/cve/CVE-2026-48020</div>
+  • https://advisories.gitlab.com/golang/github.com/traefik/traefik/v2/CVE-2026-65600/
+  • https://www.sentinelone.com/vulnerability-database/cve-2026-48020/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Traefik instance behind a WAF/network segmentation that blocks external reach (still worth patching but lower urgency)</li><li>Non-production/lab Traefik flagged alongside production</li><li>Traefik deployment that does not use ReplacePathRegex at all (vulnerable version present but not the vulnerable config in use)</li><li>TVM inventory lag showing a version that was already upgraded</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each hit, confirm whether the Traefik router config actually uses ReplacePathRegex without a mandatory slash separator (the exploitable pattern) and whether the host is internet-facing. 2) Contain: schedule/expedite upgrade to v2.11.52, v3.6.23, or v3.7.7; as interim mitigation change vulnerable regexes from ^/api(.*) to ^/api/(.*). 3) Hunt: for any internet-facing vulnerable host, retro-hunt its web/proxy logs for the traversal signatures from UC1/UC2 to rule out prior exploitation before patching.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Traefik running only with non-vulnerable middleware config (StripPrefix(&#x27;/api/&#x27;) with mandatory slash) — flagged as vulnerable-version but not actually exploitable</li><li>Internal-only Traefik instances not reachable by an unauthenticated network attacker</li><li>Containers already scheduled for the patched image but inventory not yet refreshed</li><li>Air-gapped/dev Traefik with no auth middleware in play</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: for each flagged host, confirm Traefik is internet- or partner-facing and that it uses ReplacePathRegex (or StripPrefix) on a public PathPrefix router paired with an auth-protected sibling router. 2) Contain: prioritize upgrade to v2.11.52 / v3.6.23 / v3.7.7; where upgrade is delayed, change the regex to require a mandatory separator (^/api/(.*)) or add a WAF rule dropping `..`/`%2e%2e` paths. 3) Hunt: pivot each confirmed-exposed host into the UC1/UC2 web-log detections to check whether the bypass has already been attempted or succeeded.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-09-uc2-sentinel">Sentinel KQL</button>
     </div>
     <div class="tab-content active" id="art-09-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-65600&quot;
-| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| join kind=leftouter (DeviceInfo | where IsInternetFacing == true | project DeviceId, IsInternetFacing) on DeviceId
-| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
+| where CveId in (&quot;CVE-2026-65600&quot;, &quot;CVE-2026-48020&quot;)
+| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc</code></pre></div>
     <div class="tab-content" id="art-09-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(1d)
-| where CveId == &quot;CVE-2026-65600&quot;
-| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId in (&quot;CVE-2026-65600&quot;, &quot;CVE-2026-48020&quot;)
+| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by DeviceName asc</code></pre></div>
   </div>
 </details>
@@ -5993,8 +5976,8 @@ DeviceFileEvents
   data-platforms="def,sent,sigma,spl"
   data-splunk-cats="application,endpoint,web"
   data-targets="azure,m365,windows"
-  data-uc-count="7" data-llm-uc-count="1"
-  data-search="New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD CPUs An unprivileged Linux program can time a hardware interrupt to land in the gap between a processor sanitizing its branch predictor and the kernel using it, re-poisoning the predictor after the defense has run. MIT CSAIL researchers Daniël Trujillo and Mengjia Yan named the technique INTERRUPT INJECTION. On an AMD Zen 2 machine running Linux 6.14 with every default Spectre v2 mitigation on, CVE-2023-20569 T1190 T1566 T1566.002 [LLM] Exposure hunt: AMD hosts still vulnerable to Inception (CVE-2023-20569), the Interrupt Injection training gadget Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Article-specific behavioural hunt — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C">
+  data-uc-count="6" data-llm-uc-count="0"
+  data-search="New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD CPUs An unprivileged Linux program can time a hardware interrupt to land in the gap between a processor sanitizing its branch predictor and the kernel using it, re-poisoning the predictor after the defense has run. MIT CSAIL researchers Daniël Trujillo and Mengjia Yan named the technique INTERRUPT INJECTION. On an AMD Zen 2 machine running Linux 6.14 with every default Spectre v2 mitigation on, CVE-2023-20569 T1190 T1566 T1566.002 Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Article-specific behavioural hunt — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-08-06-new-interrupt-injection-attack-can-bypass-spectre-v2-defense" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -6003,7 +5986,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-08-06</span>
-    <span>7 use cases</span>
+    <span>6 use cases</span>
     <span>3 techniques</span>
     <span>4 kill-chain phases detected</span>
   </div>
@@ -6054,51 +6037,12 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Exposure hunt: AMD hosts still vulnerable to Inception (CVE-2023-20569), the Interrupt Injection training gadget · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="c2496be90e" data-platforms="def,sent" data-targets="" open>
-  <summary>
-    <span class="uc-title">Exposure hunt: AMD hosts still vulnerable to Inception (CVE-2023-20569), the Interrupt Injection training gadget</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c2496be90e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces managed hosts whose vulnerability inventory still reports CVE-2023-20569 (Inception). The MIT Interrupt Injection / TONTOU attack re-poisons the branch predictor after saferet runs and then uses Inception to fill the return stack buffer with an attacker-chosen target, speculatively leaking kernel memory (e.g. /etc/shadow). A host confirmed exposed to Inception is the concrete, queryable prerequisite for this otherwise telemetry-invisible microarchitectural attack.
-
-Rationale: Uses the one hard string in the article — CVE-2023-20569 (Inception) — which the paper names as the gadget that arms the Interrupt Injection primitive; cross-checked against AMD-SB-7061 and NVD/Red Hat/MSRC entries confirming Inception is the AMD flaw saferet mitigates. The interrupt-timing primitive itself produces no collectable endpoint telemetry, so exposure to the prerequisite CVE is the only executable, article-specific pivot.
-
-Cross-checked against:
-  • https://www.amd.com/en/resources/product-security/bulletin/amd-sb-7005.html
-  • https://nvd.nist.gov/vuln/detail/CVE-2023-20569
-  • https://access.redhat.com/security/cve/cve-2023-20569
-  • https://www.phoronix.com/news/Linux-Safe-RET-Interrupt-Vuln
-  • https://www.linuxcompatible.org/story/linux-kernel-61843-66149-and-61181-patches-new-spectre-v2-interrupt-injection-flaw</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Microcode/OS-level mitigation already applied but TVM inventory not yet refreshed, so the CVE lingers as stale inventory</li><li>Non-AMD or non-Linux hosts erroneously tagged by a scanner plugin (Inception is AMD Zen-specific; validate SoftwareVendor/OSPlatform)</li><li>Air-gapped or single-tenant hosts with no untrusted local code execution — technically vulnerable but not realistically exploitable</li><li>Hosts pending reboot after a kernel/microcode update where the fix is staged but not active</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where OSPlatform has &quot;Linux&quot; and SoftwareVendor has &quot;AMD&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is AMD Zen 1-4 running Linux and that untrusted local code execution is possible (shared/multi-tenant, CI runners, jump boxes); prioritize those over single-user endpoints. 2) Contain: apply the Linux Safe-RET interrupt fix (commit &#x27;x86/bugs: Make Safe-RET robust against interrupt injection&#x27;; shipped in 6.1.181 / 6.6.149 / 6.18.43 and LTS 5.10.263 / 5.15.214) plus current AMD microcode, then reboot; on cloud/shared hosts consider disabling SMT and restricting untrusted tenants until patched. 3) Hunt: enumerate all AMD Linux hosts and read /sys/devices/system/cpu/vulnerabilities/spec_rstack_overflow across the fleet to distinguish patched from exposed, since the fix carries no CVE and no advisory kernel-version reference.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc0-sentinel">Sentinel KQL</button>
-    </div>
-    <div class="tab-content active" id="art-10-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(7d)
-| where CveId == &quot;CVE-2023-20569&quot;
-| summarize LastSeen = max(Timestamp) by DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-10-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2023-20569&quot;
-| summarize LastSeen = max(TimeGenerated) by DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by LastSeen desc</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -6113,11 +6057,11 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-10-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-10-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-10-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-10-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-10-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-10-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -6126,7 +6070,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-10-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -6138,12 +6082,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-10-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2023-20569&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-10-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-10-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2023-20569&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -6175,11 +6119,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-10-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-10-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-10-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-10-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-10-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-10-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -6219,7 +6163,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-10-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-10-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -6244,7 +6188,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-10-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -6276,7 +6220,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-10-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-10-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -6326,11 +6270,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-10-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-10-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-10-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-10-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-10-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-10-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -6344,7 +6288,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-10-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-10-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -6367,7 +6311,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-10-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -6378,7 +6322,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-10-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-10-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -6407,18 +6351,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-10-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-10-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-10-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-10-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-10-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-10-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-10-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-10-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-10-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-10-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -6441,7 +6385,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-10-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -6485,13 +6429,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-10-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-10-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-10-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -6515,19 +6459,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-10-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-10-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-10-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-10-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-10-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-10-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-10-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-10-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-10-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-10-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -6541,7 +6485,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-10-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -6585,7 +6529,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-10-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-10-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -6593,7 +6537,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-10-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-10-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -6619,11 +6563,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-10-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-10-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-10-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-10-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-10-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-10-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-10-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C
+    <div class="tab-content active" id="art-10-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -6636,7 +6580,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-10-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-10-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C
@@ -6652,14 +6596,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-10-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C ```
+    <div class="tab-content" id="art-10-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-10-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-10-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-10-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/etc/shadow*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-10-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-10-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — New Interrupt Injection Attack Can Bypass Spectre v2 Defenses on Intel and AMD C ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
