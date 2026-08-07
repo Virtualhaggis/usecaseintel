@@ -1,38 +1,23 @@
-# [CRIT] Chinese Threat Actor Uses Leaked DarkSword Kit to Deploy GHOSTBLADE on iOS
+# [CRIT] New WordPress Pre-Auth XSS Could Lead to PHP Code Execution - Patch ASAP
 
 **Source:** The Hacker News
-**Published:** 2026-08-03
-**Article:** https://thehackernews.com/2026/08/chinese-threat-actor-uses-leaked.html
+**Published:** 2026-08-07
+**Article:** https://thehackernews.com/2026/08/new-wordpress-pre-auth-xss-could-lead.html
 
 ## Threat Profile
 
-Chinese Threat Actor Uses Leaked DarkSword Kit to Deploy GHOSTBLADE on iOS 
- Ravie Lakshmanan  Aug 03, 2026 Mobile Security / Vulnerability 
-An unknown Chinese-threat actor has been observed running a campaign targeting Apple iOS devices by leveraging a publicly leaked version of the DarkSword exploit kit.
-Attack surface management platform Censys said it identified the threat actor running more than 100 web properties, most of which are fake Amazon Web Services (AWS) sign-in pages on a domain…
+New WordPress Pre-Auth XSS Could Lead to PHP Code Execution - Patch ASAP 
+ Swati Khandelwal  Aug 07, 2026 Web Security / Vulnerability 
+WordPress has fixed a pre-authentication reflected cross-site scripting (XSS) flaw in its login screen that affects every version of the content management system. Under additional conditions, the bug can be chained into PHP code execution on the server.
+Tracked as CVE-2026-64638 (CVSS score: 8.9), the High-severity vulnerability requires no attacker privilege…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `38.181.52.95`
-- **IPv4 (defanged):** `103.106.190.217`
-- **IPv4 (defanged):** `38.22.89.117`
-- **IPv4 (defanged):** `103.97.128.67`
-- **IPv4 (defanged):** `162.4.136.30`
-- **IPv4 (defanged):** `223.26.63.56`
-- **IPv4 (defanged):** `151.243.126.191`
-- **IPv4 (defanged):** `107.175.49.181`
-- **IPv4 (defanged):** `103.238.129.112`
-- **IPv4 (defanged):** `103.226.155.200`
-- **IPv4 (defanged):** `103.226.155.201`
-- **IPv4 (defanged):** `202.8.120.249`
-- **IPv4 (defanged):** `93.152.221.37`
-- **Domain (defanged):** `t.me/YATA0000`
+- **CVE:** `CVE-2026-64638`
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -41,12 +26,11 @@ Attack surface management platform Censys said it identified the threat actor ru
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
-- **T1189** — Drive-by Compromise
-- **T1203** — Exploitation for Client Execution
-- **T1567** — Exfiltration Over Web Service
-- **T1102** — Web Service
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1212** — Exploitation for Credential Access
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
@@ -54,96 +38,70 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Egress to DarkSword/GHOSTBLADE exploit-panel and C2 infrastructure IPs
+### WordPress CVE-2026-64638 login-screen XSS payload in wp-login.php request
 
-`UC_99_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_0_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Web where Web.url="*wp-login.php*" AND (Web.uri_query="*%3C%20*" OR Web.uri_query="*%3C+*" OR Web.uri_query="*%3C%09*" OR Web.uri_query="*%3c%20*" OR Web.uri_query="*%3c+*") by Web.src, Web.dest, Web.url, Web.uri_query, Web.http_referrer, Web.http_user_agent, Web.status | drop_dm_object_name(Web) | sort - count
+```
+
+### WordPress REST JSONP + _envelope=1 401-wrapping abuse (XSS2Shell execution)
+
+`UC_0_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where Web.url="*/wp-json/*" AND Web.uri_query="*_jsonp=*" AND Web.uri_query="*_envelope=1*" by Web.src, Web.dest, Web.url, Web.uri_query, Web.status, Web.http_user_agent | drop_dm_object_name(Web) | sort - count
+```
+
+### WordPress Application Password approval redirected to external success_url
+
+`UC_0_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where Web.uri_path="*authorize-application.php*" AND Web.uri_query="*success_url=http*" by Web.src, Web.dest, Web.uri_path, Web.uri_query, Web.http_user_agent, Web.status | drop_dm_object_name(Web) | rex field=uri_query "success_url=(?<success_url>https?[^&]+)" | eval success_host=replace(success_url,"https?(?:%3A%2F%2F|://)([^%/&]+).*","\1") | where success_host!=dest | sort - count
+```
+
+### Malicious PHP file written under wp-content/plugins by web-server worker
+
+`UC_0_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/wp-content/plugins/*" AND Filesystem.file_name="*.php" by Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.action | drop_dm_object_name(Filesystem) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let DarkSwordIPs = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112","103.226.155.200","103.226.155.201","202.8.120.249","93.152.221.37"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (DarkSwordIPs)
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Attempts=count(), Ports=make_set(RemotePort), Urls=make_set(RemoteUrl) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, InitiatingProcessAccountName
-| order by LastSeen desc
-```
-
-### Browser web session to fake AWS-console / Apple ID DarkSword watering-hole hosts
-
-`UC_99_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest_ip IN ("38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112") AND Web.http_user_agent="*Mozilla*" by Web.src Web.dest_ip Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let PhishHosts = dynamic(["38.181.52.95","103.106.190.217","38.22.89.117","103.97.128.67","162.4.136.30","223.26.63.56","151.243.126.191","107.175.49.181","103.238.129.112"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari","arc.exe","opera.exe")
-| where RemoteIP in (PhishHosts)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has "/wp-content/plugins/"
+| where FileName endswith ".php"
+| where InitiatingProcessFileName has_any ("php-fpm","php","httpd","apache2","nginx")
+| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Proxy hunt for DarkSword operator Telegram contact channel t.me/YATA0000
+### WordPress PHP worker spawning OS shell (web-shell command execution)
 
-`UC_99_8` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_0_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*t.me/YATA0000*" OR Web.url="*/YATA0000*" by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("php-fpm","php","httpd","apache2","nginx") AND Processes.process_name IN ("sh","bash","dash","curl","wget","python3","perl","nc","ncat") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | drop_dm_object_name(Processes) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "YATA0000" or RemoteUrl has_all ("t.me","YATA0000")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("php-fpm","php","httpd","apache2","nginx")
+| where FileName in~ ("sh","bash","dash","curl","wget","python","python3","perl","nc","ncat")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc
-```
-
-### Beaconing — periodic outbound to small set of destinations
-
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -322,14 +280,63 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### Article-specific behavioural hunt — New WordPress Pre-Auth XSS Could Lead to PHP Code Execution - Patch ASAP
+
+`UC_0_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — New WordPress Pre-Auth XSS Could Lead to PHP Code Execution - Patch ASAP ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("user-profile.js"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("user-profile.js"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — New WordPress Pre-Auth XSS Could Lead to PHP Code Execution - Patch ASAP
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("user-profile.js"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("user-profile.js"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `38.181.52.95`, `103.106.190.217`, `38.22.89.117`, `103.97.128.67`, `162.4.136.30`, `223.26.63.56`, `151.243.126.191`, `107.175.49.181` _(+6 more)_
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-64638`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

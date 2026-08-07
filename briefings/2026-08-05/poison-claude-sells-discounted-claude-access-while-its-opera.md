@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Egress to Poison Claude / Ecomagent LLM relay proxy domains (prompt exfiltration)
 
-`UC_40_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### Claude Code redirected to a rogue endpoint via ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN env var
 
-`UC_40_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_43_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

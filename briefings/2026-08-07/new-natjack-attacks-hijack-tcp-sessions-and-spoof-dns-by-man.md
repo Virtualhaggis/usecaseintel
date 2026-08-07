@@ -28,7 +28,7 @@ Presented at Black Hat USA 2026 , the research found affected behavior across in
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1557** — Adversary-in-the-Middle
-- **T1499** — Endpoint Denial of Service
+- **T1040** — Network Sniffing
 - **T1498** — Network Denial of Service
 
 ## Kill chain phases observed
@@ -37,43 +37,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NatJack Windows Hyper-V NAT (WinNAT) unpatched surface for CVE-2026-56181
+### Exposed hosts vulnerable to NatJack Windows NAT/Hyper-V origin-validation flaw (CVE-2026-56181)
 
-`UC_2_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-56181" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-56181" by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature, Vulnerabilities.category
 | `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - severity
 ```
 
 **Defender KQL:**
 ```kql
-DeviceInfo
+DeviceTvmSoftwareVulnerabilities
 | where Timestamp > ago(1d)
-| summarize arg_max(Timestamp, *) by DeviceId
-| where OSPlatform in ("Windows11","WindowsServer2025")
-| extend Rev = toint(OSRevision)
-| where (OSPlatform == "Windows11" and OSBuild == "26100" and Rev < 8875)   // 24H2 fixed at 26100.8875
-    or (OSPlatform == "Windows11" and OSBuild == "26200" and Rev < 8875)   // 25H2 fixed at 26200.8875
-    or (OSPlatform == "Windows11" and OSBuild == "28000" and Rev < 2525)   // 26H1 fixed at 28000.2525
-    or (OSPlatform == "WindowsServer2025" and OSBuild == "26100" and Rev < 33158)  // Server 2025 fixed at 26100.33158
-| project Timestamp, DeviceName, DeviceId, OSPlatform, OSBuild, OSRevision, OSVersion, IsInternetFacing
-| order by IsInternetFacing desc, DeviceName asc
+| where CveId == "CVE-2026-56181"
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, OSBuild, OSRevision, IsInternetFacing) by DeviceId
+  ) on DeviceId
+| project DeviceName, DeviceId, CveId, VulnerabilitySeverityLevel, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, OSPlatform, OSVersion, OSBuild, OSRevision, IsInternetFacing
+| sort by IsInternetFacing desc, VulnerabilitySeverityLevel asc
 ```
 
-### NatJack Linux Netfilter conntrack unpatched surface for CVE-2026-63913
+### Exposed hosts vulnerable to NatJack Linux Netfilter conntrack SYN/RST teardown (CVE-2026-63913)
 
-`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-63913" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-63913" by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature, Vulnerabilities.category
 | `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort - severity
 ```
 
 **Defender KQL:**
@@ -81,21 +80,13 @@ DeviceInfo
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp > ago(1d)
 | where CveId == "CVE-2026-63913"
-| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
-```
-
-### NatJack NAT-table exhaustion via Netfilter conntrack table-full drops (Linux DoS path)
-
-`UC_2_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=* sourcetype IN (linux_messages_syslog,syslog,linux_secure) "nf_conntrack: table full, dropping packet"
-| stats count as DropCount, min(_time) as firstTime, max(_time) as lastTime, dc(_time) as DistinctSeconds by host
-| where DropCount > 20   // 20 = sustained flood; occasional single drops under legit load are normal
-| convert ctime(firstTime) ctime(lastTime)
-| sort - DropCount
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, OSPlatform, OSDistribution, OSVersion, IsInternetFacing) by DeviceId
+  ) on DeviceId
+| project DeviceName, DeviceId, CveId, VulnerabilitySeverityLevel, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, OSPlatform, OSDistribution, OSVersion, IsInternetFacing
+| sort by IsInternetFacing desc, VulnerabilitySeverityLevel asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -284,4 +275,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

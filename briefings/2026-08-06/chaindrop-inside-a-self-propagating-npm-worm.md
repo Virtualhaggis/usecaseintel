@@ -292,7 +292,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ChainDrop: Inside a Self-Propagating npm Worm
 
-`UC_8_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

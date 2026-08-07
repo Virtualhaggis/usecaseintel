@@ -11,9 +11,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-08-07
 - [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
 - [claude code and gemini cli flaws let a github issue reach ci](./2026-08-07/claude-code-and-gemini-cli-flaws-let-a-github-issue-reach-ci.md)
+- [growing up the hard way](./2026-08-07/growing-up-the-hard-way.md)
 - [malware can abuse windows hello for business keys for persis](./2026-08-07/malware-can-abuse-windows-hello-for-business-keys-for-persis.md)
 - [microsoft 365 aitm phishing hijacks accounts to collect payr](./2026-08-07/microsoft-365-aitm-phishing-hijacks-accounts-to-collect-payr.md)
 - [new natjack attacks hijack tcp sessions and spoof dns by man](./2026-08-07/new-natjack-attacks-hijack-tcp-sessions-and-spoof-dns-by-man.md)
+- [new wordpress pre auth xss could lead to php code execution ](./2026-08-07/new-wordpress-pre-auth-xss-could-lead-to-php-code-execution-.md)
 - [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
 
 ## 2026-08-06
@@ -95,13 +97,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
 - [an analysis of incidents at brazilian educational institutio](./2026-08-03/an-analysis-of-incidents-at-brazilian-educational-institutio.md)
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
-- [chinese threat actor uses leaked darksword kit to deploy gho](./2026-08-03/chinese-threat-actor-uses-leaked-darksword-kit-to-deploy-gho.md)
 - [cisa kev cve 2026 18577 n able n central authentication bypa](./2026-08-03/cisa-kev-cve-2026-18577-n-able-n-central-authentication-bypa.md)
 - [ghsa critical cve 2026 69240 sequelize sql injection oracle ](./2026-08-03/ghsa-critical-cve-2026-69240-sequelize-sql-injection-oracle-.md)
 - [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
 - [inc ransomware emerges as dominant actor exploiting sonicwal](./2026-08-03/inc-ransomware-emerges-as-dominant-actor-exploiting-sonicwal.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
-- [pnld breach exposes u k police and government contact detail](./2026-08-03/pnld-breach-exposes-u-k-police-and-government-contact-detail.md)
 
 ## 2026-07-31
 - [anthropic s fever dream claude s package that stole real key](./2026-07-31/anthropic-s-fever-dream-claude-s-package-that-stole-real-key.md)

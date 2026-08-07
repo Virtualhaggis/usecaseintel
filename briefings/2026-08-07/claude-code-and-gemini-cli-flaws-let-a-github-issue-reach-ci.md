@@ -28,14 +28,17 @@ Novee Security ran the attack against each vendor's agent in the configuration t
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1027** — Obfuscated Files or Information
-- **T1567.002** — Exfiltration Over Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1211** — Exploitation for Defense Evasion
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1059** — Command and Scripting Interpreter
-- **T1195** — Supply Chain Compromise
+- **T1554** — Compromise Host Software Binary
 - **T1546** — Event Triggered Execution
 - **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1036** — Masquerading
+- **T1574** — Hijack Execution Flow
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -43,104 +46,101 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Gemini CLI OS command injection via crafted .gemini/.env on CI runner (CVE-2026-12537)
+### Claude Code validator bypass: git push --receive-pack command injection
 
-`UC_4_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/.gemini/.env" OR Filesystem.file_path="*\\.gemini\\.env" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName =~ ".env"
-| where FolderPath has "/.gemini/" or FolderPath has "\\.gemini\\"
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### git push --receive-pack command injection (Claude Code validator single-quote bypass)
-
-`UC_4_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=git AND Processes.process="*--receive-pack*" by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | regex process="--receive-pack[=\s]\S*[;&|`$><]" | `security_content_ctime(firstTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=git.exe OR Processes.process_name=git) Processes.process="*--receive-pack=*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("git","git.exe")
-| where ProcessCommandLine has "--receive-pack"
-| where ProcessCommandLine matches regex @"--receive-pack[=\s]\S*[;&|`$><]"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where FileName in~ ("git.exe","git")
+| where ProcessCommandLine has "--receive-pack="
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, FolderPath
 | order by Timestamp desc
 ```
 
-### Claude Code API-key exfiltration via huggingface.co WebFetch download counter (CVE-2026-54316)
+### Claude Code API-key exfil via Hugging Face download-counter (CVE-2026-54316)
 
-`UC_4_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count dc(Web.url) as distinct_urls values(Web.url) as urls from datamodel=Web where Web.url="*huggingface.co*" by Web.src Web.dest Web.user _time span=10m | `drop_dm_object_name(Web)` | where count > 20 | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*huggingface.co*" by All_Traffic.src All_Traffic.app _time span=10m | `drop_dm_object_name(All_Traffic)` | where count > 30 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteUrl has "huggingface.co" or RemoteUrl has "hf.co"
-| where InitiatingProcessFileName in~ ("node","claude","claude-code")
-| summarize RequestCount = count(), DistinctUrls = dcount(RemoteUrl), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleUrls = make_set(RemoteUrl, 20) by DeviceName, InitiatingProcessFileName, InitiatingProcessId, bin(Timestamp, 10m)
-| where RequestCount > 20  // char-by-char key exfil = many small fetches in a 10m window
-| order by RequestCount desc
+| where Timestamp > ago(7d)
+| where RemoteUrl has "huggingface.co"
+| where InitiatingProcessFileName in~ ("node.exe","node","claude") or InitiatingProcessCommandLine has_any ("claude","@anthropic-ai/claude-code")
+| summarize Requests=count(), DistinctUrls=dcount(RemoteUrl), Start=min(Timestamp), End=max(Timestamp) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 10m)
+| where Requests > 30
+| order by Requests desc
 ```
 
-### OpenAI Codex AGENTS.md instruction-file poisoning between passes on shared checkout
+### Gemini CLI OS command injection via crafted .gemini/.env (CVE-2026-12537)
 
-`UC_4_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_7_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="AGENTS.md" AND Filesystem.action IN ("created","modified") by Filesystem.dest Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=".env" Filesystem.file_path="*.gemini*" by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "AGENTS.md"
-| where ActionType in ("FileCreated","FileModified")
-| where InitiatingProcessFileName in~ ("codex","node") or InitiatingProcessCommandLine has "codex"
-| project Timestamp, DeviceName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where FileName == ".env"
+| where FolderPath has ".gemini"
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### ChainDrop worm persistence: Claude Code SessionStart hook / VS Code folderOpen task planted in repo
+### ChainDrop persistence: Claude Code SessionStart hook / VS Code folderOpen task drop
 
-`UC_4_9` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_7_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.claude/settings.json" OR Filesystem.file_path="*/.claude/settings.local.json" OR Filesystem.file_path="*/.vscode/tasks.json") AND Filesystem.action IN ("created","modified") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*.vscode*" Filesystem.file_name="tasks.json") OR (Filesystem.file_path="*.claude*" Filesystem.file_name="settings.json") OR (Filesystem.file_path="*.claude*" Filesystem.file_name="settings.local.json") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has "/.claude/" and FileName in~ ("settings.json","settings.local.json"))
-     or (FolderPath has "/.vscode/" and FileName =~ "tasks.json")
-| where InitiatingProcessFileName in~ ("npm","node","yarn","pnpm","git") or InitiatingProcessCommandLine has_any ("npm install","postinstall","npm ci")
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where (FolderPath has ".vscode" and FileName =~ "tasks.json")
+    or (FolderPath has ".claude" and FileName in~ ("settings.json","settings.local.json"))
+| where InitiatingProcessFileName in~ ("git","git.exe","node","node.exe","npm","npm.exe","tar","tar.exe") or InitiatingProcessCommandLine has_any ("clone","checkout","install")
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Codex second-pass hijack: AGENTS.md written inside a CI checkout
+
+`UC_7_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="AGENTS.md" (Filesystem.process_name=node.exe OR Filesystem.process_name=node OR Filesystem.process_name=codex OR Filesystem.process_name=python.exe OR Filesystem.process_name=python) by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "AGENTS.md"
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessFileName in~ ("node.exe","node","codex","python.exe","python","sh","bash") or InitiatingProcessCommandLine has "codex"
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -330,4 +330,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

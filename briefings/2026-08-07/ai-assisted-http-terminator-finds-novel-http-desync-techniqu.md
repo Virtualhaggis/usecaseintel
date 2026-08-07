@@ -35,18 +35,6 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### HTTP desync probe: multipart/byteranges Content-Type in inbound request (PortSwigger HTTP Terminator vector)
-
-`UC_1_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count as request_count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_content_type="*multipart/byteranges*" by Web.src Web.dest Web.http_method Web.uri_path Web.http_content_type Web.status
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -262,4 +250,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

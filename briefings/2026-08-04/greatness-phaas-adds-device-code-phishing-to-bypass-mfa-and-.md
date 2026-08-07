@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Entra ID device-code flow authentication (Greatness device-code phishing redemption)
 
-`UC_66_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_69_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ AADSignInEventsBeta
 
 ### M365 authentication from known Greatness AiTM proxy IP 38.248.95.214
 
-`UC_66_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_69_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ AADSignInEventsBeta
 
 ### New device registration / PRT generation minutes after a device-code sign-in
 
-`UC_66_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_69_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ AADSignInEventsBeta
 
 ### Malicious inbox rule created hours after anomalous M365 sign-in
 
-`UC_66_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_69_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ CloudAppEvents
 
 ### RingCentral voicemail phishing lure delivered despite SPF/DKIM/DMARC failure (safe-sender bypass)
 
-`UC_66_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_69_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ EmailEvents
 
 ### Navigation / DNS to Greatness PhaaS phishing infrastructure domains
 
-`UC_66_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_69_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ union
 
 ### Post-compromise Microsoft Graph enumeration across many M365 resources in minutes
 
-`UC_66_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_69_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ AADSignInEventsBeta
 
 ### Inbound email containing Microsoft device-code / devicelogin URL from external phishing context
 
-`UC_66_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_69_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

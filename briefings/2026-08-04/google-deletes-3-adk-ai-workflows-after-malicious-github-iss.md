@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Git core.hooksPath redirected to writable temp dir on CI runner (ADK allowlist bypass)
 
-`UC_77_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_80_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Git spawning shell/interpreter from runner temp dir (hook payload execution)
 
-`UC_77_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_80_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
