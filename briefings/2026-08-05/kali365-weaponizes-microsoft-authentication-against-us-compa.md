@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### Kali365 device-code-flow authentication used by a standard M365 user
 
-`UC_61_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_64_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ AADSignInEventsBeta
 
 ### Kali365 concurrent device-code sign-in: same user, 2+ IPs/countries in one hour
 
-`UC_61_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_64_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ AADSignInEventsBeta
 
 ### Host or mailbox contact with Kali365 lure domains (SharePoint/OneDrive/DocuSign decoys)
 
-`UC_61_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_64_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

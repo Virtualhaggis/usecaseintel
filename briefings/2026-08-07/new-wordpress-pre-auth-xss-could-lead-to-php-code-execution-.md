@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress CVE-2026-64638 login-screen XSS payload in wp-login.php request
 
-`UC_13_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_16_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress REST JSONP + _envelope=1 401-wrapping abuse (XSS2Shell execution)
 
-`UC_13_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_16_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### WordPress Application Password approval redirected to external success_url
 
-`UC_13_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious PHP file written under wp-content/plugins by web-server worker
 
-`UC_13_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_16_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### WordPress PHP worker spawning OS shell (web-shell command execution)
 
-`UC_13_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_16_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -282,7 +282,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New WordPress Pre-Auth XSS Could Lead to PHP Code Execution - Patch ASAP
 
-`UC_13_5` · phase: **exploit** · confidence: **High**
+`UC_16_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

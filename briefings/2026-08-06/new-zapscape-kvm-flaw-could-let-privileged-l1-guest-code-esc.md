@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Zapscape KVM escape artifact: root-owned /Zapscape file created on host
 
-`UC_31_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_34_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Exposure hunt: KVM hosts vulnerable to Zapscape (CVE-2026-64561)
 
-`UC_31_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_34_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

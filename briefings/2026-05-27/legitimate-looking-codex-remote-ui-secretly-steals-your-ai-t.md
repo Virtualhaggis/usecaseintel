@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### DNS/HTTPS exfil to sentry.anyclaw.store (Codex token C2 masquerading as Sentry)
 
-`UC_416_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_414_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### npm/pnpm install of trojanized codexui-android package on developer endpoint
 
-`UC_416_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_414_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ union isfuzzy=true
 
 ### Non-Codex-CLI node process reading ~/.codex/auth.json (Codex OAuth credential theft)
 
-`UC_416_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_414_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceFileEvents
 
 ### HTTPS POST to /startlog with codexui User-Agent (Codex exfil over the wire)
 
-`UC_416_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_414_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### Android device installed gptos.intelligence.assistant or codex.app (mobile delivery of Codex token stealer)
 
-`UC_416_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_414_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Legitimate-Looking Codex Remote UI Secretly Steals Your AI Tokens
 
-`UC_416_5` · phase: **exploit** · confidence: **High**
+`UC_414_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

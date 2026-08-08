@@ -1,29 +1,19 @@
-# [CRIT] CISA Adds Exploited N-able N-central Flaw to KEV After Customer Compromises
+# [CRIT] New CSS Attacks Can Break Webmail Defenses to Steal Passwords and Tokens
 
 **Source:** The Hacker News
-**Published:** 2026-08-04
-**Article:** https://thehackernews.com/2026/08/cisa-adds-exploited-n-able-n-central.html
+**Published:** 2026-08-08
+**Article:** https://thehackernews.com/2026/08/new-css-attacks-can-break-webmail.html
 
 ## Threat Profile
 
-CISA Adds Exploited N-able N-central Flaw to KEV After Customer Compromises 
- Ravie Lakshmanan  Aug 04, 2026 Vulnerability / Enterprise Security 
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) on Monday added a high-severity security flaw impacting N-able N-central to its Known Exploited Vulnerabilities ( KEV ) catalog following reports of active exploitation in the wild.
-The vulnerability, tracked as CVE-2026-18577 (CVSS score: 8.2), is a case of incomplete patching for CVE-…
+New CSS Attacks Can Break Webmail Defenses to Steal Passwords and Tokens 
+ Swati Khandelwal  Aug 08, 2026 Email Security / Vulnerability 
+New research shows content inside an email can escape its message boundary and interfere with the webmail interface.
+Across attack chains spanning Outlook, Gmail, Fastmail, Proton Mail, Yahoo Mail, and AOL Mail, the techniques can capture passwords, take over third-party accounts, leak tokens, hijack trusted UI actions, and manipulate AI tools that read emai…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-18577`
-- **CVE:** `CVE-2026-18556`
-- **IPv4 (defanged):** `173.249.252.200`
-- **IPv4 (defanged):** `87.249.138.34`
-- **IPv4 (defanged):** `37.19.210.32`
-- **IPv4 (defanged):** `68.235.46.214`
-- **IPv4 (defanged):** `37.153.90.88`
-- **IPv4 (defanged):** `92.118.112.181`
-- **Domain (defanged):** `mousears.synology.me`
-- **Domain (defanged):** `wagoosh.direct.quickconnect.to`
-- **Domain (defanged):** `who-ripped-one.direct.quickconnect.to`
+- **CVE:** `CVE-2026-50522`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,103 +26,12 @@ The vulnerability, tracked as CVE-2026-18577 (CVSS score: 8.2), is a case of inc
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1543.003** — Create or Modify System Process: Windows Service
-- **T1572** — Protocol Tunneling
-- **T1133** — External Remote Services
-- **T1078** — Valid Accounts
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### N-central intrusion: svchost.exe masquerading in a user Documents folder
-
-`UC_95_7` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="svchost.exe" Filesystem.file_path="*\\Documents\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "svchost.exe"
-| where FolderPath has @"\Documents\"
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Cloudflared tunnel service persistence on N-central-managed host
-
-`UC_95_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Services\\Cloudflared*" by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data
-| `drop_dm_object_name(Registry)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where RegistryKey has @"\Services\Cloudflared"
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Inbound/outbound connections to N-central intrusion VPN exit-node IOC IPs
-
-`UC_95_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("173.249.252.200","87.249.138.34","37.19.210.32","68.235.46.214","37.153.90.88","92.118.112.181") OR All_Traffic.src_ip IN ("173.249.252.200","87.249.138.34","37.19.210.32","68.235.46.214","37.153.90.88","92.118.112.181")) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let iocIPs = dynamic(["173.249.252.200","87.249.138.34","37.19.210.32","68.235.46.214","37.153.90.88","92.118.112.181"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (iocIPs)
-| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### DNS/network to N-central intrusion Synology QuickConnect tunnel domains
-
-`UC_95_10` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("mousears.synology.me","wagoosh.direct.quickconnect.to","who-ripped-one.direct.quickconnect.to") by DNS.src DNS.query DNS.answer
-| `drop_dm_object_name(DNS)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let iocDomains = dynamic(["mousears.synology.me","wagoosh.direct.quickconnect.to","who-ripped-one.direct.quickconnect.to"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl in~ (iocDomains)
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -310,44 +209,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-18577`, `CVE-2026-18556`
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `173.249.252.200`, `87.249.138.34`, `37.19.210.32`, `68.235.46.214`, `37.153.90.88`, `92.118.112.181`, `mousears.synology.me`, `wagoosh.direct.quickconnect.to` _(+1 more)_
+  - CVE(s): `CVE-2026-50522`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

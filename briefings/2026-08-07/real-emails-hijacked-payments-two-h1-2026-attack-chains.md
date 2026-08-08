@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Auth-passing inbound shipment/invoice email carrying a script or archive attachment
 
-`UC_11_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_14_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -71,7 +71,7 @@ EmailEvents
 
 ### Script-host JavaScript dropper spawning PowerShell from mail/download path
 
-`UC_11_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Proxy config / AutoConfigURL modified by a scripting or loader process (banking-session interception)
 
-`UC_11_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_14_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceRegistryEvents
 
 ### EtherHiding C2 resolution: non-browser process querying Binance Smart Chain RPC nodes
 
-`UC_11_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_14_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

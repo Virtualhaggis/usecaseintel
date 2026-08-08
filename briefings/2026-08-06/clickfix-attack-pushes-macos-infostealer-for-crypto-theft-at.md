@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### macOS ClickFix Terminal loader: curl -kfsSL to raw IP piped to bash from /tmp
 
-`UC_24_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_27_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### macOS Gatekeeper bypass: xattr strips com.apple.quarantine from Apple-masquerading payload in ~/Library/Caches
 
-`UC_24_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### macOS osascript fake admin-password dialog for credential/privilege capture
 
-`UC_24_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_27_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### macOS credential theft: cache-dir binary reading Apple Keychain and browser credential stores
 
-`UC_24_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_27_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceFileEvents
 
 ### macOS endpoint C2 to Aeza (AS210644) crypto-stealer infrastructure incl. 138.124.118.69:8133
 
-`UC_24_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_27_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

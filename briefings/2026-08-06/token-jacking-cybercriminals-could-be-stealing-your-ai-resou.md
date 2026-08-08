@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound traffic to known AI token-jacking transfer-station infrastructure (Unit42 IPs)
 
-`UC_42_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_45_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Transfer-station client fingerprint: Go-http-client/2.0,gzip(gfe) user-agent in web egress
 
-`UC_42_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_45_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### AI resource key creation paired with logging/alert teardown in cloud control plane
 
-`UC_42_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_45_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

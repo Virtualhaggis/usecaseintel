@@ -1,12 +1,17 @@
 # Briefings — full archive
 
-_2617 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-08-08
+- [atlassian rovo can be tricked into sending jira and confluen](./2026-08-08/atlassian-rovo-can-be-tricked-into-sending-jira-and-confluen.md)
+- [metabase zero day exploited in wild allows admin access with](./2026-08-08/metabase-zero-day-exploited-in-wild-allows-admin-access-with.md)
+- [new css attacks can break webmail defenses to steal password](./2026-08-08/new-css-attacks-can-break-webmail-defenses-to-steal-password.md)
 
 ## 2026-08-07
 - [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
@@ -77,11 +82,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
 - [chaindrop npm worm bun loaded ci cd credential harvester wit](./2026-08-04/chaindrop-npm-worm-bun-loaded-ci-cd-credential-harvester-wit.md)
 - [chaindrop supply chain compromise anatomy of a self propagat](./2026-08-04/chaindrop-supply-chain-compromise-anatomy-of-a-self-propagat.md)
-- [cisa adds exploited n able n central flaw to kev after custo](./2026-08-04/cisa-adds-exploited-n-able-n-central-flaw-to-kev-after-custo.md)
 - [cisa kev cve 2026 18556 n able n central authentication bypa](./2026-08-04/cisa-kev-cve-2026-18556-n-able-n-central-authentication-bypa.md)
 - [cisa kev cve 2026 34486 apache tomcat missing encryption of ](./2026-08-04/cisa-kev-cve-2026-34486-apache-tomcat-missing-encryption-of-.md)
 - [cisa kev cve 2026 9198 ibm langflow code injection vulnerabi](./2026-08-04/cisa-kev-cve-2026-9198-ibm-langflow-code-injection-vulnerabi.md)
-- [doublecup uses clickfix and cached pngs to deliver countload](./2026-08-04/doublecup-uses-clickfix-and-cached-pngs-to-deliver-countload.md)
 - [evo continuous offensive security is here pentesting grade c](./2026-08-04/evo-continuous-offensive-security-is-here-pentesting-grade-c.md)
 - [fake adobe and zoom updates install screenconnect for persis](./2026-08-04/fake-adobe-and-zoom-updates-install-screenconnect-for-persis.md)
 - [ghsa critical cve 2026 69251 flowise rce via typeorm datasou](./2026-08-04/ghsa-critical-cve-2026-69251-flowise-rce-via-typeorm-datasou.md)
@@ -101,12 +104,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 
 ## 2026-08-03
-- [18 malicious npm packages deliver cross platform rat to alib](./2026-08-03/18-malicious-npm-packages-deliver-cross-platform-rat-to-alib.md)
 - [an analysis of incidents at brazilian educational institutio](./2026-08-03/an-analysis-of-incidents-at-brazilian-educational-institutio.md)
 - [anthropic incident an ai agent published a malicious package](./2026-08-03/anthropic-incident-an-ai-agent-published-a-malicious-package.md)
 - [cisa kev cve 2026 18577 n able n central authentication bypa](./2026-08-03/cisa-kev-cve-2026-18577-n-able-n-central-authentication-bypa.md)
 - [ghsa critical cve 2026 69240 sequelize sql injection oracle ](./2026-08-03/ghsa-critical-cve-2026-69240-sequelize-sql-injection-oracle-.md)
-- [google password manager attacks could let malware hijack pas](./2026-08-03/google-password-manager-attacks-could-let-malware-hijack-pas.md)
 - [pass the passkey a novel attack surface in passwordless auth](./2026-08-03/pass-the-passkey-a-novel-attack-surface-in-passwordless-auth.md)
 
 ## 2026-07-31

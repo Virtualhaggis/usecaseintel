@@ -1,22 +1,23 @@
-# [HIGH] Google Password Manager Attacks Could Let Malware Hijack Passkey-Protected Accounts
+# [CRIT] Atlassian Rovo Can Be Tricked Into Sending Jira and Confluence Data to Attackers
 
 **Source:** The Hacker News
-**Published:** 2026-08-03
-**Article:** https://thehackernews.com/2026/08/google-password-manager-attacks-could.html
+**Published:** 2026-08-08
+**Article:** https://thehackernews.com/2026/08/atlassian-rovo-can-be-tricked-into.html
 
 ## Threat Profile
 
-Google Password Manager Attacks Could Let Malware Hijack Passkey-Protected Accounts 
- Swati Khandelwal  Aug 03, 2026 Authentication / Web Security 
-Malware running as an ordinary user on a Windows machine can sign into a victim's passkey-protected accounts without a fingerprint, a PIN, or anything at all appearing on the victim's screen.
-Unit 42 detailed three attack paths against Chrome's Google Password Manager cloud authenticator, which it calls Pass-ta-key , Silver Pass-ta-key and Golden P…
+Atlassian Rovo Can Be Tricked Into Sending Jira and Confluence Data to Attackers 
+ Swati Khandelwal  Aug 08, 2026 AI Security / Enterprise Security 
+Attacker-controlled instructions can make Atlassian's Rovo assistant collect Jira or Confluence data that a signed-in user can access, then send it to an outside server. Two security firms found that behavior independently, by different routes. Only one of those routes is confirmed closed.
+PromptArmor , an AI security firm, hid the instructions in…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `webauthm.io`
+- **CVE:** `CVE-2026-50522`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -25,85 +26,12 @@ Unit 42 detailed three attack paths against Chrome's Google Password Manager clo
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1071** — Application Layer Protocol
-- **T1555.003** — Credentials from Web Browsers
-- **T1003** — OS Credential Dumping
-- **T1556** — Modify Authentication Process
-- **T1217** — Browser Information Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Non-Chrome process reading chrome.exe memory to steal passkey Security Domain Secret (Golden Pass-ta-key)
-
-`UC_106_6` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=chrome.exe) by Processes.dest Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search parent_process_name!=chrome.exe AND parent_process!="*\\Google\\Chrome\\*" AND parent_process_name!="MsMpEng.exe" AND parent_process_name!="taskmgr.exe" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("OpenProcessApiCall", "ReadProcessMemoryApiCall")
-| where FileName =~ "chrome.exe"                       // target process being read = Chrome
-| where InitiatingProcessFileName !~ "chrome.exe"      // Chrome's own multi-process reads are legit
-| where InitiatingProcessFolderPath !has @"\Google\Chrome\"   // exclude crashpad_handler / updater
-| where InitiatingProcessFileName !in~ ("MsMpEng.exe","taskmgr.exe","procexp64.exe","procexp.exe","csrss.exe","wininit.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, TargetProcess = FileName, ActionType, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### Non-Chrome process tampering with Chrome passkey_enclave_state or Sync Data LevelDB
-
-`UC_106_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=passkey_enclave_state OR Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Sync Data\\LevelDB\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name!=chrome.exe AND process_name!="*\\Google\\Chrome\\*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "passkey_enclave_state"
-      or (FolderPath has @"\Google\Chrome\User Data\" and FolderPath has @"\Sync Data\LevelDB")
-| where InitiatingProcessFileName !~ "chrome.exe"
-| where InitiatingProcessVersionInfoCompanyName != "Google LLC"
-| where InitiatingProcessFolderPath !has @"\Google\Chrome\"
-| where InitiatingProcessFileName !in~ ("OneDrive.exe","backup.exe","MsMpEng.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### Command line referencing Chrome passkey_enclave_state or Sync Data LevelDB path
-
-`UC_106_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*passkey_enclave_state*" OR Processes.process="*Sync Data\\LevelDB*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | search process_name!=chrome.exe | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has_any ("passkey_enclave_state", @"Sync Data\LevelDB")
-| where ProcessCommandLine has @"\Google\Chrome\User Data" or ProcessCommandLine has "passkey_enclave_state"
-| where FileName !~ "chrome.exe" and InitiatingProcessFileName !~ "chrome.exe"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -281,63 +209,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Google Password Manager Attacks Could Let Malware Hijack Passkey-Protected Accou
-
-`UC_106_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — Google Password Manager Attacks Could Let Malware Hijack Passkey-Protected Accou ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_path="*%LocalAppData%\Google\Chrome\User*")
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*%LocalAppData%\Google\Chrome\User*")
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — Google Password Manager Attacks Could Let Malware Hijack Passkey-Protected Accou
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FolderPath has_any ("%LocalAppData%\Google\Chrome\User"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("%LocalAppData%\Google\Chrome\User"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `webauthm.io`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-50522`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
