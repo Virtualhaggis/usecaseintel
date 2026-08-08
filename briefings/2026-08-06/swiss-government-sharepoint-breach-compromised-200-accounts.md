@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous POST to SharePoint ToolPane/_trust exploit endpoints (CVE-2026-50522/56164)
 
-`UC_31_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_32_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### SharePoint IIS worker (w3wp.exe) spawning command interpreter — ToolShell RCE
 
-`UC_31_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_32_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### SharePoint MachineKey / web.config credential theft via w3wp child process
 
-`UC_31_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Webshell/.aspx written into SharePoint LAYOUTS by w3wp.exe (ToolShell persistence)
 
-`UC_31_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

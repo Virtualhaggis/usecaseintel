@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-08-08
 - [atlassian rovo can be tricked into sending jira and confluen](./2026-08-08/atlassian-rovo-can-be-tricked-into-sending-jira-and-confluen.md)
+- [hackers breach trueconf to trojanize client installers with ](./2026-08-08/hackers-breach-trueconf-to-trojanize-client-installers-with-.md)
 - [metabase zero day exploited in wild allows admin access with](./2026-08-08/metabase-zero-day-exploited-in-wild-allows-admin-access-with.md)
 - [new css attacks can break webmail defenses to steal password](./2026-08-08/new-css-attacks-can-break-webmail-defenses-to-steal-password.md)
 
@@ -62,7 +63,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 63077 jetbrains teamcity deserialization o](./2026-08-05/cisa-kev-cve-2026-63077-jetbrains-teamcity-deserialization-o.md)
 - [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
 - [ghsa critical cve 2026 71319 unauthenticated nuxt devtools r](./2026-08-05/ghsa-critical-cve-2026-71319-unauthenticated-nuxt-devtools-r.md)
-- [hackers run khunt post exploitation toolkit from oracle data](./2026-08-05/hackers-run-khunt-post-exploitation-toolkit-from-oracle-data.md)
 - [kali365 weaponizes microsoft authentication against us compa](./2026-08-05/kali365-weaponizes-microsoft-authentication-against-us-compa.md)
 - [leaked n8n api tokens exposed live instances to credential t](./2026-08-05/leaked-n8n-api-tokens-exposed-live-instances-to-credential-t.md)
 - [new ovswrap linux kernel flaw lets local users gain root via](./2026-08-05/new-ovswrap-linux-kernel-flaw-lets-local-users-gain-root-via.md)

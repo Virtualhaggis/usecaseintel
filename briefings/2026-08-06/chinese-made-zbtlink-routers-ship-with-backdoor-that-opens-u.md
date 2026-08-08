@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### ENDLESSDOORS C2 domain resolution (wikaba / epplink / online-string)
 
-`UC_48_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_49_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### ENDLESSDOORS C2 egress to hardcoded IPs on ports 7000/7001
 
-`UC_48_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_49_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### ENDLESSDOORS implant file artifacts on disk (kworker / librctl.so / kworker.cfg / skworker)
 
-`UC_48_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_49_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceFileEvents
 
 ### ENDLESSDOORS kworker userland process masquerading as kernel thread
 
-`UC_48_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_49_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### ENDLESSDOORS root shell / command execution spawned by kworker implant
 
-`UC_48_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_49_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceProcessEvents
 
 ### ENDLESSDOORS skworker init.d boot persistence execution
 
-`UC_48_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_49_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -415,7 +415,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Chinese-Made Zbtlink Routers Ship With Backdoor That Opens Unauthenticated Root
 
-`UC_48_8` · phase: **install** · confidence: **High**
+`UC_49_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
