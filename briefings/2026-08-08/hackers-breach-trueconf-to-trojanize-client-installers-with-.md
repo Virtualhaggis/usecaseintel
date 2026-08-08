@@ -11,15 +11,9 @@ By Bill Toulas
 August 8, 2026
 10:16 AM
 0 
-
-
 The Head Mare hacktivist group has been exploiting vulnerabilities in unpatched TrueConf video conferencing servers to replace client installers with malicious versions that deliver backdoors.
-
-
 The exploited vulnerabilities allowed the attacker to execute arbitrary code with the highest level of privileges and deploy the PhantomCore and PhantomGraph backdoors.
-
-
-TrueConf is …
+TrueConf is a video conf…
 
 ## Indicators of Compromise (high-fidelity only)
 
