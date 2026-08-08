@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall hook executes 'node setup.mjs' / 'bun execution.js' (Mini Shai-Hulud SAP supply chain)
 
-`UC_495_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_496_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Mini Shai-Hulud 'OhNoWhatsGoingOnWithGitHub' dead-drop keyword in outbound URL
 
-`UC_495_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_496_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ union
 
 ### Mini Shai-Hulud known SHA256 IOC match (setup.mjs / execution.js / runner-memory dumper)
 
-`UC_495_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_496_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -284,7 +284,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Targets SAP npm Packages With a Bun-Based Secret Stealer
 
-`UC_495_6` · phase: **exploit** · confidence: **High**
+`UC_496_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

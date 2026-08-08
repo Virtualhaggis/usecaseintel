@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — New TONTOU CPU attack bypasses Spectre v2 fixes, leaks Linux password hashes
 
-`UC_28_1` · phase: **install** · confidence: **High**
+`UC_29_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

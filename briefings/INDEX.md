@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2618 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2617 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -678,9 +678,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-24
 - [cloud workload security mind the gaps](./2026-03-24/cloud-workload-security-mind-the-gaps.md)
 - [how a poisoned security scanner became the key to backdoorin](./2026-03-24/how-a-poisoned-security-scanner-became-the-key-to-backdoorin.md)
-
-## 2026-03-22
-- [canisterworm gets teeth teampcp s kubernetes wiper targets i](./2026-03-22/canisterworm-gets-teeth-teampcp-s-kubernetes-wiper-targets-i.md)
 
 ## 2026-03-20
 - [cisa kev cve 2025 31277 apple multiple products buffer overf](./2026-03-20/cisa-kev-cve-2025-31277-apple-multiple-products-buffer-overf.md)

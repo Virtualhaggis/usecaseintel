@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Silver Fox Japan tax-season lure: inbound email with Japanese HR/ESOP subject + gofile.io URL or RAR/ZIP
 
-`UC_575_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_576_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -78,7 +78,7 @@ union UrlSide, AttachSide
 
 ### gofile.io archive download by browser followed by extracted-EXE execution within 30 minutes
 
-`UC_575_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_576_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### ValleyRAT registry-resident shellcode (HKCU\Console\0|1) and MyPythonApp Run-key persistence
 
-`UC_575_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_576_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

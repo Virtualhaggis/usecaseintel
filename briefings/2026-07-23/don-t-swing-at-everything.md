@@ -197,7 +197,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Don’t swing at everything
 
-`UC_178_8` · phase: **exploit** · confidence: **High**
+`UC_179_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
