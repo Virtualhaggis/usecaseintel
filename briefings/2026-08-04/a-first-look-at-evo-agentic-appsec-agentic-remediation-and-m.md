@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### npm preinstall hook executing setup.mjs / Math_Symbol.js (keyv/cacheable worm)
 
-`UC_99_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_138_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### keyv worm loader pulling Bun 1.3.13 runtime from GitHub during install
 
-`UC_99_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_138_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### npm-install child process reading developer credential stores (keyv stealer)
 
-`UC_99_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_138_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### keyv worm planting .claude / .vscode auto-run hooks in project (agentic dev target)
 
-`UC_99_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_138_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

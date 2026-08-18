@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2616 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2628 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,85 +8,137 @@ _2616 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
-## 2026-08-08
-- [atlassian rovo can be tricked into sending jira and confluen](./2026-08-08/atlassian-rovo-can-be-tricked-into-sending-jira-and-confluen.md)
-- [hackers breach trueconf to trojanize client installers with ](./2026-08-08/hackers-breach-trueconf-to-trojanize-client-installers-with-.md)
-- [metabase zero day exploited in wild allows admin access with](./2026-08-08/metabase-zero-day-exploited-in-wild-allows-admin-access-with.md)
-- [new css attacks can break webmail defenses to steal password](./2026-08-08/new-css-attacks-can-break-webmail-defenses-to-steal-password.md)
+## 2026-08-18
+- [cisa flags actively exploited ray flaw that can trigger brow](./2026-08-18/cisa-flags-actively-exploited-ray-flaw-that-can-trigger-brow.md)
+
+## 2026-08-17
+- [cavern c2 uses dns and google apps script to blend into legi](./2026-08-17/cavern-c2-uses-dns-and-google-apps-script-to-blend-into-legi.md)
+- [certighost and the privilege hiding in your certificate auth](./2026-08-17/certighost-and-the-privilege-hiding-in-your-certificate-auth.md)
+- [cisa kev cve 2025 62593 ray project ray code injection vulne](./2026-08-17/cisa-kev-cve-2025-62593-ray-project-ray-code-injection-vulne.md)
+- [critical gitlab graphql flaw could let unauthenticated attac](./2026-08-17/critical-gitlab-graphql-flaw-could-let-unauthenticated-attac.md)
+- [evooo1bot linux botnet exploits known flaws to turn edge dev](./2026-08-17/evooo1bot-linux-botnet-exploits-known-flaws-to-turn-edge-dev.md)
+- [french tax authority data breach affects 678 000 individuals](./2026-08-17/french-tax-authority-data-breach-affects-678-000-individuals.md)
+- [ghsa critical cve 2026 47686 vm2 has missing error cause san](./2026-08-17/ghsa-critical-cve-2026-47686-vm2-has-missing-error-cause-san.md)
+- [ghsa critical cve 2026 47698 vm2 sandbox breakout using dang](./2026-08-17/ghsa-critical-cve-2026-47698-vm2-sandbox-breakout-using-dang.md)
+- [ghsa critical cve 2026 55158 conflibot vulnerable to command](./2026-08-17/ghsa-critical-cve-2026-55158-conflibot-vulnerable-to-command.md)
+- [ghsa critical cve 2026 64849 mlflow unauthenticated full rea](./2026-08-17/ghsa-critical-cve-2026-64849-mlflow-unauthenticated-full-rea.md)
+- [ghsa critical cve 2026 64859 new api user list api leaks roo](./2026-08-17/ghsa-critical-cve-2026-64859-new-api-user-list-api-leaks-roo.md)
+- [ghsa critical cve 2026 71479 new api integer overflow in quo](./2026-08-17/ghsa-critical-cve-2026-71479-new-api-integer-overflow-in-quo.md)
+- [ghsa critical ghsa m5w8 4gq2 6f8x vm2 nodevm builtin exposes](./2026-08-17/ghsa-critical-ghsa-m5w8-4gq2-6f8x-vm2-nodevm-builtin-exposes.md)
+- [hacker claims 3 6 million azure account records stolen from ](./2026-08-17/hacker-claims-3-6-million-azure-account-records-stolen-from-.md)
+- [how qr code phishing can slip past corporate security measur](./2026-08-17/how-qr-code-phishing-can-slip-past-corporate-security-measur.md)
+- [microsoft working on defender patch for shieldbreak zero day](./2026-08-17/microsoft-working-on-defender-patch-for-shieldbreak-zero-day.md)
+- [philips and ge investigating clop ransomware data theft clai](./2026-08-17/philips-and-ge-investigating-clop-ransomware-data-theft-clai.md)
+- [snowflake github actions flaw lets crafted issues trigger co](./2026-08-17/snowflake-github-actions-flaw-lets-crafted-issues-trigger-co.md)
+- [suspected china nexus actor exploits vmware vcenter flaw dep](./2026-08-17/suspected-china-nexus-actor-exploits-vmware-vcenter-flaw-dep.md)
+- [unisoc volte video call exploit chain can give attackers ful](./2026-08-17/unisoc-volte-video-call-exploit-chain-can-give-attackers-ful.md)
+
+## 2026-08-16
+- [chaindrop npm worm bun loaded ci cd credential harvester wit](./2026-08-16/chaindrop-npm-worm-bun-loaded-ci-cd-credential-harvester-wit.md)
+- [new amnesiastealer macos malware hijacks browser sessions vi](./2026-08-16/new-amnesiastealer-macos-malware-hijacks-browser-sessions-vi.md)
+- [safepal data breach impacts 39 798 customers stolen info for](./2026-08-16/safepal-data-breach-impacts-39-798-customers-stolen-info-for.md)
+
+## 2026-08-15
+- [apple macos screen sharing flaw exploited on internet expose](./2026-08-15/apple-macos-screen-sharing-flaw-exploited-on-internet-expose.md)
+- [new evooo1bot linux botnet turns routers into traffic relay ](./2026-08-15/new-evooo1bot-linux-botnet-turns-routers-into-traffic-relay-.md)
+- [sap commerce cloud cve 2026 58231 targeted in exploitation a](./2026-08-15/sap-commerce-cloud-cve-2026-58231-targeted-in-exploitation-a.md)
+- [team pcp stole 78 330 secrets from 2 186 organizations cloud](./2026-08-15/team-pcp-stole-78-330-secrets-from-2-186-organizations-cloud.md)
+
+## 2026-08-14
+- [apple warns users in 110 countries they may be targets of me](./2026-08-14/apple-warns-users-in-110-countries-they-may-be-targets-of-me.md)
+- [apt group honeymyte upgrades coolclient the backdoor gets a ](./2026-08-14/apt-group-honeymyte-upgrades-coolclient-the-backdoor-gets-a-.md)
+- [china linked jewelbug uses xg web for government espionage a](./2026-08-14/china-linked-jewelbug-uses-xg-web-for-government-espionage-a.md)
+- [chrome devtools technique enables authenticated session hija](./2026-08-14/chrome-devtools-technique-enables-authenticated-session-hija.md)
+- [ctm360 uncovers over 3 000 recruitment phishing urls using b](./2026-08-14/ctm360-uncovers-over-3-000-recruitment-phishing-urls-using-b.md)
+- [hackers spend nearly 7 million on expired domains to redirec](./2026-08-14/hackers-spend-nearly-7-million-on-expired-domains-to-redirec.md)
+- [mustang panda adds signed windows rootkit to coolclient back](./2026-08-14/mustang-panda-adds-signed-windows-rootkit-to-coolclient-back.md)
+- [top enterprise sca tools in 2026](./2026-08-14/top-enterprise-sca-tools-in-2026.md)
+
+## 2026-08-13
+- [amnesiastealer hijacks chromium sessions to give attackers l](./2026-08-13/amnesiastealer-hijacks-chromium-sessions-to-give-attackers-l.md)
+- [armored likho expands its cyber espionage toolkit](./2026-08-13/armored-likho-expands-its-cyber-espionage-toolkit.md)
+- [attackers exploit sharepoint authentication bypass after pub](./2026-08-13/attackers-exploit-sharepoint-authentication-bypass-after-pub.md)
+- [black hat usa 2026 will vulnerability discovery eventually d](./2026-08-13/black-hat-usa-2026-will-vulnerability-discovery-eventually-d.md)
+- [curiouser and curiouser](./2026-08-13/curiouser-and-curiouser.md)
+- [dissecting the jwr phishing framework](./2026-08-13/dissecting-the-jwr-phishing-framework.md)
+- [geoserver zero day targeted in active exploitation attempts ](./2026-08-13/geoserver-zero-day-targeted-in-active-exploitation-attempts-.md)
+- [new patchcord backdoor targets afghan telecom and indian cri](./2026-08-13/new-patchcord-backdoor-targets-afghan-telecom-and-indian-cri.md)
+- [north korean remote workers are infiltrating government and ](./2026-08-13/north-korean-remote-workers-are-infiltrating-government-and-.md)
+- [the model is the malware what four agentic intrusions tell d](./2026-08-13/the-model-is-the-malware-what-four-agentic-intrusions-tell-d.md)
+- [threatsday ghostjacking ai attacks etherhiding clickfix curs](./2026-08-13/threatsday-ghostjacking-ai-attacks-etherhiding-clickfix-curs.md)
+- [windrelay android malware turns victims phones into nfc rela](./2026-08-13/windrelay-android-malware-turns-victims-phones-into-nfc-rela.md)
+
+## 2026-08-12
+- [737 chrome vpn extensions caught routing traffic through pro](./2026-08-12/737-chrome-vpn-extensions-caught-routing-traffic-through-pro.md)
+- [adobe patches three cvss 10 0 coldfusion and campaign classi](./2026-08-12/adobe-patches-three-cvss-10-0-coldfusion-and-campaign-classi.md)
+- [attackers exploit vmware vcenter vulnerability to gain persi](./2026-08-12/attackers-exploit-vmware-vcenter-vulnerability-to-gain-persi.md)
+- [cisco asa and ftd flaw exploited in the wild can trigger rem](./2026-08-12/cisco-asa-and-ftd-flaw-exploited-in-the-wild-can-trigger-rem.md)
+- [control which package registries your ci jobs and developer ](./2026-08-12/control-which-package-registries-your-ci-jobs-and-developer-.md)
+- [enterprise defenses recovered at the edge and collapsed insi](./2026-08-12/enterprise-defenses-recovered-at-the-edge-and-collapsed-insi.md)
+- [lazarus exploits windows zero day to gain system access and ](./2026-08-12/lazarus-exploits-windows-zero-day-to-gain-system-access-and-.md)
+- [malicious litellm releases tied to trivy hack may have expos](./2026-08-12/malicious-litellm-releases-tied-to-trivy-hack-may-have-expos.md)
+- [openai anthropic google api flaw let weaker ai models decode](./2026-08-12/openai-anthropic-google-api-flaw-let-weaker-ai-models-decode.md)
+- [sap commerce cloud flaw could let unauthenticated attackers ](./2026-08-12/sap-commerce-cloud-flaw-could-let-unauthenticated-attackers-.md)
+- [shieldbreak zero day poc claims microsoft defender patch byp](./2026-08-12/shieldbreak-zero-day-poc-claims-microsoft-defender-patch-byp.md)
+- [the agent baseline 35 controls but where should you start](./2026-08-12/the-agent-baseline-35-controls-but-where-should-you-start.md)
+
+## 2026-08-11
+- [a malicious sim card can run attacker code inside the modems](./2026-08-11/a-malicious-sim-card-can-run-attacker-code-inside-the-modems.md)
+- [cisa kev cve 2026 20349 cisco secure firewall adaptive secur](./2026-08-11/cisa-kev-cve-2026-20349-cisco-secure-firewall-adaptive-secur.md)
+- [cisa kev cve 2026 68820 microsoft windows ancillary function](./2026-08-11/cisa-kev-cve-2026-68820-microsoft-windows-ancillary-function.md)
+- [cisa kev cve 2026 72898 metabase sql injection vulnerability](./2026-08-11/cisa-kev-cve-2026-72898-metabase-sql-injection-vulnerability.md)
+- [deadlock ransomware uses polygon smart contracts to make ext](./2026-08-11/deadlock-ransomware-uses-polygon-smart-contracts-to-make-ext.md)
+- [ghsa critical cve 2026 73080 seaweedfs unauthenticated ssrf ](./2026-08-11/ghsa-critical-cve-2026-73080-seaweedfs-unauthenticated-ssrf-.md)
+- [head mare apt is exploiting vulnerabilities in an unpatched ](./2026-08-11/head-mare-apt-is-exploiting-vulnerabilities-in-an-unpatched-.md)
+- [kimwolf v7 an evolution of the kimwolf botnet](./2026-08-11/kimwolf-v7-an-evolution-of-the-kimwolf-botnet.md)
+- [kimwolf v7 android botnet makes http 2 ddos traffic look lik](./2026-08-11/kimwolf-v7-android-botnet-makes-http-2-ddos-traffic-look-lik.md)
+- [malicious mcp servers can split instructions to make ai codi](./2026-08-11/malicious-mcp-servers-can-split-instructions-to-make-ai-codi.md)
+- [microsoft patches 398 flaws including a windows driver zero ](./2026-08-11/microsoft-patches-398-flaws-including-a-windows-driver-zero-.md)
+- [mozilla revokes firefox and thunderbird linux signing key af](./2026-08-11/mozilla-revokes-firefox-and-thunderbird-linux-signing-key-af.md)
+- [openai launches gpt 5 6 cyber with reduced safeguards for ex](./2026-08-11/openai-launches-gpt-5-6-cyber-with-reduced-safeguards-for-ex.md)
+- [project cav3rn continues google apps script as c2 relay and ](./2026-08-11/project-cav3rn-continues-google-apps-script-as-c2-relay-and-.md)
+- [researchers built a fake crypto startup and hired three susp](./2026-08-11/researchers-built-a-fake-crypto-startup-and-hired-three-susp.md)
+- [researchers turn usb auto install into a full system takeove](./2026-08-11/researchers-turn-usb-auto-install-into-a-full-system-takeove.md)
+- [sandworm linked uac 0145 uses fake job interviews to push vp](./2026-08-11/sandworm-linked-uac-0145-uses-fake-job-interviews-to-push-vp.md)
+- [zoom annotation flaws could let a meeting participant hijack](./2026-08-11/zoom-annotation-flaws-could-let-a-meeting-participant-hijack.md)
+
+## 2026-08-10
+- [are ai tutors safe for your kids](./2026-08-10/are-ai-tutors-safe-for-your-kids.md)
+- [deadlock ransomware breaking down a rust based encryptor wit](./2026-08-10/deadlock-ransomware-breaking-down-a-rust-based-encryptor-wit.md)
+- [it threat evolution in q2 2026 non mobile statistics](./2026-08-10/it-threat-evolution-in-q2-2026-non-mobile-statistics.md)
+- [microsoft named a leader in the 2026 idc marketscape for mdr](./2026-08-10/microsoft-named-a-leader-in-the-2026-idc-marketscape-for-mdr.md)
+- [show don t tell what evo continuous offensive security found](./2026-08-10/show-don-t-tell-what-evo-continuous-offensive-security-found.md)
+- [the permanent threat analyzing aeternum s blockchain based c](./2026-08-10/the-permanent-threat-analyzing-aeternum-s-blockchain-based-c.md)
 
 ## 2026-08-07
-- [ai assisted http terminator finds novel http desync techniqu](./2026-08-07/ai-assisted-http-terminator-finds-novel-http-desync-techniqu.md)
 - [cisa kev cve 2026 8037 progress loadmaster command injection](./2026-08-07/cisa-kev-cve-2026-8037-progress-loadmaster-command-injection.md)
-- [claude code and gemini cli flaws let a github issue reach ci](./2026-08-07/claude-code-and-gemini-cli-flaws-let-a-github-issue-reach-ci.md)
-- [clickfix attacks deliver macos stealer that can drain crypto](./2026-08-07/clickfix-attacks-deliver-macos-stealer-that-can-drain-crypto.md)
 - [ghsa critical cve 2026 63221 codeigniter sql injection in qu](./2026-08-07/ghsa-critical-cve-2026-63221-codeigniter-sql-injection-in-qu.md)
 - [ghsa critical cve 2026 63223 codeigniter uploaded file exten](./2026-08-07/ghsa-critical-cve-2026-63223-codeigniter-uploaded-file-exten.md)
 - [ghsa critical cve 2026 71851 crypto js insufficient entropy ](./2026-08-07/ghsa-critical-cve-2026-71851-crypto-js-insufficient-entropy-.md)
 - [ghsa critical ghsa wg23 69c2 gjc8 craft cms passkey login ac](./2026-08-07/ghsa-critical-ghsa-wg23-69c2-gjc8-craft-cms-passkey-login-ac.md)
-- [growing up the hard way](./2026-08-07/growing-up-the-hard-way.md)
 - [inside the modern soc the identity front door](./2026-08-07/inside-the-modern-soc-the-identity-front-door.md)
-- [malware can abuse windows hello for business keys for persis](./2026-08-07/malware-can-abuse-windows-hello-for-business-keys-for-persis.md)
-- [microsoft 365 aitm phishing hijacks accounts to collect payr](./2026-08-07/microsoft-365-aitm-phishing-hijacks-accounts-to-collect-payr.md)
-- [nearly 800 malicious npm packages deliver cross platform rat](./2026-08-07/nearly-800-malicious-npm-packages-deliver-cross-platform-rat.md)
-- [new natjack attacks hijack tcp sessions and spoof dns by man](./2026-08-07/new-natjack-attacks-hijack-tcp-sessions-and-spoof-dns-by-man.md)
-- [new wordpress pre auth xss could lead to php code execution ](./2026-08-07/new-wordpress-pre-auth-xss-could-lead-to-php-code-execution-.md)
-- [real emails hijacked payments two h1 2026 attack chains](./2026-08-07/real-emails-hijacked-payments-two-h1-2026-attack-chains.md)
-- [teampcp linked to redis attacks dating back to 2020 and late](./2026-08-07/teampcp-linked-to-redis-attacks-dating-back-to-2020-and-late.md)
-- [unc6671 vishing attacks target personal phones to steal saas](./2026-08-07/unc6671-vishing-attacks-target-personal-phones-to-steal-saas.md)
-- [unlimited technology systems breach impacts 3 8 million peop](./2026-08-07/unlimited-technology-systems-breach-impacts-3-8-million-peop.md)
 
 ## 2026-08-06
-- [ai recommendation poisoning how ask ai buttons silently alte](./2026-08-06/ai-recommendation-poisoning-how-ask-ai-buttons-silently-alte.md)
-- [apple icloud private relay can expose real ips through webki](./2026-08-06/apple-icloud-private-relay-can-expose-real-ips-through-webki.md)
-- [attackers compile khunt inside oracle to turn sql injection ](./2026-08-06/attackers-compile-khunt-inside-oracle-to-turn-sql-injection-.md)
-- [aws google and vercel agent flaws let attackers trigger tool](./2026-08-06/aws-google-and-vercel-agent-flaws-let-attackers-trigger-tool.md)
 - [chaindrop inside a self propagating npm worm](./2026-08-06/chaindrop-inside-a-self-propagating-npm-worm.md)
-- [chinese made zbtlink routers ship with backdoor that opens u](./2026-08-06/chinese-made-zbtlink-routers-ship-with-backdoor-that-opens-u.md)
-- [clickfix attack pushes macos infostealer for crypto theft at](./2026-08-06/clickfix-attack-pushes-macos-infostealer-for-crypto-theft-at.md)
-- [cryptojs weak rng behind 5 7 million in drains affects five ](./2026-08-06/cryptojs-weak-rng-behind-5-7-million-in-drains-affects-five-.md)
 - [ghsa critical cve 2026 65600 traefik authentication bypass v](./2026-08-06/ghsa-critical-cve-2026-65600-traefik-authentication-bypass-v.md)
-- [hedge fund cyberattacks tied to blackfile linked unc6671 ext](./2026-08-06/hedge-fund-cyberattacks-tied-to-blackfile-linked-unc6671-ext.md)
-- [new interrupt injection attack can bypass spectre v2 defense](./2026-08-06/new-interrupt-injection-attack-can-bypass-spectre-v2-defense.md)
-- [new tontou cpu attack bypasses spectre v2 fixes leaks linux ](./2026-08-06/new-tontou-cpu-attack-bypasses-spectre-v2-fixes-leaks-linux-.md)
-- [new zapscape kvm flaw could let privileged l1 guest code esc](./2026-08-06/new-zapscape-kvm-flaw-could-let-privileged-l1-guest-code-esc.md)
-- [over 4 400 rockwell plcs exposed online 22 found in water at](./2026-08-06/over-4-400-rockwell-plcs-exposed-online-22-found-in-water-at.md)
-- [ransom cartel creator gets 16 years in prison for operating ](./2026-08-06/ransom-cartel-creator-gets-16-years-in-prison-for-operating-.md)
-- [snowflake hacker pleads guilty over breaches affecting at le](./2026-08-06/snowflake-hacker-pleads-guilty-over-breaches-affecting-at-le.md)
-- [swiss government sharepoint breach compromised 200 accounts](./2026-08-06/swiss-government-sharepoint-breach-compromised-200-accounts.md)
-- [threatsday odysseus rce samsung one click takeover icloud ba](./2026-08-06/threatsday-odysseus-rce-samsung-one-click-takeover-icloud-ba.md)
 - [token jacking cybercriminals could be stealing your ai resou](./2026-08-06/token-jacking-cybercriminals-could-be-stealing-your-ai-resou.md)
 - [why metaphor may dictate your security strategy](./2026-08-06/why-metaphor-may-dictate-your-security-strategy.md)
 
 ## 2026-08-05
-- [canadian pleads guilty to snowflake cloud data theft attacks](./2026-08-05/canadian-pleads-guilty-to-snowflake-cloud-data-theft-attacks.md)
-- [cisa flags langflow rce tomcat and n central flaws as active](./2026-08-05/cisa-flags-langflow-rce-tomcat-and-n-central-flaws-as-active.md)
 - [cisa kev cve 2026 63077 jetbrains teamcity deserialization o](./2026-08-05/cisa-kev-cve-2026-63077-jetbrains-teamcity-deserialization-o.md)
-- [critical gitea flaw let unauthenticated attackers read serve](./2026-08-05/critical-gitea-flaw-let-unauthenticated-attackers-read-serve.md)
+- [from open lures to cloaked gates how a macos clickfix campai](./2026-08-05/from-open-lures-to-cloaked-gates-how-a-macos-clickfix-campai.md)
 - [ghsa critical cve 2026 71319 unauthenticated nuxt devtools r](./2026-08-05/ghsa-critical-cve-2026-71319-unauthenticated-nuxt-devtools-r.md)
-- [kali365 weaponizes microsoft authentication against us compa](./2026-08-05/kali365-weaponizes-microsoft-authentication-against-us-compa.md)
-- [leaked n8n api tokens exposed live instances to credential t](./2026-08-05/leaked-n8n-api-tokens-exposed-live-instances-to-credential-t.md)
-- [new ovswrap linux kernel flaw lets local users gain root via](./2026-08-05/new-ovswrap-linux-kernel-flaw-lets-local-users-gain-root-via.md)
-- [open vsx removes 77 malicious evil twin extensions exfiltrat](./2026-08-05/open-vsx-removes-77-malicious-evil-twin-extensions-exfiltrat.md)
-- [openai disrupts poipet scam network using chatgpt across mul](./2026-08-05/openai-disrupts-poipet-scam-network-using-chatgpt-across-mul.md)
-- [over 250 clickfix domains use browser fingerprinting to hide](./2026-08-05/over-250-clickfix-domains-use-browser-fingerprinting-to-hide.md)
-- [paperclip ai flaws let attackers run host commands via malic](./2026-08-05/paperclip-ai-flaws-let-attackers-run-host-commands-via-malic.md)
-- [poison claude sells discounted claude access while its opera](./2026-08-05/poison-claude-sells-discounted-claude-access-while-its-opera.md)
-- [quickfox supply chain attack delivers fdmtp backdoor via tro](./2026-08-05/quickfox-supply-chain-attack-delivers-fdmtp-backdoor-via-tro.md)
-- [ransom cartel ransomware creator sentenced to 16 years in pr](./2026-08-05/ransom-cartel-ransomware-creator-sentenced-to-16-years-in-pr.md)
-- [trojanized npm packages employ nullreceiver tactic to decode](./2026-08-05/trojanized-npm-packages-employ-nullreceiver-tactic-to-decode.md)
 - [who was behind the attack possibly nobody](./2026-08-05/who-was-behind-the-attack-possibly-nobody.md)
 
 ## 2026-08-04
 - [128 seconds to disruption microsoft defender stops ransomwar](./2026-08-04/128-seconds-to-disruption-microsoft-defender-stops-ransomwar.md)
 - [a first look at evo agentic appsec agentic remediation and m](./2026-08-04/a-first-look-at-evo-agentic-appsec-agentic-remediation-and-m.md)
 - [almost half of malware samples communicate direct to ip](./2026-08-04/almost-half-of-malware-samples-communicate-direct-to-ip.md)
-- [chaindrop npm worm bun loaded ci cd credential harvester wit](./2026-08-04/chaindrop-npm-worm-bun-loaded-ci-cd-credential-harvester-wit.md)
 - [chaindrop supply chain compromise anatomy of a self propagat](./2026-08-04/chaindrop-supply-chain-compromise-anatomy-of-a-self-propagat.md)
 - [cisa kev cve 2026 18556 n able n central authentication bypa](./2026-08-04/cisa-kev-cve-2026-18556-n-able-n-central-authentication-bypa.md)
 - [cisa kev cve 2026 34486 apache tomcat missing encryption of ](./2026-08-04/cisa-kev-cve-2026-34486-apache-tomcat-missing-encryption-of-.md)
 - [cisa kev cve 2026 9198 ibm langflow code injection vulnerabi](./2026-08-04/cisa-kev-cve-2026-9198-ibm-langflow-code-injection-vulnerabi.md)
 - [evo continuous offensive security is here pentesting grade c](./2026-08-04/evo-continuous-offensive-security-is-here-pentesting-grade-c.md)
-- [fake adobe and zoom updates install screenconnect for persis](./2026-08-04/fake-adobe-and-zoom-updates-install-screenconnect-for-persis.md)
 - [ghsa critical cve 2026 69251 flowise rce via typeorm datasou](./2026-08-04/ghsa-critical-cve-2026-69251-flowise-rce-via-typeorm-datasou.md)
 - [ghsa critical cve 2026 69254 flowise rce via nodevm sandbox ](./2026-08-04/ghsa-critical-cve-2026-69254-flowise-rce-via-nodevm-sandbox-.md)
 - [ghsa critical cve 2026 69255 flowise csv agent remote code e](./2026-08-04/ghsa-critical-cve-2026-69255-flowise-csv-agent-remote-code-e.md)
@@ -95,12 +147,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 70470 flowise pyodide validator unico](./2026-08-04/ghsa-critical-cve-2026-70470-flowise-pyodide-validator-unico.md)
 - [ghsa critical cve 2026 70477 flowise csv agent prompt inject](./2026-08-04/ghsa-critical-cve-2026-70477-flowise-csv-agent-prompt-inject.md)
 - [ghsa critical cve 2026 70478 flowise unauthenticated oauth2 ](./2026-08-04/ghsa-critical-cve-2026-70478-flowise-unauthenticated-oauth2-.md)
-- [google deletes 3 adk ai workflows after malicious github iss](./2026-08-04/google-deletes-3-adk-ai-workflows-after-malicious-github-iss.md)
-- [greatness phaas adds device code phishing to bypass mfa and ](./2026-08-04/greatness-phaas-adds-device-code-phishing-to-bypass-mfa-and-.md)
 - [how legitimate cloud platforms enable phishers to bypass mfa](./2026-08-04/how-legitimate-cloud-platforms-enable-phishers-to-bypass-mfa.md)
 - [inside the keyv npm compromise preinstall malware trusted pr](./2026-08-04/inside-the-keyv-npm-compromise-preinstall-malware-trusted-pr.md)
 - [keyv and friends compromised in active shai hulud supply cha](./2026-08-04/keyv-and-friends-compromised-in-active-shai-hulud-supply-cha.md)
-- [keyv linked npm worm poisons hundreds of packages plants cla](./2026-08-04/keyv-linked-npm-worm-poisons-hundreds-of-packages-plants-cla.md)
 - [the frontier ai vulnerability burst industrializing autonomo](./2026-08-04/the-frontier-ai-vulnerability-burst-industrializing-autonomo.md)
 
 ## 2026-08-03
@@ -130,7 +179,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [octlurk and silklurk newly identified tailored backdoors in ](./2026-07-30/octlurk-and-silklurk-newly-identified-tailored-backdoors-in-.md)
 - [secure at inception announcing the snyk studio integration f](./2026-07-30/secure-at-inception-announcing-the-snyk-studio-integration-f.md)
 - [the attacker never sleeps neither can your testing](./2026-07-30/the-attacker-never-sleeps-neither-can-your-testing.md)
-- [toy ghouls new toy the genielocker ransomware](./2026-07-30/toy-ghouls-new-toy-the-genielocker-ransomware.md)
 - [what s new in microsoft security july 2026](./2026-07-30/what-s-new-in-microsoft-security-july-2026.md)
 - [you were onto something with it s the climb miley](./2026-07-30/you-were-onto-something-with-it-s-the-climb-miley.md)
 
@@ -147,7 +195,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 62325 goshs sftp authentication bypas](./2026-07-28/ghsa-critical-cve-2026-62325-goshs-sftp-authentication-bypas.md)
 - [ghsa critical cve 2026 64863 goshs no delete webdav move byp](./2026-07-28/ghsa-critical-cve-2026-64863-goshs-no-delete-webdav-move-byp.md)
 - [ir trends q2 2026 phishing and weaponized remote management ](./2026-07-28/ir-trends-q2-2026-phishing-and-weaponized-remote-management-.md)
-- [mirage kitten targets middle east and africa region with new](./2026-07-28/mirage-kitten-targets-middle-east-and-africa-region-with-new.md)
 - [the generator can t be the validator what openai s hugging f](./2026-07-28/the-generator-can-t-be-the-validator-what-openai-s-hugging-f.md)
 
 ## 2026-07-27
@@ -164,25 +211,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 59940 seroval seroval fromjson promis](./2026-07-24/ghsa-critical-cve-2026-59940-seroval-seroval-fromjson-promis.md)
 - [ghsa critical cve 2026 62263 openam webauthn java deserializ](./2026-07-24/ghsa-critical-cve-2026-62263-openam-webauthn-java-deserializ.md)
 - [ghsa critical cve 2026 62379 openam unauthenticated remote c](./2026-07-24/ghsa-critical-cve-2026-62379-openam-unauthenticated-remote-c.md)
+- [ghsa critical cve 2026 73300 budibase sql injection via mult](./2026-07-24/ghsa-critical-cve-2026-73300-budibase-sql-injection-via-mult.md)
+- [ghsa critical cve 2026 73302 budibase oidc sso account takeo](./2026-07-24/ghsa-critical-cve-2026-73302-budibase-oidc-sso-account-takeo.md)
+- [ghsa critical cve 2026 73414 shescape shell injection via un](./2026-07-24/ghsa-critical-cve-2026-73414-shescape-shell-injection-via-un.md)
+- [ghsa critical cve 2026 73567 sm crypto predictable sm2 key g](./2026-07-24/ghsa-critical-cve-2026-73567-sm-crypto-predictable-sm2-key-g.md)
+- [ghsa critical cve 2026 73644 opendj sasl plain authzid bypas](./2026-07-24/ghsa-critical-cve-2026-73644-opendj-sasl-plain-authzid-bypas.md)
+- [ghsa critical cve 2026 73649 velocity js remote code executi](./2026-07-24/ghsa-critical-cve-2026-73649-velocity-js-remote-code-executi.md)
 - [ghsa critical ghsa 68r5 9hpg 7qw9 opendj unauthenticated ssr](./2026-07-24/ghsa-critical-ghsa-68r5-9hpg-7qw9-opendj-unauthenticated-ssr.md)
-- [ghsa critical ghsa 7gfh x38p prh3 velocity js remote code ex](./2026-07-24/ghsa-critical-ghsa-7gfh-x38p-prh3-velocity-js-remote-code-ex.md)
 - [ghsa critical ghsa f25v x6vr 962g pheditor authentication by](./2026-07-24/ghsa-critical-ghsa-f25v-x6vr-962g-pheditor-authentication-by.md)
-- [ghsa critical ghsa hp6v 6jw7 gv2f budibase oidc sso account ](./2026-07-24/ghsa-critical-ghsa-hp6v-6jw7-gv2f-budibase-oidc-sso-account-.md)
 - [ghsa critical ghsa mqhr 6j6h 74p5 budibase unauthenticated r](./2026-07-24/ghsa-critical-ghsa-mqhr-6j6h-74p5-budibase-unauthenticated-r.md)
-- [ghsa critical ghsa p279 2cqp 84jg opendj sasl plain authzid ](./2026-07-24/ghsa-critical-ghsa-p279-2cqp-84jg-opendj-sasl-plain-authzid-.md)
-- [ghsa critical ghsa q6x4 v3qx 85qw budibase sql injection via](./2026-07-24/ghsa-critical-ghsa-q6x4-v3qx-85qw-budibase-sql-injection-via.md)
 - [ghsa critical ghsa r277 6w6q xmqw kin openapi validationhand](./2026-07-24/ghsa-critical-ghsa-r277-6w6q-xmqw-kin-openapi-validationhand.md)
 - [ghsa critical ghsa rjg6 39jm rgg4 better auth scim account t](./2026-07-24/ghsa-critical-ghsa-rjg6-39jm-rgg4-better-auth-scim-account-t.md)
 - [ghsa critical ghsa w28w gp39 m4p6 prompty server side templa](./2026-07-24/ghsa-critical-ghsa-w28w-gp39-m4p6-prompty-server-side-templa.md)
-- [ghsa critical ghsa w4hw qcx7 56pr shescape shell injection v](./2026-07-24/ghsa-critical-ghsa-w4hw-qcx7-56pr-shescape-shell-injection-v.md)
 
 ## 2026-07-23
 - [chaos ransomware s msarat living off the browser to build a ](./2026-07-23/chaos-ransomware-s-msarat-living-off-the-browser-to-build-a-.md)
 - [don t swing at everything](./2026-07-23/don-t-swing-at-everything.md)
 - [find unused stale and oidc replaceable github actions secret](./2026-07-23/find-unused-stale-and-oidc-replaceable-github-actions-secret.md)
 - [ghsa critical cve 2026 16723 fastjson has a remote code exec](./2026-07-23/ghsa-critical-cve-2026-16723-fastjson-has-a-remote-code-exec.md)
-- [ghsa critical ghsa 7rqj j65f 68wh auth js email normalizer v](./2026-07-23/ghsa-critical-ghsa-7rqj-j65f-68wh-auth-js-email-normalizer-v.md)
-- [ghsa critical ghsa 8fpg xm3f 6cx3 auth js configuration erro](./2026-07-23/ghsa-critical-ghsa-8fpg-xm3f-6cx3-auth-js-configuration-erro.md)
+- [ghsa critical cve 2026 73420 auth js email normalizer valida](./2026-07-23/ghsa-critical-cve-2026-73420-auth-js-email-normalizer-valida.md)
+- [ghsa critical cve 2026 73421 auth js configuration errors ca](./2026-07-23/ghsa-critical-cve-2026-73421-auth-js-configuration-errors-ca.md)
 - [preview cisco talos at black hat usa 2026](./2026-07-23/preview-cisco-talos-at-black-hat-usa-2026.md)
 - [russian global webmail espionage](./2026-07-23/russian-global-webmail-espionage.md)
 
@@ -195,7 +243,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the upgrade trap when upgrading is the wrong answer to a cve](./2026-07-22/the-upgrade-trap-when-upgrading-is-the-wrong-answer-to-a-cve.md)
 
 ## 2026-07-21
-- [a new extortion cocktail office printers small ransoms and b](./2026-07-21/a-new-extortion-cocktail-office-printers-small-ransoms-and-b.md)
 - [cisa kev cve 2021 27137 dd wrt stack based buffer overflow v](./2026-07-21/cisa-kev-cve-2021-27137-dd-wrt-stack-based-buffer-overflow-v.md)
 - [cisa kev cve 2026 0770 langflow inclusion of functionality f](./2026-07-21/cisa-kev-cve-2026-0770-langflow-inclusion-of-functionality-f.md)
 - [cisa kev cve 2026 60137 wordpress core sql injection vulnera](./2026-07-21/cisa-kev-cve-2026-60137-wordpress-core-sql-injection-vulnera.md)
@@ -205,9 +252,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 58426 gitea actions artifacts v4 sign](./2026-07-21/ghsa-critical-cve-2026-58426-gitea-actions-artifacts-v4-sign.md)
 - [ghsa critical cve 2026 58443 gitea public only repository to](./2026-07-21/ghsa-critical-cve-2026-58443-gitea-public-only-repository-to.md)
 - [ghsa critical cve 2026 59891 credential confusion in sigstor](./2026-07-21/ghsa-critical-cve-2026-59891-credential-confusion-in-sigstor.md)
-- [ghsa critical ghsa p63j vcc4 9vmv vitest browser browser mod](./2026-07-21/ghsa-critical-ghsa-p63j-vcc4-9vmv-vitest-browser-browser-mod.md)
+- [ghsa critical cve 2026 64825 home assistant core vulnerable ](./2026-07-21/ghsa-critical-cve-2026-64825-home-assistant-core-vulnerable-.md)
+- [ghsa critical cve 2026 73653 vitest browser browser mode pro](./2026-07-21/ghsa-critical-cve-2026-73653-vitest-browser-browser-mode-pro.md)
 - [iran war cyber threat landscape a midyear assessment on what](./2026-07-21/iran-war-cyber-threat-landscape-a-midyear-assessment-on-what.md)
-- [new project cav3rn module abuses outlook calendar events for](./2026-07-21/new-project-cav3rn-module-abuses-outlook-calendar-events-for.md)
 
 ## 2026-07-20
 - [ghsa critical cve 2026 59873 node tar decompression parse do](./2026-07-20/ghsa-critical-cve-2026-59873-node-tar-decompression-parse-do.md)
@@ -231,9 +278,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [coordinated asyncapi supply chain attack miasma rat delivere](./2026-07-16/coordinated-asyncapi-supply-chain-attack-miasma-rat-delivere.md)
 - [ghsa critical cve 2026 53713 envoy gateway authentication by](./2026-07-16/ghsa-critical-cve-2026-53713-envoy-gateway-authentication-by.md)
 - [ghsa critical cve 2026 55579 pheditor hardcoded default pass](./2026-07-16/ghsa-critical-cve-2026-55579-pheditor-hardcoded-default-pass.md)
-- [goserpent a persistent threat evolves with sophisticated dat](./2026-07-16/goserpent-a-persistent-threat-evolves-with-sophisticated-dat.md)
 - [harden runner block mode now available for macos and windows](./2026-07-16/harden-runner-block-mode-now-available-for-macos-and-windows.md)
-- [hellonet campaign new malicious modules launched through the](./2026-07-16/hellonet-campaign-new-malicious-modules-launched-through-the.md)
 - [runtime security for third party github actions runners bitr](./2026-07-16/runtime-security-for-third-party-github-actions-runners-bitr.md)
 - [uat 11795 deploys novel starland rat and bespoke wldr c2 imp](./2026-07-16/uat-11795-deploys-novel-starland-rat-and-bespoke-wldr-c2-imp.md)
 
@@ -258,9 +303,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54052 n8n mcp cross tenant access to ](./2026-07-14/ghsa-critical-cve-2026-54052-n8n-mcp-cross-tenant-access-to-.md)
 - [ghsa critical ghsa 9hc2 hjx8 q6pv tidgi desktop remote code ](./2026-07-14/ghsa-critical-ghsa-9hc2-hjx8-q6pv-tidgi-desktop-remote-code-.md)
 - [ghsa critical ghsa hgjx r89m m7v4 facturascripts path traver](./2026-07-14/ghsa-critical-ghsa-hgjx-r89m-m7v4-facturascripts-path-traver.md)
-- [microsoft patch tuesday for july 2026 snort rules and promin](./2026-07-14/microsoft-patch-tuesday-for-july-2026-snort-rules-and-promin.md)
-- [the serpent s tongue luring the python out of its den](./2026-07-14/the-serpent-s-tongue-luring-the-python-out-of-its-den.md)
-- [video where protection starts cisco talos intelligence integ](./2026-07-14/video-where-protection-starts-cisco-talos-intelligence-integ.md)
 
 ## 2026-07-13
 - [cisa kev cve 2008 4128 cisco ios cross site request forgery ](./2026-07-13/cisa-kev-cve-2008-4128-cisco-ios-cross-site-request-forgery-.md)
@@ -284,9 +326,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54072 authorizer unvalidated redirect](./2026-07-10/ghsa-critical-cve-2026-54072-authorizer-unvalidated-redirect.md)
 - [ghsa critical cve 2026 54088 file browser command injection ](./2026-07-10/ghsa-critical-cve-2026-54088-file-browser-command-injection-.md)
 - [ghsa critical cve 2026 54089 file browser authentication byp](./2026-07-10/ghsa-critical-cve-2026-54089-file-browser-authentication-byp.md)
+- [ghsa critical cve 2026 61459 mcp server kubernetes argument ](./2026-07-10/ghsa-critical-cve-2026-61459-mcp-server-kubernetes-argument-.md)
 - [ghsa critical ghsa 99j7 fhr2 xfj4 exploration was removed fr](./2026-07-10/ghsa-critical-ghsa-99j7-fhr2-xfj4-exploration-was-removed-fr.md)
 - [ghsa critical ghsa g936 7jqj mwv8 tsdproxy internal proxy au](./2026-07-10/ghsa-critical-ghsa-g936-7jqj-mwv8-tsdproxy-internal-proxy-au.md)
-- [no manners here the ruthless rise of the gentlemen ransomwar](./2026-07-10/no-manners-here-the-ruthless-rise-of-the-gentlemen-ransomwar.md)
 
 ## 2026-07-09
 - [compromised injectivelabs sdk ts exfiltrates wallet keys thr](./2026-07-09/compromised-injectivelabs-sdk-ts-exfiltrates-wallet-keys-thr.md)
@@ -298,23 +340,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-07-08
 - [eset threat report h1 2026](./2026-07-08/eset-threat-report-h1-2026.md)
-- [ghsa critical cve 2026 52831 nuclio unsanitized cron trigger](./2026-07-08/ghsa-critical-cve-2026-52831-nuclio-unsanitized-cron-trigger.md)
-- [ghsa critical cve 2026 53649 joro unauthenticated cross orig](./2026-07-08/ghsa-critical-cve-2026-53649-joro-unauthenticated-cross-orig.md)
 
 ## 2026-07-07
 - [cisa kev cve 2026 48282 adobe coldfusion path traversal vuln](./2026-07-07/cisa-kev-cve-2026-48282-adobe-coldfusion-path-traversal-vuln.md)
 - [cisa kev cve 2026 48908 joomshaper sp page builder unrestric](./2026-07-07/cisa-kev-cve-2026-48908-joomshaper-sp-page-builder-unrestric.md)
 - [cisa kev cve 2026 55255 langflow authorization bypass throug](./2026-07-07/cisa-kev-cve-2026-55255-langflow-authorization-bypass-throug.md)
 - [cisa kev cve 2026 56290 joomlack page builder improper acces](./2026-07-07/cisa-kev-cve-2026-56290-joomlack-page-builder-improper-acces.md)
-- [ghsa critical cve 2026 27823 egroupware has a remote code ex](./2026-07-07/ghsa-critical-cve-2026-27823-egroupware-has-a-remote-code-ex.md)
-- [ghsa critical cve 2026 53513 better auth sso provider regist](./2026-07-07/ghsa-critical-cve-2026-53513-better-auth-sso-provider-regist.md)
-- [vidar stealer unmasked code signing abuse go loaders and fil](./2026-07-07/vidar-stealer-unmasked-code-signing-abuse-go-loaders-and-fil.md)
 
 ## 2026-07-06
-- [ghsa critical cve 2026 54496 zebra missing copy constraint i](./2026-07-06/ghsa-critical-cve-2026-54496-zebra-missing-copy-constraint-i.md)
-- [ghsa critical cve 2026 55500 9routers has exposure of sensit](./2026-07-06/ghsa-critical-cve-2026-55500-9routers-has-exposure-of-sensit.md)
-- [ghsa critical cve 2026 55615 langroid neo4jchatagent execute](./2026-07-06/ghsa-critical-cve-2026-55615-langroid-neo4jchatagent-execute.md)
-- [ghsa critical ghsa vjc7 jrh9 9j86 9router has unauthenticate](./2026-07-06/ghsa-critical-ghsa-vjc7-jrh9-9j86-9router-has-unauthenticate.md)
 - [predicting mongodb objectid continuously in rocket chat](./2026-07-06/predicting-mongodb-objectid-continuously-in-rocket-chat.md)
 
 ## 2026-07-03
@@ -630,7 +663,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [velora dex sdk compromised on npm malicious version drops ma](./2026-04-09/velora-dex-sdk-compromised-on-npm-malicious-version-drops-ma.md)
 
 ## 2026-04-08
-- [aikido attack finds multiple 0 days in hoppscotch](./2026-04-08/aikido-attack-finds-multiple-0-days-in-hoppscotch.md)
 - [cisa kev cve 2026 1340 ivanti endpoint manager mobile epmm c](./2026-04-08/cisa-kev-cve-2026-1340-ivanti-endpoint-manager-mobile-epmm-c.md)
 - [glassworm goes native new zig dropper infects every ide on y](./2026-04-08/glassworm-goes-native-new-zig-dropper-infects-every-ide-on-y.md)
 
@@ -650,7 +682,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 5281 google dawn use after free vulnerabil](./2026-04-01/cisa-kev-cve-2026-5281-google-dawn-use-after-free-vulnerabil.md)
 
 ## 2026-03-30
-- [axios compromised on npm maintainer account hijacked rat dep](./2026-03-30/axios-compromised-on-npm-maintainer-account-hijacked-rat-dep.md)
 - [axios npm package compromised supply chain attack delivers c](./2026-03-30/axios-npm-package-compromised-supply-chain-attack-delivers-c.md)
 - [cisa kev cve 2026 3055 citrix netscaler out of bounds read v](./2026-03-30/cisa-kev-cve-2026-3055-citrix-netscaler-out-of-bounds-read-v.md)
 
@@ -660,7 +691,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-27
 - [a cunning predator how silver fox preys on japanese firms th](./2026-03-27/a-cunning-predator-how-silver-fox-preys-on-japanese-firms-th.md)
 - [cisa kev cve 2025 53521 f5 big ip stack based buffer overflo](./2026-03-27/cisa-kev-cve-2025-53521-f5-big-ip-stack-based-buffer-overflo.md)
-- [popular telnyx package compromised on pypi by teampcp](./2026-03-27/popular-telnyx-package-compromised-on-pypi-by-teampcp.md)
 
 ## 2026-03-26
 - [bittensor wallet 4 0 2 compromised on pypi backdoor exfiltra](./2026-03-26/bittensor-wallet-4-0-2-compromised-on-pypi-backdoor-exfiltra.md)
@@ -974,10 +1004,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-11-10
 - [cisa kev cve 2025 21042 samsung mobile devices out of bounds](./2025-11-10/cisa-kev-cve-2025-21042-samsung-mobile-devices-out-of-bounds.md)
-
-## 2025-11-07
-- [in memoriam david harley](./2025-11-07/in-memoriam-david-harley.md)
-- [the who where and how of apt attacks in q2 2025 q3 2025](./2025-11-07/the-who-where-and-how-of-apt-attacks-in-q2-2025-q3-2025.md)
 
 ## 2025-11-05
 - [snyk studio brings security scanning and automated fixes to ](./2025-11-05/snyk-studio-brings-security-scanning-and-automated-fixes-to-.md)
@@ -4160,7 +4186,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2019-10-30
 - [84 of all websites are impacted by jquery xss vulnerabilitie](./2019-10-30/84-of-all-websites-are-impacted-by-jquery-xss-vulnerabilitie.md)
-- [angular vs react the security risk of indirect dependencies](./2019-10-30/angular-vs-react-the-security-risk-of-indirect-dependencies.md)
+- [angular vs react security bakeoff 2019](./2019-10-30/angular-vs-react-security-bakeoff-2019.md)
 - [javascript frameworks security report 2019](./2019-10-30/javascript-frameworks-security-report-2019.md)
 
 ## 2019-10-09

@@ -225,7 +225,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Why metaphor may dictate your security strategy
 
-`UC_34_6` · phase: **exploit** · confidence: **High**
+`UC_110_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

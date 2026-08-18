@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Architecting a Serverless web application in AWS
 
-`UC_3699_1` · phase: **exploit** · confidence: **High**
+`UC_3707_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

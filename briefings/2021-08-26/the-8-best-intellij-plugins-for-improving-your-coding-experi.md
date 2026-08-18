@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The 8 best IntelliJ plugins for improving your coding experience
 
-`UC_3113_0` · phase: **exploit** · confidence: **High**
+`UC_3121_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
